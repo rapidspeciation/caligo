@@ -29,4 +29,4 @@ pnpm build
 pnpm test:nav
 ```
 
-The site is deployed automatically to GitHub Pages from `main` through `.github/workflows/deploy.yml`.
+The maintained repository is `rapidspeciation/caligo`. Push accepted changes to its `main` branch; the Fr4nzz fork is no longer maintained. The site is deployed automatically to GitHub Pages from `main` through `.github/workflows/deploy.yml`.
