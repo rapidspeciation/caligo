@@ -2,6 +2,9 @@
 // Dedicated Colombia funding-call form supplied by Nicole.
 export const PILOT_APPLICATION_URL: string = 'https://docs.google.com/forms/d/e/1FAIpQLScCX2XIzecHAMZ8lr4lZE1vYkubZawt4zXKywHD9qnJNLIfaw/viewform';
 
+// Last day applications are accepted (inclusive, visitor's local date).
+export const PILOT_DEADLINE = '2026-09-30';
+
 export const PILOT_INTRO = {
   en: {
     opening: 'Caligo is building the foundation for genomic research on Neotropical Lepidoptera, starting with what we can do now and expanding as funding and partnerships grow.',
@@ -42,6 +45,16 @@ export const PILOT_INTRO = {
     apply: 'Complete the application form',
     pending: 'Application form link pending.',
     share: 'Please share this opportunity with your collaborators.',
+    chip: {
+      open: 'Open until 30 September',
+      days: 'Closes in {n} days',
+      tomorrow: 'Closes tomorrow',
+      today: 'Closes today',
+      closed: 'Applications closed',
+    },
+    banner: 'Colombia sequencing call',
+    bannerAction: 'Apply',
+    dismiss: 'Dismiss announcement',
   },
   es: {
     opening: 'Caligo está construyendo las bases para la investigación genómica de los lepidópteros neotropicales, empezando con los recursos disponibles y ampliando el trabajo a medida que crezcan el financiamiento y las alianzas.',
@@ -82,5 +95,15 @@ export const PILOT_INTRO = {
     apply: 'Completa el formulario de postulación',
     pending: 'Enlace al formulario de postulación pendiente.',
     share: 'Comparte esta oportunidad con tus colaboradores.',
+    chip: {
+      open: 'Abierta hasta el 30 de septiembre',
+      days: 'Cierra en {n} días',
+      tomorrow: 'Cierra mañana',
+      today: 'Cierra hoy',
+      closed: 'Convocatoria cerrada',
+    },
+    banner: 'Convocatoria de secuenciación en Colombia',
+    bannerAction: 'Postula',
+    dismiss: 'Cerrar anuncio',
   },
 };

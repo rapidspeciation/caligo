@@ -2,6 +2,8 @@
 import Base from '../../layouts/Base.astro';
 import PageHeader from '../PageHeader.astro';
 import Icon from '../Icon.astro';
+import CardIcon, { type CardIconName } from '../CardIcon.astro';
+import DeadlineChip from '../DeadlineChip.astro';
 import { PILOT_INTRO } from '../../data/pilot-call';
 import MediaCandidateViewer from '../MediaCandidateViewer.astro';
 import { getDict, localePath, type Locale } from '../../i18n';
@@ -39,6 +41,11 @@ const pilotToProjectId: Record<string, string> = {
 };
 
 const projectById = new Map(PROJECTS.map((pr) => [pr.id, pr]));
+
+// One icon per reason, in the order of PILOT_INTRO.reasons.
+const reasonIcons: readonly CardIconName[] = [
+  'capacity', 'workflow', 'training', 'regulation', 'data', 'budget', 'results', 'connect',
+];
 ---
 
 <Base locale={locale} title={metaTitle} description={metaDescription} page="/projects">
@@ -48,16 +55,27 @@ const projectById = new Map(PROJECTS.map((pr) => [pr.id, pr]));
 
   <section class="section pilot-introduction" aria-labelledby="pilot-purpose">
     <div class="container-wide">
-      <div class="intro-copy content-body">
-        {intro.body.map((paragraph) => <p>{paragraph}</p>)}
-      </div>
-      <div class="project-jumps">
-        <a class="btn btn--primary" href={localePath(locale, '/funding')}>{intro.funding}<Icon name="arrow-right" /></a>
+      <div class="pilot-intro-layout">
+        <div class="intro-copy content-body">
+          {intro.body.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+        <aside class="funding-callout" aria-labelledby="funding-callout-title">
+          <h2 id="funding-callout-title" class="funding-callout-title">{intro.call}</h2>
+          <DeadlineChip locale={locale} />
+          <p class="content-body">{intro.coverage}</p>
+          <a class="btn btn--primary" href={localePath(locale, '/funding')}>{intro.funding}<Icon name="arrow-right" /></a>
+        </aside>
       </div>
       <h2 id="pilot-purpose" class="content-heading">{intro.why}</h2>
       <ul class="pilot-reasons">
-        {intro.reasons.map(([title, body]) => (
-          <li class="content-body"><strong>{title}</strong><p>{body}</p></li>
+        {intro.reasons.map(([title, body], i) => (
+          <li class="content-body">
+            <CardIcon name={reasonIcons[i]} />
+            <div>
+              <strong>{title}</strong>
+              <p>{body}</p>
+            </div>
+          </li>
         ))}
       </ul>
       <p class="intro-copy content-body">{intro.closing}</p>
@@ -82,7 +100,7 @@ const projectById = new Map(PROJECTS.map((pr) => [pr.id, pr]));
             <!-- Media: 5-column slot on desktop -->
             <div class="pilot-media">
               {getMediaModule(pilot.id) && (
-                <MediaCandidateViewer moduleId={pilot.id} locale={locale} aspectRatio="4 / 3" singleImage />
+                <MediaCandidateViewer moduleId={pilot.id} locale={locale} aspectRatio="4 / 3" captionMode="compact" singleImage />
               )}
             </div>
 
@@ -99,9 +117,6 @@ const projectById = new Map(PROJECTS.map((pr) => [pr.id, pr]));
               <!-- One-sentence research question -->
               <p class="pilot-hook content-lead">{pilot.hook[locale]}</p>
 
-              <!-- Published background -->
-              <p class="pilot-body-text content-body">{pilot.publishedContext[locale]}</p>
-
               <!-- What Caligo proposes to test -->
               <div class="pilot-field">
                 <p class="pilot-field-label content-label">{p.fieldLabels.proposedQuestion}</p>
@@ -117,32 +132,39 @@ const projectById = new Map(PROJECTS.map((pr) => [pr.id, pr]));
                 </div>
               )}
 
-              {project && (
-                <div class="pilot-field">
-                  <p class="pilot-field-label content-label">{pp.resourcesLabel}</p>
-                  <p class="pilot-field-value content-body">{project.resources?.[locale]}</p>
-                </div>
-              )}
-
               <!--
-                Sources as a plain line of author-year links. This replaces
-                a nested disclosure plus a page-footer bibliography that
-                printed the same nine references a second time with DOIs
-                and database access dates.
+                Published background, starting material and sources share one
+                disclosure so each pilot opens on its question and proposal.
               -->
-              <p class="pilot-source-line content-meta">
-                <span class="pilot-source-label content-label">{sourcesLabel}: </span>
-                {pilot.sourceIds.map((sid, i) => {
-                  const src = getSource(sid);
-                  if (!src) return null;
-                  return (
-                    <>
-                      {i > 0 && ' · '}
-                      <a target="_blank" href={src.url} rel="external noopener">{src.shortLabel ?? src.citation}</a>
-                    </>
-                  );
-                })}
-              </p>
+              <details class="disclosure disclosure--boxed pilot-more" data-pilot-more>
+                <summary class="disclosure-summary">
+                  <span class="disclosure-summary-inner">{pp.backgroundLabel}</span>
+                </summary>
+                <div class="disclosure-body pilot-more-body">
+                  <p class="pilot-body-text content-body">{pilot.publishedContext[locale]}</p>
+
+                  {project && (
+                    <div class="pilot-field">
+                      <p class="pilot-field-label content-label">{pp.resourcesLabel}</p>
+                      <p class="pilot-field-value content-body">{project.resources?.[locale]}</p>
+                    </div>
+                  )}
+
+                  <p class="pilot-source-line content-meta">
+                    <span class="pilot-source-label content-label">{sourcesLabel}: </span>
+                    {pilot.sourceIds.map((sid, i) => {
+                      const src = getSource(sid);
+                      if (!src) return null;
+                      return (
+                        <>
+                          {i > 0 && ' · '}
+                          <a target="_blank" href={src.url} rel="external noopener">{src.shortLabel ?? src.citation}</a>
+                        </>
+                      );
+                    })}
+                  </p>
+                </div>
+              </details>
             </div>
             </li>
           );
@@ -152,12 +174,55 @@ const projectById = new Map(PROJECTS.map((pr) => [pr.id, pr]));
   </div>
 </Base>
 
+<script is:inline>
+  /* A link to /projects/#<pilot> arrives for the full proposal, so open
+     that pilot's background instead of leaving it collapsed. */
+  (function () {
+    function openTarget() {
+      var id = decodeURIComponent(location.hash.slice(1));
+      if (!id) return;
+      var target = document.getElementById(id);
+      var more = target && target.querySelector('[data-pilot-more]');
+      if (more) more.open = true;
+    }
+    if (!window.__caligoPilotHash) {
+      window.__caligoPilotHash = true;
+      document.addEventListener('astro:page-load', openTarget);
+      window.addEventListener('hashchange', openTarget);
+    }
+    openTarget();
+  })();
+</script>
+
 <style>
   .intro-copy { max-width: var(--measure); }
   .intro-copy p + p { margin-top: var(--space-s); }
-  .project-jumps { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-m); margin-block: var(--space-m) var(--space-l); }
+  .pilot-intro-layout {
+    display: grid;
+    gap: var(--space-l);
+    align-items: start;
+    margin-bottom: var(--space-xl);
+  }
+  @media (min-width: 60rem) {
+    .pilot-intro-layout { grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr); gap: clamp(2rem, 5vw, 5rem); }
+  }
+  .funding-callout {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-s);
+    padding: var(--space-l);
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius);
+    background: var(--bg-panel);
+  }
+  .funding-callout-title {
+    margin: 0;
+    font-size: var(--step-1);
+    line-height: 1.25;
+  }
+  .funding-callout .btn { margin-top: var(--space-xs); }
   .pilot-reasons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-m) var(--space-xl); list-style: none; padding: 0; margin-block: var(--space-m); }
-  .pilot-reasons li { border-top: 1px solid var(--hairline); padding-top: var(--space-s); }
+  .pilot-reasons li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-s); align-items: start; border-top: 1px solid var(--hairline); padding-top: var(--space-s); }
   .pilot-reasons strong { color: var(--text-strong); }
   .pilot-reasons p { margin-top: var(--space-xs); }
   .projects-heading { padding-top: var(--space-l); }
@@ -267,5 +332,10 @@ const projectById = new Map(PROJECTS.map((pr) => [pr.id, pr]));
   }
   .pilot-field-value {
     max-width: var(--measure);
+  }
+  .pilot-more { margin-top: var(--space-xs); max-width: var(--measure); }
+  .pilot-more-body {
+    display: grid;
+    gap: var(--space-s);
   }
 </style>

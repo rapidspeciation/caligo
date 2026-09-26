@@ -14,7 +14,15 @@ export type CardIconName =
   | 'culture'
   | 'person'
   | 'core'
-  | 'affiliate';
+  | 'affiliate'
+  | 'capacity'
+  | 'workflow'
+  | 'training'
+  | 'regulation'
+  | 'data'
+  | 'budget'
+  | 'results'
+  | 'connect';
 
 interface Props {
   readonly name: CardIconName;
@@ -22,9 +30,24 @@ interface Props {
 }
 
 const { name, class: className } = Astro.props;
+
+// Ready-made glyphs from Lucide (ISC licence, lucide.dev), used verbatim
+// rather than drawing new ones.
+const LUCIDE: Partial<Record<CardIconName, string>> = {
+  capacity: '<path d="M16 7h6v6"/><path d="m22 7-8.5 8.5-5-5L2 17"/>',
+  workflow: '<rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/>',
+  training: '<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>',
+  regulation: '<path d="M12 3v18"/><path d="m19 8 3 8a5 5 0 0 1-6 0zV7"/><path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1"/><path d="m5 8 3 8a5 5 0 0 1-6 0zV7"/><path d="M7 21h10"/>',
+  data: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/>',
+  budget: '<rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/>',
+  results: '<path d="M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528"/>',
+  connect: '<rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/>',
+};
+const lucide = LUCIDE[name];
 ---
 
 <span class:list={['card-icon', className]} aria-hidden="true">
+  {lucide ? <svg viewBox="0 0 24 24" focusable="false" set:html={lucide} /> : (
   <svg viewBox="0 0 24 24" focusable="false">
     {name === 'people' && (
       <>
@@ -111,6 +134,7 @@ const { name, class: className } = Astro.props;
       </>
     )}
   </svg>
+  )}
 </span>
 
 <style>

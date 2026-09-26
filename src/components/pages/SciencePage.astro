@@ -8,8 +8,10 @@ import Base from '../../layouts/Base.astro';
 import PageHeader from '../PageHeader.astro';
 import MediaCandidateViewer from '../MediaCandidateViewer.astro';
 import Icon from '../Icon.astro';
+import FigureLightbox from '../FigureLightbox.astro';
 import { getDict, localePath, type Locale } from '../../i18n';
 import { getSource } from '../../data/records';
+import { EVENTS, pick } from '../../data/initiative';
 import { publicationExamples, scienceFeedback } from '../../data/science-feedback';
 
 interface Props {
@@ -81,6 +83,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
 
   <section class="section analysis-section" aria-labelledby="analysis-heading">
     <div class="container-wide analysis-layout">
+      <div class="analysis-main">
       <div class="analysis-heading-group">
         <h2 id="analysis-heading" class="section-heading content-heading">
           {feedback.analysis.heading}
@@ -92,6 +95,17 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
           {feedback.analysis.projectsLink}<Icon name="arrow-right" />
         </a>
       </div>
+      </div>
+      <ul class="training-events" role="list" aria-label={feedback.analysis.eyebrow}>
+        {EVENTS.map((event) => (
+          <li class="training-event">
+            <time class="training-event-date mono">{pick(event.dates, locale)}</time>
+            <span class="training-event-name">{pick(event.name, locale)}</span>
+            <span class="training-event-place">{pick(event.location, locale)}</span>
+            <p class="training-event-summary">{pick(event.summary, locale)}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 
@@ -119,7 +133,10 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
                 class="publication-image-wrap"
                 href={`${base}${publication.figure.src}`}
                 aria-label={`${feedback.publications.figureLabel}: ${publication.title}`}
+                data-lightbox
+                data-caption={publication.figure.caption[locale]}
               >
+                <span class="publication-zoom" aria-hidden="true"><Icon name="zoom-in" /></span>
                 <img
                   src={`${base}${publication.figure.src}`}
                   alt={publication.figure.alt[locale]}
@@ -199,7 +216,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
 
               {aside.photo && (
                 <div class="split-figure">
-                  <MediaCandidateViewer moduleId={aside.photo} locale={locale} aspectRatio="4 / 3" singleImage />
+                  <MediaCandidateViewer moduleId={aside.photo} locale={locale} aspectRatio="4 / 3" captionMode="compact" singleImage />
                 </div>
               )}
             </div>
@@ -211,6 +228,8 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
       })}
     </div>
   </section>
+
+  <FigureLightbox locale={locale} />
 
   <section class="section" aria-labelledby="ethics-heading">
     <div class="container-wide prose-column">
@@ -288,9 +307,47 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     margin-top: var(--space-m);
     width: fit-content;
   }
-  .analysis-layout { display: block; max-width: min(var(--container-wide), 100% - 2.5rem); }
   .analysis-heading-group, .analysis-copy { max-width: 70ch; }
   .analysis-heading-group .section-heading { max-width: none; }
+  @media (min-width: 60rem) {
+    .analysis-layout {
+      grid-template-columns: minmax(0, 1.12fr) minmax(20rem, 0.88fr);
+      column-gap: clamp(3rem, 7vw, 7rem);
+    }
+    .training-events { align-self: center; }
+  }
+  .training-events {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--hairline-strong);
+  }
+  .training-event {
+    display: grid;
+    gap: 0.2rem;
+    padding-block: var(--space-m);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .training-event-date {
+    color: var(--accent-strong);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+  }
+  .training-event-name {
+    color: var(--text-strong);
+    font-weight: 620;
+    line-height: 1.3;
+  }
+  .training-event-place {
+    color: var(--text-faint);
+    font-size: var(--step--1);
+  }
+  .training-event-summary {
+    margin-top: var(--space-2xs, 0.25rem);
+    color: var(--text-muted);
+    font-size: var(--step--1);
+    line-height: 1.55;
+  }
 
   /* ---- Publication examples ---- */
   .publications-section {
@@ -352,6 +409,25 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     border-radius: calc(var(--radius) - 2px);
     background: #fff;
   }
+  .publication-image-wrap { cursor: zoom-in; }
+  .publication-zoom {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: rgba(12, 11, 10, 0.7);
+    color: #F6F7F3;
+    opacity: 0.85;
+    transition: opacity var(--transition), transform var(--transition);
+  }
+  .publication-zoom :global(svg) { width: 1.05rem; height: 1.05rem; }
+  .publication-image-wrap:hover .publication-zoom,
+  .publication-image-wrap:focus-visible .publication-zoom { opacity: 1; transform: scale(1.06); }
   .publication-image-wrap img {
     position: absolute;
     inset: 0;

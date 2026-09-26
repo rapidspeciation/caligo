@@ -111,23 +111,27 @@ export const es: Dict = {
     "researchCards": [
       {
         "question": "¿Cómo pueden dividirse y fusionarse los cromosomas de las mariposas sin dejar de funcionar?",
-        "scienceLink": "Descubre cómo cambiaron los cromosomas",
-        "projectLink": "Conoce el estudio propuesto sobre Heliconius"
+        "projectLink": "Conoce el estudio propuesto sobre Heliconius",
+        "scienceTopic": "Ciencia: cómo cambiaron los cromosomas",
+        "projectTopic": "Proyecto piloto: el estudio propuesto sobre Heliconius"
       },
       {
         "question": "¿Siguen conectadas las poblaciones de una mariposa amenazada una década después?",
-        "scienceLink": "Lee qué encontró el estudio poblacional de 2016",
-        "projectLink": "Descubre cómo Caligo reevaluaría la conectividad"
+        "projectLink": "Descubre cómo Caligo reevaluaría la conectividad",
+        "scienceTopic": "Ciencia: lo que encontró el estudio poblacional de 2016",
+        "projectTopic": "Proyecto piloto: reevaluar la conectividad"
       },
       {
         "question": "¿Cómo se desplazan las plagas y evoluciona la resistencia en los paisajes sojeros?",
-        "scienceLink": "Lee qué revela la genómica sobre movimiento y resistencia",
-        "projectLink": "Conoce el estudio propuesto en paisajes sojeros"
+        "projectLink": "Conoce el estudio propuesto en paisajes sojeros",
+        "scienceTopic": "Ciencia: cómo se mueven las plagas y desarrollan resistencia",
+        "projectTopic": "Proyecto piloto: el estudio en paisajes sojeros"
       },
       {
         "question": "Miles de Panacea prola vuelan hacia el noreste. ¿De dónde vienen?",
-        "scienceLink": "Lee la evidencia sobre el movimiento estacional",
-        "projectLink": "Descubre cómo Caligo seguiría la oleada migratoria"
+        "projectLink": "Descubre cómo Caligo seguiría la oleada migratoria",
+        "scienceTopic": "Ciencia: la evidencia del movimiento estacional",
+        "projectTopic": "Proyecto piloto: seguir la oleada migratoria"
       }
     ],
     "pilotsTeaser": {
@@ -321,7 +325,8 @@ export const es: Dict = {
     "pilotProposal": {
       "heading": "El proyecto piloto de Caligo",
       "leadsLabel": "Quienes lideran el proyecto piloto",
-      "resourcesLabel": "Material y capacidad disponibles"
+      "resourcesLabel": "Material y capacidad disponibles",
+      "backgroundLabel": "Antecedentes publicados y recursos"
     }
   },
   "about": {

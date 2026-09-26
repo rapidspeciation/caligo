@@ -24,36 +24,35 @@ const facilityIntro = locale === 'en'
 <Base locale={locale} title={t.about.metaTitle} description={t.about.metaDescription} page="/about">
   <PageHeader title={pick(page.header.title, locale)} intro={pick(page.header.intro, locale)} />
 
-  <section class="section" aria-labelledby="about-goals">
-    <div class="container-wide prose-column">
-      <h2 id="about-goals" class="section-heading content-heading">{pick(page.goals.heading, locale)}</h2>
-      <div class="prose-block">
-        {page.goals.body.map((paragraph) => (
-          <p class="prose-para content-body">{pick(paragraph, locale)}</p>
-        ))}
+  <section class="section">
+    <div class="container-wide about-pair">
+      <div class="about-pair-item">
+        <h2 id="about-goals" class="section-heading content-heading">{pick(page.goals.heading, locale)}</h2>
+        <div class="prose-block">
+          {page.goals.body.map((paragraph) => (
+            <p class="prose-para content-body">{pick(paragraph, locale)}</p>
+          ))}
+        </div>
+      </div>
+      <div class="about-pair-item">
+        <h2 id="about-name" class="section-heading content-heading">{pick(page.name.heading, locale)}</h2>
+        <div class="prose-block">
+          {page.name.body.map((paragraph) => (
+            <p class="prose-para content-body">{pick(paragraph, locale)}</p>
+          ))}
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="section section--panel" aria-labelledby="about-name">
-    <div class="container-wide prose-column">
-      <h2 id="about-name" class="section-heading content-heading">{pick(page.name.heading, locale)}</h2>
-      <div class="prose-block">
-        {page.name.body.map((paragraph) => (
-          <p class="prose-para content-body">{pick(paragraph, locale)}</p>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="about-principles">
+  <section class="section section--panel" aria-labelledby="about-principles">
     <div class="container-wide visual-section">
       <h2 id="about-principles" class="section-heading content-heading">{pick(page.principles.heading, locale)}</h2>
       <PrincipleGrid locale={locale} />
     </div>
   </section>
 
-  <section class="section section--panel" aria-labelledby="about-network">
+  <section class="section" aria-labelledby="about-network">
     <div class="container-wide visual-section network-section">
       <div class="network-intro">
         <h2 id="about-network" class="section-heading content-heading">{pick(page.network.heading, locale)}</h2>
@@ -97,6 +96,25 @@ const facilityIntro = locale === 'en'
   .community-intro,
   .network-block--prose {
     max-width: var(--measure);
+  }
+  /* Two short essays read side by side on desktop: left column first,
+     then right, with a hairline between them. */
+  .about-pair {
+    display: grid;
+    gap: var(--space-xl);
+  }
+  .about-pair-item { max-width: var(--measure); }
+  .about-pair-item [id] { scroll-margin-top: 5rem; }
+  @media (min-width: 60rem) {
+    .about-pair {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+    }
+    .about-pair-item:first-child { padding-right: clamp(2rem, 4vw, 4rem); }
+    .about-pair-item + .about-pair-item {
+      padding-left: clamp(2rem, 4vw, 4rem);
+      border-left: 1px solid var(--hairline);
+    }
   }
   .prose-block {
     display: grid;

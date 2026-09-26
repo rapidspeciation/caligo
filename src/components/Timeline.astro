@@ -3,6 +3,7 @@ import { EVENTS, pick } from '../data/initiative';
 import { localePath, type Locale } from '../i18n';
 import { PILOT_INTRO } from '../data/pilot-call';
 import Icon from './Icon.astro';
+import DeadlineChip from './DeadlineChip.astro';
 
 interface Props {
   readonly locale: Locale;
@@ -20,6 +21,7 @@ const funding = PILOT_INTRO[locale];
       <span class="timeline-name">{funding.call}</span>
     </div>
     <p class="timeline-location mono">{funding.deadline} · Colombia</p>
+    <DeadlineChip locale={locale} class="timeline-chip" />
     <p class="timeline-summary">{funding.description}</p>
     <a class="text-link timeline-summary" href={localePath(locale, '/funding')}>{funding.funding}<Icon name="arrow-right" /></a>
   </li>
@@ -85,6 +87,7 @@ const funding = PILOT_INTRO[locale];
     color: var(--text-faint);
     letter-spacing: 0.04em;
   }
+  .timeline-item :global(.timeline-chip) { margin-block: 0.2rem; }
   .timeline-summary {
     margin: 0;
     font-size: var(--step--1);

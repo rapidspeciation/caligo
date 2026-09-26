@@ -135,7 +135,7 @@ if (publishedPilots.length !== h.researchCards.length) {
           const card = h.researchCards[i];
           return (
             <li class="research-card">
-              <div class="research-plate-label mono"><span>{String(i + 1).padStart(2, '0')} / {h.researchLabels[i]}</span></div>
+              <p class="research-plate-label">{i + 1}. {h.researchLabels[i]}</p>
               <MediaCandidateViewer
                 moduleId={pilot.id}
                 locale={locale}
@@ -152,13 +152,13 @@ if (publishedPilots.length !== h.researchCards.length) {
                     class="text-link"
                     href={`${localePath(locale, '/science')}#${pilotScienceAnchors[i]}`}
                   >
-                    {card.scienceLink}<Icon name="arrow-right" />
+                    {card.scienceTopic}<Icon name="arrow-right" />
                   </a>
                   <a
                     class="text-link"
                     href={`${localePath(locale, '/projects')}#${pilot.slug}`}
                   >
-                    {card.projectLink}<Icon name="arrow-right" />
+                    {card.projectTopic}<Icon name="arrow-right" />
                   </a>
                 </div>
               </div>
@@ -490,8 +490,7 @@ if (publishedPilots.length !== h.researchCards.length) {
   .research-cards {
     list-style: none;
     padding: 0;
-    max-width: 74rem;
-    margin: var(--space-l) auto 0;
+    margin: var(--space-l) 0 0;
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-xl) var(--space-l);
@@ -611,13 +610,13 @@ if (publishedPilots.length !== h.researchCards.length) {
     .intro-copy .intro-link { grid-row: 2; align-self: start; }
   }
   .intro-link { margin-top: var(--space-m); }
-  .research-plate-label { display: flex; justify-content: space-between; gap: 1rem; padding: .85rem var(--space-m); border-bottom: 1px solid var(--hairline); color: var(--text-muted); text-transform: uppercase; letter-spacing: .09em; font-size: .73rem; }
+  .research-plate-label { margin: 0; padding: .8rem var(--space-m); border-bottom: 1px solid var(--hairline); color: var(--text-muted); font-size: var(--step--1); font-weight: 500; }
   .research-card :global(.mcv-stage) { border-radius: 2px; }
   .research-card h3 { font-size: clamp(1.15rem, 1rem + .45vw, 1.4rem); font-weight: 500; line-height: 1.3; max-width: 34ch; }
   .research-card-links .text-link { font-size: .88rem; }
   .research-card-links .text-link:last-child { color: var(--text-muted); }
   .section--close { border-top: 1px solid var(--hairline); background: var(--bg); }
-  .close-copy h2 { max-width: 25ch; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 400; line-height: 1.15; }
+  .close-copy h2 { max-width: 25ch; }
   @media (max-width: 60rem) { .hero-title { font-size: clamp(2rem, 5vw, 3rem); max-width: 24ch; } .hero-copy { padding-block: 1.25rem; } .hero-overlay { padding-bottom: .5rem; } .hero-btn-ghost { padding-inline: 1rem; } }
   @media (max-width: 48rem) { .intro-layout { grid-template-columns: 1fr; gap: 2rem; } .research-cards { gap: 2rem; } }
   @media (min-width: 40rem) and (max-width: 60rem) {

@@ -53,7 +53,11 @@ const base = import.meta.env.BASE_URL;
     flex-direction: column;
     overflow: hidden;
   }
+  /* Portraits come from different sources (studio, field, lab). One crop
+     anchored on the upper third and a light shared grade make them read
+     as a single set without altering anyone's likeness. */
   .person-media {
+    position: relative;
     margin: 0;
     background: var(--bg-inset);
     border-bottom: 1px solid var(--hairline);
@@ -63,6 +67,16 @@ const base = import.meta.env.BASE_URL;
     width: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
+    object-position: 50% 22%;
+    filter: saturate(0.9) contrast(1.03);
+  }
+  .person-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: color-mix(in oklab, var(--accent) 14%, transparent);
+    mix-blend-mode: soft-light;
+    pointer-events: none;
   }
   .person-content {
     display: flex;

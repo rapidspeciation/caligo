@@ -7,6 +7,7 @@ import '../styles/disclosure.css';
 import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import FundingBanner from '../components/FundingBanner.astro';
 import { getDict, LOCALE_LANG, switchLocalePath, type Locale } from '../i18n';
 import {
   ALLOWED_PALETTES,
@@ -344,6 +345,50 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
       })();
     </script>
     <script is:inline>
+      /* Funding-call countdown and site-wide banner. Dates compare in the
+         visitor's local calendar, so a static build never shows a stale
+         count. Runs before paint: from FundingBanner's inline call on first
+         load, and on astro:after-swap for client-side navigations. */
+      (function () {
+        if (window.caligoDeadlines) return;
+        var DAY = 86400000;
+        function daysLeft(iso) {
+          var p = iso.split('-');
+          var end = new Date(+p[0], +p[1] - 1, +p[2]);
+          var now = new Date();
+          var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          return Math.round((end - today) / DAY);
+        }
+        window.caligoDeadlines = function () {
+          document.querySelectorAll('[data-deadline]').forEach(function (chip) {
+            var n = daysLeft(chip.getAttribute('data-deadline'));
+            var d = chip.dataset;
+            var text = n < 0 ? d.closed : n === 0 ? d.today : n === 1 ? d.tomorrow : d.days.replace('{n}', n);
+            chip.setAttribute('data-state', n < 0 ? 'closed' : 'open');
+            var label = chip.querySelector('[data-deadline-text]');
+            if (label) label.textContent = text;
+          });
+          var bar = document.querySelector('[data-funding-banner]');
+          if (!bar) return;
+          var key = 'caligo-banner-dismissed';
+          var deadline = bar.getAttribute('data-funding-banner');
+          var dismissed = null;
+          try { dismissed = localStorage.getItem(key); } catch (_) {}
+          bar.hidden = daysLeft(deadline) < 0 || dismissed === deadline;
+          var close = bar.querySelector('[data-funding-banner-close]');
+          if (close && !close.dataset.bound) {
+            close.dataset.bound = '1';
+            close.addEventListener('click', function () {
+              bar.hidden = true;
+              try { localStorage.setItem(key, deadline); } catch (_) {}
+            });
+          }
+        };
+        document.addEventListener('astro:after-swap', window.caligoDeadlines);
+        document.addEventListener('astro:page-load', window.caligoDeadlines);
+      })();
+    </script>
+    <script is:inline>
       /* Cross-browser enhancement for native disclosures. The `open`
          attribute remains the source of truth; JS only keeps it present long
          enough to animate a close in engines without ::details-content. */
@@ -416,6 +461,7 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
   </head>
   <body>
     <a class="skip-link" href="#main">{t.common.skipToContent}</a>
+    {page !== '/funding' && <FundingBanner locale={locale} />}
     <Header locale={locale} page={page} />
     <main id="main">
       <slot />

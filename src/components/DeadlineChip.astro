@@ -1,0 +1,53 @@
+---
+/**
+ * Live countdown for the funding call. The server renders the static
+ * "open until" text; the shared `caligoDeadlines()` script in Base.astro
+ * swaps it for a day count in the visitor's local date, or "closed".
+ */
+import Icon from './Icon.astro';
+import { PILOT_DEADLINE, PILOT_INTRO } from '../data/pilot-call';
+import type { Locale } from '../i18n';
+
+interface Props {
+  readonly locale: Locale;
+  readonly class?: string;
+}
+const { locale, class: className } = Astro.props;
+const chip = PILOT_INTRO[locale].chip;
+---
+
+<span
+  class:list={['deadline-chip', className]}
+  data-deadline={PILOT_DEADLINE}
+  data-days={chip.days}
+  data-tomorrow={chip.tomorrow}
+  data-today={chip.today}
+  data-closed={chip.closed}
+>
+  <Icon name="clock" />
+  <span data-deadline-text>{chip.open}</span>
+</span>
+
+<style>
+  .deadline-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: fit-content;
+    padding: 0.2rem 0.6rem 0.2rem 0.5rem;
+    border: 1px solid color-mix(in oklab, var(--accent) 45%, transparent);
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--accent) 12%, transparent);
+    color: var(--accent-strong);
+    font-size: var(--step--1);
+    font-weight: 500;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+  .deadline-chip :global(svg) { width: 0.95rem; height: 0.95rem; flex: none; }
+  .deadline-chip[data-state='closed'] {
+    border-color: var(--hairline-strong);
+    background: transparent;
+    color: var(--text-muted);
+  }
+</style>

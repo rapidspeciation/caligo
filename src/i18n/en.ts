@@ -114,23 +114,27 @@ export const en = {
     "researchCards": [
       {
         "question": "How can butterfly chromosomes split and fuse, yet still work?",
-        "scienceLink": "Read how the chromosomes changed",
-        "projectLink": "See the proposed Heliconius study"
+        "projectLink": "See the proposed Heliconius study",
+        "scienceTopic": "Science: how the chromosomes changed",
+        "projectTopic": "Pilot project: the proposed Heliconius study"
       },
       {
         "question": "Are threatened butterfly populations still connected a decade later?",
-        "scienceLink": "Read what the 2016 population study found",
-        "projectLink": "See how Caligo would revisit connectivity"
+        "projectLink": "See how Caligo would revisit connectivity",
+        "scienceTopic": "Science: what the 2016 population study found",
+        "projectTopic": "Pilot project: revisiting connectivity"
       },
       {
         "question": "How do crop pests move and evolve resistance across soybean landscapes?",
-        "scienceLink": "Read what genomics reveals about movement and resistance",
-        "projectLink": "See the proposed soybean landscape study"
+        "projectLink": "See the proposed soybean landscape study",
+        "scienceTopic": "Science: how pests move and evolve resistance",
+        "projectTopic": "Pilot project: the soybean landscape study"
       },
       {
         "question": "Thousands of Panacea prola fly north-east. Where do they come from?",
-        "scienceLink": "Read the evidence for seasonal movement",
-        "projectLink": "See how Caligo would trace the migration wave"
+        "projectLink": "See how Caligo would trace the migration wave",
+        "scienceTopic": "Science: the evidence for seasonal movement",
+        "projectTopic": "Pilot project: tracing the migration wave"
       }
     ],
     "pilotsTeaser": {
@@ -324,7 +328,8 @@ export const en = {
     "pilotProposal": {
       "heading": "The proposed Caligo pilot project",
       "leadsLabel": "Pilot project leads",
-      "resourcesLabel": "Starting material and capacity"
+      "resourcesLabel": "Starting material and capacity",
+      "backgroundLabel": "Published background and resources"
     }
   },
   "about": {

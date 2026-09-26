@@ -191,18 +191,20 @@ const clientCandidates = sorted.map((c) => ({
 
   <figcaption id={`${moduleId}-caption`} class="mcv-caption">
     {captionMode === 'compact' ? (
-      <details class="mcv-details">
+      <details class="mcv-info">
         <summary>
-          <span>{labels.imageDetailsLabel}</span>
+          <span class="sr-only">{labels.imageDetailsLabel}</span>
+          <Icon name="info" class="mcv-info-open" />
+          <Icon name="close" class="mcv-info-close" />
+        </summary>
+        <div class="mcv-info-body">
           {hasControls && (
             <span class="mcv-index mono" aria-live="polite" data-mcv-index>
               {initialIndexLabel}
             </span>
           )}
-        </summary>
-        <div class="mcv-details-body">
           <p class="mcv-caption-text" data-mcv-caption>{initial.caption[locale]}</p>
-          <p class="mcv-credit mono">
+          <p class="mcv-credit">
             <span data-mcv-credit>{initial.credit[locale]}</span>
             <span data-mcv-source-wrap>
               {initial.sourceItemPage && (
@@ -468,53 +470,75 @@ const clientCandidates = sorted.map((c) => ({
     gap: 0.4rem;
     margin: 0;
   }
+  /* Compact cards: provenance sits behind a small (i) on the image corner,
+     so the card shows the specimen and the question, not a credit row. */
   .mcv--compact {
+    position: relative;
     gap: 0;
   }
   .mcv--compact .mcv-caption {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 3;
     display: block;
+    pointer-events: none;
   }
-  .mcv-details {
-    border-bottom: 1px solid var(--hairline);
-  }
-  .mcv-details summary {
-    display: flex;
-    min-height: 2.6rem;
-    padding: 0.62rem var(--space-m);
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-s);
-    color: var(--text-muted);
-    font-size: var(--step--1);
-    line-height: 1.3;
+  .mcv-info summary {
+    position: absolute;
+    right: 0.6rem;
+    bottom: 0.6rem;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: rgba(12, 11, 10, 0.6);
+    color: #F6F7F3;
     cursor: pointer;
     list-style: none;
+    pointer-events: auto;
+    backdrop-filter: blur(6px);
+    transition: background var(--transition);
   }
-  .mcv-details summary::-webkit-details-marker {
-    display: none;
-  }
-  .mcv-details summary::before {
-    content: '+';
-    color: var(--accent);
-    font-family: var(--font-mono);
-    font-size: 1rem;
-    line-height: 1;
-  }
-  .mcv-details[open] summary::before {
-    content: '−';
-  }
-  .mcv-details summary:focus-visible {
+  .mcv-info summary::-webkit-details-marker { display: none; }
+  .mcv-info summary:hover { background: rgba(12, 11, 10, 0.85); }
+  .mcv-info summary:focus-visible {
     outline: 2px solid var(--accent);
-    outline-offset: -2px;
+    outline-offset: 2px;
   }
-  .mcv-details .mcv-index {
-    margin-left: auto;
-    font-size: var(--step--2);
-  }
-  .mcv-details-body {
+  .mcv-info summary :global(svg) { width: 1.1rem; height: 1.1rem; }
+  .mcv-info :global(.mcv-info-close),
+  .mcv-info[open] :global(.mcv-info-open) { display: none; }
+  .mcv-info[open] :global(.mcv-info-close) { display: block; }
+  .mcv-info-body {
     display: grid;
-    gap: 0.35rem;
-    padding: 0 var(--space-m) var(--space-s);
+    gap: 0.3rem;
+    padding: 0.8rem 3.2rem 0.8rem var(--space-m);
+    background: rgba(12, 11, 10, 0.86);
+    color: #F6F7F3;
+    pointer-events: auto;
+    backdrop-filter: blur(6px);
+    animation: mcv-info-in 180ms ease-out;
+  }
+  .mcv-info-body .mcv-caption-text {
+    color: #F6F7F3;
+    font-size: var(--step--1);
+    line-height: 1.45;
+  }
+  .mcv-info-body .mcv-credit {
+    color: rgba(246, 247, 243, 0.72);
+    letter-spacing: 0;
+  }
+  .mcv-info-body .mcv-credit a,
+  .mcv-info-body .mcv-credit a:hover { color: #F6F7F3; }
+  .mcv-info-body .mcv-index { color: rgba(246, 247, 243, 0.72); font-size: var(--step--2); }
+  @keyframes mcv-info-in {
+    from { opacity: 0; transform: translateY(0.5rem); }
+    to { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mcv-info-body { animation: none; }
   }
   .mcv-chips {
     display: flex;
