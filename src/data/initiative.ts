@@ -287,6 +287,8 @@ export type InitiativeEvent = {
   dates: Bilingual;
   location: Bilingual;
   summary: Bilingual;
+  /** [longitude, latitude] of the host city, used on the network map. */
+  lonLat: readonly [number, number];
 };
 
 export const EVENTS: InitiativeEvent[] = [
@@ -304,6 +306,7 @@ export const EVENTS: InitiativeEvent[] = [
       en: 'Bogotá, Colombia',
       es: 'Bogotá, Colombia',
     },
+    lonLat: [-74.07, 4.62],
     summary: {
       en: 'First initiative activity in Latin America. The initiative plans to sequence its first four Heliconius species following the workshop.',
       es: 'Primera actividad de la iniciativa en América Latina. Después del taller, la iniciativa planea secuenciar sus primeras cuatro especies de Heliconius.',
@@ -323,6 +326,7 @@ export const EVENTS: InitiativeEvent[] = [
       en: 'Campinas, Brazil',
       es: 'Campinas, Brasil',
     },
+    lonLat: [-47.06, -22.91],
     summary: {
       en: 'Hackathon at the Neotropical Lepidoptera / Biology of Butterflies congress; dates to be confirmed.',
       es: 'Hackathon durante el congreso Lepidópteros Neotropicales / Biología de las Mariposas. Las fechas están por confirmar.',

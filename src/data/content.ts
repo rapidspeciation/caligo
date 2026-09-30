@@ -305,53 +305,75 @@ export type Facility = {
   country: Bilingual;
   platforms: string; // platform names kept literal in both languages
   websites: { label: string; href: string }[];
+  /** City of the institution's main campus, used to place it on the network map. */
+  city: Bilingual;
+  /** [longitude, latitude] of that city. */
+  lonLat: readonly [number, number];
 };
 
 export const FACILITIES: Facility[] = [
   {
     institution: 'Universidad del Rosario',
+    city: { en: 'Bogotá', es: 'Bogotá' },
+    lonLat: [-74.07, 4.6],
     country: { en: 'Colombia', es: 'Colombia' },
     platforms: 'NextSeq 2000, Nanopore MinION',
     websites: [{ label: 'urosario.edu.co', href: 'https://urosario.edu.co/' }],
   },
   {
     institution: 'Universidad Nacional de Colombia',
+    city: { en: 'Bogotá', es: 'Bogotá' },
+    lonLat: [-74.08, 4.64],
     country: { en: 'Colombia', es: 'Colombia' },
     platforms: 'Nanopore PromethION',
     websites: [{ label: 'unal.edu.co', href: 'https://unal.edu.co/' }],
   },
   {
     institution: 'Smithsonian Tropical Research Institute',
+    city: { en: 'Panama City', es: 'Ciudad de Panamá' },
+    lonLat: [-79.54, 8.95],
     country: { en: 'Panama', es: 'Panamá' },
     platforms: 'NextSeq 2000, MinION, PromethION (Hi-C expertise planned)',
     websites: [{ label: 'stri.si.edu', href: 'https://stri.si.edu/' }],
   },
   {
     institution: 'Universidade Federal de Goiás',
+    city: { en: 'Goiânia', es: 'Goiânia' },
+    lonLat: [-49.26, -16.6],
     country: { en: 'Brazil', es: 'Brasil' },
     platforms: 'NextSeq 2000, MiSeq, MinION, PromethION',
     websites: [{ label: 'ufg.br', href: 'https://ufg.br/' }],
   },
   {
     institution: 'Universidad Regional Amazónica Ikiam',
+    city: { en: 'Tena', es: 'Tena' },
+    lonLat: [-77.86, -0.95],
     country: { en: 'Ecuador', es: 'Ecuador' },
     platforms: 'PromethION, Hi-C',
     websites: [{ label: 'ikiam.edu.ec', href: 'https://www.ikiam.edu.ec/' }],
   },
   {
     institution: 'Universidad Austral de Chile',
+    city: { en: 'Valdivia', es: 'Valdivia' },
+    lonLat: [-73.25, -39.81],
     country: { en: 'Chile', es: 'Chile' },
     platforms: 'NextSeq 2000, MinION',
     websites: [{ label: 'uach.cl', href: 'https://www.uach.cl/' }],
   },
   {
     institution: 'Universidade Federal do Pará',
+    city: { en: 'Belém', es: 'Belém' },
+    lonLat: [-48.45, -1.47],
     country: { en: 'Brazil', es: 'Brasil' },
     platforms: 'NextSeq 2000, MinION',
     websites: [{ label: 'ufpa.br', href: 'https://ufpa.br/' }],
   },
   {
     institution: 'Pontificia Universidad Católica del Perú / Alianza para una Amazonía Sostenible',
+    /* Nanopore work runs at the Alliance's Finca Las Piedras field lab near
+       Puerto Maldonado (Madre de Dios); PUCP's campus is in Lima. */
+    city: { en: 'Puerto Maldonado', es: 'Puerto Maldonado' },
+    lonLat: [-69.11, -12.23],
     country: { en: 'Peru', es: 'Perú' },
     platforms: 'Nanopore MinION',
     websites: [

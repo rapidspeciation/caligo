@@ -1,0 +1,416 @@
+---
+/**
+ * NetworkMap — where Caligo's sequencing facilities and events are.
+ *
+ * Country outlines come from Natural Earth (public domain) through
+ * scripts/build-network-map.py, so the map is static SVG with no mapping
+ * library. Facilities are numbered so the list and the map cross-reference;
+ * hovering or focusing either one highlights the other. Without JavaScript
+ * the list still carries every fact the map shows.
+ */
+import { FACILITIES, EVENTS, pick } from '../data/initiative';
+import { MAP_COUNTRIES, MAP_VIEWBOX, projectLonLat } from '../data/network-map';
+import { localePath, type Locale } from '../i18n';
+import Icon from './Icon.astro';
+
+interface Props {
+  readonly locale: Locale;
+  readonly headingId?: string;
+}
+const { locale, headingId = 'network-map-title' } = Astro.props;
+
+const copy = {
+  en: {
+    heading: 'A network across Latin America',
+    intro: 'Eight partner facilities in six countries can sequence Caligo samples close to where they are collected. Workshops and hackathons bring the network together in person.',
+    facilities: 'Sequencing facilities',
+    events: 'Meetings',
+    mapLabel: 'Map of Latin America showing Caligo’s eight partner sequencing facilities and two network events.',
+    details: 'Platforms and websites',
+    source: 'Map: Natural Earth',
+  },
+  es: {
+    heading: 'Una red a lo largo de América Latina',
+    intro: 'Ocho instalaciones asociadas en seis países pueden secuenciar muestras de Caligo cerca de donde se recolectan. Talleres y hackatones reúnen a la red en persona.',
+    facilities: 'Instalaciones de secuenciación',
+    events: 'Encuentros',
+    mapLabel: 'Mapa de América Latina con las ocho instalaciones de secuenciación asociadas de Caligo y dos eventos de la red.',
+    details: 'Plataformas y sitios web',
+    source: 'Mapa: Natural Earth',
+  },
+}[locale];
+
+/* Short display names; the full institution name stays in the title. */
+const shortName: Record<string, string> = {
+  'Universidad del Rosario': 'Universidad del Rosario',
+  'Universidad Nacional de Colombia': 'Universidad Nacional de Colombia',
+  'Smithsonian Tropical Research Institute': 'Smithsonian Tropical Research Institute',
+  'Universidade Federal de Goiás': 'Universidade Federal de Goiás',
+  'Universidad Regional Amazónica Ikiam': 'Universidad Regional Amazónica Ikiam',
+  'Universidad Austral de Chile': 'Universidad Austral de Chile',
+  'Universidade Federal do Pará': 'Universidade Federal do Pará',
+  'Pontificia Universidad Católica del Perú / Alianza para una Amazonía Sostenible': 'PUCP / Alianza para una Amazonía Sostenible',
+};
+
+const countryIso: Record<string, string> = {
+  Colombia: 'COL', Panama: 'PAN', Brazil: 'BRA', Ecuador: 'ECU', Chile: 'CHL', Peru: 'PER',
+};
+const facilityCountries = new Set(FACILITIES.map((f) => countryIso[f.country.en]));
+
+/* Project facilities, then spread markers that would overlap (two in Bogotá). */
+const R = 11;
+const sites = FACILITIES.map((facility, i) => ({
+  n: i + 1,
+  facility,
+  ...projectLonLat(facility.lonLat[0], facility.lonLat[1]),
+}));
+for (let i = 0; i < sites.length; i++) {
+  for (let j = 0; j < i; j++) {
+    const dx = sites[i].x - sites[j].x;
+    const dy = sites[i].y - sites[j].y;
+    if (Math.hypot(dx, dy) < R * 2.2) {
+      sites[j].x -= R * 1.15;
+      sites[i].x = sites[j].x + R * 2.3;
+      sites[i].y = sites[j].y;
+    }
+  }
+}
+
+/* City labels sit on the ocean side of each marker. */
+const labelLeft = new Set(['Panama City', 'Tena', 'Lima', 'Valdivia']);
+const cityLabels = new Map<string, { x: number; y: number; left: boolean; text: string }>();
+for (const site of sites) {
+  const city = site.facility.city.en;
+  const existing = cityLabels.get(city);
+  const left = labelLeft.has(city);
+  if (existing) {
+    existing.x = left ? Math.min(existing.x, site.x) : Math.max(existing.x, site.x);
+    continue;
+  }
+  cityLabels.set(city, { x: site.x, y: site.y, left, text: pick(site.facility.city, locale) });
+}
+/* Bogotá's two markers read left of the city name; nudge it clear of Panama. */
+const bogota = cityLabels.get('Bogotá');
+if (bogota) bogota.y -= 2;
+
+/* Faint arcs to each facility's two nearest neighbours suggest a network
+   without implying a central hub. */
+const edges = new Set<string>();
+for (const a of sites) {
+  const nearest = sites
+    .filter((b) => b !== a && b.facility.city.en !== a.facility.city.en)
+    .sort((b, c) => Math.hypot(b.x - a.x, b.y - a.y) - Math.hypot(c.x - a.x, c.y - a.y))
+    .slice(0, 2);
+  for (const b of nearest) edges.add([a.n, b.n].sort((p, q) => p - q).join('-'));
+}
+const arcs = [...edges].map((key) => {
+  const [p, q] = key.split('-').map((v) => sites[Number(v) - 1]);
+  const mx = (p.x + q.x) / 2;
+  const my = (p.y + q.y) / 2;
+  const len = Math.hypot(q.x - p.x, q.y - p.y);
+  const bend = len * 0.18;
+  const cx = mx + ((q.y - p.y) / len) * bend;
+  const cy = my - ((q.x - p.x) / len) * bend;
+  return `M${p.x.toFixed(1)},${p.y.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${q.x.toFixed(1)},${q.y.toFixed(1)}`;
+});
+
+const events = EVENTS.map((event) => ({ event, ...projectLonLat(event.lonLat[0], event.lonLat[1]) }));
+/* The Bogotá workshop shares its city with two facilities; set it below them. */
+const eventMarks = events.map((e) => {
+  const shared = sites.some((s) => Math.hypot(s.x - e.x, s.y - e.y) < R * 3);
+  return { ...e, y: shared ? e.y + R * 2.4 : e.y, label: !shared };
+});
+---
+
+<div class="network-map" data-network-map>
+  <div class="nm-head">
+    <h2 id={headingId} class="nm-heading">{copy.heading}</h2>
+    <p class="nm-intro">{copy.intro}</p>
+  </div>
+
+  <div class="nm-lists">
+
+    <h3 class="nm-list-title content-label">{copy.facilities}</h3>
+    <ol class="nm-list" role="list">
+      {sites.map((site) => (
+        <li class="nm-item" data-site={site.n} tabindex="0">
+          <span class="nm-num" aria-hidden="true">{site.n}</span>
+          <span class="nm-item-text">
+            <span class="nm-item-name">{shortName[site.facility.institution] ?? site.facility.institution}</span>
+            <span class="nm-item-place">{pick(site.facility.city, locale)}, {pick(site.facility.country, locale)}</span>
+          </span>
+        </li>
+      ))}
+    </ol>
+
+    <h3 class="nm-list-title content-label">{copy.events}</h3>
+    <ul class="nm-list nm-list--events" role="list">
+      {events.map(({ event }) => (
+        <li class="nm-item nm-item--event" data-site={`e-${event.id}`} tabindex="0">
+          <span class="nm-diamond" aria-hidden="true"></span>
+          <span class="nm-item-text">
+            <span class="nm-item-name">{pick(event.name, locale)}</span>
+            <span class="nm-item-place">{pick(event.dates, locale)}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
+
+    <a class="text-link nm-more" href={`${localePath(locale, '/about')}#about-facilities`}>
+      {copy.details}<Icon name="arrow-right" />
+    </a>
+  </div>
+
+  <figure class="nm-figure">
+    <svg
+      class="nm-svg"
+      viewBox={`0 0 ${MAP_VIEWBOX.width} ${MAP_VIEWBOX.height}`}
+      role="img"
+      aria-label={copy.mapLabel}
+    >
+      <g class="nm-land">
+        {MAP_COUNTRIES.map((c) => (
+          <path d={c.d} class:list={['nm-country', { 'nm-country--active': facilityCountries.has(c.iso) }]} />
+        ))}
+      </g>
+      <g class="nm-arcs" aria-hidden="true">
+        {arcs.map((d) => <path d={d} />)}
+      </g>
+      <g class="nm-labels" aria-hidden="true">
+        {[...cityLabels.values()].map((l) => (
+          <text
+            x={l.left ? l.x - R - 8 : l.x + R + 8}
+            y={l.y + 4.5}
+            text-anchor={l.left ? 'end' : 'start'}
+          >{l.text}</text>
+        ))}
+      </g>
+      <g class="nm-events" aria-hidden="true">
+        {eventMarks.map((e) => (
+          <g class="nm-event" data-site={`e-${e.event.id}`} transform={`translate(${e.x.toFixed(1)} ${e.y.toFixed(1)})`}>
+            <rect x="-6.5" y="-6.5" width="13" height="13" transform="rotate(45)" />
+            {e.label && <text x="14" y="4.5">{pick(e.event.location, locale).split(',')[0]}</text>}
+          </g>
+        ))}
+      </g>
+      <g class="nm-sites" aria-hidden="true">
+        {sites.map((s) => (
+          <g class="nm-site" data-site={s.n} transform={`translate(${s.x.toFixed(1)} ${s.y.toFixed(1)})`}>
+            <circle class="nm-halo" r={R + 7} />
+            <circle class="nm-dot" r={R} />
+            <text class="nm-dot-num" y="4.2">{s.n}</text>
+          </g>
+        ))}
+      </g>
+    </svg>
+    <figcaption class="nm-caption">
+      <span class="nm-key"><span class="nm-key-dot" aria-hidden="true"></span>{copy.facilities}</span>
+      <span class="nm-key"><span class="nm-diamond" aria-hidden="true"></span>{copy.events}</span>
+      <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener noreferrer external">{copy.source}</a>
+    </figcaption>
+  </figure>
+</div>
+
+<script is:inline>
+  (function () {
+    function bind() {
+      document.querySelectorAll('[data-network-map]').forEach(function (root) {
+        if (root.dataset.bound) return;
+        root.dataset.bound = '1';
+        function set(id, on) {
+          root.querySelectorAll('[data-site="' + id + '"]').forEach(function (el) {
+            el.classList.toggle('is-active', on);
+          });
+          root.classList.toggle('has-active', on);
+        }
+        root.querySelectorAll('.nm-item, .nm-site, .nm-event').forEach(function (el) {
+          var id = el.getAttribute('data-site');
+          ['mouseenter', 'focus'].forEach(function (t) { el.addEventListener(t, function () { set(id, true); }); });
+          ['mouseleave', 'blur'].forEach(function (t) { el.addEventListener(t, function () { set(id, false); }); });
+        });
+      });
+    }
+    document.addEventListener('astro:page-load', bind);
+    bind();
+  })();
+</script>
+
+<style>
+  .network-map {
+    display: grid;
+    gap: var(--space-l);
+    grid-template-areas: 'head' 'map' 'lists';
+  }
+  .nm-head { grid-area: head; }
+  .nm-figure { grid-area: map; }
+  .nm-lists { grid-area: lists; }
+  @media (min-width: 60rem) {
+    .network-map {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      grid-template-rows: auto 1fr;
+      grid-template-areas: 'head map' 'lists map';
+      column-gap: clamp(var(--space-l), 5vw, var(--space-2xl));
+      row-gap: 0;
+    }
+    .nm-figure { align-self: center; }
+  }
+
+  .nm-heading {
+    max-width: 18ch;
+    font-size: clamp(1.75rem, 1.55rem + 0.8vw, 2.25rem);
+  }
+  .nm-intro {
+    margin-top: var(--space-m);
+    max-width: var(--measure);
+    font-size: clamp(1rem, 0.96rem + 0.16vw, 1.125rem);
+    line-height: 1.55;
+  }
+  .nm-list-title {
+    margin-top: var(--space-l);
+    margin-bottom: var(--space-xs);
+  }
+  .nm-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    border-top: 1px solid var(--hairline);
+  }
+  @media (min-width: 36rem) and (max-width: 60rem) {
+    .nm-list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-m); }
+  }
+  .nm-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.55rem 0.4rem;
+    margin-inline: -0.4rem;
+    border-bottom: 1px solid var(--hairline);
+    border-radius: var(--radius-xs);
+    cursor: default;
+    transition: background var(--transition);
+  }
+  .nm-item.is-active { background: var(--accent-dim); }
+  .nm-item:focus-visible { outline-offset: 0; }
+  .nm-num {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.55rem;
+    height: 1.55rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--accent-contrast);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    font-weight: 700;
+  }
+  .nm-item-text { display: grid; min-width: 0; }
+  .nm-item-name {
+    color: var(--text-strong);
+    font-size: var(--step--1);
+    font-weight: 560;
+    line-height: 1.3;
+  }
+  .nm-item-place {
+    color: var(--text-muted);
+    font-size: var(--step--2);
+    line-height: 1.35;
+  }
+  .nm-diamond {
+    flex: none;
+    width: 0.7rem;
+    height: 0.7rem;
+    margin-inline: 0.42rem;
+    background: var(--highlight);
+    transform: rotate(45deg);
+  }
+  .nm-more { margin-top: var(--space-m); }
+
+  /* ---- Map ---- */
+  .nm-figure { margin: 0; min-width: 0; }
+  .nm-svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .nm-country {
+    fill: color-mix(in oklab, var(--text-muted) 11%, var(--bg));
+    stroke: color-mix(in oklab, var(--text-muted) 38%, transparent);
+    stroke-width: 0.7;
+    stroke-linejoin: round;
+  }
+  .nm-country--active {
+    fill: color-mix(in oklab, var(--accent) 17%, var(--bg));
+    stroke: color-mix(in oklab, var(--accent) 50%, transparent);
+  }
+  .nm-arcs path {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.3;
+    stroke-dasharray: 2 5;
+    stroke-linecap: round;
+    opacity: 0.55;
+  }
+  .nm-labels text,
+  .nm-event text {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    fill: var(--text-muted);
+    paint-order: stroke;
+    stroke: var(--bg);
+    stroke-width: 4px;
+    stroke-linejoin: round;
+  }
+  .nm-halo {
+    fill: var(--accent);
+    opacity: 0.16;
+    transition: opacity var(--transition), r var(--transition);
+  }
+  .nm-dot {
+    fill: var(--accent);
+    stroke: var(--bg);
+    stroke-width: 2.5;
+  }
+  .nm-dot-num {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    font-weight: 700;
+    text-anchor: middle;
+    fill: var(--accent-contrast);
+  }
+  .nm-event rect {
+    fill: var(--highlight);
+    stroke: var(--bg);
+    stroke-width: 2.5;
+  }
+  .nm-event text { fill: var(--highlight-strong); }
+  .nm-site, .nm-event { transition: opacity var(--transition); }
+  .network-map.has-active .nm-site:not(.is-active),
+  .network-map.has-active .nm-event:not(.is-active) { opacity: 0.35; }
+  .nm-site.is-active .nm-halo { opacity: 0.4; r: 24; }
+
+  .nm-caption {
+    margin-top: var(--space-s);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 1.2rem;
+    font-size: var(--step--2);
+    color: var(--text-faint);
+  }
+  .nm-key { display: inline-flex; align-items: center; gap: 0.45rem; }
+  .nm-key .nm-diamond { margin-inline: 0.1rem; width: 0.55rem; height: 0.55rem; }
+  .nm-key-dot {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .nm-caption a { margin-left: auto; color: var(--text-faint); }
+
+  @media (max-width: 60rem) {
+    .nm-lists .nm-list-title:first-child { margin-top: 0; }
+  }
+</style>

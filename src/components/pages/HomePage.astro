@@ -8,6 +8,7 @@ import MediaCandidateViewer from '../MediaCandidateViewer.astro';
 import Icon from '../Icon.astro';
 import CommunityStats from '../CommunityStats.astro';
 import Timeline from '../Timeline.astro';
+import NetworkMap from '../NetworkMap.astro';
 import { italicizeSpecies } from '../../data/content';
 import { getDict, localePath, type Locale } from '../../i18n';
 import { PILOTS, getMedia } from '../../data/records';
@@ -101,9 +102,9 @@ if (publishedPilots.length !== h.researchCards.length) {
   <section id="why-lepidoptera" class="section" aria-labelledby="h2b-title">
     <div class="container-wide intro-layout">
       <div class="intro-copy">
-      <h2 id="h2b-title">{h.intro.title}</h2>
-      {h.intro.body.map((para) => <p class="lead">{para}</p>)}
-      <a class="text-link intro-link" href={localePath(locale, '/about')}>{t.cta.readVision}<Icon name="arrow-right" /></a>
+        <h2 id="h2b-title">{h.intro.title}</h2>
+        {h.intro.body.map((para) => <p class="lead">{para}</p>)}
+        <a class="text-link intro-link" href={localePath(locale, '/about')}>{t.cta.readVision}<Icon name="arrow-right" /></a>
       </div>
     </div>
   </section>
@@ -167,6 +168,13 @@ if (publishedPilots.length !== h.researchCards.length) {
           );
         })}
       </ol>
+    </div>
+  </section>
+
+  <!-- ====================== Network map ====================== -->
+  <section id="network" class="section network-section" aria-labelledby="network-map-title">
+    <div class="container-wide">
+      <NetworkMap locale={locale} />
     </div>
   </section>
 
@@ -548,6 +556,8 @@ if (publishedPilots.length !== h.researchCards.length) {
   .research-card-links :global(svg) {
     flex: none;
   }
+
+  .network-section { border-top: 1px solid var(--hairline); }
 
   /* ---- H5 Current activity ---- */
   .activity-layout {
