@@ -368,6 +368,13 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
             var label = chip.querySelector('[data-deadline-text]');
             if (label) label.textContent = text;
           });
+          var chip = document.querySelector('[data-deadline]');
+          if (chip) {
+            var callClosed = daysLeft(chip.getAttribute('data-deadline')) < 0;
+            document.querySelectorAll('[data-when-call]').forEach(function (el) {
+              el.hidden = (el.getAttribute('data-when-call') === 'closed') !== callClosed;
+            });
+          }
           var bar = document.querySelector('[data-funding-banner]');
           if (!bar) return;
           var key = 'caligo-banner-dismissed';

@@ -45,6 +45,7 @@ export const PILOT_INTRO = {
     apply: 'Complete the application form',
     pending: 'Application form link pending.',
     share: 'Please share this opportunity with your collaborators.',
+    closedNote: 'Applications for this call closed on 30 September 2026. Register with the network to hear about the next one.',
     chip: {
       open: 'Open until 30 September',
       days: 'Closes in {n} days',
@@ -95,6 +96,7 @@ export const PILOT_INTRO = {
     apply: 'Completa el formulario de postulación',
     pending: 'Enlace al formulario de postulación pendiente.',
     share: 'Comparte esta oportunidad con tus colaboradores.',
+    closedNote: 'Esta convocatoria cerró el 30 de septiembre de 2026. Inscríbete en la red para enterarte de la próxima.',
     chip: {
       open: 'Abierta hasta el 30 de septiembre',
       days: 'Cierra en {n} días',
@@ -107,3 +109,9 @@ export const PILOT_INTRO = {
     dismiss: 'Cerrar anuncio',
   },
 };
+
+/** True once the deadline day has passed (build-time default; Base.astro re-checks in the browser). */
+export function isCallClosed(now: Date = new Date()): boolean {
+  const [y, m, d] = PILOT_DEADLINE.split('-').map(Number);
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate()) > new Date(y, m - 1, d);
+}

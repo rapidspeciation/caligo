@@ -138,6 +138,23 @@ const base = import.meta.env.BASE_URL;
     color: var(--accent-strong);
     text-decoration-color: currentColor;
   }
+  /* Phones: a portrait beside the text halves the scroll through eight
+     leaders without hiding any biography. */
+  @media (max-width: 38rem) {
+    .person-card {
+      display: grid;
+      grid-template-columns: 6.5rem minmax(0, 1fr);
+    }
+    .person-media {
+      align-self: start;
+      margin: var(--space-s) 0 0 var(--space-s);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius-xs);
+      overflow: hidden;
+    }
+    .person-photo { aspect-ratio: 4 / 5; }
+    .person-content { padding: var(--space-s) var(--space-m) var(--space-m); }
+  }
   .person-source:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 3px;

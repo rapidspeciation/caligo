@@ -3,11 +3,15 @@ import Base from '../../layouts/Base.astro';
 import PageHeader from '../PageHeader.astro';
 import Icon from '../Icon.astro';
 import DeadlineChip from '../DeadlineChip.astro';
-import { PILOT_INTRO, PILOT_APPLICATION_URL } from '../../data/pilot-call';
+import { PILOT_INTRO, PILOT_APPLICATION_URL, isCallClosed } from '../../data/pilot-call';
+import { LINKS } from '../../data/content';
+import { getDict } from '../../i18n';
 import { localePath, type Locale } from '../../i18n';
 interface Props { locale: Locale; }
 const { locale } = Astro.props;
 const intro = PILOT_INTRO[locale];
+const join = getDict(locale).join;
+const closed = isCallClosed();
 ---
 <Base locale={locale} title={intro.funding + ' | Caligo'} description={intro.description} page="/funding">
   <PageHeader title={intro.funding} />
@@ -20,12 +24,18 @@ const intro = PILOT_INTRO[locale];
           <p class="content-body">{intro.coverage}</p>
           <p class="funding-deadline content-body">{intro.deadline}<br /><strong><time datetime="2026-09-30">{intro.date}</time></strong></p>
           <DeadlineChip locale={locale} />
-          {PILOT_APPLICATION_URL ? (
-            <a class="btn btn--primary" href={PILOT_APPLICATION_URL} target="_blank" rel="external noopener">{intro.apply}<Icon name="external" /></a>
-          ) : (
-            <p class="content-meta">{intro.pending}</p>
-          )}
-          <p class="content-meta">{intro.share}</p>
+          <div class="funding-open" data-when-call="open" hidden={closed}>
+            {PILOT_APPLICATION_URL ? (
+              <a class="btn btn--primary" href={PILOT_APPLICATION_URL} target="_blank" rel="external noopener">{intro.apply}<Icon name="external" /></a>
+            ) : (
+              <p class="content-meta">{intro.pending}</p>
+            )}
+            <p class="content-meta">{intro.share}</p>
+          </div>
+          <div class="funding-closed" data-when-call="closed" hidden={!closed}>
+            <p class="content-body">{intro.closedNote}</p>
+            <a class="btn btn--primary" href={LINKS.joinForm} target="_blank" rel="noopener noreferrer">{join.cta}<Icon name="external" /></a>
+          </div>
         </div>
         <div class="funding-conditions">
           <h3 class="content-heading">{intro.eligibility}</h3>
@@ -41,6 +51,8 @@ const intro = PILOT_INTRO[locale];
   .funding-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-xl); margin-top: var(--space-m); }
   .funding-summary { display: grid; align-content: start; justify-items: start; gap: var(--space-s); }
   .funding-deadline { padding-block: var(--space-s); }
+  .funding-open, .funding-closed { display: grid; justify-items: start; gap: var(--space-s); }
+  .funding-open[hidden], .funding-closed[hidden] { display: none; }
   .funding-deadline strong { color: var(--accent-strong); }
   .funding-conditions ul { padding-left: 1.25rem; margin-block: var(--space-m); }
   .funding-conditions li + li { margin-top: var(--space-s); }

@@ -13,6 +13,7 @@ import { getDict, localePath, type Locale } from '../../i18n';
 import { getSource } from '../../data/records';
 import { EVENTS, pick } from '../../data/initiative';
 import { publicationExamples, scienceFeedback } from '../../data/science-feedback';
+import { italicizeSpecies } from '../../data/content';
 
 interface Props {
   locale: Locale;
@@ -102,7 +103,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
             <time class="training-event-date mono">{pick(event.dates, locale)}</time>
             <span class="training-event-name">{pick(event.name, locale)}</span>
             <span class="training-event-place">{pick(event.location, locale)}</span>
-            <p class="training-event-summary">{pick(event.summary, locale)}</p>
+            <p class="training-event-summary" set:html={italicizeSpecies(pick(event.summary, locale))} />
           </li>
         ))}
       </ul>
@@ -125,7 +126,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
               {String(index + 1).padStart(2, '0')}
             </div>
             <a target="_blank" class="publication-title" href={publication.url} rel="external noopener">
-              <h3>{publication.title}</h3>
+              <h3 set:html={italicizeSpecies(publication.title)} />
               <Icon name="external" />
             </a>
             <figure>
@@ -147,7 +148,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
                 />
               </a>
               <figcaption>
-                <p class="publication-caption">{publication.figure.caption[locale]}</p>
+                <p class="publication-caption" set:html={italicizeSpecies(publication.figure.caption[locale])} />
                 <p class="publication-credit mono">
                   <a target="_blank" href={publication.url} rel="external noopener">{publication.citation}</a>
                   {' · '}
@@ -184,11 +185,11 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
           .filter((source) => source !== undefined);
         return (
           <article id={anchor} class="question">
-            <h3 class="question-heading content-heading">{q.heading}</h3>
+            <h3 class="question-heading content-heading" set:html={italicizeSpecies(q.heading)} />
 
             <div class:list={['split', { 'split--prose-only': !aside.photo }]}>
               <div class="split-prose">
-                {q.answer.map((para) => <p class="content-body">{para}</p>)}
+                {q.answer.map((para) => <p class="content-body" set:html={italicizeSpecies(para)} />)}
                 <p class="question-sources content-meta">
                   <span class="question-sources-label content-label">{sourcesLabel}: </span>
                   {sources.map((src, n) => (
@@ -201,16 +202,16 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
                   ))}
                 </p>
                 {continuation && (
-                  <aside class="pilot-continuation">
-                    <p class="pilot-continuation-label content-label">{s.pilotContinuationLabel}</p>
-                    <a
-                      class="text-link"
-                      href={`${localePath(locale, '/projects')}#${continuation.slug}`}
-                    >
+                  <a
+                    class="pilot-continuation"
+                    href={`${localePath(locale, '/projects')}#${continuation.slug}`}
+                  >
+                    <span class="pilot-continuation-label content-label">{s.pilotContinuationLabel}</span>
+                    <span class="pilot-continuation-title">
                       {t.home.researchCards[continuation.cardIndex].projectLink}
                       <Icon name="arrow-right" />
-                    </a>
-                  </aside>
+                    </span>
+                  </a>
                 )}
               </div>
 
@@ -522,15 +523,27 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   .question-sources a:hover { text-decoration-color: currentColor; }
   .pilot-continuation {
     margin-top: var(--space-m);
+    display: grid;
+    gap: 0.3rem;
     padding: var(--space-s) var(--space-m);
-    border-left: 2px solid var(--accent);
-    background: var(--accent-dim);
+    border: 1px solid var(--hairline-strong);
+    border-radius: var(--radius);
+    background: var(--bg-raised);
+    text-decoration: none;
+    transition: border-color var(--transition), background var(--transition);
   }
-  .pilot-continuation-label {
-    margin-bottom: var(--space-xs);
+  .pilot-continuation:hover {
+    border-color: var(--accent);
+    background: var(--bg-panel);
   }
-  .pilot-continuation .text-link {
-    width: fit-content;
+  .pilot-continuation-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 560;
+    color: var(--accent-strong);
     line-height: 1.4;
   }
+  .pilot-continuation-title :global(svg) { width: 1em; height: 1em; flex: none; transition: transform var(--transition); }
+  .pilot-continuation:hover .pilot-continuation-title :global(svg) { transform: translateX(3px); }
 </style>

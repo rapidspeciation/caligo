@@ -8,6 +8,7 @@ import MediaCandidateViewer from '../MediaCandidateViewer.astro';
 import Icon from '../Icon.astro';
 import CommunityStats from '../CommunityStats.astro';
 import Timeline from '../Timeline.astro';
+import { italicizeSpecies } from '../../data/content';
 import { getDict, localePath, type Locale } from '../../i18n';
 import { PILOTS, getMedia } from '../../data/records';
 
@@ -145,7 +146,7 @@ if (publishedPilots.length !== h.researchCards.length) {
                 singleImage
               />
               <div class="research-card-content">
-                <h3>{card.question}</h3>
+                <h3 set:html={italicizeSpecies(card.question)} />
 
                 <div class="research-card-links">
                   <a

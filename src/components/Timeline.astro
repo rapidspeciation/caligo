@@ -1,5 +1,5 @@
 ---
-import { EVENTS, pick } from '../data/initiative';
+import { EVENTS, pick, italicizeSpecies } from '../data/initiative';
 import { localePath, type Locale } from '../i18n';
 import { PILOT_INTRO } from '../data/pilot-call';
 import Icon from './Icon.astro';
@@ -32,7 +32,7 @@ const funding = PILOT_INTRO[locale];
         <span class="timeline-name">{pick(event.name, locale)}</span>
       </div>
       <p class="timeline-location mono">{pick(event.location, locale)}</p>
-      <p class="timeline-summary">{pick(event.summary, locale)}</p>
+      <p class="timeline-summary" set:html={italicizeSpecies(pick(event.summary, locale))} />
     </li>
   ))}
 </ol>

@@ -136,6 +136,20 @@ const labels = {
     color: var(--text-muted);
     letter-spacing: 0.04em;
   }
+  /* Phones: each facility becomes a short record, so nobody has to pan
+     sideways to reach the website column. */
+  @media (max-width: 40rem) {
+    .facility-table-wrapper { overflow: visible; }
+    .facility-caption { display: block; }
+    .facility-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .facility-table, .facility-table tbody, .facility-table tr, .facility-table td { display: block; width: auto; }
+    tbody td { padding: 0.15rem var(--space-m); }
+    tbody tr { padding-block: var(--space-s); }
+    .cell-institution { padding-bottom: 0.3rem; }
+    .cell-country, .cell-platforms { color: var(--text-muted); white-space: normal; }
+    .cell-website { padding-top: 0.4rem; }
+    .tfoot-row, .tfoot-row td { display: block; }
+  }
   .col-institution { width: 34%; }
   .col-country     { width: 15%; }
   .col-platforms   { width: 29%; }

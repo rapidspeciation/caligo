@@ -62,7 +62,7 @@ export const PRINCIPLES: { title: Bilingual; body: Bilingual }[] = [
   {
     title: { en: 'Inclusive and democratic', es: 'Inclusiva y democrática' },
     body: {
-      en: 'Decisions span countries, languages, institution types, and career stages.',
+      en: 'Decisions include voices from different countries, languages, institutions and career stages.',
       es: 'Las decisiones incorporan voces de distintos países, idiomas, instituciones y etapas profesionales.',
     },
   },
@@ -381,24 +381,46 @@ export const LAST_REVIEWED = '2026-07-15';
 
 /**
  * Scientific names that should render italic wherever they appear in prose.
- * Ordered longest-first so binomials wrap before bare genera.
+ * One alternation, longest first, so a binomial wins over its bare genus and
+ * nothing is wrapped twice. "Caligo" alone is the initiative's name, so only
+ * its binomials are listed.
  */
 const SCIENTIFIC_NAMES = [
   'Parides ascanius',
   'Aristolochia trilobata',
   'Panacea procilla',
   'Panacea prola',
+  'Batesia hypochlora',
+  'Chrysodeixis includens',
+  'Rachiplusia nu',
+  'Caligo martia',
+  'Caligo memnon',
+  'Greta oto',
+  'Heliconius sapho',
+  'Heliconius elevatus',
+  'Heliconius pardalinus',
+  'Heliconius melpomene',
+  'H. elevatus',
+  'H. pardalinus',
+  'H. melpomene',
   'Heliconius',
+  'Panacea',
+  'Parides',
+  'sapho',
 ];
 
 const escapeHtml = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+const NAME_PATTERN = new RegExp(
+  `(?<![\\w.])(${[...SCIENTIFIC_NAMES]
+    .sort((a, b) => b.length - a.length)
+    .map((n) => n.replace(/[.]/g, '\\.'))
+    .join('|')})(?!\\w)`,
+  'g',
+);
+
 /** Escape text, then wrap known scientific names in <em>. Safe for set:html. */
 export function italicizeSpecies(text: string): string {
-  let out = escapeHtml(text);
-  for (const name of SCIENTIFIC_NAMES) {
-    out = out.replace(new RegExp(`\\b${name}\\b`, 'g'), `<em>${name}</em>`);
-  }
-  return out;
+  return escapeHtml(text).replace(NAME_PATTERN, '<em>$1</em>');
 }

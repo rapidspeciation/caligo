@@ -109,7 +109,7 @@ export const en = {
     ],
     "questions": {
       "heading": "Four questions genomes can help answer",
-      "intro": "Each discovery reveals what to ask next."
+      "intro": "Each starts from a published finding and leads to a proposed pilot project."
     },
     "researchCards": [
       {
@@ -385,7 +385,7 @@ export const en = {
       "ariaLabel": "Email Caligo at genomica.neotropical@gmail.com"
     },
     "audiences": {
-      "heading": "You can join us by bringing",
+      "heading": "What you can bring",
       "intro": "Whether you work in taxonomy, ecology, evolution, conservation, genomics, bioinformatics, natural history, collections, sequencing, education or community engagement, there may be a place for you in Caligo.",
       "items": [
         {

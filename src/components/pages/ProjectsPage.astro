@@ -1,4 +1,5 @@
 ---
+import { italicizeSpecies } from '../../data/content';
 import Base from '../../layouts/Base.astro';
 import PageHeader from '../PageHeader.astro';
 import Icon from '../Icon.astro';
@@ -106,7 +107,7 @@ const reasonIcons: readonly CardIconName[] = [
 
             <!-- Text: 7-column slot on desktop -->
             <div class="pilot-text">
-              <h2 class="pilot-heading content-heading">{pilot.heading[locale]}</h2>
+              <h2 class="pilot-heading content-heading" set:html={italicizeSpecies(pilot.heading[locale])} />
 
               {pilot.taxon && (
                 <p class="pilot-taxon content-meta mono">
@@ -115,12 +116,12 @@ const reasonIcons: readonly CardIconName[] = [
               )}
 
               <!-- One-sentence research question -->
-              <p class="pilot-hook content-lead">{pilot.hook[locale]}</p>
+              <p class="pilot-hook content-lead" set:html={italicizeSpecies(pilot.hook[locale])} />
 
               <!-- What Caligo proposes to test -->
               <div class="pilot-field">
                 <p class="pilot-field-label content-label">{p.fieldLabels.proposedQuestion}</p>
-                <p class="pilot-field-value content-body">{pilot.proposedQuestion[locale]}</p>
+                <p class="pilot-field-value content-body" set:html={italicizeSpecies(pilot.proposedQuestion[locale])} />
               </div>
 
               {project && (
@@ -141,12 +142,12 @@ const reasonIcons: readonly CardIconName[] = [
                   <span class="disclosure-summary-inner">{pp.backgroundLabel}</span>
                 </summary>
                 <div class="disclosure-body pilot-more-body">
-                  <p class="pilot-body-text content-body">{pilot.publishedContext[locale]}</p>
+                  <p class="pilot-body-text content-body" set:html={italicizeSpecies(pilot.publishedContext[locale])} />
 
                   {project && (
                     <div class="pilot-field">
                       <p class="pilot-field-label content-label">{pp.resourcesLabel}</p>
-                      <p class="pilot-field-value content-body">{project.resources?.[locale]}</p>
+                      <p class="pilot-field-value content-body" set:html={italicizeSpecies(project.resources?.[locale] ?? '')} />
                     </div>
                   )}
 

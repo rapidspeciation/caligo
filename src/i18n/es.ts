@@ -106,7 +106,7 @@ export const es: Dict = {
     ],
     "questions": {
       "heading": "Cuatro preguntas que los genomas ayudan a responder",
-      "intro": "Cada hallazgo abre la siguiente pregunta."
+      "intro": "Cada una parte de un hallazgo publicado y lleva a un proyecto piloto propuesto."
     },
     "researchCards": [
       {
@@ -382,7 +382,7 @@ export const es: Dict = {
       "ariaLabel": "Enviar un correo a Caligo a genomica.neotropical@gmail.com"
     },
     "audiences": {
-      "heading": "Puedes sumarte aportando",
+      "heading": "Lo que puedes aportar",
       "intro": "Si trabajas en taxonomía, ecología, evolución, conservación, genómica, bioinformática, historia natural, colecciones, secuenciación, educación o participación comunitaria, puedes encontrar un espacio en Caligo.",
       "items": [
         {
