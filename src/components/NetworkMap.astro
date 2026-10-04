@@ -93,27 +93,6 @@ for (const site of sites) {
 const bogota = cityLabels.get('Bogotá');
 if (bogota) bogota.y -= 2;
 
-/* Faint arcs to each facility's two nearest neighbours suggest a network
-   without implying a central hub. */
-const edges = new Set<string>();
-for (const a of sites) {
-  const nearest = sites
-    .filter((b) => b !== a && b.facility.city.en !== a.facility.city.en)
-    .sort((b, c) => Math.hypot(b.x - a.x, b.y - a.y) - Math.hypot(c.x - a.x, c.y - a.y))
-    .slice(0, 2);
-  for (const b of nearest) edges.add([a.n, b.n].sort((p, q) => p - q).join('-'));
-}
-const arcs = [...edges].map((key) => {
-  const [p, q] = key.split('-').map((v) => sites[Number(v) - 1]);
-  const mx = (p.x + q.x) / 2;
-  const my = (p.y + q.y) / 2;
-  const len = Math.hypot(q.x - p.x, q.y - p.y);
-  const bend = len * 0.18;
-  const cx = mx + ((q.y - p.y) / len) * bend;
-  const cy = my - ((q.x - p.x) / len) * bend;
-  return `M${p.x.toFixed(1)},${p.y.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${q.x.toFixed(1)},${q.y.toFixed(1)}`;
-});
-
 const events = EVENTS.map((event) => ({ event, ...projectLonLat(event.lonLat[0], event.lonLat[1]) }));
 /* The Bogotá workshop shares its city with two facilities; set it below them. */
 const eventMarks = events.map((e) => {
@@ -172,9 +151,6 @@ const eventMarks = events.map((e) => {
         {MAP_COUNTRIES.map((c) => (
           <path d={c.d} class:list={['nm-country', { 'nm-country--active': facilityCountries.has(c.iso) }]} />
         ))}
-      </g>
-      <g class="nm-arcs" aria-hidden="true">
-        {arcs.map((d) => <path d={d} />)}
       </g>
       <g class="nm-labels" aria-hidden="true">
         {[...cityLabels.values()].map((l) => (
@@ -343,14 +319,6 @@ const eventMarks = events.map((e) => {
   .nm-country--active {
     fill: color-mix(in oklab, var(--accent) 17%, var(--bg));
     stroke: color-mix(in oklab, var(--accent) 50%, transparent);
-  }
-  .nm-arcs path {
-    fill: none;
-    stroke: var(--accent);
-    stroke-width: 1.3;
-    stroke-dasharray: 2 5;
-    stroke-linecap: round;
-    opacity: 0.55;
   }
   .nm-labels text,
   .nm-event text {

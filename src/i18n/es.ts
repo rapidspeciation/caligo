@@ -138,13 +138,57 @@ export const es: Dict = {
       "heading": "De las preguntas a los proyectos piloto",
       "intro": "Caligo está desarrollando cuatro proyectos sobre cambios cromosómicos, conectividad de poblaciones amenazadas, plagas agrícolas y migración estacional."
     },
-    "vision": {
-      "heading": "¿Por qué mariposas y polillas?",
-      "lead": "Las mariposas y polillas habitan casi todos los ecosistemas terrestres y son especialmente diversas en el Neotrópico, lo que las convierte en un grupo ideal para estudiar ecología, evolución y conservación.",
+    "intro": {
+      "eyebrow": "Por qué mariposas y polillas",
+      "title": "¿Por qué mariposas y polillas?",
       "body": [
-        "Sin embargo, la mayoría de las especies de la región aún no tiene genomas de referencia ni marcadores genéticos. Caligo reúne investigadores y recursos de toda América Latina para identificar especies, descubrir otras nuevas y entender cómo surgen."
+        "Las mariposas y polillas habitan casi todos los ecosistemas terrestres y son especialmente diversas en el Neotrópico. Son un grupo ideal para estudiar ecología, evolución y conservación, si se cuenta con la información necesaria.",
+        "La mayoría de las especies de la región aún carece de genomas de referencia y marcadores genéticos. Caligo reúne investigadores y recursos de América Latina para responder preguntas sobre identificación, descubrimiento de especies y especiación."
       ]
     },
+    "building": {
+      "heading": "Qué está construyendo Caligo",
+      "items": [
+        {
+          "title": "Secuenciar grupos poco estudiados",
+          "body": "Producir códigos de barras de ADN, datos poblacionales y ensamblajes de referencia para grupos taxonómicos que siguen poco representados."
+        },
+        {
+          "title": "Vincular la información genética con ejemplares",
+          "body": "Vincular cada secuencia o ensamblaje a un ejemplar de colección documentado para comprobar qué organismo se secuenció y cuál es su procedencia."
+        },
+        {
+          "title": "Fortalecer las capacidades regionales",
+          "body": "Ampliar la secuenciación, los bancos de muestras y la bioinformática en América Latina, desde las capitales hasta sitios de campo remotos en áreas de alta biodiversidad."
+        },
+        {
+          "title": "Formación y crédito justo",
+          "body": "Apoyar la formación, los datos abiertos y las publicaciones conjuntas, reconociendo a quienes aportan ejemplares, análisis o conocimientos."
+        }
+      ]
+    },
+    "activity": {
+      "eyebrow": "Actividad reciente y próxima",
+      "heading": "Caligo en acción",
+      "intro": "Los talleres, hackathones y otros encuentros nos permiten aprender juntos y ampliar la red."
+    },
+    "pillars": {
+      "eyebrow": "Cómo se orienta el trabajo",
+      "title": "Principios para una genómica hecha desde la región"
+    },
+    "closing": {
+      "title": "Súmate con una pregunta, un organismo o una perspectiva",
+      "body": "Puedes aportar ejemplares, capacidad de secuenciación, experiencia taxonómica o una pregunta de investigación. Inscríbete en la red, participa en Discord o escríbenos por correo."
+    },
+    "stats": {
+      "participants": "miembros",
+      "facilities": "instalaciones de secuenciación",
+      "countries": "países de América Latina",
+      "pilots": "proyectos piloto propuestos",
+      "asOf": "a septiembre de 2026"
+    }
+  },
+  "science": {
     "tiers": {
       "heading": "Tres niveles de datos genómicos",
       "intro": "Cada nivel responde preguntas distintas, con un costo distinto.",
@@ -177,47 +221,9 @@ export const es: Dict = {
           "title": "Cómo se ensambla un genoma de referencia",
           "desc": "El ADN de una mariposa se secuencia en muchos fragmentos. Los fragmentos se ordenan y se unen hasta que cada cromosoma es una secuencia continua. El resultado es el cariotipo de un Heliconius típico: 21 cromosomas.",
           "count": "21 cromosomas"
-        },
-        "voucher": {
-          "desc": "Una mariposa se separa: sus alas van a un sobre con la etiqueta CAM041027, Heliconius cydno, hembra, y su cuerpo a un tubo con el mismo ID. El ADN del tubo se convierte en un genoma con el mismo ID.",
-          "sex": "♀ · Colombia",
-          "dna": "ADN"
         }
-      },
-      "voucherHeading": "Cada genoma conserva su ejemplar",
-      "voucherBody": "Las alas se guardan en un sobre etiquetado y el cuerpo va a un tubo para extraer ADN. Sobre, tubo y genoma comparten un mismo ID, así cualquiera puede verificar qué mariposa se secuenció y cómo se identificó."
+      }
     },
-    "proof": {
-      "date": "20–23 de julio de 2026 · Bogotá",
-      "heading": "Los primeros ocho genomas de referencia de Heliconius de la red",
-      "body": "Se generaron durante un taller de cuatro días con la Red Colombiana de Genómica, la Universidad Nacional de Colombia, Oxford Nanopore, el Wellcome Sanger Institute y Holobiont Research.",
-      "link": "El proyecto piloto de Heliconius",
-      "photoAlt": "Un secuenciador portátil de Oxford Nanopore conectado a una computadora sobre un mesón de laboratorio durante el taller de Bogotá.",
-      "photoCredit": "Foto proporcionada por Caligo",
-      "plateLabel": "Bogotá · julio de 2026"
-    },
-    "activity": {
-      "eyebrow": "Actividad reciente y próxima",
-      "heading": "Caligo en acción",
-      "intro": "Los talleres, hackathones y otros encuentros nos permiten aprender juntos y ampliar la red."
-    },
-    "pillars": {
-      "eyebrow": "Cómo se orienta el trabajo",
-      "title": "Principios para una genómica hecha desde la región"
-    },
-    "closing": {
-      "title": "Súmate con una pregunta, un organismo o una perspectiva",
-      "body": "Puedes aportar ejemplares, capacidad de secuenciación, experiencia taxonómica o una pregunta de investigación. Inscríbete en la red, participa en Discord o escríbenos por correo."
-    },
-    "stats": {
-      "participants": "miembros",
-      "facilities": "instalaciones de secuenciación",
-      "countries": "países de América Latina",
-      "pilots": "proyectos piloto propuestos",
-      "asOf": "a septiembre de 2026"
-    }
-  },
-  "science": {
     "metaTitle": "Ciencia | Caligo",
     "metaDescription": "Genomas de referencia, análisis conjunto y formación para estudiar mariposas y polillas neotropicales, con ejemplos publicados y preguntas de Caligo.",
     "title": "Preguntas que los genomas ayudan a responder",

@@ -1,6 +1,6 @@
 ---
 /**
- * Didactic diagrams for the three tiers of genomic data on Home.
+ * Didactic diagrams for the three tiers of genomic data on Science.
  *
  * One shared visual language: the same butterfly glyph, 2 px outlines,
  * reads and chromosomes as rounded bars, the palette accent for "reference"
@@ -24,7 +24,7 @@ interface Props {
 }
 
 const { locale, kind } = Astro.props;
-const tiers = getDict(locale).home.tiers;
+const tiers = getDict(locale).science.tiers;
 const copy = tiers.diagrams[kind];
 const id = `tier-diagram-${kind}`;
 

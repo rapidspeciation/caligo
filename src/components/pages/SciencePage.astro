@@ -9,6 +9,7 @@ import PageHeader from '../PageHeader.astro';
 import MediaCandidateViewer from '../MediaCandidateViewer.astro';
 import Icon from '../Icon.astro';
 import FigureLightbox from '../FigureLightbox.astro';
+import TierDiagram from '../TierDiagram.astro';
 import { getDict, localePath, type Locale } from '../../i18n';
 import { getSource } from '../../data/records';
 import { EVENTS, pick } from '../../data/initiative';
@@ -52,6 +53,9 @@ const pilotContinuation: Record<string, { cardIndex: number; slug: string } | un
   'panacea-migration': { cardIndex: 3, slug: 'panacea-prola' },
 };
 
+const TIER_KINDS = ['barcode', 'resequencing', 'reference'] as const;
+const tiers = t.science.tiers;
+
 const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
 ---
 
@@ -79,6 +83,29 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
           <Icon name="external" />{feedback.reference.standardsLink}
         </a>
       </aside>
+    </div>
+  </section>
+
+  <!-- Three tiers of genomic data, from Nicol's vision document. Each card
+       carries a didactic diagram that plays once in view. -->
+  <section id="tiers" class="section tiers-section" aria-labelledby="tiers-heading">
+    <div class="container-wide">
+      <div class="tiers-head">
+        <h2 id="tiers-heading" class="section-heading content-heading">{tiers.heading}</h2>
+        <p class="content-body">{tiers.intro}</p>
+      </div>
+      <ol class="tier-list" role="list">
+        {tiers.items.map((item, i) => (
+          <li class="tier-card">
+            <TierDiagram locale={locale} kind={TIER_KINDS[i]} />
+            <div class="tier-copy">
+              <p class="tier-label mono">{tiers.tierLabel} {i + 1}</p>
+              <h3 class="tier-title">{item.title}</h3>
+              <p class="tier-body">{item.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
     </div>
   </section>
 
@@ -546,4 +573,50 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   }
   .pilot-continuation-title :global(svg) { width: 1em; height: 1em; flex: none; transition: transform var(--transition); }
   .pilot-continuation:hover .pilot-continuation-title :global(svg) { transform: translateX(3px); }
+  /* ---- H3 Three tiers of genomic data ---- */
+  .tiers-head > * + * { margin-top: var(--space-s); }
+  .tiers-head .section-heading { margin-bottom: 0; }
+  .tiers-section { border-top: 1px solid var(--hairline); }
+  .tier-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-l) 0 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 1.6vw, 1.5rem);
+  }
+  .tier-card {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+  }
+  .tier-copy { padding: var(--space-s) var(--space-m) var(--space-m); }
+  .tier-label {
+    margin: 0;
+    font-size: var(--step--2);
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+  .tier-title {
+    margin: 0.3rem 0 0;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 560;
+    letter-spacing: -0.015em;
+    color: var(--text-strong);
+  }
+  .tier-body {
+    margin: 0.5rem 0 0;
+    font-size: var(--step-0);
+    line-height: 1.55;
+    color: var(--text-muted);
+  }
+  @media (max-width: 60rem) {
+    .tier-list { grid-template-columns: 1fr; max-width: 34rem; }
+  }
+
 </style>

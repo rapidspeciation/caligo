@@ -13,9 +13,6 @@ import Timeline from '../Timeline.astro';
 import NetworkMap from '../NetworkMap.astro';
 import { getDict, localePath, type Locale } from '../../i18n';
 import { getMedia } from '../../data/records';
-import { italicizeSpecies } from '../../data/content';
-import TierDiagram from '../TierDiagram.astro';
-import VoucherDiagram from '../VoucherDiagram.astro';
 
 interface Props {
   locale: Locale;
@@ -24,7 +21,6 @@ const { locale } = Astro.props;
 const t = getDict(locale);
 const h = t.home;
 const base = import.meta.env.BASE_URL;
-const TIER_KINDS = ['barcode', 'resequencing', 'reference'] as const;
 
 const heroMedia = getMedia('hero-caligo-tambopata');
 if (!heroMedia) {
@@ -88,76 +84,33 @@ const desktopSrcset = [
     </div>
   </section>
 
-  <!-- ====================== H2 — Why butterflies and moths ====================== -->
+  <!-- ====================== H2 — Why butterflies and moths ======================
+       Psyche's second homepage section. This copy already existed under
+       `home.intro` but was rendered on /about/ instead, so the homepage
+       never answered "why this group of animals" at all.
+  -->
   <section id="why-lepidoptera" class="section" aria-labelledby="h2b-title">
     <div class="container-wide intro-layout">
       <div class="intro-copy">
-        <h2 id="h2b-title">{h.vision.heading}</h2>
-        {[h.vision.lead, ...h.vision.body].map((para) => <p class="lead">{para}</p>)}
+        <h2 id="h2b-title">{h.intro.title}</h2>
+        {h.intro.body.map((para) => <p class="lead">{para}</p>)}
         <a class="text-link intro-link" href={localePath(locale, '/about')}>{t.cta.readVision}<Icon name="arrow-right" /></a>
       </div>
     </div>
   </section>
 
-  <!-- ====================== H3 — Three tiers of genomic data ======================
-       From the Draft Vision and Governance document. Each card carries a
-       didactic diagram (TierDiagram) that plays once in view. -->
-  <section id="building" class="section section--panel tiers" aria-labelledby="tiers-title">
-    <span id="tiers" hidden aria-hidden="true" />
+  <!-- ====================== H3 — What Caligo is building ====================== -->
+  <section id="building" class="section section--panel" aria-labelledby="building-title">
     <div class="container-wide">
-      <div class="tiers-head">
-        <h2 id="tiers-title">{h.tiers.heading}</h2>
-        <p class="lead">{h.tiers.intro}</p>
-      </div>
-      <ol class="tier-list" role="list">
-        {h.tiers.items.map((item, i) => (
-          <li class="tier-card">
-            <TierDiagram locale={locale} kind={TIER_KINDS[i]} />
-            <div class="tier-copy">
-              <p class="tier-label mono">{h.tiers.tierLabel} {i + 1}</p>
-              <h3 class="tier-title">{item.title}</h3>
-              <p class="tier-body">{item.body}</p>
-            </div>
+      <h2 id="building-title">{h.building.heading}</h2>
+      <ul class="building-grid" role="list">
+        {h.building.items.map((item) => (
+          <li class="building-item">
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
           </li>
         ))}
-      </ol>
-      <div class="principle">
-        <div class="principle-art"><VoucherDiagram locale={locale} /></div>
-        <div class="principle-copy">
-          <h3 class="principle-heading">{h.tiers.voucherHeading}</h3>
-          <p class="principle-body">{h.tiers.voucherBody}</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ====================== Bogotá proof point ====================== -->
-  <section id="bogota" class="section proof" aria-labelledby="proof-title">
-    <div class="container-wide proof-layout">
-      <div class="proof-copy">
-        <p class="proof-date mono">{h.proof.date}</p>
-        <div class="proof-headline">
-          <span class="proof-numeral" aria-hidden="true">8</span>
-          <h2 id="proof-title" set:html={italicizeSpecies(h.proof.heading)} />
-        </div>
-        <p class="lead proof-body">{h.proof.body}</p>
-        <a class="text-link" href={`${localePath(locale, '/projects')}#heliconius`}><span set:html={italicizeSpecies(h.proof.link)} /><Icon name="arrow-right" /></a>
-      </div>
-      <figure class="proof-plate">
-        <span class="proof-pin" aria-hidden="true"></span>
-        <img
-          src={`${base}media/network/bogota-workshop-sequencer.jpg`}
-          width="1100"
-          height="1487"
-          alt={h.proof.photoAlt}
-          loading="lazy"
-          decoding="async"
-        />
-        <figcaption class="proof-plate-label mono">
-          <span>{h.proof.plateLabel}</span>
-          <span>{h.proof.photoCredit}</span>
-        </figcaption>
-      </figure>
+      </ul>
     </div>
   </section>
 
@@ -165,7 +118,7 @@ const desktopSrcset = [
        Requested by Nicol on 27 September 2026 in place of the four research
        questions, which remain on Science and Pilot projects. The legacy
        anchors keep old links to this part of the page working. -->
-  <section id="leadership" class="section section--panel" aria-labelledby="leadership-title">
+  <section id="leadership" class="section" aria-labelledby="leadership-title">
     <span id="questions" hidden aria-hidden="true" />
     <span id="h4" hidden aria-hidden="true" data-legacy-anchor="h4" />
     <span id="proposed-pilots" hidden aria-hidden="true" />
@@ -218,14 +171,18 @@ const desktopSrcset = [
 <style>
 
   /* ---- Scroll margins for semantic + legacy anchors ---- */
-  #overview, #from-organism-to-genome, #building, #bogota, #why-lepidoptera,
+  #overview, #from-organism-to-genome, #building,
   #leadership, #questions, #proposed-pilots, #activity, #discover-caligo,
   #h1, #h2, #h3, #h4, #h5, #h6 { scroll-margin-top: 5rem; }
 
   /* The stat bar and the introduction share one background, so they need
-     only the introduction's top gap. */
+     only the introduction's top gap. The following priority panel changes
+     colour, so retain a smaller closing gap before that visible boundary. */
   .stat-bar-section {
     padding-bottom: 0;
+  }
+  #why-lepidoptera {
+    padding-bottom: var(--space-l);
   }
 
   /* ---- H1 Cinematic hero ---- */
@@ -438,7 +395,8 @@ const desktopSrcset = [
     font-size: clamp(1.75rem, 1.55rem + 0.8vw, 2.25rem);
   }
   .section .lead { max-width: var(--measure); }
-  .section .lead {
+  .section .lead,
+  .building-item p {
     font-size: clamp(1rem, 0.96rem + 0.16vw, 1.125rem);
     line-height: 1.55;
   }
@@ -450,176 +408,50 @@ const desktopSrcset = [
     color: var(--text-faint);
   }
 
-
-  .intro-layout { display: grid; grid-template-columns: 1fr; }
-  .intro-copy > * + * { margin-top: var(--space-m); }
-  .intro-copy h2 { max-width: 25ch; }
-  @media (min-width: 60rem) {
-    .intro-copy { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); column-gap: clamp(1.5rem, 3vw, 3rem); position: relative; }
-    .intro-copy::after { content: ''; position: absolute; inset-block: 0; left: calc((100% - clamp(1.5rem, 3vw, 3rem)) / 2.3 + clamp(1.5rem, 3vw, 3rem) / 2); width: 1px; background: var(--hairline); }
-    .intro-copy h2, .intro-copy .intro-link { grid-column: 1; }
-    .intro-copy .lead { grid-column: 2; }
-    .intro-copy .lead:first-of-type { grid-row: 1; margin-top: 0; }
-    .intro-copy .lead:last-of-type { grid-row: 2; }
-    .intro-copy .intro-link { grid-row: 2; align-self: start; }
-  }
-  .intro-link { margin-top: var(--space-m); }
-
-  /* ---- H3 Three tiers of genomic data ---- */
-  .tiers-head > * + * { margin-top: var(--space-s); }
-  .tiers-head .lead { color: var(--text-muted); }
-  .tier-list {
+  /* ---- H3 Initiative priorities ---- */
+  .building-grid {
     list-style: none;
     padding: 0;
     margin: var(--space-l) 0 0;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(1rem, 1.6vw, 1.5rem);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--hairline-strong);
   }
-  .tier-card {
+  .building-item {
     min-width: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    background: var(--bg);
-    border: 1px solid var(--hairline);
-    border-radius: var(--radius);
+    padding: var(--space-m) var(--space-m) var(--space-m) 0;
+    border-bottom: 1px solid var(--hairline);
   }
-  .tier-copy { padding: var(--space-s) var(--space-m) var(--space-m); }
-  .tier-label {
+  .building-item:nth-child(even) {
+    padding-left: var(--space-m);
+    border-left: 1px solid var(--hairline);
+  }
+  .building-item h3 {
     margin: 0;
-    font-size: var(--step--2);
-    letter-spacing: 0.06em;
-    color: var(--accent);
-  }
-  .tier-title {
-    margin: 0.3rem 0 0;
-    font-family: var(--font-display);
-    font-size: var(--step-1);
-    font-weight: 560;
-    letter-spacing: -0.015em;
-    color: var(--text-strong);
-  }
-  .tier-body {
-    margin: 0.5rem 0 0;
+    font-family: var(--font-body);
     font-size: var(--step-0);
-    line-height: 1.55;
-    color: var(--text-muted);
+    font-weight: 620;
+    color: var(--text-strong);
+    letter-spacing: -0.006em;
   }
-  @media (max-width: 60rem) {
-    .tier-list { grid-template-columns: 1fr; max-width: 34rem; }
-  }
-
-  /* Specimen-to-genome link: diagram first, short explanation beside it. */
-  .principle {
-    display: grid;
-    grid-template-columns: minmax(0, 1.5fr) minmax(16rem, 1fr);
-    gap: clamp(1.5rem, 5vw, 4.5rem);
-    align-items: center;
-    margin: var(--space-xl) 0 0;
-    padding-top: var(--space-l);
-    border-top: 1px solid var(--hairline);
-  }
-  .principle-copy > * + * { margin-top: var(--space-s); }
-  .principle-heading {
-    margin: 0;
-    font-size: var(--step-2);
-    line-height: 1.15;
-  }
-  .principle-body {
-    margin: 0;
-    max-width: 44ch;
-    font-size: clamp(1rem, 0.96rem + 0.16vw, 1.125rem);
-    line-height: 1.55;
-    color: var(--text-muted);
-  }
-  @media (max-width: 52rem) {
-    .principle { grid-template-columns: 1fr; }
-    .principle-copy { order: -1; }
-  }
-
-  /* ---- Bogotá proof point (static) ---- */
-  .proof-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(15rem, 0.65fr);
-    gap: clamp(2rem, 6vw, 6rem);
-    align-items: center;
-  }
-  .proof-copy > * + * { margin-top: var(--space-m); }
-  .proof-date {
-    margin: 0;
-    font-size: var(--step--1);
-    letter-spacing: 0.04em;
-    color: var(--accent);
-  }
-  .proof-copy .proof-headline {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
-    column-gap: clamp(1rem, 2.5vw, 2rem);
-    margin-top: var(--space-s);
-  }
-  .proof-numeral {
-    font-family: var(--font-display);
-    font-size: clamp(6rem, 4rem + 7vw, 10.5rem);
-    font-weight: 300;
-    line-height: 0.8;
-    letter-spacing: -0.06em;
-    color: var(--accent);
-  }
-  .section .proof-headline h2 {
-    margin: 0;
-    max-width: 18ch;
-    font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.45rem);
-    line-height: 1.12;
-    text-wrap: balance;
-  }
-  .proof-body { color: var(--text-muted); }
-  .proof-plate {
-    position: relative;
-    justify-self: end;
-    width: 100%;
-    max-width: 23rem;
-    margin: 0;
-    padding: 0.55rem 0.55rem 0;
-    background: var(--bg-raised);
-    border: 1px solid var(--hairline);
-    box-shadow: 0 18px 30px -26px color-mix(in oklab, var(--text-strong) 45%, transparent);
-    transform: rotate(0.8deg);
-  }
-  .proof-plate img {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1100 / 1300;
-    object-fit: cover;
-    object-position: 50% 62%;
-  }
-  .proof-pin {
-    position: absolute;
-    z-index: 1;
-    top: -0.3rem;
-    left: 50%;
-    width: 0.62rem;
-    height: 0.62rem;
-    margin-left: -0.31rem;
-    border-radius: 50%;
-    background: radial-gradient(circle at 34% 30%, color-mix(in oklab, #fff 70%, var(--accent)) 0 18%, var(--accent-strong) 62%);
-    box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.35);
-  }
-  .proof-plate-label {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 0.15rem 1rem;
-    padding: 0.5rem 0.1rem 0.55rem;
-    font-size: 0.72rem;
-    line-height: 1.45;
+  .building-item p {
+    margin: var(--space-xs) 0 0;
     color: var(--text-muted);
   }
   @media (max-width: 48rem) {
-    .proof-layout { grid-template-columns: 1fr; }
-    .proof-plate { justify-self: start; max-width: 21rem; }
+    .building-grid {
+      grid-template-columns: 1fr;
+    }
+    .building-item,
+    .building-item:nth-child(even) {
+      padding: var(--space-m) 0;
+      border-left: 0;
+      border-bottom: 1px solid var(--hairline);
+    }
+    .building-item:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
   }
 
   .network-section { border-top: 1px solid var(--hairline); }
@@ -673,9 +505,23 @@ const desktopSrcset = [
   .hero-actions .btn { border-radius: 3px; }
   .hero-btn-ghost { border-color: transparent; padding-inline: 0; text-decoration: underline; text-underline-offset: .4em; }
   .hero-attribution { font-family: var(--font-body); max-width: 48ch; }
+  .intro-layout { display: grid; grid-template-columns: 1fr; }
+  .intro-copy > * + * { margin-top: var(--space-m); }
+  .intro-copy h2 { max-width: 25ch; }
+  @media (min-width: 60rem) {
+    .intro-copy { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); column-gap: clamp(1.5rem, 3vw, 3rem); position: relative; }
+    .intro-copy::after { content: ''; position: absolute; inset-block: 0; left: calc((100% - clamp(1.5rem, 3vw, 3rem)) / 2.3 + clamp(1.5rem, 3vw, 3rem) / 2); width: 1px; background: var(--hairline); }
+    .intro-copy h2, .intro-copy .intro-link { grid-column: 1; }
+    .intro-copy .lead { grid-column: 2; }
+    .intro-copy .lead:first-of-type { grid-row: 1; margin-top: 0; }
+    .intro-copy .lead:last-of-type { grid-row: 2; }
+    .intro-copy .intro-link { grid-row: 2; align-self: start; }
+  }
+  .intro-link { margin-top: var(--space-m); }
   .section--close { border-top: 1px solid var(--hairline); background: var(--bg); }
   .close-copy h2 { max-width: 25ch; }
   @media (max-width: 60rem) { .hero-title { font-size: clamp(2rem, 5vw, 3rem); max-width: 24ch; } .hero-copy { padding-block: 1.25rem; } .hero-overlay { padding-bottom: .5rem; } .hero-btn-ghost { padding-inline: 1rem; } }
+  @media (max-width: 48rem) { .intro-layout { grid-template-columns: 1fr; gap: 2rem; } }
   @media (min-width: 40rem) and (max-width: 60rem) {
     .hero-tagline { max-width: 65ch; }
     .hero-actions { justify-items: start; }

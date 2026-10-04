@@ -32,7 +32,7 @@ const funding = PILOT_INTRO[locale];
         <span class="timeline-name">{pick(event.name, locale)}</span>
       </div>
       <p class="timeline-location mono">{pick(event.location, locale)}</p>
-      <p class="timeline-summary" set:html={italicizeSpecies(pick(compact && event.homeSummary ? event.homeSummary : event.summary, locale))} />
+      <p class="timeline-summary" set:html={italicizeSpecies(pick(event.summary, locale))} />
     </li>
   ))}
 </ol>

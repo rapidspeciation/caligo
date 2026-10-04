@@ -141,13 +141,57 @@ export const en = {
       "heading": "From questions to pilot projects",
       "intro": "Caligo is shaping four projects on chromosome change, threatened-population connectivity, crop pests and seasonal migration."
     },
-    "vision": {
-      "heading": "Why butterflies and moths?",
-      "lead": "Butterflies and moths live in nearly every terrestrial ecosystem and are especially diverse in the Neotropics, which makes them ideal for studying ecology, evolution and conservation.",
+    "intro": {
+      "eyebrow": "Why butterflies and moths",
+      "title": "Why butterflies and moths?",
       "body": [
-        "Yet most species in the region still lack reference genomes and genetic markers. Caligo brings researchers and resources together across Latin America to identify species, discover new ones and understand how they arise."
+        "Butterflies and moths live in nearly every terrestrial ecosystem and are especially diverse in the Neotropics. They are an ideal group for studying ecology, evolution and conservation, if the right information is available.",
+        "Reference genomes and genetic markers are still missing for most species in this region. Caligo brings researchers and resources together across Latin America to answer questions about species identification, discovery and speciation."
       ]
     },
+    "building": {
+      "heading": "What Caligo is building",
+      "items": [
+        {
+          "title": "Sequence undersampled groups",
+          "body": "Produce DNA barcodes, population data and reference assemblies for taxonomic groups that remain poorly represented."
+        },
+        {
+          "title": "Link genetic information with specimens",
+          "body": "Link each sequence or assembly to a documented specimen in a collection so researchers can check which organism was sequenced and where it came from."
+        },
+        {
+          "title": "Build regional capacity",
+          "body": "Expand sequencing, sample banking and bioinformatics in Latin America, from country capitals to remote field sites in areas of high biodiversity."
+        },
+        {
+          "title": "Training and fair credit",
+          "body": "Support training, open data and shared publications while recognising everyone who contributes specimens, analysis or knowledge."
+        }
+      ]
+    },
+    "activity": {
+      "eyebrow": "Recent and upcoming",
+      "heading": "Caligo in action",
+      "intro": "Workshops, hackathons and other events help us learn together and grow the network."
+    },
+    "pillars": {
+      "eyebrow": "How the work is shaped",
+      "title": "Guiding principles for regional genomics"
+    },
+    "closing": {
+      "title": "Bring a question, an organism or a perspective",
+      "body": "You can contribute specimens, sequencing capacity, taxonomic knowledge or a research question. Register with the network, join the conversation on Discord or contact us by email."
+    },
+    "stats": {
+      "participants": "members",
+      "facilities": "sequencing facilities",
+      "countries": "Latin American countries",
+      "pilots": "proposed pilot projects",
+      "asOf": "as of September 2026"
+    }
+  },
+  "science": {
     "tiers": {
       "heading": "Three tiers of genomic data",
       "intro": "Each tier answers different questions, at a different cost.",
@@ -180,47 +224,9 @@ export const en = {
           "title": "How a reference genome is assembled",
           "desc": "The DNA of one butterfly is sequenced as many fragments. The fragments are ordered and joined until each chromosome is one continuous sequence. The result is the karyotype of a typical Heliconius: 21 chromosomes.",
           "count": "21 chromosomes"
-        },
-        "voucher": {
-          "desc": "A butterfly is separated: its wings go into an envelope labelled CAM041027, Heliconius cydno, female, and its body into a tube with the same ID. DNA from the tube becomes a genome, tagged with the same ID.",
-          "sex": "♀ · Colombia",
-          "dna": "DNA"
         }
-      },
-      "voucherHeading": "Every genome keeps its specimen",
-      "voucherBody": "The wings are kept in a labelled envelope and the body goes into a tube for DNA. Envelope, tube and genome share one ID, so anyone can check which butterfly was sequenced and how it was identified."
+      }
     },
-    "proof": {
-      "date": "20–23 July 2026 · Bogotá",
-      "heading": "The network’s first eight Heliconius reference genomes",
-      "body": "Generated during a four-day workshop with the Red Colombiana de Genómica, Universidad Nacional de Colombia, Oxford Nanopore, the Wellcome Sanger Institute and Holobiont Research.",
-      "link": "The Heliconius pilot project",
-      "photoAlt": "A portable Oxford Nanopore sequencer connected to a computer on a laboratory bench at the Bogotá workshop.",
-      "photoCredit": "Photo supplied by Caligo",
-      "plateLabel": "Bogotá · July 2026"
-    },
-    "activity": {
-      "eyebrow": "Recent and upcoming",
-      "heading": "Caligo in action",
-      "intro": "Workshops, hackathons and other events help us learn together and grow the network."
-    },
-    "pillars": {
-      "eyebrow": "How the work is shaped",
-      "title": "Guiding principles for regional genomics"
-    },
-    "closing": {
-      "title": "Bring a question, an organism or a perspective",
-      "body": "You can contribute specimens, sequencing capacity, taxonomic knowledge or a research question. Register with the network, join the conversation on Discord or contact us by email."
-    },
-    "stats": {
-      "participants": "members",
-      "facilities": "sequencing facilities",
-      "countries": "Latin American countries",
-      "pilots": "proposed pilot projects",
-      "asOf": "as of September 2026"
-    }
-  },
-  "science": {
     "metaTitle": "Science | Caligo",
     "metaDescription": "Reference genomes, shared analysis and training for Neotropical butterflies and moths, with published examples and Caligo’s research questions.",
     "title": "Questions genomes can help answer",
