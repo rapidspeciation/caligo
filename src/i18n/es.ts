@@ -179,11 +179,13 @@ export const es: Dict = {
           "count": "21 cromosomas"
         },
         "voucher": {
-          "desc": "Una mariposa montada con una etiqueta que lleva un identificador, vinculada a su genoma, que lleva el mismo identificador."
+          "desc": "Una mariposa se separa: sus alas van a un sobre con la etiqueta CAM041027, Heliconius cydno, hembra, y su cuerpo a un tubo con el mismo ID. El ADN del tubo se convierte en un genoma con el mismo ID.",
+          "sex": "♀ · Colombia",
+          "dna": "ADN"
         }
       },
-      "principleLabel": "Principio de Caligo",
-      "principle": "Ningún genoma sin un ejemplar testigo identificado y un especialista que respalde esa identificación."
+      "voucherHeading": "Cada genoma conserva su ejemplar",
+      "voucherBody": "Las alas se guardan en un sobre etiquetado y el cuerpo va a un tubo para extraer ADN. Sobre, tubo y genoma comparten un mismo ID, así cualquiera puede verificar qué mariposa se secuenció y cómo se identificó."
     },
     "proof": {
       "date": "20–23 de julio de 2026 · Bogotá",

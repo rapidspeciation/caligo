@@ -182,11 +182,13 @@ export const en = {
           "count": "21 chromosomes"
         },
         "voucher": {
-          "desc": "A pinned butterfly with a label carrying an identifier, linked to its genome, which carries the same identifier."
+          "desc": "A butterfly is separated: its wings go into an envelope labelled CAM041027, Heliconius cydno, female, and its body into a tube with the same ID. DNA from the tube becomes a genome, tagged with the same ID.",
+          "sex": "♀ · Colombia",
+          "dna": "DNA"
         }
       },
-      "principleLabel": "Caligo principle",
-      "principle": "No genome without a vouchered, identified specimen and a specialist who can stand behind that identification."
+      "voucherHeading": "Every genome keeps its specimen",
+      "voucherBody": "The wings are kept in a labelled envelope and the body goes into a tube for DNA. Envelope, tube and genome share one ID, so anyone can check which butterfly was sequenced and how it was identified."
     },
     "proof": {
       "date": "20–23 July 2026 · Bogotá",

@@ -15,7 +15,7 @@ import { getDict, localePath, type Locale } from '../../i18n';
 import { getMedia } from '../../data/records';
 import { italicizeSpecies } from '../../data/content';
 import TierDiagram from '../TierDiagram.astro';
-import VoucherLink from '../VoucherLink.astro';
+import VoucherDiagram from '../VoucherDiagram.astro';
 
 interface Props {
   locale: Locale;
@@ -121,13 +121,13 @@ const desktopSrcset = [
           </li>
         ))}
       </ol>
-      <figure class="principle">
-        <div class="principle-art"><VoucherLink locale={locale} /></div>
-        <blockquote class="principle-quote">
-          <p>{h.tiers.principle}</p>
-        </blockquote>
-        <figcaption class="principle-label mono">{h.tiers.principleLabel}</figcaption>
-      </figure>
+      <div class="principle">
+        <div class="principle-art"><VoucherDiagram locale={locale} /></div>
+        <div class="principle-copy">
+          <h3 class="principle-heading">{h.tiers.voucherHeading}</h3>
+          <p class="principle-body">{h.tiers.voucherBody}</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -510,45 +510,32 @@ const desktopSrcset = [
     .tier-list { grid-template-columns: 1fr; max-width: 34rem; }
   }
 
+  /* Specimen-to-genome link: diagram first, short explanation beside it. */
   .principle {
     display: grid;
-    grid-template-columns: minmax(12rem, 17rem) minmax(0, 1fr);
-    grid-template-areas: 'art quote' 'art label';
-    column-gap: clamp(1.5rem, 4vw, 3.5rem);
-    row-gap: var(--space-xs);
+    grid-template-columns: minmax(0, 1.5fr) minmax(16rem, 1fr);
+    gap: clamp(1.5rem, 5vw, 4.5rem);
     align-items: center;
     margin: var(--space-xl) 0 0;
     padding-top: var(--space-l);
     border-top: 1px solid var(--hairline);
   }
-  .principle-art { grid-area: art; }
-  .principle-quote { grid-area: quote; margin: 0; align-self: end; }
-  .principle-quote p {
+  .principle-copy > * + * { margin-top: var(--space-s); }
+  .principle-heading {
     margin: 0;
-    max-width: 40ch;
-    font-family: Georgia, 'Times New Roman', serif;
-    font-style: italic;
-    font-size: clamp(1.3rem, 1.05rem + 1vw, 1.95rem);
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-    color: var(--text-strong);
-    text-wrap: pretty;
+    font-size: var(--step-2);
+    line-height: 1.15;
   }
-  .principle-label {
-    grid-area: label;
-    align-self: start;
+  .principle-body {
     margin: 0;
-    font-size: var(--step--2);
-    letter-spacing: 0.06em;
-    color: var(--text-faint);
+    max-width: 44ch;
+    font-size: clamp(1rem, 0.96rem + 0.16vw, 1.125rem);
+    line-height: 1.55;
+    color: var(--text-muted);
   }
-  @media (max-width: 48rem) {
-    .principle {
-      grid-template-columns: 1fr;
-      grid-template-areas: 'quote' 'label' 'art';
-      row-gap: var(--space-s);
-    }
-    .principle-art { max-width: 17rem; margin-top: var(--space-s); }
+  @media (max-width: 52rem) {
+    .principle { grid-template-columns: 1fr; }
+    .principle-copy { order: -1; }
   }
 
   /* ---- Bogotá proof point (static) ---- */
