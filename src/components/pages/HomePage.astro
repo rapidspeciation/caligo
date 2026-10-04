@@ -88,20 +88,13 @@ const desktopSrcset = [
     </div>
   </section>
 
-  <!-- ====================== H2 — Vision ======================
-       Nicol's vision line from the Draft Vision and Governance document,
-       set as an editorial headline in the hero's serif-accent style. Keeps
-       the old #why-lepidoptera anchor. -->
-  <section id="why-lepidoptera" class="section vision" aria-labelledby="vision-title">
-    <div class="container-wide vision-layout">
-      <p class="vision-kicker">{h.vision.kicker}</p>
-      <h2 id="vision-title" class="vision-statement">{h.vision.statement}{' '}<em>{h.vision.statementFocus}</em></h2>
-      <div class="vision-lead">
-        <p class="lead">{h.vision.lead}</p>
-        <a class="text-link" href={localePath(locale, '/about')}>{t.cta.readVision}<Icon name="arrow-right" /></a>
-      </div>
-      <div class="vision-body">
-        {h.vision.body.map((para) => <p>{para}</p>)}
+  <!-- ====================== H2 — Why butterflies and moths ====================== -->
+  <section id="why-lepidoptera" class="section" aria-labelledby="h2b-title">
+    <div class="container-wide intro-layout">
+      <div class="intro-copy">
+        <h2 id="h2b-title">{h.vision.heading}</h2>
+        {[h.vision.lead, ...h.vision.body].map((para) => <p class="lead">{para}</p>)}
+        <a class="text-link intro-link" href={localePath(locale, '/about')}>{t.cta.readVision}<Icon name="arrow-right" /></a>
       </div>
     </div>
   </section>
@@ -229,8 +222,8 @@ const desktopSrcset = [
   #leadership, #questions, #proposed-pilots, #activity, #discover-caligo,
   #h1, #h2, #h3, #h4, #h5, #h6 { scroll-margin-top: 5rem; }
 
-  /* The stat bar and the vision share one background, so they need only
-     the vision's top gap. */
+  /* The stat bar and the introduction share one background, so they need
+     only the introduction's top gap. */
   .stat-bar-section {
     padding-bottom: 0;
   }
@@ -458,57 +451,19 @@ const desktopSrcset = [
   }
 
 
-  /* ---- H2 Vision: editorial headline in the hero's serif-accent style ---- */
-  .vision { padding-block: clamp(3.5rem, 7vw, 6rem) clamp(3rem, 6vw, 5rem); }
-  .vision-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: clamp(2rem, 5vw, 5rem);
-    align-items: start;
+  .intro-layout { display: grid; grid-template-columns: 1fr; }
+  .intro-copy > * + * { margin-top: var(--space-m); }
+  .intro-copy h2 { max-width: 25ch; }
+  @media (min-width: 60rem) {
+    .intro-copy { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); column-gap: clamp(1.5rem, 3vw, 3rem); position: relative; }
+    .intro-copy::after { content: ''; position: absolute; inset-block: 0; left: calc((100% - clamp(1.5rem, 3vw, 3rem)) / 2.3 + clamp(1.5rem, 3vw, 3rem) / 2); width: 1px; background: var(--hairline); }
+    .intro-copy h2, .intro-copy .intro-link { grid-column: 1; }
+    .intro-copy .lead { grid-column: 2; }
+    .intro-copy .lead:first-of-type { grid-row: 1; margin-top: 0; }
+    .intro-copy .lead:last-of-type { grid-row: 2; }
+    .intro-copy .intro-link { grid-row: 2; align-self: start; }
   }
-  .section > .vision-layout > * + * { margin-top: 0; }
-  .vision-kicker {
-    grid-column: 1 / -1;
-    margin: 0;
-    color: var(--text-muted);
-    font-size: var(--step-0);
-  }
-  .section .vision-statement {
-    grid-column: 1 / -1;
-    margin: var(--space-s) 0 var(--space-l);
-    max-width: 19ch;
-    font-size: clamp(2.3rem, 1.3rem + 4vw, 5rem);
-    font-weight: 440;
-    line-height: 1.03;
-    letter-spacing: -0.04em;
-    text-wrap: balance;
-  }
-  .vision-statement em {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-weight: 400;
-    letter-spacing: -0.03em;
-    color: var(--text-muted);
-  }
-  .vision-lead > * + * { margin-top: var(--space-m); }
-  .section .vision-lead .lead {
-    color: var(--text-strong);
-    font-size: clamp(1.1rem, 1rem + 0.45vw, 1.35rem);
-    line-height: 1.45;
-    max-width: 34ch;
-  }
-  .vision-body { padding-top: 0.2rem; }
-  .vision-body p {
-    margin: 0;
-    max-width: 52ch;
-    color: var(--text-muted);
-    font-size: clamp(1rem, 0.96rem + 0.16vw, 1.125rem);
-    line-height: 1.55;
-  }
-  .vision-body p + p { margin-top: var(--space-s); }
-  @media (max-width: 48rem) {
-    .vision-layout { grid-template-columns: 1fr; }
-    .vision-body { margin-top: var(--space-l); }
-  }
+  .intro-link { margin-top: var(--space-m); }
 
   /* ---- H3 Three tiers of genomic data ---- */
   .tiers-head > * + * { margin-top: var(--space-s); }

@@ -139,12 +139,9 @@ export const es: Dict = {
       "intro": "Caligo está desarrollando cuatro proyectos sobre cambios cromosómicos, conectividad de poblaciones amenazadas, plagas agrícolas y migración estacional."
     },
     "vision": {
-      "kicker": "Mariposas y polillas del Neotrópico",
-      "statement": "Una de las faunas más ricas del planeta",
-      "statementFocus": "y de las menos secuenciadas.",
-      "lead": "Empezamos con lo que podemos hacer hoy: crear protocolos, conservar tejidos en bancos y formar personas. Creceremos a medida que maduren el financiamiento y las alianzas.",
+      "heading": "¿Por qué mariposas y polillas?",
+      "lead": "Las mariposas y polillas habitan casi todos los ecosistemas terrestres y son especialmente diversas en el Neotrópico, lo que las convierte en un grupo ideal para estudiar ecología, evolución y conservación.",
       "body": [
-        "Las mariposas y polillas habitan casi todos los ecosistemas terrestres y son especialmente diversas en el Neotrópico, lo que las convierte en un grupo ideal para estudiar ecología, evolución y conservación.",
         "Sin embargo, la mayoría de las especies de la región aún no tiene genomas de referencia ni marcadores genéticos. Caligo reúne investigadores y recursos de toda América Latina para identificar especies, descubrir otras nuevas y entender cómo surgen."
       ]
     },

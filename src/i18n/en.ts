@@ -142,12 +142,9 @@ export const en = {
       "intro": "Caligo is shaping four projects on chromosome change, threatened-population connectivity, crop pests and seasonal migration."
     },
     "vision": {
-      "kicker": "Neotropical butterflies and moths",
-      "statement": "One of the planet’s richest yet",
-      "statementFocus": "least-sequenced faunas.",
-      "lead": "We start with what we can do now: build protocols, bank tissues and train people. We scale as funding and partnerships mature.",
+      "heading": "Why butterflies and moths?",
+      "lead": "Butterflies and moths live in nearly every terrestrial ecosystem and are especially diverse in the Neotropics, which makes them ideal for studying ecology, evolution and conservation.",
       "body": [
-        "Butterflies and moths live in nearly every terrestrial ecosystem and are especially diverse in the Neotropics, which makes them ideal for studying ecology, evolution and conservation.",
         "Yet most species in the region still lack reference genomes and genetic markers. Caligo brings researchers and resources together across Latin America to identify species, discover new ones and understand how they arise."
       ]
     },
