@@ -141,34 +141,64 @@ export const en = {
       "heading": "From questions to pilot projects",
       "intro": "Caligo is shaping four projects on chromosome change, threatened-population connectivity, crop pests and seasonal migration."
     },
-    "intro": {
-      "eyebrow": "Why butterflies and moths",
-      "title": "Why butterflies and moths?",
+    "vision": {
+      "kicker": "Neotropical butterflies and moths",
+      "statement": "One of the planet’s richest yet",
+      "statementFocus": "least-sequenced faunas.",
+      "lead": "We start with what we can do now: build protocols, bank tissues and train people. We scale as funding and partnerships mature.",
       "body": [
-        "Butterflies and moths live in nearly every terrestrial ecosystem and are especially diverse in the Neotropics. They are an ideal group for studying ecology, evolution and conservation, if the right information is available.",
-        "Reference genomes and genetic markers are still missing for most species in this region. Caligo brings researchers and resources together across Latin America to answer questions about species identification, discovery and speciation."
+        "Butterflies and moths live in nearly every terrestrial ecosystem and are especially diverse in the Neotropics, which makes them ideal for studying ecology, evolution and conservation.",
+        "Yet most species in the region still lack reference genomes and genetic markers. Caligo brings researchers and resources together across Latin America to identify species, discover new ones and understand how they arise."
       ]
     },
-    "building": {
-      "heading": "What Caligo is building",
+    "tiers": {
+      "heading": "Three tiers of genomic data",
+      "intro": "Each tier answers different questions, at a different cost.",
+      "tierLabel": "Tier",
+      "replay": "Replay",
       "items": [
         {
-          "title": "Sequence undersampled groups",
-          "body": "Produce DNA barcodes, population data and reference assemblies for taxonomic groups that remain poorly represented."
+          "title": "DNA barcodes",
+          "body": "A short, standard stretch of DNA, matched against a reference library, identifies the species. The same approach reads mixed samples, such as pollen carried on a proboscis."
         },
         {
-          "title": "Link genetic information with specimens",
-          "body": "Link each sequence or assembly to a documented specimen in a collection so researchers can check which organism was sequenced and where it came from."
+          "title": "Population resequencing",
+          "body": "Short reads from many individuals, aligned to a reference genome, show where populations differ and help tell species apart."
         },
         {
-          "title": "Build regional capacity",
-          "body": "Expand sequencing, sample banking and bioinformatics in Latin America, from country capitals to remote field sites in areas of high biodiversity."
-        },
-        {
-          "title": "Training and fair credit",
-          "body": "Support training, open data and shared publications while recognising everyone who contributes specimens, analysis or knowledge."
+          "title": "Reference genomes",
+          "body": "Chromosome-scale assemblies: one continuous sequence per chromosome instead of many fragments. Resequenced reads are aligned to them."
         }
-      ]
+      ],
+      "diagrams": {
+        "barcode": {
+          "title": "How a DNA barcode identifies a species",
+          "desc": "A butterfly of unknown species gives a short, standard stretch of DNA. Each of its bases, A, C, G or T, becomes a coloured bar, forming a barcode. The barcode is compared with the barcodes of four Heliconius species in a reference library. Three differ at a few positions; the fourth is identical, so the specimen is identified as Heliconius cydno."
+        },
+        "resequencing": {
+          "title": "How population resequencing compares populations",
+          "desc": "Three butterflies from one population and three from another are sequenced as short reads. The reads line up along a reference genome, those of the first population above it and those of the second below. At one position every read from the first population carries an A and every read from the second carries a G: a site where the two populations differ."
+        },
+        "reference": {
+          "title": "How a reference genome is assembled",
+          "desc": "The DNA of one butterfly is sequenced as many fragments. The fragments are ordered and joined until each chromosome is one continuous sequence. The result is the karyotype of a typical Heliconius: 21 chromosomes.",
+          "count": "21 chromosomes"
+        },
+        "voucher": {
+          "desc": "A pinned butterfly with a label carrying an identifier, linked to its genome, which carries the same identifier."
+        }
+      },
+      "principleLabel": "Caligo principle",
+      "principle": "No genome without a vouchered, identified specimen and a specialist who can stand behind that identification."
+    },
+    "proof": {
+      "date": "20–23 July 2026 · Bogotá",
+      "heading": "The network’s first eight Heliconius reference genomes",
+      "body": "Generated during a four-day workshop with the Red Colombiana de Genómica, Universidad Nacional de Colombia, Oxford Nanopore, the Wellcome Sanger Institute and Holobiont Research.",
+      "link": "The Heliconius pilot project",
+      "photoAlt": "A portable Oxford Nanopore sequencer connected to a computer on a laboratory bench at the Bogotá workshop.",
+      "photoCredit": "Photo supplied by Caligo",
+      "plateLabel": "Bogotá · July 2026"
     },
     "activity": {
       "eyebrow": "Recent and upcoming",
@@ -463,8 +493,8 @@ export const en = {
     "mutableData": "Mutable database or institutional record. The access date is shown."
   },
   "notFound": {
-    "title": "This page has not been assembled yet",
-    "body": "The address may have changed, or the page may never have existed. Here is the way back.",
+    "title": "This page hasn’t been sequenced yet",
+    "body": "The address may have changed, or the page never existed. Like this moth, you may be circling the wrong light.",
     "homeLink": "Back to the home page"
   },
   "footer": {

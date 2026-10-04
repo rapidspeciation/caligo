@@ -287,6 +287,9 @@ export type InitiativeEvent = {
   dates: Bilingual;
   location: Bilingual;
   summary: Bilingual;
+  /** Optional shorter summary for the compact Home timeline, where a
+   *  dedicated block already tells the full story. */
+  homeSummary?: Bilingual;
   /** [longitude, latitude] of the host city, used on the network map. */
   lonLat: readonly [number, number];
 };
@@ -310,6 +313,10 @@ export const EVENTS: InitiativeEvent[] = [
     summary: {
       en: 'The network’s first activity in Latin America, with the Red Colombiana de Genómica. Participants generated the first eight reference genomes of the genus Heliconius.',
       es: 'La primera actividad de la red en América Latina, con la Red Colombiana de Genómica. Durante el taller se generaron los primeros ocho genomas de referencia del género Heliconius.',
+    },
+    homeSummary: {
+      en: 'The network’s first activity in Latin America, with the Red Colombiana de Genómica.',
+      es: 'La primera actividad de la red en América Latina, con la Red Colombiana de Genómica.',
     },
   },
   {

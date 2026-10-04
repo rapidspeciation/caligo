@@ -28,6 +28,36 @@ const nEs = dictEs.notFound;
 >
   <section class="not-found container-narrow">
 
+    <!-- A moth circling a lamp. Decorative; reduced motion leaves it resting
+         beside the bulb. -->
+    <div class="lamp" aria-hidden="true">
+      <svg class="lamp-svg" viewBox="0 0 240 200" focusable="false">
+        <defs>
+          <radialGradient id="lamp-glow">
+            <stop offset="0" stop-color="var(--highlight)" stop-opacity="0.32" />
+            <stop offset="1" stop-color="var(--highlight)" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <line class="lamp-cord" x1="120" y1="0" x2="120" y2="70" />
+        <circle cx="120" cy="104" r="78" fill="url(#lamp-glow)" />
+        <path class="lamp-cap" d="M111 70 h18 v12 h-18 Z" />
+        <path class="lamp-bulb" d="M112 82 C 98 90 96 110 108 122 C 112 126 114 130 114 134 h12 C 126 130 128 126 132 122 C 144 110 142 90 128 82 Z" />
+        <path class="lamp-filament" d="M115 120 C 116 110 118 106 120 112 C 122 106 124 110 125 120" />
+      </svg>
+      <div class="moth">
+        <svg viewBox="-12 -10 24 18" focusable="false">
+          <g class="moth-wings">
+            <path d="M0 -1 C -4 -7 -11 -6 -10.5 -1 C -10 2.4 -4 2 0 1 Z" />
+            <path d="M0 -1 C 4 -7 11 -6 10.5 -1 C 10 2.4 4 2 0 1 Z" />
+            <path d="M0 0.6 C -3.6 1.6 -7.6 4.2 -5.4 6.4 C -3.6 7.6 -1.4 5 0 2.2 Z" />
+            <path d="M0 0.6 C 3.6 1.6 7.6 4.2 5.4 6.4 C 3.6 7.6 1.4 5 0 2.2 Z" />
+          </g>
+          <path class="moth-body" d="M0 -4 L0 5" />
+          <path class="moth-antennae" d="M-0.4 -3.8 C -1.6 -6.4 -3.4 -7.4 -4.6 -7.6 M0.4 -3.8 C 1.6 -6.4 3.4 -7.4 4.6 -7.6" />
+        </svg>
+      </div>
+    </div>
+
     <!-- English -->
     <div class="not-found-block" lang="en">
       <p class="not-found-eyebrow mono">404</p>
@@ -62,6 +92,49 @@ const nEs = dictEs.notFound;
 
   .not-found {
     padding-block: var(--space-xl);
+  }
+
+  .lamp {
+    position: relative;
+    width: 15rem;
+    max-width: 100%;
+    aspect-ratio: 240 / 200;
+    margin: calc(-1 * var(--space-xl)) 0 var(--space-m);
+  }
+  .lamp-svg { width: 100%; height: 100%; overflow: visible; }
+  .lamp-cord { stroke: var(--text-faint); stroke-width: 1; }
+  .lamp-cap { fill: var(--text-muted); }
+  .lamp-bulb {
+    fill: color-mix(in oklab, var(--highlight) 22%, var(--bg-raised));
+    stroke: var(--text-muted);
+    stroke-width: 1.2;
+  }
+  .lamp-filament { fill: none; stroke: var(--highlight); stroke-width: 1.3; stroke-linecap: round; }
+  .moth {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1.7rem;
+    height: 1.3rem;
+    /* An uneven loop around the bulb, in the lamp's own 240 x 200 box
+       scaled to 15rem. */
+    offset-path: path('M 120 52 C 186 44 206 104 170 136 C 134 168 64 160 58 118 C 52 76 84 56 120 52 Z');
+    offset-rotate: auto 90deg;
+    animation: moth-orbit 4.6s linear infinite;
+  }
+  .moth svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  .moth-wings path { fill: var(--text-muted); }
+  .moth-body { stroke: var(--text-strong); stroke-width: 1.6; stroke-linecap: round; }
+  .moth-antennae { fill: none; stroke: var(--text-muted); stroke-width: 0.7; stroke-linecap: round; }
+  .moth-wings { transform-box: fill-box; transform-origin: center; animation: moth-flap 120ms ease-in-out infinite alternate; }
+  @keyframes moth-orbit {
+    from { offset-distance: 0%; }
+    to { offset-distance: 100%; }
+  }
+  @keyframes moth-flap { to { transform: scaleX(0.45); } }
+  @media (prefers-reduced-motion: reduce) {
+    .moth { animation: none; offset-distance: 22%; }
+    .moth-wings { animation: none; }
   }
 
   .not-found-block + .not-found-block {

@@ -138,34 +138,64 @@ export const es: Dict = {
       "heading": "De las preguntas a los proyectos piloto",
       "intro": "Caligo está desarrollando cuatro proyectos sobre cambios cromosómicos, conectividad de poblaciones amenazadas, plagas agrícolas y migración estacional."
     },
-    "intro": {
-      "eyebrow": "Por qué mariposas y polillas",
-      "title": "¿Por qué mariposas y polillas?",
+    "vision": {
+      "kicker": "Mariposas y polillas del Neotrópico",
+      "statement": "Una de las faunas más ricas del planeta",
+      "statementFocus": "y de las menos secuenciadas.",
+      "lead": "Empezamos con lo que podemos hacer hoy: crear protocolos, conservar tejidos en bancos y formar personas. Creceremos a medida que maduren el financiamiento y las alianzas.",
       "body": [
-        "Las mariposas y polillas habitan casi todos los ecosistemas terrestres y son especialmente diversas en el Neotrópico. Son un grupo ideal para estudiar ecología, evolución y conservación, si se cuenta con la información necesaria.",
-        "La mayoría de las especies de la región aún carece de genomas de referencia y marcadores genéticos. Caligo reúne investigadores y recursos de América Latina para responder preguntas sobre identificación, descubrimiento de especies y especiación."
+        "Las mariposas y polillas habitan casi todos los ecosistemas terrestres y son especialmente diversas en el Neotrópico, lo que las convierte en un grupo ideal para estudiar ecología, evolución y conservación.",
+        "Sin embargo, la mayoría de las especies de la región aún no tiene genomas de referencia ni marcadores genéticos. Caligo reúne investigadores y recursos de toda América Latina para identificar especies, descubrir otras nuevas y entender cómo surgen."
       ]
     },
-    "building": {
-      "heading": "Qué está construyendo Caligo",
+    "tiers": {
+      "heading": "Tres niveles de datos genómicos",
+      "intro": "Cada nivel responde preguntas distintas, con un costo distinto.",
+      "tierLabel": "Nivel",
+      "replay": "Repetir",
       "items": [
         {
-          "title": "Secuenciar grupos poco estudiados",
-          "body": "Producir códigos de barras de ADN, datos poblacionales y ensamblajes de referencia para grupos taxonómicos que siguen poco representados."
+          "title": "Códigos de barras de ADN",
+          "body": "Un fragmento corto y estandarizado de ADN, comparado con una biblioteca de referencia, identifica la especie. Con el mismo método se leen muestras mixtas, como el polen que lleva una probóscide."
         },
         {
-          "title": "Vincular la información genética con ejemplares",
-          "body": "Vincular cada secuencia o ensamblaje a un ejemplar de colección documentado para comprobar qué organismo se secuenció y cuál es su procedencia."
+          "title": "Resecuenciación poblacional",
+          "body": "Lecturas cortas de muchos individuos, alineadas a un genoma de referencia, muestran en qué difieren las poblaciones y ayudan a distinguir especies."
         },
         {
-          "title": "Fortalecer las capacidades regionales",
-          "body": "Ampliar la secuenciación, los bancos de muestras y la bioinformática en América Latina, desde las capitales hasta sitios de campo remotos en áreas de alta biodiversidad."
-        },
-        {
-          "title": "Formación y crédito justo",
-          "body": "Apoyar la formación, los datos abiertos y las publicaciones conjuntas, reconociendo a quienes aportan ejemplares, análisis o conocimientos."
+          "title": "Genomas de referencia",
+          "body": "Ensamblajes a escala cromosómica: una secuencia continua por cromosoma en lugar de muchos fragmentos. Sobre ellos se alinean las lecturas resecuenciadas."
         }
-      ]
+      ],
+      "diagrams": {
+        "barcode": {
+          "title": "Cómo un código de barras de ADN identifica una especie",
+          "desc": "Una mariposa de especie desconocida aporta un fragmento corto y estandarizado de ADN. Cada una de sus bases, A, C, G o T, se convierte en una barra de color y forma un código de barras. El código se compara con los de cuatro especies de Heliconius en una biblioteca de referencia. Tres difieren en algunas posiciones; la cuarta es idéntica, así que el ejemplar se identifica como Heliconius cydno."
+        },
+        "resequencing": {
+          "title": "Cómo la resecuenciación compara poblaciones",
+          "desc": "Se secuencian en lecturas cortas tres mariposas de una población y tres de otra. Las lecturas se alinean a lo largo de un genoma de referencia: las de la primera población por encima y las de la segunda por debajo. En una posición, todas las lecturas de la primera población tienen una A y todas las de la segunda una G: un sitio donde las dos poblaciones difieren."
+        },
+        "reference": {
+          "title": "Cómo se ensambla un genoma de referencia",
+          "desc": "El ADN de una mariposa se secuencia en muchos fragmentos. Los fragmentos se ordenan y se unen hasta que cada cromosoma es una secuencia continua. El resultado es el cariotipo de un Heliconius típico: 21 cromosomas.",
+          "count": "21 cromosomas"
+        },
+        "voucher": {
+          "desc": "Una mariposa montada con una etiqueta que lleva un identificador, vinculada a su genoma, que lleva el mismo identificador."
+        }
+      },
+      "principleLabel": "Principio de Caligo",
+      "principle": "Ningún genoma sin un ejemplar testigo identificado y un especialista que respalde esa identificación."
+    },
+    "proof": {
+      "date": "20–23 de julio de 2026 · Bogotá",
+      "heading": "Los primeros ocho genomas de referencia de Heliconius de la red",
+      "body": "Se generaron durante un taller de cuatro días con la Red Colombiana de Genómica, la Universidad Nacional de Colombia, Oxford Nanopore, el Wellcome Sanger Institute y Holobiont Research.",
+      "link": "El proyecto piloto de Heliconius",
+      "photoAlt": "Un secuenciador portátil de Oxford Nanopore conectado a una computadora sobre un mesón de laboratorio durante el taller de Bogotá.",
+      "photoCredit": "Foto proporcionada por Caligo",
+      "plateLabel": "Bogotá · julio de 2026"
     },
     "activity": {
       "eyebrow": "Actividad reciente y próxima",
@@ -460,8 +490,8 @@ export const es: Dict = {
     "mutableData": "Base de datos o registro institucional cambiante. Se indica la fecha de consulta."
   },
   "notFound": {
-    "title": "No encontramos esta página",
-    "body": "Puede que la dirección haya cambiado o sea incorrecta. Puedes volver al inicio desde aquí.",
+    "title": "Esta página aún no ha sido secuenciada",
+    "body": "Puede que la dirección haya cambiado o que la página nunca haya existido. Como esta polilla, quizás estás girando alrededor de la luz equivocada.",
     "homeLink": "Volver al inicio"
   },
   "footer": {
