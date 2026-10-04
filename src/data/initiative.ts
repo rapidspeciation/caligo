@@ -308,8 +308,8 @@ export const EVENTS: InitiativeEvent[] = [
     },
     lonLat: [-74.07, 4.62],
     summary: {
-      en: 'First initiative activity in Latin America. The initiative plans to sequence its first four Heliconius species following the workshop.',
-      es: 'Primera actividad de la iniciativa en América Latina. Después del taller, la iniciativa planea secuenciar sus primeras cuatro especies de Heliconius.',
+      en: 'The network’s first activity in Latin America, with the Red Colombiana de Genómica. Participants generated the first eight reference genomes of the genus Heliconius.',
+      es: 'La primera actividad de la red en América Latina, con la Red Colombiana de Genómica. Durante el taller se generaron los primeros ocho genomas de referencia del género Heliconius.',
     },
   },
   {
@@ -319,8 +319,8 @@ export const EVENTS: InitiativeEvent[] = [
       es: 'Hackathon de Campinas',
     },
     dates: {
-      en: 'April 2027',
-      es: 'Abril de 2027',
+      en: '30 March – 3 April 2027',
+      es: '30 de marzo – 3 de abril de 2027',
     },
     location: {
       en: 'Campinas, Brazil',
@@ -328,8 +328,8 @@ export const EVENTS: InitiativeEvent[] = [
     },
     lonLat: [-47.06, -22.91],
     summary: {
-      en: 'Hackathon at the Neotropical Lepidoptera / Biology of Butterflies congress; dates to be confirmed.',
-      es: 'Hackathon durante el congreso Lepidópteros Neotropicales / Biología de las Mariposas. Las fechas están por confirmar.',
+      en: 'Hackathon at the Biology of Butterflies and Neotropical Lepidoptera (ELEN) congress: collaborative work to assemble reference genomes, analyse the data and strengthen the network.',
+      es: 'Hackathon durante el congreso Biology of Butterflies y Encuentro de Lepidópteros Neotropicales (ELEN): trabajo colaborativo para ensamblar genomas de referencia, analizar los datos y fortalecer la red.',
     },
   },
 ];

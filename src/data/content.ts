@@ -176,7 +176,7 @@ export const PROJECTS: Project[] = [
       en: 'Chromosomal rearrangements in Heliconius: drivers and consequences',
       es: 'Reordenamientos cromosómicos en Heliconius: causas y consecuencias',
     },
-    leads: 'Nicol Rueda, Joana Meier',
+    leads: 'Nicol Rueda, Joana Meier, Caroline Bacquet',
     leadsNote: {
       en: 'The presentation additionally names Caroline Bacquet; this difference between sources needs confirmation.',
       es: 'La presentación menciona además a Caroline Bacquet; esta diferencia entre fuentes necesita confirmación.',
