@@ -4,21 +4,15 @@ import CopyEmail from '../CopyEmail.astro';
 import DiscordButton from '../DiscordButton.astro';
 import { LINKS } from '../../data/content';
 import HeroMedia from '../HeroMedia.astro';
-import MediaCandidateViewer from '../MediaCandidateViewer.astro';
+import LeadershipGrid from '../LeadershipGrid.astro';
+import { ABOUT_FEEDBACK } from '../../data/about-feedback';
+import { pick } from '../../data/initiative';
 import Icon from '../Icon.astro';
 import CommunityStats from '../CommunityStats.astro';
 import Timeline from '../Timeline.astro';
 import NetworkMap from '../NetworkMap.astro';
-import { italicizeSpecies } from '../../data/content';
 import { getDict, localePath, type Locale } from '../../i18n';
-import { PILOTS, getMedia } from '../../data/records';
-
-const pilotScienceAnchors = [
-  'chromosomes',
-  'connectivity',
-  'soybean-movement-resistance',
-  'panacea-migration',
-] as const;
+import { getMedia } from '../../data/records';
 
 interface Props {
   locale: Locale;
@@ -39,10 +33,6 @@ const desktopSrcset = [
   { width: 1600, height: 902,  path: `${base}media/hero/caligo-tambopata-1600w.jpg` },
   { width: 2400, height: 1354, path: `${base}media/hero/caligo-tambopata-2400w.jpg` },
 ] as const;
-const publishedPilots = PILOTS.filter((pilot) => pilot.publish);
-if (publishedPilots.length !== h.researchCards.length) {
-  throw new Error('HomePage: each published pilot needs one evidence-to-pilot card.');
-}
 ---
 
 <Base locale={locale} title={h.metaTitle} description={h.metaDescription} page="/">
@@ -124,50 +114,19 @@ if (publishedPilots.length !== h.researchCards.length) {
     </div>
   </section>
 
-  <!-- ====================== H4 — Published evidence → proposed work ====================== -->
-  <section id="questions" class="section" aria-labelledby="h4-title">
+  <!-- ====================== H4 — Leadership team ======================
+       Requested by Nicol on 27 September 2026 in place of the four research
+       questions, which remain on Science and Pilot projects. The legacy
+       anchors keep old links to this part of the page working. -->
+  <section id="leadership" class="section" aria-labelledby="leadership-title">
+    <span id="questions" hidden aria-hidden="true" />
     <span id="h4" hidden aria-hidden="true" data-legacy-anchor="h4" />
     <span id="proposed-pilots" hidden aria-hidden="true" />
     <span id="h5" hidden aria-hidden="true" data-legacy-anchor="h5" />
     <div class="container-wide">
-      <h2 id="h4-title">{h.questions.heading}</h2>
-      <p class="lead">{h.questions.intro}</p>
-      <ol class="research-cards" role="list">
-        {publishedPilots.map((pilot, i) => {
-          const card = h.researchCards[i];
-          return (
-            <li class="research-card">
-              <p class="research-plate-label">{i + 1}. {h.researchLabels[i]}</p>
-              <MediaCandidateViewer
-                moduleId={pilot.id}
-                locale={locale}
-                aspectRatio="3 / 2"
-                class="research-card-media"
-                captionMode="compact"
-                singleImage
-              />
-              <div class="research-card-content">
-                <h3 set:html={italicizeSpecies(card.question)} />
-
-                <div class="research-card-links">
-                  <a
-                    class="text-link"
-                    href={`${localePath(locale, '/science')}#${pilotScienceAnchors[i]}`}
-                  >
-                    {card.scienceTopic}<Icon name="arrow-right" />
-                  </a>
-                  <a
-                    class="text-link"
-                    href={`${localePath(locale, '/projects')}#${pilot.slug}`}
-                  >
-                    {card.projectTopic}<Icon name="arrow-right" />
-                  </a>
-                </div>
-              </div>
-            </li>
-          );
-        })}
-      </ol>
+      <h2 id="leadership-title">{pick(ABOUT_FEEDBACK.network.leadershipHeading, locale)}</h2>
+      <p class="lead">{pick(ABOUT_FEEDBACK.network.leadershipIntro, locale)}</p>
+      <LeadershipGrid locale={locale} />
     </div>
   </section>
 
@@ -213,7 +172,7 @@ if (publishedPilots.length !== h.researchCards.length) {
 
   /* ---- Scroll margins for semantic + legacy anchors ---- */
   #overview, #from-organism-to-genome, #building,
-  #questions, #proposed-pilots, #activity, #discover-caligo,
+  #leadership, #questions, #proposed-pilots, #activity, #discover-caligo,
   #h1, #h2, #h3, #h4, #h5, #h6 { scroll-margin-top: 5rem; }
 
   /* The stat bar and the introduction share one background, so they need
@@ -495,68 +454,6 @@ if (publishedPilots.length !== h.researchCards.length) {
     }
   }
 
-  /* ---- Published evidence → proposed project cards ---- */
-  .research-cards {
-    list-style: none;
-    padding: 0;
-    margin: var(--space-l) 0 0;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-xl) var(--space-l);
-  }
-  /*
-    Match the original pilot-card layout: two columns as soon as there is
-    enough room for readable cards. Waiting until 58rem made each item
-    become an oversized full-width panel on common laptop/zoomed views.
-  */
-  @media (min-width: 44rem) {
-    .research-cards {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  .research-card {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border: 1px solid var(--hairline);
-    border-radius: var(--radius);
-    background: var(--bg-panel);
-  }
-  .research-card :global(.media-candidate-viewer) {
-    margin: 0;
-  }
-  .research-card :global(.mcv-stage) {
-    border-radius: 0;
-  }
-  .research-card-content {
-    flex: 1;
-    padding: var(--space-m);
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .research-card h3 {
-    margin: 0;
-    max-width: 30ch;
-    font-family: var(--font-display);
-    font-size: clamp(1.04rem, 0.98rem + 0.3vw, 1.22rem);
-    line-height: 1.2;
-    color: var(--text-strong);
-  }
-  .research-card-links {
-    margin-top: var(--space-s);
-    display: grid;
-    gap: var(--space-xs);
-  }
-  .research-card-links .text-link {
-    width: fit-content;
-    line-height: 1.35;
-  }
-  .research-card-links :global(svg) {
-    flex: none;
-  }
-
   .network-section { border-top: 1px solid var(--hairline); }
 
   /* ---- H5 Current activity ---- */
@@ -621,15 +518,10 @@ if (publishedPilots.length !== h.researchCards.length) {
     .intro-copy .intro-link { grid-row: 2; align-self: start; }
   }
   .intro-link { margin-top: var(--space-m); }
-  .research-plate-label { margin: 0; padding: .8rem var(--space-m); border-bottom: 1px solid var(--hairline); color: var(--text-muted); font-size: var(--step--1); font-weight: 500; }
-  .research-card :global(.mcv-stage) { border-radius: 2px; }
-  .research-card h3 { font-size: clamp(1.15rem, 1rem + .45vw, 1.4rem); font-weight: 500; line-height: 1.3; max-width: 34ch; }
-  .research-card-links .text-link { font-size: .88rem; }
-  .research-card-links .text-link:last-child { color: var(--text-muted); }
   .section--close { border-top: 1px solid var(--hairline); background: var(--bg); }
   .close-copy h2 { max-width: 25ch; }
   @media (max-width: 60rem) { .hero-title { font-size: clamp(2rem, 5vw, 3rem); max-width: 24ch; } .hero-copy { padding-block: 1.25rem; } .hero-overlay { padding-bottom: .5rem; } .hero-btn-ghost { padding-inline: 1rem; } }
-  @media (max-width: 48rem) { .intro-layout { grid-template-columns: 1fr; gap: 2rem; } .research-cards { gap: 2rem; } }
+  @media (max-width: 48rem) { .intro-layout { grid-template-columns: 1fr; gap: 2rem; } }
   @media (min-width: 40rem) and (max-width: 60rem) {
     .hero-tagline { max-width: 65ch; }
     .hero-actions { justify-items: start; }

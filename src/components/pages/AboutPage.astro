@@ -2,11 +2,11 @@
 import Base from '../../layouts/Base.astro';
 import PageHeader from '../PageHeader.astro';
 import PrincipleGrid from '../PrincipleGrid.astro';
-import LeadershipGrid from '../LeadershipGrid.astro';
+import Icon from '../Icon.astro';
 import FacilityTable from '../FacilityTable.astro';
 import { ABOUT_FEEDBACK, ABOUT_LINKS } from '../../data/about-feedback';
 import { facilityStats, pick } from '../../data/initiative';
-import { getDict, type Locale } from '../../i18n';
+import { getDict, localePath, type Locale } from '../../i18n';
 
 interface Props {
   locale: Locale;
@@ -59,11 +59,9 @@ const facilityIntro = locale === 'en'
         <p id="about-community" class="prose-para content-body community-intro">{pick(page.community.body, locale)}</p>
       </div>
 
-      <div class="network-block" aria-labelledby="about-leadership">
-        <h3 id="about-leadership" class="subsection-heading content-heading">{pick(page.network.leadershipHeading, locale)}</h3>
-        <p class="prose-para content-body">{pick(page.network.leadershipIntro, locale)}</p>
-        <LeadershipGrid locale={locale} />
-      </div>
+      <p class="prose-para content-body leadership-pointer">
+        <a class="text-link" href={`${localePath(locale, '/')}#leadership`}>{pick(page.network.leadershipLink, locale)}<Icon name="arrow-right" /></a>
+      </p>
 
       <div class="network-block" aria-labelledby="about-facilities">
         <h3 id="about-facilities" class="subsection-heading content-heading">{pick(page.network.facilitiesHeading, locale)}</h3>

@@ -59,6 +59,7 @@ export const ABOUT_FEEDBACK = {
     eyebrow: { en: 'The network', es: 'La red' },
     heading: { en: 'The Caligo network', es: 'La red Caligo' },
     leadershipHeading: { en: 'Leadership team', es: 'Equipo de liderazgo' },
+    leadershipLink: { en: 'Meet the leadership team', es: 'Conoce al equipo de liderazgo' },
     leadershipIntro: {
       en: 'Eight researchers from institutions in Latin America and Europe coordinate the community.',
       es: 'Ocho investigadores de instituciones de América Latina y Europa coordinan la comunidad.',
