@@ -29,10 +29,15 @@ const base = import.meta.env.BASE_URL;
     <strong class="person-name">{person.name}</strong>
     <p class="person-role">{pick(person.role, locale)}</p>
     <p class="person-bio">{pick(person.bio, locale)}</p>
-    <p class="person-affil mono">{person.affiliation}</p>
-    <p class="person-region mono">
-      <span>{regionalTiesLabel}:</span> {pick(person.regionalTies, locale)}
-    </p>
+  </div>
+
+  <div class="person-foot">
+    <div class="person-place">
+      <p class="person-affil mono">{person.affiliation}</p>
+      <p class="person-region mono">
+        <span>{regionalTiesLabel}:</span> {pick(person.regionalTies, locale)}
+      </p>
+    </div>
     <a
       class="person-source mono"
       href={person.source.href}
@@ -52,10 +57,34 @@ const base = import.meta.env.BASE_URL;
     border: 1px solid var(--hairline);
     border-radius: var(--radius);
     display: grid;
-    grid-template-columns: clamp(6.5rem, 9vw, 8.5rem) minmax(0, 1fr);
-    gap: var(--space-m);
+    grid-template-columns: clamp(5.5rem, 8vw, 7.5rem) minmax(0, 1fr);
+    grid-template-areas: 'media content' 'foot foot';
+    /* Share row tracks with the neighbouring card so both footer rules
+       line up across a row. */
+    grid-row: span 2;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+    margin-bottom: var(--space-m);
+    column-gap: var(--space-m);
     padding: var(--space-m);
   }
+  .person-media { grid-area: media; }
+  .person-content { grid-area: content; }
+  /* Institution and profile link run under both columns, so the space
+     below the portrait is used instead of left empty. */
+  .person-foot {
+    grid-area: foot;
+    margin-top: var(--space-s);
+    padding-top: var(--space-s);
+    border-top: 1px solid var(--hairline);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    align-content: flex-start;
+    justify-content: space-between;
+    gap: var(--space-xs) var(--space-m);
+  }
+  .person-place { display: grid; gap: 0.2rem; min-width: 0; }
   /* Portraits come from different sources (studio, field, lab). One crop
      anchored on the upper third and a light shared grade make them read
      as a single set without altering anyone's likeness. */
@@ -108,7 +137,7 @@ const base = import.meta.env.BASE_URL;
     line-height: 1.4;
   }
   .person-bio {
-    margin: 0.15rem 0 var(--space-xs);
+    margin: 0.15rem 0 0;
     font-size: var(--step--1);
     color: var(--text-muted);
     line-height: 1.55;
@@ -130,9 +159,6 @@ const base = import.meta.env.BASE_URL;
     color: var(--text-muted);
   }
   .person-source {
-    align-self: flex-start;
-    margin-top: auto;
-    padding-top: var(--space-xs);
     color: var(--accent);
     font-size: var(--step--2);
     letter-spacing: 0.02em;
