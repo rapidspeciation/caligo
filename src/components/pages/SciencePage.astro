@@ -573,6 +573,10 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     border-radius: var(--radius-xs);
     border: 1px solid var(--hairline);
   }
+  /* Once open, the large photo beside the answer takes over. */
+  .question[open] .question-thumb { display: none; }
+  .question[open] .question-summary { grid-template-columns: minmax(0, 1fr) auto; }
+  .question-summary:focus:not(:focus-visible) { outline: none; box-shadow: none; }
   .question-summary-text { display: grid; gap: var(--space-2xs); min-width: 0; }
   .question-label { color: var(--accent-strong); }
   .question-heading { max-width: 34ch; transition: color var(--transition); }
