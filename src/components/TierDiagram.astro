@@ -9,7 +9,7 @@
  *
  * The markup IS the final state. Without JavaScript, or with reduced motion,
  * that is what renders. With JavaScript the figure is "armed" (animations
- * attached but paused on their first frame) and plays once when it scrolls
+ * attached but paused on their first frame) and plays each time it scrolls
  * into view; Replay restarts it. Only transform, opacity and
  * stroke-dashoffset animate, so nothing reflows.
  */
@@ -253,15 +253,21 @@ const chromosomes = Array.from({ length: 21 }, (_, i) => {
   };
 
   if (!reduce.matches && 'IntersectionObserver' in window) {
+    // Play each time a diagram comes back into view: start when it is mostly
+    // visible, and re-arm once it has left the viewport completely.
+    const shown = new WeakSet<Element>();
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          play(entry.target as HTMLElement);
-          observer.unobserve(entry.target);
+          if (entry.intersectionRatio >= 0.55 && !shown.has(entry.target)) {
+            shown.add(entry.target);
+            play(entry.target as HTMLElement);
+          } else if (!entry.isIntersecting) {
+            shown.delete(entry.target);
+          }
         }
       },
-      { threshold: 0.55 },
+      { threshold: [0, 0.55] },
     );
     figures.forEach((figure) => {
       figure.classList.add('is-armed');
