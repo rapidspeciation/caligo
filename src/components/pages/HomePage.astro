@@ -509,8 +509,12 @@ const desktopSrcset = [
   .intro-copy > * + * { margin-top: var(--space-m); }
   .intro-copy h2 { max-width: 25ch; }
   @media (min-width: 60rem) {
-    .intro-copy { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); column-gap: clamp(1.5rem, 3vw, 3rem); position: relative; }
-    .intro-copy::after { content: ''; position: absolute; inset-block: 0; left: calc((100% - clamp(1.5rem, 3vw, 3rem)) / 2.3 + clamp(1.5rem, 3vw, 3rem) / 2); width: 1px; background: var(--hairline); }
+    /* Same two equal columns and divider position as the priorities grid
+       below, so both vertical rules line up. */
+    .intro-copy { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 0; position: relative; }
+    .intro-copy::after { content: ''; position: absolute; inset-block: 0; left: 50%; width: 1px; background: var(--hairline); }
+    .intro-copy h2, .intro-copy .intro-link { padding-right: var(--space-m); }
+    .intro-copy .lead { padding-left: var(--space-m); }
     .intro-copy h2, .intro-copy .intro-link { grid-column: 1; }
     .intro-copy .lead { grid-column: 2; }
     .intro-copy .lead:first-of-type { grid-row: 1; margin-top: 0; }

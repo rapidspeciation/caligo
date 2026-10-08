@@ -308,8 +308,8 @@ export const EVENTS: InitiativeEvent[] = [
     },
     lonLat: [-74.07, 4.62],
     summary: {
-      en: 'The network’s first activity in Latin America, with the Red Colombiana de Genómica. Participants generated the first eight reference genomes of the genus Heliconius.',
-      es: 'La primera actividad de la red en América Latina, con la Red Colombiana de Genómica. Durante el taller se generaron los primeros ocho genomas de referencia del género Heliconius.',
+      en: 'The network’s first activity in Latin America, with the Red Colombiana de Genómica. Eight Heliconius species were sequenced during the workshop.',
+      es: 'La primera actividad de la red en América Latina, con la Red Colombiana de Genómica. Durante el taller se secuenciaron ocho especies de Heliconius.',
     },
   },
   {

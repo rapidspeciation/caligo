@@ -244,6 +244,7 @@ export const es: Dict = {
     "questions": [
       {
         "heading": "¿Cómo pueden los cromosomas de las mariposas dividirse y fusionarse sin dejar de funcionar?",
+        "teaser": "La mayoría de Heliconius tiene 21 cromosomas; cinco especies del grupo sapho llegan a 60.",
         "answer": [
           "El número de cromosomas se mantiene estable durante millones de años en muchos linajes animales. En algunas mariposas y polillas ocurre algo distinto. La mayoría de las especies de Heliconius tiene 21 cromosomas en el juego haploide, pero cinco especies del grupo sapho tienen entre 21 y 60 después de fisiones repetidas.",
           "Los cromosomas de los lepidópteros son holocéntricos. Durante la división celular, la maquinaria que separa los cromosomas puede unirse a gran parte de su longitud, en lugar de hacerlo en un único centrómero. Por eso, un fragmento roto puede conservar esa maquinaria y pasar a una célula hija. Esto puede ayudar a que las fisiones cromosómicas persistan, pero no explica por qué se propagan en una población.",
@@ -252,6 +253,7 @@ export const es: Dict = {
       },
       {
         "heading": "¿Siguen conectadas las poblaciones de una mariposa amenazada una década después?",
+        "teaser": "Un estudio de 2016 encontró que la mayoría de las poblaciones seguían conectadas. ¿Lo están hoy?",
         "answer": [
           "Parides ascanius está restringida a restingas costeras y humedales del sureste de Brasil. La UICN la evaluó como Vulnerable a nivel global en 2018. La evaluación nacional de Brasil la clasificó En Peligro en 2021.",
           "Seraphim y sus colegas compararon las poblaciones supervivientes mediante secuencias mitocondriales de COI y ocho marcadores microsatélites. El estudio de 2016 encontró poca estructura genética, ninguna señal de endogamia y una migración alta entre la mayoría de los sitios muestreados, aunque una población estaba más aislada por el entorno metropolitano.",
@@ -260,6 +262,7 @@ export const es: Dict = {
       },
       {
         "heading": "¿Cómo se desplazan las plagas y evoluciona la resistencia en los paisajes sojeros?",
+        "teaser": "Polillas de especies muy parecidas pueden diferir en cómo se desplazan y resisten el control.",
         "answer": [
           "En los cultivos de soja de Brasil conviven varias especies cercanas de polillas que pueden ser difíciles de distinguir durante el monitoreo. Identificarlas bien es importante porque su movimiento y su resistencia pueden diferir.",
           "Estudios brasileños han detectado cambios en la susceptibilidad a proteínas insecticidas que exigen pruebas repetidas y específicas para cada especie. Los datos genómicos permiten distinguir las especies, comparar el movimiento entre poblaciones e identificar variantes asociadas con la resistencia.",
@@ -268,6 +271,7 @@ export const es: Dict = {
       },
       {
         "heading": "Miles de Panacea prola vuelan hacia el noreste. ¿De dónde vienen?",
+        "teaser": "Se contaron 2.509 Panacea prola volando hacia el noreste en el sureste de Perú.",
         "answer": [
           "En 2020, Gallice y sus colegas registraron 2.509 individuos de Panacea prola durante cincuenta observaciones de una hora en el sureste de Perú. Solo 19 volaron en otra dirección. Los autores presentaron el hallazgo como la primera evidencia de una migración de insectos en la Amazonía.",
           "La referencia genómica más cercana disponible pertenece a otra especie de la misma subfamilia, Batesia hypochlora. No permite saber de dónde venían las Panacea, si pertenecían a una o varias poblaciones ni si el movimiento se repite cada año.",

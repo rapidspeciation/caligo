@@ -247,6 +247,7 @@ export const en = {
     "questions": [
       {
         "heading": "How can butterfly chromosomes split and fuse, yet still work?",
+        "teaser": "Most Heliconius have 21 chromosomes; five sapho-group species have up to 60.",
         "answer": [
           "Chromosome number remains stable for millions of years in many animal lineages. Some butterflies and moths are different. Most Heliconius species carry 21 chromosomes in the haploid set, but five species in the sapho group have between 21 and 60 after repeated fissions.",
           "Lepidopteran chromosomes are holocentric. During cell division, the machinery that moves them can attach along much of the chromosome instead of at one localised centromere. A broken fragment can therefore retain the machinery needed to move into a daughter cell. This may help chromosome fissions persist, but it does not explain why they spread through a population.",
@@ -255,6 +256,7 @@ export const en = {
       },
       {
         "heading": "Are threatened butterfly populations still connected a decade later?",
+        "teaser": "A 2016 study found most populations still connected. Are they today?",
         "answer": [
           "Parides ascanius is restricted to coastal restinga and wetlands in south-eastern Brazil. The IUCN assessed it as Vulnerable globally in 2018. Brazil's national assessment listed it as Endangered in 2021.",
           "Seraphim and colleagues used mitochondrial COI sequences and eight microsatellite markers to compare the surviving populations. Their 2016 study found little genetic structure, no evidence of inbreeding and high migration among most sampled sites, although one population was more isolated by the metropolitan landscape.",
@@ -263,6 +265,7 @@ export const en = {
       },
       {
         "heading": "How do crop pests move and evolve resistance across soybean landscapes?",
+        "teaser": "Similar-looking moth species can differ in how they move and resist control.",
         "answer": [
           "Several closely related moth species occur in Brazilian soybean fields and can be difficult to distinguish during monitoring. Reliable identification matters because movement and resistance can differ among species.",
           "Brazilian studies have found changes in susceptibility to insecticidal proteins that require repeated, species-specific testing. Genomic data can distinguish the species, compare movement among populations and identify variants associated with resistance.",
@@ -271,6 +274,7 @@ export const en = {
       },
       {
         "heading": "Thousands of Panacea prola fly north-east. Where do they come from?",
+        "teaser": "Researchers counted 2,509 Panacea prola flying north-east in south-eastern Peru.",
         "answer": [
           "In 2020, Gallice and colleagues recorded 2,509 Panacea prola during fifty one-hour observations in south-eastern Peru. Only 19 flew in another direction. They presented the observation as the first evidence of an Amazonian insect migration.",
           "The closest available genomic reference is from another member of the same subfamily, Batesia hypochlora. It cannot reveal where the moving Panacea came from, whether they belonged to one population or several, or whether the movement repeats each year.",
