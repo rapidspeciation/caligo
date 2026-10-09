@@ -475,6 +475,157 @@ kbd,
   border: 0;
 }
 
+/* ============================ Explorable controls ============================
+   Shared by the Science diagrams (TierDiagram, FissionExplainer): one labelled
+   control per figure and a one-line readout of what it now shows. Native
+   inputs, so keyboard, touch and screen readers work without extra code. */
+.explorable-panel {
+  display: grid;
+  gap: 0.35rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed var(--hairline);
+}
+.explorable-panel[hidden] { display: none; }
+.explorable-foot {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.explorable-replay {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 1.75rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: var(--bg-inset);
+  color: var(--text-faint);
+  font: 500 0.72rem/1.2 var(--font-body);
+  cursor: pointer;
+  transition: color var(--transition), border-color var(--transition);
+}
+.explorable-replay:hover { color: var(--text-strong); border-color: var(--surface-border-strong); }
+.explorable-replay svg { width: 0.8rem; height: 0.8rem; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.explorable-label {
+  color: var(--text-muted);
+  font-size: var(--step--1);
+  font-weight: 560;
+  line-height: 1.3;
+}
+.explorable-range {
+  --fill: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 1.75rem;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+.explorable-range::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--accent) var(--fill), var(--surface-border-strong) var(--fill));
+}
+.explorable-range::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--accent) var(--fill), var(--surface-border-strong) var(--fill));
+}
+.explorable-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: calc(2px - 0.625rem);
+  border: 3px solid var(--bg-inset);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+  transition: transform var(--transition);
+}
+.explorable-range::-moz-range-thumb {
+  width: 1.25rem;
+  height: 1.25rem;
+  box-sizing: border-box;
+  border: 3px solid var(--bg-inset);
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.explorable-range:active::-webkit-slider-thumb { transform: scale(1.15); }
+.explorable-range:focus-visible { outline-offset: 1px; }
+.explorable-readout {
+  display: block;
+  min-height: 2lh;
+  color: var(--text);
+  font-size: var(--step--1);
+  line-height: 1.45;
+}
+.readout-base {
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+.readout-base--A { color: var(--base-A, var(--trait-plant)); }
+.readout-base--C { color: var(--base-C, var(--trait-wing)); }
+.readout-base--G { color: var(--base-G, var(--trait-scent)); }
+.readout-base--T { color: var(--base-T, var(--trait-pattern)); }
+.explorable-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.explorable-toggle label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--surface-border-strong);
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: var(--step--1);
+  line-height: 1.25;
+  cursor: pointer;
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
+}
+.explorable-toggle input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+/* Checked is shown by a filled dot as well as colour. */
+.explorable-toggle label::before {
+  content: '';
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+}
+.explorable-toggle label:has(:checked) {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  color: var(--text-strong);
+}
+.explorable-toggle label:has(:checked)::before { background: var(--accent); border-color: var(--accent); }
+.explorable-toggle label:has(:focus-visible) { outline: var(--focus-ring) solid var(--accent); outline-offset: 2px; }
+.explorable-toggle label:hover { color: var(--text-strong); }
+
 .skip-link {
   position: fixed;
   top: 0.5rem;

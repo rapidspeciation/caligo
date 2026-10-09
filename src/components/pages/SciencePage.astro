@@ -10,6 +10,7 @@ import MediaCandidateViewer from '../MediaCandidateViewer.astro';
 import Icon from '../Icon.astro';
 import FigureLightbox from '../FigureLightbox.astro';
 import TierDiagram from '../TierDiagram.astro';
+import FissionExplainer from '../FissionExplainer.astro';
 import { getDict, localePath, type Locale } from '../../i18n';
 import { getSource, getMediaModule } from '../../data/records';
 import { EVENTS, pick } from '../../data/initiative';
@@ -87,7 +88,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   </section>
 
   <!-- Three tiers of genomic data, from Nicol's vision document. Each card
-       carries a didactic diagram that plays once in view. -->
+       carries a didactic diagram that plays in view, then can be explored. -->
   <section id="tiers" class="section tiers-section" aria-labelledby="tiers-heading">
     <div class="container-wide">
       <div class="tiers-head">
@@ -230,7 +231,13 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
             <div class="disclosure-body question-body">
             <div class:list={['split', { 'split--prose-only': !aside.photo }]}>
               <div class="split-prose">
-                {q.answer.map((para) => <p class="content-body" set:html={italicizeSpecies(para)} />)}
+                {q.answer.map((para, n) => (
+                  <>
+                    <p class="content-body" set:html={italicizeSpecies(para)} />
+                    {/* After the holocentric paragraph: split the chromosomes yourself. */}
+                    {anchor === 'chromosomes' && n === 1 && <FissionExplainer locale={locale} />}
+                  </>
+                ))}
                 <p class="question-sources content-meta">
                   <span class="question-sources-label content-label">{sourcesLabel}: </span>
                   {sources.map((src, n) => (
@@ -666,10 +673,14 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: clamp(1rem, 1.6vw, 1.5rem);
   }
+  /* Subgrid keeps the diagrams, and the copy under them, level across the
+     three cards even though each explore panel has a different height. */
   .tier-card {
     min-width: 0;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-row: span 2;
+    grid-template-rows: subgrid;
+    row-gap: 0;
     overflow: hidden;
     background: var(--bg);
     border: 1px solid var(--hairline);

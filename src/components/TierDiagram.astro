@@ -12,9 +12,16 @@
  * attached but paused on their first frame) and plays each time it scrolls
  * into view; Replay restarts it. Only transform, opacity and
  * stroke-dashoffset animate, so nothing reflows.
+ *
+ * Each diagram then becomes explorable with exactly one control, and a
+ * one-line readout says what changed:
+ *   barcode       choose the library row to compare (radios over the rows)
+ *   resequencing  slide or drag along the genome, position by position
+ *   reference     slide the number of reads; gaps close as coverage grows
+ * Touching a control stops the autoplay for good; Replay restores it.
  */
 import { getDict, type Locale } from '../i18n';
-import { BUTTERFLY } from '../data/diagram-glyphs';
+import { BUTTERFLY, KARYOTYPE, seededRandom } from '../data/diagram-glyphs';
 
 type Kind = 'barcode' | 'resequencing' | 'reference';
 
@@ -26,6 +33,7 @@ interface Props {
 const { locale, kind } = Astro.props;
 const tiers = getDict(locale).science.tiers;
 const copy = tiers.diagrams[kind];
+const explore = tiers.explore;
 const id = `tier-diagram-${kind}`;
 
 /* ---------- Butterfly glyph (Heliconius-like: long narrow forewings) ---------- */
@@ -51,6 +59,11 @@ const rowY = (r: number) => ROW_Y0 + r * ROW_PITCH;
 const MATCH_ROW = LIBRARY.length - 1;
 /* When the scanning frame reaches each row (s), for the mismatch ticks. */
 const SCAN_AT = [3.35, 4.1, 4.9];
+const DIFFS = LIBRARY.map((row) => [...row.seq].filter((b, i) => b !== QUERY[i]).length);
+/* Radios laid over the library rows, positioned in viewBox percentages. */
+const pct = (v: number) => `${(v * 100).toFixed(3)}%`;
+const VIEW_W = 360;
+const VIEW_H = 236;
 
 /* ---------- Tier 2: population resequencing ---------- */
 const REF_Y = 118;
@@ -68,7 +81,16 @@ const READS_BOTTOM: readonly Read[] = [
   [100, 160, 148], [172, 244, 148], [256, 330, 148],
   [118, 196, 162], [210, 282, 162], [294, 346, 162],
 ];
-const covers = ([x1, x2]: Read) => x1 + 4 < SITE_X && x2 - 4 > SITE_X;
+/* 21 positions along the reference, 12 units apart; the variable site is
+   position 12 (index 11). Population 1 carries the reference A there,
+   population 2 a G; everywhere else every read matches the reference. */
+const REF_SEQ = 'CTAGGTCATCGAACTTGCAGT';
+const POS_X0 = 100;
+const POS_PITCH = 12;
+const SITE_I = 11;
+const posX = (i: number) => POS_X0 + i * POS_PITCH;
+const coversX = ([x1, x2]: Read, x: number) => x1 + 4 < x && x2 - 4 > x;
+const baseAt = (pop: 1 | 2, i: number) => (i === SITE_I ? (pop === 1 ? 'A' : 'G') : REF_SEQ[i]) as Base;
 const readsAll = [
   ...READS_TOP.map((r, i) => ({ r, pop: 1 as const, order: i, from: POP1 })),
   ...READS_BOTTOM.map((r, i) => ({ r, pop: 2 as const, order: i, from: POP2 })),
@@ -80,21 +102,12 @@ const readsAll = [
 });
 
 /* ---------- Tier 3: reference genome ---------- */
-function rng(seed: number) {
-  return () => {
-    seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-const rand = rng(21);
+const rand = seededRandom(21);
 const CHR_W = 13;
 const KARYO_X0 = 102;
 const KARYO_PITCH = 38;
 const ROW_CY = [46, 112, 178];
-const chromosomes = Array.from({ length: 21 }, (_, i) => {
-  const h = Math.round((56 - i * 1.15) * 10) / 10;
+const chromosomes = KARYOTYPE.map((h, i) => {
   const cx = KARYO_X0 + (i % 7) * KARYO_PITCH;
   const top = ROW_CY[Math.floor(i / 7)] - h / 2;
   // 2 to 4 fragments per chromosome, cut at uneven points.
@@ -116,13 +129,70 @@ const chromosomes = Array.from({ length: 21 }, (_, i) => {
   });
   return { i, cx, top, h, frags };
 });
+
+/* 
+/* Coverage: a small, honest simulation. Each chromosome receives reads of
+   9 units at random positions; overlapping reads (by 1.5 units or more) join
+   into one piece, and stretches no read reached stay as gaps. More reads are
+   always added on top of the earlier ones, so pieces only ever merge. */
+const READ_LEN = 9;
+const MIN_OVERLAP = 1.5;
+const COVERAGE = [0.5, 1, 1.5, 2, 3, 4, 6, 12];
+const readRand = seededRandom(7);
+const readStarts = KARYOTYPE.map((h) =>
+  Array.from({ length: Math.ceil((COVERAGE[COVERAGE.length - 1] * h) / READ_LEN) }, () => -(READ_LEN - 2) + readRand() * (h + READ_LEN - 4)),
+);
+const GENOME = KARYOTYPE.reduce((a, b) => a + b, 0);
+const r1 = (v: number) => Math.round(v * 10) / 10;
+const coverageSteps = COVERAGE.map((c) => {
+  let covered = 0;
+  const pieces: [number, number, number][] = [];
+  KARYOTYPE.forEach((h, ci) => {
+    const reads = readStarts[ci]
+      .slice(0, Math.round((c * h) / READ_LEN))
+      .map((s) => [Math.max(0, s), Math.min(h, s + READ_LEN)])
+      .sort((a, b) => a[0] - b[0]);
+    const contigs: number[][] = [];
+    for (const [a, b] of reads) {
+      const last = contigs[contigs.length - 1];
+      if (last && a <= last[1] - MIN_OVERLAP) last[1] = Math.max(last[1], b);
+      else contigs.push([a, b]);
+    }
+    for (const [a, b] of contigs) {
+      covered += b - a;
+      pieces.push([ci, r1(a), r1(b)]);
+    }
+  });
+  return { p: Math.round((covered / GENOME) * 100), pieces };
+});
+const lastStep = coverageSteps[coverageSteps.length - 1];
+if (lastStep.pieces.length !== 21 || lastStep.p !== 100) {
+  throw new Error('TierDiagram: the highest coverage step must assemble all 21 chromosomes');
+}
+
+/* What the client script needs, per kind. */
+const exploreData =
+  kind === 'barcode'
+    ? { copy: explore.barcode, rows: LIBRARY.map((row, r) => ({ name: row.name, diff: DIFFS[r] })), pitch: ROW_PITCH, match: MATCH_ROW }
+    : kind === 'resequencing'
+      ? { copy: explore.resequencing, pop1: REF_SEQ.split('').map((_, i) => baseAt(1, i)), pop2: REF_SEQ.split('').map((_, i) => baseAt(2, i)), pitch: POS_PITCH, site: SITE_I, x0: POS_X0 }
+      : { copy: explore.reference, steps: coverageSteps, chr: chromosomes.map((c) => [c.cx - CHR_W / 2, r1(c.top)]), w: CHR_W };
+const control =
+  kind === 'resequencing'
+    ? { label: explore.resequencing.label, min: 1, max: REF_SEQ.length, value: SITE_I + 1 }
+    : kind === 'reference'
+      ? { label: explore.reference.label, min: 1, max: COVERAGE.length, value: COVERAGE.length }
+      : undefined;
 ---
 
 <figure
   id={id}
   class={`tier-diagram tier-diagram--${kind}`}
   data-tier-diagram
+  data-kind={kind}
+  data-explore={JSON.stringify(exploreData)}
 >
+  <div class="tier-stage">
   <svg viewBox="0 0 360 236" role="img" aria-labelledby={`${id}-title ${id}-desc`}>
     <title id={`${id}-title`}>{copy.title}</title>
     <desc id={`${id}-desc`}>{copy.desc}</desc>
@@ -175,7 +245,7 @@ const chromosomes = Array.from({ length: 21 }, (_, i) => {
           <path d="M28 141 C28 147.6 60 147.6 60 141 M28 156 C28 162.6 60 162.6 60 156" />
         </g>
         {LIBRARY.map((row, r) => (
-          <g class={`bc-row ${r === MATCH_ROW ? 'bc-row--match' : 'bc-row--miss'}`} style={`--d:${(2.5 + r * 0.12).toFixed(2)}s`}>
+          <g class={`bc-row ${r === MATCH_ROW ? 'bc-row--match' : 'bc-row--miss'}`} data-row={r} style={`--d:${(2.5 + r * 0.12).toFixed(2)}s`}>
             {[...row.seq].map((b, i) => (
               <rect x={barX(i)} y={rowY(r)} width={BAR_W} height={ROW_H} rx="1.5" class={`dg-base--${b as Base}`} />
             ))}
@@ -195,18 +265,26 @@ const chromosomes = Array.from({ length: 21 }, (_, i) => {
         {[POP1, POP2].map((pop, p) => pop.flies.map(([x, y]) => (
           <use href={`#${id}-fly${p ? '-alt' : ''}`} transform={`translate(${x} ${y}) scale(0.78)`} />
         )))}
-        <rect x={SITE_X - 9} y="60" width="18" height="116" rx="9" class="rs-site" />
+        <rect x={SITE_X - 9} y="60" width="18" height="116" rx="9" class="rs-site rs-col" />
         <path d={`M84 ${REF_Y} H348`} class="dg-ref rs-ref" pathLength="1" />
         {readsAll.map(({ r, pop, dx, dy, delay }) => (
           <g class="rs-read" style={`--dx:${dx}px;--dy:${dy}px;--d:${delay.toFixed(2)}s`}>
             <path d={`M${r[0]} ${r[2]} H${r[1]}`} class="dg-read" />
-            {covers(r) && (
-              <rect x={SITE_X - 3.5} y={r[2] - 5} width="7" height="10" rx="1.5" class={`rs-allele rs-allele--${pop} ${pop === 1 ? 'dg-base--A' : 'dg-base--G'}`} />
-            )}
+            {REF_SEQ.split('').map((_, i) => coversX(r, posX(i)) && (
+              <rect
+                x={posX(i) - 3.5}
+                y={r[2] - 5}
+                width="7"
+                height="10"
+                rx="1.5"
+                data-i={i}
+                class={`rs-cell dg-base--${baseAt(pop, i)}${i === SITE_I ? ` is-on rs-allele rs-allele--${pop}` : ''}`}
+              />
+            ))}
           </g>
         ))}
-        <text x={SITE_X} y="52" class="rs-letter rs-letter--1 dg-base-text--A">A</text>
-        <text x={SITE_X} y="194" class="rs-letter rs-letter--2 dg-base-text--G">G</text>
+        <text x={SITE_X} y="52" class="rs-letter rs-letter--1 rs-col dg-base-text--A" data-letter="1">A</text>
+        <text x={SITE_X} y="194" class="rs-letter rs-letter--2 rs-col dg-base-text--G" data-letter="2">G</text>
       </g>
     )}
 
@@ -227,55 +305,251 @@ const chromosomes = Array.from({ length: 21 }, (_, i) => {
           )))}
         </g>
         {chromosomes.map((c) => (
+          <rect x={c.cx - CHR_W / 2} y={c.top} width={CHR_W} height={c.h} rx={CHR_W / 2} class="rf-ghost" />
+        ))}
+        {chromosomes.map((c) => (
           <rect x={c.cx - CHR_W / 2} y={c.top} width={CHR_W} height={c.h} rx={CHR_W / 2} class="rf-chr" style={`--d:${(3.7 + c.i * 0.03).toFixed(2)}s`} />
         ))}
+        <g class="rf-cov" data-pieces></g>
         <text x="96" y="226" class="rf-count">{tiers.diagrams.reference.count}</text>
       </g>
     )}
   </svg>
 
-  <button type="button" class="tier-replay" data-replay hidden>
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></svg>
-    <span>{tiers.replay}</span>
-  </button>
+  {kind === 'barcode' && (
+    <fieldset class="bc-pick" data-pick hidden>
+      <legend class="sr-only">{explore.barcode.label}</legend>
+      {LIBRARY.map((row, r) => (
+        <label
+          class="bc-pick-row"
+          style={`top:${pct((rowY(r) - 5) / VIEW_H)};height:${pct((ROW_H + 10) / VIEW_H)};left:${pct((BAR_X0 - 6) / VIEW_W)};right:0`}
+        >
+          <input type="radio" name={`${id}-row`} value={r} checked={r === MATCH_ROW} />
+          <span class="sr-only"><i>{row.name}</i></span>
+        </label>
+      ))}
+    </fieldset>
+  )}
+  </div>
+
+  <div class="explorable-panel tier-explore" data-explore-panel hidden>
+    {kind === 'barcode' && <p class="explorable-label" aria-hidden="true">{explore.barcode.label}</p>}
+    {control && (
+      <>
+        <label class="explorable-label" for={`${id}-control`}>{control.label}</label>
+        <input
+          id={`${id}-control`}
+          class="explorable-range"
+          type="range"
+          min={control.min}
+          max={control.max}
+          step="1"
+          value={control.value}
+          data-control
+        />
+      </>
+    )}
+    <div class="explorable-foot">
+      <output class="explorable-readout" data-readout for={control ? `${id}-control` : undefined}></output>
+      <button type="button" class="explorable-replay" data-replay>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></svg>
+        <span>{tiers.replay}</span>
+      </button>
+    </div>
+  </div>
 </figure>
 
 <script>
+  type Copy = Record<string, string>;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   const figures = document.querySelectorAll<HTMLElement>('[data-tier-diagram]');
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  /* When each autoplay has finished, so the readout does not give it away. */
+  const DURATION: Record<string, number> = { barcode: 6200, resequencing: 4600, reference: 5100 };
 
-  // Restart from the first frame: drop both classes, force a style flush,
-  // then re-attach the (paused) animations and let them run.
-  const play = (figure: HTMLElement) => {
-    figure.classList.remove('is-armed', 'is-playing');
-    void figure.getBoundingClientRect();
-    figure.classList.add('is-armed', 'is-playing');
-  };
+  const fill = (tpl: string, vars: Record<string, string | number>) =>
+    tpl.replace(/\{(\w+)\}/g, (_, key: string) => String(vars[key] ?? ''));
+  const base = (b: string) => `<b class="readout-base readout-base--${b}">${b}</b>`;
+  const plain = (html: string) => html.replace(/<[^>]+>/g, '');
+
+  figures.forEach((figure) => {
+    const kind = figure.dataset.kind ?? '';
+    const data = JSON.parse(figure.dataset.explore ?? '{}');
+    const copy: Copy = data.copy;
+    const panel = figure.querySelector<HTMLElement>('[data-explore-panel]');
+    const readout = figure.querySelector<HTMLOutputElement>('[data-readout]');
+    const range = figure.querySelector<HTMLInputElement>('[data-control]');
+    const replay = figure.querySelector<HTMLButtonElement>('[data-replay]');
+    if (!panel || !readout || !replay) return;
+    let doneTimer = 0;
+
+    const say = (html: string) => {
+      readout.innerHTML = html;
+      range?.setAttribute('aria-valuetext', plain(html));
+    };
+    const setFill = () => {
+      if (!range) return;
+      const span = Number(range.max) - Number(range.min);
+      range.style.setProperty('--fill', `${((Number(range.value) - Number(range.min)) / span) * 100}%`);
+    };
+
+    /* ---------- One render function per kind ---------- */
+    let render: (value: number) => void = () => {};
+    let initial = 0;
+
+    if (kind === 'barcode') {
+      const scan = figure.querySelector<SVGElement>('.bc-scan');
+      const rows = figure.querySelectorAll<SVGGElement>('.bc-row');
+      initial = data.match;
+      render = (r) => {
+        const row = data.rows[r];
+        rows.forEach((g) => g.classList.toggle('is-selected', Number(g.dataset.row) === r));
+        if (scan) scan.style.transform = `translateY(${(r - data.match) * data.pitch}px)`;
+        figure.classList.toggle('is-miss', row.diff > 0);
+        say(fill(row.diff ? copy.miss : copy.match, { name: row.name, n: row.diff }));
+      };
+      figure.querySelectorAll<HTMLInputElement>('.bc-pick input').forEach((input) => {
+        input.addEventListener('change', () => {
+          explore();
+          render(Number(input.value));
+        });
+      });
+    }
+
+    if (kind === 'resequencing') {
+      const cells = figure.querySelectorAll<SVGRectElement>('.rs-cell');
+      const cols = figure.querySelectorAll<SVGElement>('.rs-col');
+      const letters = figure.querySelectorAll<SVGTextElement>('[data-letter]');
+      initial = data.site + 1;
+      render = (pos) => {
+        const i = pos - 1;
+        cells.forEach((c) => c.classList.toggle('is-on', Number(c.dataset.i) === i));
+        cols.forEach((c) => { c.style.transform = `translateX(${(i - data.site) * data.pitch}px)`; });
+        const bases = [data.pop1[i], data.pop2[i]];
+        letters.forEach((t, n) => {
+          t.textContent = bases[n];
+          t.setAttribute('class', `rs-letter rs-letter--${n + 1} rs-col dg-base-text--${bases[n]}`);
+        });
+        say(bases[0] === bases[1]
+          ? fill(copy.same, { i: pos, base: base(bases[0]) })
+          : fill(copy.differ, { i: pos, a: base(bases[0]), b: base(bases[1]) }));
+      };
+      // Direct manipulation: drag (or tap) along the reads to move the column.
+      const svg = figure.querySelector<SVGSVGElement>('svg');
+      if (svg && range) {
+        const toPos = (event: PointerEvent) => {
+          const ctm = svg.getScreenCTM();
+          if (!ctm) return;
+          const x = new DOMPoint(event.clientX, event.clientY).matrixTransform(ctm.inverse()).x;
+          const pos = Math.min(Number(range.max), Math.max(1, Math.round((x - data.x0) / data.pitch) + 1));
+          if (String(pos) !== range.value) {
+            range.value = String(pos);
+            range.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+        };
+        svg.addEventListener('pointerdown', (event) => {
+          svg.setPointerCapture(event.pointerId);
+          toPos(event);
+        });
+        svg.addEventListener('pointermove', (event) => {
+          if (svg.hasPointerCapture(event.pointerId)) toPos(event);
+        });
+      }
+    }
+
+    if (kind === 'reference') {
+      const layer = figure.querySelector<SVGGElement>('[data-pieces]');
+      initial = data.steps.length;
+      render = (step) => {
+        const { p, pieces } = data.steps[step - 1];
+        const whole = step === data.steps.length;
+        figure.classList.toggle('is-partial', !whole);
+        if (layer) {
+          layer.replaceChildren(...(whole ? [] : pieces.map(([c, a, b]: number[]) => {
+            const [x, top] = data.chr[c];
+            const rect = document.createElementNS(SVG_NS, 'rect');
+            const h = Math.max(b - a - 1.6, 1.2);
+            rect.setAttribute('x', String(x));
+            rect.setAttribute('y', String(top + a + 0.8));
+            rect.setAttribute('width', String(data.w));
+            rect.setAttribute('height', h.toFixed(1));
+            rect.setAttribute('rx', String(Math.min(3, h / 2)));
+            return rect;
+          })));
+        }
+        say(whole ? copy.whole : fill(copy.partial, { p, n: pieces.length }));
+      };
+    }
+
+    /* ---------- Shared play / explore lifecycle ---------- */
+    const play = () => {
+      window.clearTimeout(doneTimer);
+      figure.classList.remove('is-armed', 'is-playing', 'is-done');
+      void figure.getBoundingClientRect();
+      figure.classList.add('is-armed', 'is-playing');
+      doneTimer = window.setTimeout(() => figure.classList.add('is-done'), DURATION[kind] ?? 5000);
+    };
+    // Interacting stops the autoplay where the figure already shows its
+    // final state, and the figure stays as the reader left it.
+    function explore() {
+      window.clearTimeout(doneTimer);
+      figure.dataset.touched = '';
+      figure.classList.remove('is-armed', 'is-playing');
+      figure.classList.add('is-exploring', 'is-done');
+    }
+    const reset = () => {
+      figure.classList.remove('is-exploring');
+      delete figure.dataset.touched;
+      if (range) range.value = String(initial);
+      figure.querySelectorAll<HTMLInputElement>('.bc-pick input').forEach((input) => {
+        input.checked = Number(input.value) === initial;
+      });
+      setFill();
+      render(initial);
+    };
+
+    range?.addEventListener('input', () => {
+      explore();
+      setFill();
+      render(Number(range.value));
+    });
+    replay.addEventListener('click', () => {
+      reset();
+      if (reduce.matches) return;
+      play();
+    });
+
+    reset();
+    panel.hidden = false;
+    figure.querySelector<HTMLElement>('[data-pick]')?.removeAttribute('hidden');
+    figure.classList.add('is-done');
+  });
 
   if (!reduce.matches && 'IntersectionObserver' in window) {
-    // Play each time a diagram comes back into view: start when it is mostly
-    // visible, and re-arm once it has left the viewport completely.
+    // Play each time a diagram comes back into view (unless the reader has
+    // taken over): start when it is mostly visible, and re-arm once it has
+    // left the viewport completely.
     const shown = new WeakSet<Element>();
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.intersectionRatio >= 0.55 && !shown.has(entry.target)) {
-            shown.add(entry.target);
-            play(entry.target as HTMLElement);
+          const figure = entry.target as HTMLElement;
+          if (entry.intersectionRatio >= 0.55 && !shown.has(figure)) {
+            shown.add(figure);
+            if (!('touched' in figure.dataset)) figure.querySelector<HTMLButtonElement>('[data-replay]')?.click();
           } else if (!entry.isIntersecting) {
-            shown.delete(entry.target);
+            shown.delete(figure);
           }
         }
       },
       { threshold: [0, 0.55] },
     );
     figures.forEach((figure) => {
-      figure.classList.add('is-armed');
+      if (!('touched' in figure.dataset)) {
+        figure.classList.remove('is-done');
+        figure.classList.add('is-armed');
+      }
       observer.observe(figure);
-      const button = figure.querySelector<HTMLButtonElement>('[data-replay]');
-      if (!button) return;
-      button.hidden = false;
-      button.addEventListener('click', () => play(figure));
     });
   }
 </script>
@@ -283,6 +557,8 @@ const chromosomes = Array.from({ length: 21 }, (_, i) => {
 <style>
   .tier-diagram {
     position: relative;
+    display: flex;
+    flex-direction: column;
     margin: 0;
     padding: 0.85rem 0.75rem 0.6rem;
     background: var(--bg-inset);
@@ -293,12 +569,17 @@ const chromosomes = Array.from({ length: 21 }, (_, i) => {
     --base-G: var(--trait-scent);
     --base-T: var(--trait-pattern);
   }
-  .tier-diagram > svg {
+  .tier-stage { position: relative; margin-bottom: 0.5rem; }
+  .tier-stage > svg {
     display: block;
+    user-select: none;
+    -webkit-user-select: none;
     width: 100%;
     height: auto;
     overflow: visible;
   }
+  /* Tier 2 can be dragged sideways; vertical swipes still scroll the page. */
+  .tier-diagram--resequencing.is-done .tier-stage > svg { touch-action: pan-y; cursor: ew-resize; }
 
   /* ---- Shared marks ---- */
   .dg-fly path { fill: var(--text-muted); }
@@ -339,26 +620,51 @@ const chromosomes = Array.from({ length: 21 }, (_, i) => {
   .rf-chr { fill: var(--accent); }
   .rf-count { font-family: var(--font-body); font-size: 14px; font-weight: 600; fill: var(--text-strong); }
 
-  /* ---- Replay ---- */
-  .tier-replay {
+  /* ---- Explore panel: one control, one readout, Replay ---- */
+  .tier-explore { margin-top: auto; }
+  /* The readout waits for the autoplay to finish, so it never gives the
+     answer away before the diagram does. */
+  .is-armed:not(.is-done) .explorable-readout { opacity: 0; }
+  .explorable-readout { transition: opacity var(--transition-slow); }
+
+  /* ---- Tier 1: the library rows are the radio buttons ---- */
+  .bc-pick { position: absolute; inset: 0; margin: 0; padding: 0; border: 0; min-width: 0; pointer-events: none; }
+  .bc-pick-row {
     position: absolute;
-    right: 0.5rem;
-    bottom: 0.45rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    padding: 0.2rem 0.5rem;
-    border: 1px solid var(--hairline);
-    border-radius: 999px;
-    background: var(--bg-inset);
-    color: var(--text-faint);
-    font: 500 0.72rem/1.2 var(--font-body);
+    border-radius: 7px;
     cursor: pointer;
-    transition: color var(--transition), border-color var(--transition);
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
   }
-  .tier-replay[hidden] { display: none; }
-  .tier-replay:hover { color: var(--text-strong); border-color: var(--surface-border-strong); }
-  .tier-replay svg { width: 0.8rem; height: 0.8rem; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .bc-pick-row input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .bc-pick-row:hover:not(:has(:checked)) { outline: 1.5px dashed var(--text-faint); outline-offset: -1px; }
+  .bc-pick-row:has(:focus-visible) { outline: var(--focus-ring) solid var(--accent); outline-offset: 2px; }
+  .is-exploring .bc-row { opacity: 0.38; transition: opacity var(--transition); }
+  .is-exploring .bc-row.is-selected { opacity: 1; }
+  .is-exploring .bc-scan { transition: transform 320ms var(--ease-settle); }
+  .is-exploring .bc-answer, .is-exploring .bc-unknown { transition: opacity var(--transition); }
+  .is-exploring.is-miss .bc-answer { opacity: 0; }
+  .is-exploring.is-miss .bc-unknown { opacity: 1; }
+
+  /* ---- Tier 2: only the cells under the column show their base ---- */
+  .rs-cell { opacity: 0; }
+  .rs-cell.is-on { opacity: 1; }
+  .is-exploring .rs-col { transition: transform 160ms var(--ease-glide); }
+
+  /* ---- Tier 3: partial coverage shows pieces inside dashed outlines ---- */
+  .rf-ghost { fill: none; stroke: none; }
+  .rf-cov :global(rect) { fill: var(--accent); }
+  .is-partial .rf-chr { opacity: 0; }
+  .is-partial .rf-ghost { stroke: var(--text-faint); stroke-width: 1; stroke-dasharray: 2 2.5; }
+  .is-partial .rf-count { opacity: 0; }
 
   /* ================= Animation (armed by JS, paused until in view) ================= */
   :is(.bc-arrow, .bc-arrow-head, .bc-letter, .bc-bar, .bc-qframe, .bc-unknown, .bc-answer, .bc-row, .bc-miss, .bc-scan, .rs-ref, .rs-read, .rs-allele, .rs-site, .rs-letter, .rf-frag, .rf-frags, .rf-chr, .rf-count) {

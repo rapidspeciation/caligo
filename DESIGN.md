@@ -127,3 +127,14 @@ A Home section, `NetworkMap`, places the eight partner facilities and two networ
 ## Data-tier diagrams, October 2026
 
 Science adds "Three tiers of genomic data" from Nicol's vision document, after "What is a reference genome?". Each tier has a small didactic SVG diagram (`TierDiagram`): a barcode matched row by row against a reference library until it identifies *H. cydno*; short reads from two populations aligning to a reference with one differing site highlighted; fragments assembling into 21 chromosome-length sequences. Each plays whenever it comes back into view, ends on a lasting final state, offers Replay, and shows only the final state under reduced motion or without JavaScript. Home is unchanged. The network map shows facilities and events without connecting lines, because the lines implied collaborations that are not documented. The 404 page shows a moth circling a lamp.
+
+## Interactive explainers, October 2026 (variant insp/explainers)
+
+Inspired by Bartosz Ciechanowski (one control directly under each figure, with a live value), Distill (labelled controls plus a sentence that says what the reader now sees) and Explorable Explanations (direct manipulation with a plain instruction). The tier diagrams still autoplay when they come into view; once the reader touches a control, the autoplay stops for good and the figure stays as they left it. Replay restores the default. Each figure has exactly one control and a one-line readout, in a shared panel (`.explorable-panel`, `.explorable-range`, `.explorable-readout`, `.explorable-replay`, `.explorable-toggle` in `global.css`):
+
+- Tier 1, barcode: the library rows are the radio buttons. Choosing one moves the comparison frame there and states how many of the 16 bases differ.
+- Tier 2, resequencing: a slider (or a drag along the reads) moves the column through 21 positions. The populations agree everywhere except position 12 (A above, G below).
+- Tier 3, reference genome: a "Reads sequenced" slider runs a small seeded coverage simulation. Gaps are stretches no read reached and show as dashed outlines. Pieces first increase, then merge, as in real coverage curves. The highest setting is checked at build time to assemble all 21 chromosomes.
+- Science question 1 (`FissionExplainer`): the same 21-chromosome karyotype, a Fissions slider from 0 to 39 (21 to 60 chromosomes, the sapho-group maximum) and a toggle comparing holocentric attachment (an attachment line on every piece) with a single centromere (one dot; pieces without it become dashed and are counted as lost).
+
+Shape and letters carry every difference as well as colour. The controls are native inputs with labels, the readouts are `<output>` elements, and slider `aria-valuetext` repeats the readout. Without JavaScript, the controls are hidden and the final state is shown. Under reduced motion, there is no autoplay but the controls still work.

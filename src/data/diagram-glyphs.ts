@@ -12,3 +12,20 @@ export const BUTTERFLY = {
   body: 'M0 -5.6 V10.4',
   antennae: 'M-0.6 -5.2 C-2 -9.6 -3.8 -12.6 -6 -14.6 M0.6 -5.2 C2 -9.6 3.8 -12.6 6 -14.6',
 } as const;
+
+/** Small deterministic PRNG (mulberry32), so diagrams render identically on every build. */
+export function seededRandom(seed: number): () => number {
+  return () => {
+    seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * The 21-chromosome karyotype drawn by the reference-genome diagram and the
+ * chromosome-fission explainer: relative lengths, longest first, laid out in
+ * three rows of seven.
+ */
+export const KARYOTYPE = Array.from({ length: 21 }, (_, i) => Math.round((56 - i * 1.15) * 10) / 10);
