@@ -25,11 +25,25 @@ const entries: Entry[] = [
   ...EVENTS.map((event) => ({ kind: 'event' as const, sort: event.start, event })),
 ].sort((a, b) => a.sort.localeCompare(b.sort));
 const todayLabel = locale === 'es' ? 'Hoy' : 'Today';
+/* Every card leads somewhere, so the whole card is the link. */
+const eventLinks: Record<string, { href: string; label: string; external?: boolean; tone: string }> = {
+  'bogota-2026': {
+    href: `${localePath(locale, '/projects')}#heliconius`,
+    label: locale === 'es' ? 'Proyecto piloto de Heliconius' : 'The Heliconius pilot project',
+    tone: 'leaf',
+  },
+  'campinas-2027': {
+    href: 'https://www.even3.com.br/bob-elen-2027/',
+    label: locale === 'es' ? 'Sitio del congreso' : 'Congress website',
+    external: true,
+    tone: 'sky',
+  },
+};
 ---
 
 <ol class:list={['timeline-list', { 'timeline-list--compact': compact }]} role="list" data-timeline data-locale={locale}>
   {entries.map((entry) => entry.kind === 'call' ? (
-    <li class="timeline-item ink-card" id="event-colombia-funding" data-end={PILOT_DEADLINE}>
+    <li class="timeline-item ink-card" id="event-colombia-funding" data-end={PILOT_DEADLINE} style="--tone: var(--tone-person-rose)">
       <div class="timeline-when">
         <DeadlineChip locale={locale} class="timeline-chip" />
         <time class="timeline-dates mono" datetime={PILOT_DEADLINE}>{funding.date}</time>
@@ -40,7 +54,7 @@ const todayLabel = locale === 'es' ? 'Hoy' : 'Today';
       <a class="text-link timeline-link" href={localePath(locale, '/funding')}>{funding.funding}<Icon name="arrow-right" /></a>
     </li>
   ) : (
-    <li class="timeline-item ink-card" id={`event-${entry.event.id}`} data-end={entry.event.end ?? entry.event.start}>
+    <li class="timeline-item ink-card" id={`event-${entry.event.id}`} data-end={entry.event.end ?? entry.event.start} style={`--tone: var(--tone-person-${eventLinks[entry.event.id]?.tone ?? 'leaf'})`}>
       <div class="timeline-when">
         <WhenChip locale={locale} start={entry.event.start} end={entry.event.end} class="timeline-chip" />
         <time class="timeline-dates mono" datetime={entry.event.start}>{pick(entry.event.dates, locale)}</time>
@@ -48,6 +62,17 @@ const todayLabel = locale === 'es' ? 'Hoy' : 'Today';
       <h3 class="timeline-name">{pick(entry.event.name, locale)}</h3>
       <p class="timeline-location mono">{pick(entry.event.location, locale)}</p>
       <p class="timeline-summary" set:html={italicizeSpecies(pick(entry.event.summary, locale))} />
+      {eventLinks[entry.event.id] && (
+        <a
+          class="text-link timeline-link"
+          href={eventLinks[entry.event.id].href}
+          target={eventLinks[entry.event.id].external ? '_blank' : undefined}
+          rel={eventLinks[entry.event.id].external ? 'noopener noreferrer external' : undefined}
+        >
+          <span set:html={italicizeSpecies(eventLinks[entry.event.id].label)} />
+          <Icon name={eventLinks[entry.event.id].external ? 'external' : 'arrow-right'} />
+        </a>
+      )}
     </li>
   ))}
   <li class="timeline-today" data-timeline-today aria-hidden="true" hidden>
@@ -144,6 +169,43 @@ const todayLabel = locale === 'es' ? 'Hoy' : 'Today';
     max-width: var(--measure);
   }
   .timeline-link { margin-top: auto; padding-top: 0.5rem; font-size: var(--step--1); }
+
+  /* The whole card is the link. On hover it lifts onto a hard shadow in its
+     own colour and its node on the track lights up to match. */
+  .timeline-item { position: relative; }
+  .timeline-link::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+  .timeline-link:focus-visible { outline: none; }
+  .timeline-item:has(.timeline-link:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .timeline-item {
+    transition: transform var(--dur-quick) var(--ease-glide),
+      box-shadow var(--dur-quick) var(--ease-glide),
+      border-color var(--dur-quick) var(--ease-glide);
+  }
+  .timeline-item::before { transition: transform var(--dur-quick) var(--ease-settle), background var(--dur-quick), border-color var(--dur-quick); }
+  @media (hover: hover) and (pointer: fine) {
+    .timeline-item:hover {
+      transform: translate(-3px, -3px);
+      border-color: var(--tone);
+      box-shadow: 7px 7px 0 var(--tone);
+    }
+    .timeline-list--compact .timeline-item:hover::before,
+    .timeline-list--compact .timeline-item[data-when]:hover::before {
+      transform: translate(3px, 3px) scale(1.5);
+      background: var(--tone);
+      border-color: var(--tone);
+    }
+    /* Keep the track line still while the card lifts. */
+    .timeline-list--compact .timeline-item:hover::after { transform: translate(3px, 3px); }
+    .timeline-item:hover .timeline-name { color: var(--accent-strong); }
+    .timeline-item:active { transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--tone); }
+    .timeline-list--compact .timeline-item:active::before,
+    .timeline-list--compact .timeline-item:active::after { transform: translate(-1px, -1px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .timeline-item:hover, .timeline-item:active,
+    .timeline-list--compact .timeline-item:hover::before,
+    .timeline-list--compact .timeline-item:hover::after { transform: none; }
+  }
   /* ---- Track: one line through the entries in date order ----
      Past entries sit on a solid line with filled nodes; upcoming ones on a
      dashed line with open nodes. The Today pin falls in the gap between. */
