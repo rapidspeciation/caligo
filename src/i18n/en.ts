@@ -199,17 +199,14 @@ export const en = {
   "science": {
     "fission": {
       "title": "Chromosome fissions with and without a single centromere",
-      "desc": "Twenty-one chromosomes, as in most Heliconius. A slider adds fissions, each splitting one chromosome in two, up to 39 fissions and 60 chromosomes, the highest count in the sapho group. When the division machinery can attach along the whole chromosome, as in butterflies and moths, every piece can still be passed on to the daughter cells. With a single centromere, as in most animals, each piece left without the centromere is lost. This is a simplified picture.",
+      "desc": "Twenty-one chromosomes, as in most Heliconius. Fissions are added one by one, each splitting one chromosome in two, up to 39 fissions and 60 chromosomes, the highest count in the sapho group. When the division machinery can attach along the whole chromosome, as in butterflies and moths, every piece can still be passed on to the daughter cells. With a single centromere, as in most animals, each piece left without the centromere is lost. This is a simplified picture.",
       "count": "{c} chromosomes",
       "countLost": "{c} kept, {n} lost",
-      "slider": "How many times do the chromosomes split?",
-      "ends": ["21: most <i>Heliconius</i>", "60: sapho-group maximum"],
       "unit": ["fission", "fissions"],
       "modeLegend": "Where does the division machinery attach?",
       "modes": ["Along the whole chromosome (butterflies and moths)", "One centromere (most animals)"],
       "start": "No fissions: 21 chromosomes, as in most <i>Heliconius</i>.",
-      "monoStart": "No fissions: each of the 21 chromosomes has its centromere.",
-      "holo": "{f}: every piece can still attach, so all {c} are passed on.",
+      "splitting": "Each fission splits one chromosome in two.",
       "holoMax": "{f}: 60 chromosomes, the most in the sapho group, and every piece is still passed on.",
       "mono": "{f}: only the 21 pieces with a centromere are passed on. The other {n} cannot attach and are lost (simplified)."
     },

@@ -196,17 +196,14 @@ export const es: Dict = {
   "science": {
     "fission": {
       "title": "Fisiones cromosómicas con y sin un único centrómero",
-      "desc": "Veintiún cromosomas, como en la mayoría de Heliconius. Un control deslizante añade fisiones, cada una divide un cromosoma en dos, hasta 39 fisiones y 60 cromosomas, el número más alto del grupo sapho. Cuando la maquinaria de división puede unirse a lo largo de todo el cromosoma, como en mariposas y polillas, cada fragmento aún puede pasar a las células hijas. Con un solo centrómero, como en la mayoría de los animales, cada fragmento que queda sin centrómero se pierde. Es una imagen simplificada.",
+      "desc": "Veintiún cromosomas, como en la mayoría de Heliconius. Las fisiones se suman una a una y cada una divide un cromosoma en dos, hasta 39 fisiones y 60 cromosomas, el número más alto del grupo sapho. Cuando la maquinaria de división puede unirse a lo largo de todo el cromosoma, como en mariposas y polillas, cada fragmento aún puede pasar a las células hijas. Con un solo centrómero, como en la mayoría de los animales, cada fragmento que queda sin centrómero se pierde. Es una imagen simplificada.",
       "count": "{c} cromosomas",
       "countLost": "{c} se conservan, {n} se pierden",
-      "slider": "¿Cuántas veces se dividen los cromosomas?",
-      "ends": ["21: la mayoría de <i>Heliconius</i>", "60: máximo del grupo sapho"],
       "unit": ["fisión", "fisiones"],
       "modeLegend": "¿Dónde se une la maquinaria de división?",
       "modes": ["A lo largo de todo el cromosoma (mariposas y polillas)", "En un solo centrómero (la mayoría de los animales)"],
       "start": "Sin fisiones: 21 cromosomas, como en la mayoría de <i>Heliconius</i>.",
-      "monoStart": "Sin fisiones: cada uno de los 21 cromosomas tiene su centrómero.",
-      "holo": "{f}: cada fragmento aún puede unirse, así que los {c} pasan a las células hijas.",
+      "splitting": "Cada fisión divide un cromosoma en dos.",
       "holoMax": "{f}: 60 cromosomas, el máximo del grupo sapho, y todos siguen pasando a las células hijas.",
       "mono": "{f}: solo los 21 fragmentos con centrómero pasan a las células hijas. Los otros {n} se pierden (simplificado)."
     },

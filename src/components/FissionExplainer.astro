@@ -13,15 +13,15 @@
  * difference (an attachment line on every piece versus one dot; lost pieces
  * become tilted dashed outlines), so it does not depend on colour.
  *
- * Laid out across the full prose column: karyotype on the left, the two
- * questions and the result on the right, stacked when the column is narrow.
- * The slider's two ends are the two real anchors: 21 (most Heliconius) and
- * 60 (the sapho-group maximum).
+ * Laid out across the full prose column: karyotype on the left, the
+ * question and the result on the right, stacked when the column is narrow.
  *
  * The markup is the final state (39 fissions, holocentric). With JavaScript
- * and motion allowed, the slider runs from 0 to 39 each time the figure comes
- * into view, until the reader takes over. The karyotype is the one drawn by
- * the reference-genome tier diagram.
+ * and motion allowed, the figure plays each time it comes into view: the
+ * fissions add up from 21 to 60 chromosomes, the same splits are then shown
+ * with a single centromere, and it returns to the butterfly. The toggle is
+ * the one control: the reader can flip the comparison at any time. The
+ * karyotype is the one drawn by the reference-genome tier diagram.
  */
 import { getDict, type Locale } from '../i18n';
 import { KARYOTYPE, seededRandom } from '../data/diagram-glyphs';
@@ -95,7 +95,7 @@ const data = {
   max: MAX_FISSIONS,
   w: W,
   chr: chromosomes.map((c) => ({ x: c.x, top: c.top, h: c.h, cen: c.centromere, cuts: c.cuts.map((k) => [k.at, k.n]) })),
-  copy: { unit: copy.unit, start: copy.start, monoStart: copy.monoStart, holo: copy.holo, holoMax: copy.holoMax, mono: copy.mono, count: copy.count, countLost: copy.countLost },
+  copy: { unit: copy.unit, start: copy.start, splitting: copy.splitting, holoMax: copy.holoMax, mono: copy.mono, count: copy.count, countLost: copy.countLost },
 };
 ---
 
@@ -116,15 +116,6 @@ const data = {
     </svg>
 
     <div class="explorable-panel fission-panel" data-panel hidden>
-          <label class="explorable-prompt" for={`${id}-range`}>{copy.slider}</label>
-      <div class="explorable-control">
-        <div class="explorable-slider" style="--at:1" data-slider>
-          <input id={`${id}-range`} class="explorable-range" type="range" min="0" max={MAX_FISSIONS} step="1" value={MAX_FISSIONS} data-range />
-          <div class="explorable-ends" aria-hidden="true">
-            {copy.ends.map((end) => <span set:html={end} />)}
-          </div>
-        </div>
-      </div>
       <fieldset class="fission-mode">
         <legend class="explorable-prompt">{copy.modeLegend}</legend>
         <div class="explorable-toggle">
@@ -140,7 +131,7 @@ const data = {
           ))}
         </div>
       </fieldset>
-      <output class="explorable-result" for={`${id}-range`} data-result></output>
+      <output class="explorable-result" data-result></output>
         <button type="button" class="explorable-replay" data-replay aria-label={replay} title={replay}>
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></svg>
         </button>
@@ -158,15 +149,20 @@ const data = {
     const cfg = JSON.parse(figure.dataset.config ?? '{}');
     const layer = figure.querySelector<SVGGElement>('[data-karyotype]');
     const count = figure.querySelector<SVGTextElement>('[data-count]');
-    const range = figure.querySelector<HTMLInputElement>('[data-range]');
-    const slider = figure.querySelector<HTMLElement>('[data-slider]');
     const result = figure.querySelector<HTMLOutputElement>('[data-result]');
     const replay = figure.querySelector<HTMLButtonElement>('[data-replay]');
     const panel = figure.querySelector<HTMLElement>('[data-panel]');
     const modes = figure.querySelectorAll<HTMLInputElement>('input[type="radio"]');
-    if (!layer || !count || !range || !slider || !result || !replay || !panel) return;
+    if (!layer || !count || !result || !replay || !panel) return;
     let frame = 0;
     let cueTimer = 0;
+    // How many of the 39 fissions are drawn.
+    let fissions: number = cfg.max;
+    const timers = new Set<number>();
+    const after = (ms: number, fn: () => void) => {
+      const t = window.setTimeout(() => { timers.delete(t); fn(); }, ms);
+      timers.add(t);
+    };
     let touched = false;
     let cued = false;
 
@@ -177,7 +173,7 @@ const data = {
     };
 
     const render = () => {
-      const f = Number(range.value);
+      const f = fissions;
       const mono = figure.dataset.mode === 'mono';
       const w = cfg.w;
       const nodes: SVGElement[] = [];
@@ -206,19 +202,24 @@ const data = {
       count.textContent = mono && f > 0 ? fill(cfg.copy.countLost, { c: 21, n: f }) : fill(cfg.copy.count, { c: total });
       const unit = `${f} ${cfg.copy.unit[f === 1 ? 0 : 1]}`;
       const text = f === 0
-        ? (mono ? cfg.copy.monoStart : cfg.copy.start)
-        : mono
-          ? fill(cfg.copy.mono, { f: unit, n: f })
-          : fill(f === cfg.max ? cfg.copy.holoMax : cfg.copy.holo, { f: unit, c: total });
+        ? cfg.copy.start
+        : f < cfg.max
+          ? cfg.copy.splitting
+          : mono
+            ? fill(cfg.copy.mono, { f: unit, n: f })
+            : fill(cfg.copy.holoMax, { f: unit, c: total });
       if (result.innerHTML !== text) result.innerHTML = text;
-      range.setAttribute('aria-valuetext', text.replace(/<[^>]+>/g, ''));
-      slider.style.setProperty('--at', String(f / cfg.max));
     };
 
-    const stop = () => { cancelAnimationFrame(frame); window.clearTimeout(cueTimer); frame = 0; };
-    const take = () => { stop(); touched = true; result.removeAttribute('aria-live'); };
-    // "Your turn": the slider has just moved by itself, so the nudge goes to
-    // the question the reader has not seen answered yet.
+    const stop = () => {
+      cancelAnimationFrame(frame);
+      window.clearTimeout(cueTimer);
+      timers.forEach((t) => window.clearTimeout(t));
+      timers.clear();
+      frame = 0;
+    };
+    const take = () => { stop(); touched = true; fissions = cfg.max; result.removeAttribute('aria-live'); };
+    // "Your turn": one nudge on the answer the reader is not looking at.
     const cue = () => {
       const other = [...modes].find((input) => !input.checked)?.closest('label');
       if (cued || touched || !other) return;
@@ -226,43 +227,51 @@ const data = {
       other.classList.add('is-cue');
       window.setTimeout(() => other.classList.remove('is-cue'), 1600);
     };
+    const setMode = (mode: string) => {
+      figure.dataset.mode = mode;
+      modes.forEach((input) => { input.checked = input.value === mode; });
+      render();
+      if (reduce.matches) return;
+      figure.classList.remove('is-switching');
+      void figure.getBoundingClientRect();
+      figure.classList.add('is-switching');
+    };
 
-    // The autoplay: the slider itself runs from 0 to 39, so the reader sees
-    // which control produced the change.
+    // The autoplay: the chromosomes split 39 times and all 60 pieces are
+    // kept; the same splits are then shown with one centromere, where 39
+    // pieces are lost; and it comes back to the butterfly.
     const play = () => {
       stop();
       result.setAttribute('aria-live', 'off');
       const t0 = performance.now();
       const run = (now: number) => {
-        const k = Math.min(1, (now - t0 - 300) / 2800);
+        const k = Math.min(1, (now - t0 - 1400) / 3200);
         const eased = k <= 0 ? 0 : 1 - Math.pow(1 - k, 2);
-        range.value = String(Math.round(eased * cfg.max));
+        fissions = Math.round(eased * cfg.max);
         render();
         if (k < 1) { frame = requestAnimationFrame(run); return; }
         frame = 0;
-        result.removeAttribute('aria-live');
-        cueTimer = window.setTimeout(cue, 500);
+        after(3200, () => setMode('mono'));
+        after(7400, () => {
+          setMode('holo');
+          result.removeAttribute('aria-live');
+          cueTimer = window.setTimeout(cue, 600);
+        });
       };
       frame = requestAnimationFrame(run);
     };
 
-    range.addEventListener('input', () => { take(); render(); });
     modes.forEach((input) => input.addEventListener('change', () => {
       take();
-      figure.dataset.mode = input.value;
-      render();
-      if (!reduce.matches) {
-        figure.classList.remove('is-switching');
-        void figure.getBoundingClientRect();
-        figure.classList.add('is-switching');
-      }
+      setMode(input.value);
     }));
     replay.addEventListener('click', () => {
       touched = false;
+      stop();
       figure.dataset.mode = 'holo';
       figure.classList.remove('is-switching');
       modes.forEach((input) => { input.checked = input.value === 'holo'; });
-      if (reduce.matches) { range.value = String(cfg.max); render(); return; }
+      if (reduce.matches) { fissions = cfg.max; render(); return; }
       play();
     });
 
@@ -324,7 +333,6 @@ const data = {
   .fs-count { font-family: var(--font-display); font-size: 16px; font-weight: 600; fill: var(--text-strong); }
   @keyframes fs-lose { from { transform: rotate(0deg); opacity: 0.2; } to { transform: rotate(var(--tilt, 0deg)); opacity: 1; } }
 
-  .fission-panel :global(.explorable-control) { min-height: 0; margin-bottom: 0.35rem; }
   /* The longest result runs to three lines; reserve them so nothing jumps. */
   .fission-panel :global(.explorable-result) { min-height: 3lh; }
   .fission-mode {
