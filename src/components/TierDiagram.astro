@@ -7,19 +7,18 @@
  * Okabe-Ito trait tokens from tokens.css as the four DNA bases.
  *
  * The markup IS the final state. Without JavaScript that is what renders.
- * With JavaScript each figure plays whenever it scrolls into view, and the
- * autoplay drives the figure's own control, so the reader sees which control
- * produced the change. Then the control gets one "your turn" nudge.
+ * With JavaScript each figure plays whenever it scrolls into view.
  *
- * Each figure teaches one idea with one control:
+ * Each figure teaches one idea:
  *   barcode       "Try another butterfly": the same method names a new
- *                 specimen each time (the reader changes the question)
- *   resequencing  a slider over five sites of three kinds: identical
- *                 everywhere (=), mixed in both populations (≈), and
- *                 different between populations (≠)
- *   reference     a reads slider: more reads, fewer gaps, fewer pieces,
- *                 from a draft genome to a chromosome-scale reference
- * Touching a control stops the autoplay for good; Replay restores it.
+ *                 specimen each time (the one control the reader gets)
+ *   resequencing  plays by itself: five sites are read butterfly by
+ *                 butterfly, and each gets its result written above it:
+ *                 identical everywhere (=), mixed in both populations (≈),
+ *                 or different between populations (≠)
+ *   reference     plays by itself in three steps: long reads, assembly into
+ *                 unordered pieces, then ordering into 21 chromosomes
+ * Replay runs a figure again.
  */
 import { getDict, type Locale } from '../i18n';
 import { BUTTERFLY, KARYOTYPE, WING_PATTERNS, seededRandom } from '../data/diagram-glyphs';
@@ -162,20 +161,37 @@ if (stepCounts[stepCounts.length - 1] !== 21 || stepCounts.some((c, n) => n > 0 
   throw new Error(`TierDiagram: coverage steps must fall steadily to 21 pieces (got ${stepCounts.join(', ')})`);
 }
 
+/* Assembly, in three beats. Long reads arrive as a loose cloud; they are
+   assembled into the pieces of one mid-coverage step, still unordered; then
+   each piece moves to its place on a chromosome. Scatter is seeded, so every
+   build draws the same cloud. */
+const CONTIG_PIECES = coverageSteps[Math.floor(coverageSteps.length / 2)];
+const scatter = seededRandom(11);
+const FLY_AT = [40, 108] as const;
+const contigs = CONTIG_PIECES.map(([ci, a, b], i) => {
+  const c = chromosomes[ci];
+  const h = Math.max(b - a - 1.8, 1.4);
+  const y = c.top + a + 0.9;
+  return {
+    i, x: c.cx - CHR_W / 2, y: r1(y), h: r1(h),
+    sx: Math.round(100 + scatter() * 232 - c.cx),
+    sy: Math.round(26 + scatter() * 164 - (y + h / 2)),
+    sr: Math.round(scatter() * 150 - 75),
+  };
+});
+const longReads = Array.from({ length: 56 }, (_, i) => {
+  const cx = Math.round(96 + scatter() * 244);
+  const cy = Math.round(20 + scatter() * 176);
+  return { cx, cy, len: r1(10 + scatter() * 7), rot: Math.round(scatter() * 180), dx: FLY_AT[0] - cx, dy: FLY_AT[1] - cy, d: i * 26 };
+});
+
 /* What the client script needs, per kind. */
 const exploreData =
   kind === 'barcode'
     ? { copy: explore.barcode, rows: LIBRARY.map((row) => ({ name: row.name, seq: row.seq })), specimens: SPECIMENS, pitch: ROW_PITCH }
     : kind === 'resequencing'
-      ? { copy: explore.resequencing, sites: SITES, pitch: SITE_PITCH, x0: SITE_X0, symbol: SYMBOL, initial: DEFAULT_SITE + 1 }
-      : { copy: { ...explore.reference, count: tiers.diagrams.reference.count }, steps: coverageSteps, chr: chromosomes.map((c) => [c.cx - CHR_W / 2, c.top, c.h]), w: CHR_W, fly: [40, 108] };
-const control =
-  kind === 'resequencing'
-    ? { min: 1, max: SITES.length, value: DEFAULT_SITE + 1 }
-    : kind === 'reference'
-      ? { min: 1, max: coverageSteps.length, value: coverageSteps.length }
-      : undefined;
-const at = control ? (control.value - control.min) / (control.max - control.min) : 1;
+      ? { copy: explore.resequencing, sites: SITES, pitch: SITE_PITCH, final: DEFAULT_SITE }
+      : { copy: { ...explore.reference, count: tiers.diagrams.reference.count }, contigs: contigs.length };
 const prompt = explore[kind].prompt;
 ---
 
@@ -286,14 +302,17 @@ const prompt = explore[kind].prompt;
         )))}
         <g class="rs-col is-on" data-col data-kind="differ" style={`transform:translateX(${DEFAULT_SITE * SITE_PITCH}px)`}>
           <rect x={SITE_X0 - 11} y="62" width="22" height="112" rx="11" class="rs-site" />
-          <text x={SITE_X0} y="53" class="rs-symbol" data-symbol>{SYMBOL.differ}</text>
         </g>
+        {/* The result at each site, written above it once the site is read. */}
+        {SITES.map((site, i) => (
+          <text x={siteX(i)} y="53" class={`rs-symbol rs-symbol--${site.kind} is-on`} data-v={i}>{SYMBOL[site.kind]}</text>
+        ))}
         <path d={`M84 ${REF_Y} H352`} class="dg-ref rs-ref" pathLength="1" />
         {readsAll.map((read) => (
           <g class="rs-read" style={`--dx:${read.dx}px;--dy:${read.dy}px;--d:${read.delay.toFixed(2)}s`}>
             <path d={`M${read.x1} ${read.y} H${read.x2}`} class="dg-read" />
             {read.cells.map(({ i, base }) => (
-              <g class={`rs-cell${i === DEFAULT_SITE ? ' is-on' : ''}`} data-i={i}>
+              <g class="rs-cell is-on" data-i={i} data-y={read.y}>
                 <rect x={siteX(i) - 5.5} y={read.y - 6} width="11" height="12" rx="2.5" class={`dg-base--${base}`} />
                 <text x={siteX(i)} y={read.y + 3.3}>{base}</text>
               </g>
@@ -314,44 +333,50 @@ const prompt = explore[kind].prompt;
         {chromosomes.map((c) => (
           <rect x={c.cx - CHR_W / 2} y={c.top} width={CHR_W} height={c.h} rx={CHR_W / 2} class="rf-chr" style={`--i:${c.i}`} />
         ))}
-        <g class="rf-cov" data-pieces></g>
+        <g class="rf-reads">
+          {longReads.map((r) => (
+            <g class="rf-read" style={`--dx:${r.dx}px;--dy:${r.dy}px;--d:${r.d}ms`}>
+              <rect x={r1(r.cx - r.len / 2)} y={r.cy - 1.6} width={r.len} height="3.2" rx="1.6" transform={`rotate(${r.rot} ${r.cx} ${r.cy})`} />
+            </g>
+          ))}
+        </g>
+        <g class="rf-contigs">
+          {contigs.map((c) => (
+            <rect x={c.x} y={c.y} width={CHR_W} height={c.h} rx={Math.min(3, c.h / 2)} class="rf-contig" style={`--sx:${c.sx}px;--sy:${c.sy}px;--sr:${c.sr}deg;--i:${c.i}`} />
+          ))}
+        </g>
         <text x={KARYO_X0 - CHR_W / 2} y="226" class="rf-count" data-count>{tiers.diagrams.reference.count}</text>
       </g>
     )}
   </svg>
 
   <div class="explorable-panel tier-explore" data-panel hidden>
-      {control
-        ? <label class="explorable-prompt" for={`${id}-control`}>{prompt}</label>
-        : <p class="explorable-prompt">{prompt}</p>}
+    <p class="explorable-prompt">{prompt}</p>
     <div class="explorable-control">
       {kind === 'barcode' && (
         <button type="button" class="explorable-btn" data-next>
-          <svg viewBox="-26 -17 52 32" aria-hidden="true" focusable="false">
+          <svg viewBox="-28 -17 56 32" aria-hidden="true" focusable="false">
             <path d={`${WING_F} ${WING_H}`} /><path d={`${WING_F} ${WING_H}`} transform="scale(-1 1)" />
           </svg>
           <span>{explore.barcode.button}</span>
         </button>
       )}
-      {control && (
-        <div class="explorable-slider" style={`--at:${at}`} data-slider>
-          <input id={`${id}-control`} class="explorable-range" type="range" min={control.min} max={control.max} step="1" value={control.value} data-control />
-          {kind === 'resequencing' && (
-            <div class="explorable-ticks" aria-hidden="true">
-              {SITES.map((s, i) => (
-                <span class={`rs-tick rs-tick--${s.kind}${i === DEFAULT_SITE ? ' is-current' : ''}`} style={`--p:${i / (SITES.length - 1)}`} data-tick>{SYMBOL[s.kind]}</span>
-              ))}
-            </div>
-          )}
-          {kind === 'reference' && (
-            <div class="explorable-ends" aria-hidden="true">
-              {explore.reference.ends.map((end) => <span>{end}</span>)}
-            </div>
-          )}
-        </div>
+      {kind === 'resequencing' && (
+        <ul class="tier-key" role="list">
+          {(['same', 'mixed', 'differ'] as const).map((k, n) => (
+            <li class={`tier-key-item tier-key-item--${k}`}><b>{SYMBOL[k]}</b>{explore.resequencing.legend[n]}</li>
+          ))}
+        </ul>
+      )}
+      {kind === 'reference' && (
+        <ol class="tier-key tier-steps" role="list">
+          {explore.reference.steps.map((step, n) => (
+            <li class="tier-key-item" data-step={n}><b>{n + 1}</b>{step}</li>
+          ))}
+        </ol>
       )}
     </div>
-    <output class="explorable-result" data-result for={control ? `${id}-control` : undefined}></output>
+    <output class="explorable-result" data-result></output>
       <button type="button" class="explorable-replay" data-replay aria-label={tiers.replay} title={tiers.replay}>
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></svg>
       </button>
@@ -361,11 +386,9 @@ const prompt = explore[kind].prompt;
 <script>
   type Copy = Record<string, string>;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const SVG_NS = 'http://www.w3.org/2000/svg';
   const fill = (tpl: string, vars: Record<string, string | number>) =>
     tpl.replace(/\{(\w+)\}/g, (_, key: string) => String(vars[key] ?? ''));
   const base = (b: string) => `<b class="readout-base readout-base--${b}">${b}</b>`;
-  const plain = (html: string) => html.replace(/<[^>]+>/g, '');
   /** Restart a one-shot CSS animation carried by a class. */
   const once = (el: Element | null, cls: string) => {
     if (!el || reduce.matches) return;
@@ -380,8 +403,6 @@ const prompt = explore[kind].prompt;
     const copy: Copy = data.copy;
     const panel = figure.querySelector<HTMLElement>('[data-panel]');
     const result = figure.querySelector<HTMLOutputElement>('[data-result]');
-    const range = figure.querySelector<HTMLInputElement>('[data-control]');
-    const slider = figure.querySelector<HTMLElement>('[data-slider]');
     const replay = figure.querySelector<HTMLButtonElement>('[data-replay]');
     const fly = figure.querySelector<SVGElement>('[data-fly]');
     if (!panel || !result || !replay) return;
@@ -397,21 +418,14 @@ const prompt = explore[kind].prompt;
 
     const say = (html: string) => {
       if (result.innerHTML !== html) result.innerHTML = html;
-      range?.setAttribute('aria-valuetext', plain(html));
-    };
-    const setRange = (value: number) => {
-      if (!range || !slider) return;
-      range.value = String(value);
-      slider.style.setProperty('--at', String((value - Number(range.min)) / (Number(range.max) - Number(range.min))));
     };
 
-    /* ---------- Per kind: the resting state for a value, the state before
-       the autoplay, and the autoplay itself ---------- */
-    let initial = 0;
-    let show: (value: number) => void = () => {};
+    /* ---------- Per kind: the resting state, the state before the
+       autoplay, and the autoplay itself ---------- */
+    let show: () => void = () => {};
     let prepare: () => void = () => {};
     let autoplay: (done: () => void) => void = (done) => done();
-    let cueTarget: HTMLElement | null = slider;
+    let cueTarget: HTMLElement | null = null;
 
     if (kind === 'barcode') {
       const scan = figure.querySelector<SVGElement>('[data-scan]');
@@ -498,129 +512,87 @@ const prompt = explore[kind].prompt;
     }
 
     if (kind === 'resequencing') {
-      const svg = figure.querySelector<SVGSVGElement>('svg');
-      const cells = figure.querySelectorAll<SVGGElement>('.rs-cell');
+      const cells = [...figure.querySelectorAll<SVGGElement>('.rs-cell')];
+      const verdicts = figure.querySelectorAll<SVGTextElement>('[data-v]');
       const col = figure.querySelector<SVGGElement>('[data-col]');
-      const symbol = figure.querySelector<SVGTextElement>('[data-symbol]');
-      const marks = figure.querySelectorAll<HTMLElement>('[data-tick]');
-      const count = (letters: string, b: string) => [...letters].filter((x) => x === b).length;
-      initial = data.initial;
-      show = (pos) => {
-        const i = pos - 1;
-        const site = data.sites[i];
-        cells.forEach((c) => c.classList.toggle('is-on', Number(c.dataset.i) === i));
-        marks.forEach((m, n) => m.classList.toggle('is-current', n === i));
-        if (col) {
-          col.style.transform = `translateX(${i * data.pitch}px)`;
-          col.classList.add('is-on');
-          col.dataset.kind = site.kind;
-        }
-        if (symbol) symbol.textContent = data.symbol[site.kind];
-        const a = site.top[0];
-        const vars = { i: pos, a: base(a), b: base(site.bottom[0]), n: site.top.length, x: count(site.top, a), y: count(site.bottom, a) };
-        say(fill(copy[site.kind], vars));
+      const n: number = data.sites.length;
+      const final: number = data.final;
+      // A site's letters from the top butterfly to the bottom one.
+      const column = (i: number) => cells
+        .filter((c) => Number(c.dataset.i) === i)
+        .sort((a, b) => Number(a.dataset.y) - Number(b.dataset.y));
+      const moveCol = (i: number, kind: string) => {
+        if (!col) return;
+        col.style.transform = `translateX(${i * data.pitch}px)`;
+        col.classList.add('is-on');
+        col.dataset.kind = kind;
+      };
+      show = () => {
+        cells.forEach((c) => c.classList.add('is-on'));
+        verdicts.forEach((v) => v.classList.add('is-on'));
+        moveCol(final, 'differ');
+        const site = data.sites[final];
+        say(fill(copy.summary, { n, a: base(site.top[0]), b: base(site.bottom[0]) }));
       };
       prepare = () => {
-        setRange(1);
         cells.forEach((c) => c.classList.remove('is-on'));
-        marks.forEach((m) => m.classList.remove('is-current'));
+        verdicts.forEach((v) => v.classList.remove('is-on'));
         col?.classList.remove('is-on');
         say('');
       };
-      // After the reads have aligned, the column visits the sites one by
-      // one and stops where the populations differ.
+      // Once the reads have aligned, the column visits every site: it reads
+      // the letter of each butterfly in turn, then the result is written
+      // above the site. It ends on the site where the populations differ.
       autoplay = (done) => {
         prepare();
-        for (let pos = 1; pos <= initial; pos++) {
-          after(3300 + (pos - 1) * 800, () => {
-            setRange(pos);
-            show(pos);
-            if (pos === initial) { once(symbol, 'is-pop'); done(); }
+        const T0 = 3300;
+        const STEP = 1300;
+        const LETTER = 110;
+        for (let i = 0; i < n; i++) {
+          const t = T0 + i * STEP;
+          const letters = column(i);
+          after(t, () => { moveCol(i, 'reading'); say(fill(copy.scanning, { i: i + 1, n })); });
+          letters.forEach((c, k) => after(t + 220 + k * LETTER, () => c.classList.add('is-on')));
+          after(t + 300 + letters.length * LETTER, () => {
+            moveCol(i, data.sites[i].kind);
+            verdicts[i]?.classList.add('is-on');
+            once(verdicts[i], 'is-pop');
           });
         }
+        after(T0 + n * STEP + 150, () => { show(); once(verdicts[final], 'is-pop'); done(); });
       };
-      // Direct manipulation: tap or drag along the reads to move the column.
-      if (svg && range) {
-        const toPos = (event: PointerEvent) => {
-          const ctm = svg.getScreenCTM();
-          if (!ctm) return;
-          const x = new DOMPoint(event.clientX, event.clientY).matrixTransform(ctm.inverse()).x;
-          const pos = Math.min(Number(range.max), Math.max(1, Math.round((x - data.x0) / data.pitch) + 1));
-          if (String(pos) !== range.value || !touched) {
-            range.value = String(pos);
-            range.dispatchEvent(new Event('input', { bubbles: true }));
-          }
-        };
-        svg.addEventListener('pointerdown', (event) => {
-          svg.setPointerCapture(event.pointerId);
-          toPos(event);
-        });
-        svg.addEventListener('pointermove', (event) => {
-          if (svg.hasPointerCapture(event.pointerId)) toPos(event);
-        });
-      }
     }
 
     if (kind === 'reference') {
-      const layer = figure.querySelector<SVGGElement>('[data-pieces]');
       const count = figure.querySelector<SVGTextElement>('[data-count]');
       const rf = figure.querySelector<SVGGElement>('.rf');
-      const last = data.steps.length;
-      let whole = true;
-      initial = last;
-      const draw = (step: number) => {
-        const pieces: number[][] = data.steps[step - 1];
-        layer?.replaceChildren(...(step === last ? [] : pieces.map(([c, a, b]) => {
-          const [x, top] = data.chr[c];
-          const rect = document.createElementNS(SVG_NS, 'rect');
-          const h = Math.max(b - a - 1.8, 1.4);
-          const y = top + a + 0.9;
-          rect.setAttribute('x', String(x));
-          rect.setAttribute('y', y.toFixed(1));
-          rect.setAttribute('width', String(data.w));
-          rect.setAttribute('height', h.toFixed(1));
-          rect.setAttribute('rx', String(Math.min(3, h / 2)));
-          // Where the piece flies in from during the autoplay: the butterfly.
-          rect.style.setProperty('--dx', `${(data.fly[0] - x - data.w / 2).toFixed(0)}px`);
-          rect.style.setProperty('--dy', `${(data.fly[1] - y - h / 2).toFixed(0)}px`);
-          rect.style.setProperty('--d', `${((c * 37) % 21) * 22 + ((a * 13) % 9) * 30}ms`);
-          return rect;
-        })));
-        return pieces.length;
+      const steps = figure.querySelectorAll<HTMLElement>('[data-step]');
+      // No stage attribute is the finished genome, which is also what a
+      // reader without scripts sees.
+      const stage = (name: string, step: number) => {
+        if (name) figure.dataset.stage = name; else delete figure.dataset.stage;
+        steps.forEach((el, k) => el.classList.toggle('is-current', k === step));
       };
-      show = (step) => {
-        const n = draw(step);
-        const done = step === last;
-        figure.classList.toggle('is-partial', !done);
-        if (count) count.textContent = done ? copy.count : fill(copy.pieces, { n });
-        say(done ? copy.whole : fill(copy.partial, { g: n - data.chr.length }));
-        // The last gap closing gets one small pop.
-        if (done && !whole) { once(rf, 'is-pop'); once(fly, 'is-flap'); }
-        whole = done;
+      show = () => {
+        stage('', -1);
+        if (count) count.textContent = copy.count;
+        say(copy.whole);
       };
       prepare = () => {
-        setRange(1);
-        show(1);
-        layer?.replaceChildren();
+        stage('idle', -1);
         if (count) count.textContent = '';
         say('');
       };
-      // The reads arrive from the butterfly, then the slider itself runs up
-      // to the last step, closing gaps as it goes.
       autoplay = (done) => {
         prepare();
-        after(350, () => {
-          show(1);
-          once(layer, 'is-flying');
+        after(300, () => { stage('reads', 0); say(copy.reads); });
+        after(3600, () => {
+          stage('contigs', 1);
+          if (count) count.textContent = fill(copy.pieces, { n: data.contigs });
+          say(fill(copy.contigs, { n: data.contigs }));
         });
-        for (let step = 2; step <= last; step++) {
-          after(1900 + (step - 2) * 330, () => {
-            layer?.classList.remove('is-flying');
-            setRange(step);
-            show(step);
-            if (step === last) done();
-          });
-        }
+        after(6900, () => { stage('order', 2); say(copy.order); });
+        after(9900, () => { show(); once(rf, 'is-pop'); once(fly, 'is-flap'); done(); });
       };
     }
 
@@ -653,25 +625,17 @@ const prompt = explore[kind].prompt;
       touched = true;
       result?.removeAttribute('aria-live');
       figure.classList.remove('is-armed', 'is-playing');
-      figure.querySelector('.is-flying')?.classList.remove('is-flying');
     }
 
-    range?.addEventListener('input', () => {
-      take();
-      setRange(Number(range.value));
-      show(Number(range.value));
-    });
     replay.addEventListener('click', () => {
       touched = false;
       cancel();
       figure.classList.remove('is-armed', 'is-playing');
-      setRange(initial);
-      if (reduce.matches) { show(initial); return; }
+      if (reduce.matches) { show(); return; }
       play();
     });
 
-    setRange(initial);
-    show(initial);
+    show();
     panel.hidden = false;
     figure.classList.add('is-live');
 
@@ -721,8 +685,6 @@ const prompt = explore[kind].prompt;
     overflow: visible;
     margin-bottom: 0.5rem;
   }
-  /* Tier 2 can be tapped or dragged sideways; vertical swipes still scroll. */
-  .tier-diagram--resequencing.is-live > svg { touch-action: pan-y; cursor: ew-resize; }
   .tier-explore { margin-top: auto; }
 
   /* ---- Shared marks ---- */
@@ -798,9 +760,10 @@ const prompt = explore[kind].prompt;
   .rs-col.is-on { opacity: 1; }
   .rs-site { fill: var(--highlight-dim); stroke: var(--text-strong); stroke-width: 1.75; }
   .rs-col[data-kind='differ'] .rs-site { fill: color-mix(in oklab, var(--marker) 55%, transparent); }
-  .rs-symbol { font-family: var(--font-mono); font-size: 19px; font-weight: 700; text-anchor: middle; fill: var(--text-strong); }
-  .rs-col[data-kind='differ'] .rs-symbol { fill: var(--accent); }
-  /* A site's letters: small coloured marks until the column reaches them,
+  .rs-symbol { font-family: var(--font-mono); font-size: 19px; font-weight: 700; text-anchor: middle; fill: var(--text-muted); opacity: 0; }
+  .rs-symbol.is-on { opacity: 1; }
+  .rs-symbol--differ { fill: var(--accent); }
+  /* A site's letters: small coloured marks until the column reads them,
      then full cells with the letter written in. */
   .rs-cell { transform-box: fill-box; transform-origin: center; transform: scale(0.66); }
   .rs-cell text { font-family: var(--font-mono); font-size: 9.5px; font-weight: 700; text-anchor: middle; fill: var(--stage); opacity: 0; }
@@ -809,31 +772,58 @@ const prompt = explore[kind].prompt;
   .is-live .rs-col { transition: transform 260ms var(--ease-settle), opacity 200ms linear; }
   .is-live .rs-cell { transition: transform 200ms var(--ease-settle); }
   .rs-symbol.is-pop { transform-box: fill-box; transform-origin: center; animation: dg-pop 0.45s var(--ease-settle); }
-  .rs-tick {
-    position: absolute;
-    left: calc(var(--p) * 100%);
-    top: 0;
-    transform: translateX(-50%);
-    font: 700 0.95rem/1 var(--font-mono);
-    color: var(--text-faint);
+
+  /* The key under tiers 2 and 3: what each mark means, or which step is playing. */
+  .tier-key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.9rem;
+    margin: 0.45rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--step--1);
+    color: var(--text-muted);
   }
-  .rs-tick--differ { color: var(--accent); }
-  .rs-tick.is-current { color: var(--text-strong); }
-  .rs-tick--differ.is-current { color: var(--accent); }
+  .tier-key-item { display: inline-flex; align-items: baseline; gap: 0.35rem; }
+  .tier-key-item b { font: 700 0.95rem/1 var(--font-mono); color: var(--text-strong); }
+  .tier-key-item--differ b { color: var(--accent); }
+  .tier-steps .tier-key-item { transition: color 200ms linear; }
+  .tier-steps .tier-key-item b {
+    display: inline-grid;
+    place-items: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    border: 1.5px solid var(--ink-line);
+    border-radius: 50%;
+    font-size: 0.75rem;
+    transition: background-color 200ms linear;
+  }
+  .tier-steps .tier-key-item.is-current { color: var(--text-strong); }
+  .tier-steps .tier-key-item.is-current b { background: var(--marker); color: var(--on-marker); }
 
   /* ---- Tier 3 ---- */
   .rf-chr { fill: var(--accent); }
   .rf-count { font-family: var(--font-display); font-size: 16px; font-weight: 600; fill: var(--text-strong); }
-  /* A gap is a stretch no read reached: an empty, hatched outline. */
-  .rf-ghost { display: none; stroke: var(--text-faint); stroke-width: 1.25; }
+  /* The empty places the pieces are sorted into. */
+  .rf-ghost { opacity: 0; stroke: var(--text-faint); stroke-width: 1.25; }
   .rf-hatch { stroke: var(--text-faint); stroke-width: 1; opacity: 0.5; }
-  .rf-cov :global(rect) { fill: var(--accent); stroke: var(--stage); stroke-width: 1; }
-  .is-partial .rf-chr { opacity: 0; }
-  .is-partial .rf-ghost { display: block; }
-  .rf-chr, .rf-count, .rf-cov :global(rect) { transform-box: fill-box; transform-origin: center; }
+  .rf-read { opacity: 0; }
+  .rf-read rect { fill: var(--text-muted); }
+  .rf-contig { opacity: 0; fill: var(--accent); stroke: var(--stage); stroke-width: 1; }
+  .rf-chr, .rf-count, .rf-read, .rf-contig { transform-box: fill-box; transform-origin: center; }
+  .is-live .rf-read { transition: opacity 400ms linear; }
+  .is-live .rf-contig {
+    transform: translate(var(--sx), var(--sy)) rotate(var(--sr));
+    transition: opacity 400ms linear, transform 1.3s calc(var(--i) * 16ms) var(--ease-glide);
+  }
+  .is-live .rf-ghost { transition: opacity 400ms linear; }
+  [data-stage] .rf-chr { opacity: 0; }
+  [data-stage='reads'] .rf-read { opacity: 1; animation: rf-fly 0.9s var(--d) var(--ease-glide) backwards; }
+  [data-stage='contigs'] .rf-contig, [data-stage='order'] .rf-contig { opacity: 1; }
+  [data-stage='order'] .rf-contig { transform: none; }
+  [data-stage='order'] .rf-ghost { opacity: 1; }
   .rf.is-pop .rf-chr { animation: rf-pop 0.42s calc(var(--i) * 14ms) var(--ease-settle) both; }
   .rf.is-pop .rf-count { transform-origin: left center; animation: dg-pop 0.45s 0.15s var(--ease-settle) both; }
-  .rf-cov:global(.is-flying) :global(rect) { animation: rf-fly 0.9s var(--d) var(--ease-glide) both; }
 
   /* ================= Intro animation (armed by JS, paused until in view) ================= */
   :is(.bc-arrow, .bc-arrow-head, .bc-letter, .bc-bar, .bc-qframe, .bc-row, .rs-ref, .rs-read) {
@@ -883,6 +873,6 @@ const prompt = explore[kind].prompt;
   @keyframes rf-pop { 0%, 100% { transform: scaleY(1); } 45% { transform: scale(1.12, 1.07); } }
 
   @media (prefers-reduced-motion: reduce) {
-    .is-live :is(.bc-scan, .bc-miss, .bc-unknown, .rs-col, .rs-cell) { transition: none; }
+    .is-live :is(.bc-scan, .bc-miss, .bc-unknown, .rs-col, .rs-cell, .rf-read, .rf-contig, .rf-ghost) { transition: none; }
   }
 </style>

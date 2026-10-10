@@ -225,16 +225,18 @@ export const es: Dict = {
         },
         "resequencing": {
           "prompt": "¿Dónde difieren las dos poblaciones?",
-          "same": "Sitio {i}: {a} en las seis mariposas. Aquí no hay nada que comparar.",
-          "mixed": "Sitio {i}: {a} en {x} de {n} arriba y en {y} de {n} abajo. Mezclado en ambas, así que no las distingue.",
-          "differ": "Sitio {i}: {a} en {n} de {n} arriba, {b} en {n} de {n} abajo. Aquí las poblaciones difieren."
+          "legend": ["igual en todas", "mezclado en ambas", "distinto"],
+          "scanning": "Leyendo el sitio {i} de {n}, mariposa por mariposa…",
+          "summary": "1 de {n} sitios distingue a las poblaciones: {a} arriba, {b} abajo. Los demás son iguales o están mezclados."
         },
         "reference": {
-          "prompt": "¿Cuántas lecturas cierran los huecos?",
-          "ends": ["Menos lecturas", "Más lecturas"],
+          "prompt": "¿Cómo se pasa de lecturas a cromosomas?",
+          "steps": ["Lecturas largas", "Ensamblaje", "Orden con Hi-C"],
           "pieces": "{n} fragmentos",
-          "partial": "Genoma en borrador: {g} huecos sin lecturas aún parten los cromosomas en fragmentos.",
-          "whole": "Referencia a escala cromosómica: los 21 cromosomas, cada uno en un solo fragmento."
+          "reads": "Se leen tramos de ADN de miles de bases de una sola mariposa.",
+          "contigs": "Las lecturas que se solapan se unen en {n} fragmentos más largos, todavía sin orden.",
+          "order": "Los datos de Hi-C indican qué fragmentos están juntos en la célula, y así cada uno encuentra su lugar.",
+          "whole": "Referencia a escala cromosómica: los fragmentos quedan ordenados en 21 cromosomas."
         }
       },
       "items": [
@@ -258,11 +260,11 @@ export const es: Dict = {
         },
         "resequencing": {
           "title": "Cómo la resecuenciación compara poblaciones",
-          "desc": "Se secuencian en lecturas cortas tres mariposas de una población y tres de otra. Las lecturas se alinean a lo largo de un genoma de referencia, una fila por mariposa: la primera población por encima y la segunda por debajo. Hay cinco sitios señalados. En dos, las seis mariposas tienen la misma letra. En dos, ambas letras aparecen en las dos poblaciones, así que ese sitio no sirve para distinguirlas. En uno, todas las mariposas de arriba tienen una T y todas las de abajo una C: un sitio donde las dos poblaciones difieren."
+          "desc": "Se secuencian en lecturas cortas tres mariposas de una población y tres de otra. Las lecturas se alinean a lo largo de un genoma de referencia, una fila por mariposa: la primera población por encima y la segunda por debajo. Se leen cinco sitios, uno tras otro, y cada uno recibe una marca. En dos, las seis mariposas tienen la misma letra. En dos, ambas letras aparecen en las dos poblaciones, así que ese sitio no sirve para distinguirlas. En uno, todas las mariposas de arriba tienen una T y todas las de abajo una C: un sitio donde las dos poblaciones difieren."
         },
         "reference": {
           "title": "Cómo se ensambla un genoma de referencia",
-          "desc": "El ADN de una mariposa se secuencia en muchas lecturas cortas. Donde las lecturas se solapan, se unen en fragmentos; los tramos que ninguna lectura ha alcanzado quedan como huecos. Con pocas lecturas el resultado es un genoma en borrador, en decenas de fragmentos. Al sumar lecturas los huecos se cierran y los fragmentos se unen, hasta que cada cromosoma es una secuencia continua: una referencia a escala cromosómica con los 21 cromosomas de un Heliconius típico.",
+          "desc": "El ADN de una mariposa se secuencia en lecturas largas. Las lecturas que se solapan se ensamblan en unas decenas de fragmentos más largos, cuyo orden aún se desconoce. Los datos de Hi-C, que registran qué tramos de ADN están cerca unos de otros en la célula, ubican cada fragmento y dan una referencia a escala cromosómica con los 21 cromosomas de un Heliconius típico.",
           "count": "21 cromosomas"
         }
       }

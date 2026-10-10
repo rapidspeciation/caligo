@@ -228,16 +228,18 @@ export const en = {
         },
         "resequencing": {
           "prompt": "Where do the two populations differ?",
-          "same": "Site {i}: {a} in all six butterflies. Nothing to compare here.",
-          "mixed": "Site {i}: {a} in {x} of {n} above and {y} of {n} below. Mixed in both, so it does not tell them apart.",
-          "differ": "Site {i}: {a} in {n} of {n} above, {b} in {n} of {n} below. The populations differ here."
+          "legend": ["same in all", "mixed in both", "differs"],
+          "scanning": "Reading site {i} of {n}, one butterfly at a time…",
+          "summary": "1 of {n} sites tells the populations apart: {a} above, {b} below. The others are shared or mixed."
         },
         "reference": {
-          "prompt": "How many reads until the gaps close?",
-          "ends": ["Fewer reads", "More reads"],
+          "prompt": "How do reads become chromosomes?",
+          "steps": ["Long reads", "Assembly", "Hi-C ordering"],
           "pieces": "{n} pieces",
-          "partial": "A draft genome: {g} gaps that no read has reached still break the chromosomes into pieces.",
-          "whole": "A chromosome-scale reference: each of the 21 chromosomes is one continuous piece."
+          "reads": "Stretches of DNA thousands of bases long are read from a single butterfly.",
+          "contigs": "Overlapping reads join into {n} longer pieces, but their order is still unknown.",
+          "order": "Hi-C data shows which pieces lie together in the cell, so each one finds its place.",
+          "whole": "A chromosome-scale reference: the pieces are ordered into 21 chromosomes."
         }
       },
       "items": [
@@ -261,11 +263,11 @@ export const en = {
         },
         "resequencing": {
           "title": "How population resequencing compares populations",
-          "desc": "Three butterflies from one population and three from another are sequenced as short reads. The reads line up along a reference genome, one row per butterfly: the first population above it and the second below. Five sites are marked. At two, all six butterflies carry the same letter. At two, both letters occur in both populations, so that site cannot tell them apart. At one, every butterfly above carries a T and every butterfly below a C: a site where the two populations differ."
+          "desc": "Three butterflies from one population and three from another are sequenced as short reads. The reads line up along a reference genome, one row per butterfly: the first population above it and the second below. Five sites are read one after another and each gets a mark. At two, all six butterflies carry the same letter. At two, both letters occur in both populations, so that site cannot tell them apart. At one, every butterfly above carries a T and every butterfly below a C: a site where the two populations differ."
         },
         "reference": {
           "title": "How a reference genome is assembled",
-          "desc": "The DNA of one butterfly is sequenced as many short reads. Where reads overlap they join into pieces; stretches no read has reached stay as gaps. With few reads the result is a draft genome in dozens of pieces. As reads are added the gaps close and the pieces merge, until each chromosome is one continuous sequence: a chromosome-scale reference with the 21 chromosomes of a typical Heliconius.",
+          "desc": "The DNA of one butterfly is sequenced as long reads. Overlapping reads are assembled into a few dozen longer pieces whose order is not yet known. Hi-C data, which records which stretches of DNA lie close together in the cell, places each piece, giving a chromosome-scale reference with the 21 chromosomes of a typical Heliconius.",
           "count": "21 chromosomes"
         }
       }
