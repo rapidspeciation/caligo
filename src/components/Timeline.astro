@@ -201,7 +201,18 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
     .timeline-list--compact .timeline-item:active::before,
     .timeline-list--compact .timeline-item:active::after { transform: translate(-1px, -1px); }
   }
+  /* On touch, the card passing the middle of the screen (Base.astro). */
+  .timeline-item:global(.is-near) {
+    transform: translate(-3px, -3px);
+    border-color: var(--tone);
+    box-shadow: 7px 7px 0 var(--tone);
+  }
+  .timeline-item:global(.is-near) .timeline-name { color: var(--accent-strong); }
+  @media (hover: none) {
+    .timeline-item:active { transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--tone); }
+  }
   @media (prefers-reduced-motion: reduce) {
+    .timeline-item:global(.is-near) { transform: none; }
     .timeline-item:hover, .timeline-item:active,
     .timeline-list--compact .timeline-item:hover::before,
     .timeline-list--compact .timeline-item:hover::after { transform: none; }

@@ -455,17 +455,28 @@ a.ink-card, .ink-press {
   transition: transform var(--dur-instant) var(--ease-glide),
     box-shadow var(--dur-instant) var(--ease-glide);
 }
-a.ink-card:hover, .ink-press:hover {
+/* `.is-near` is the touch stand-in for hover: Base.astro sets it on the
+   card passing the middle of the screen. */
+a.ink-card.is-near, .ink-press.is-near {
   transform: translate(-2px, -2px);
   box-shadow: calc(var(--ink-drop) + 2px) calc(var(--ink-drop) + 2px) 0 var(--ink-shadow);
+}
+@media (hover: hover) {
+  a.ink-card:hover, .ink-press:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: calc(var(--ink-drop) + 2px) calc(var(--ink-drop) + 2px) 0 var(--ink-shadow);
+  }
 }
 a.ink-card:active {
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 var(--ink-shadow);
 }
+@media (hover: none) {
+  a.ink-card, .ink-press { transition-duration: var(--dur-base); }
+}
 @media (prefers-reduced-motion: reduce) {
   a.ink-card, .ink-press { transition: none; }
-  a.ink-card:hover, a.ink-card:active, .ink-press:hover { transform: none; }
+  a.ink-card:hover, a.ink-card:active, .ink-press:hover, a.ink-card.is-near, .ink-press.is-near { transform: none; }
 }
 
 /* Small ink pill for statuses and dates ("3 months ago"). */

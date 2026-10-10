@@ -207,8 +207,20 @@ const base = import.meta.env.BASE_URL;
     .person-card:hover .person-source-arrow { transform: translate(2px, -2px); }
     .person-card:active { transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--tone); }
   }
+  /* On touch, the card passing the middle of the screen (Base.astro). */
+  .person-card:global(.is-near) {
+    transform: translate(-3px, -3px);
+    border-color: var(--tone);
+    box-shadow: 6px 6px 0 var(--tone);
+  }
+  .person-card:global(.is-near) .person-photo { transform: scale(1.05); filter: none; }
+  .person-card:global(.is-near) .person-media::after { opacity: 0; }
+  .person-card:global(.is-near) .person-tie { background: color-mix(in oklab, var(--tone) 34%, transparent); border-color: var(--tone); }
+  @media (hover: none) {
+    .person-card:active { transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--tone); }
+  }
   @media (prefers-reduced-motion: reduce) {
-    .person-card:hover, .person-card:active { transform: none; }
-    .person-card:hover .person-photo { transform: none; }
+    .person-card:hover, .person-card:active, .person-card:global(.is-near) { transform: none; }
+    .person-card:hover .person-photo, .person-card:global(.is-near) .person-photo { transform: none; }
   }
 </style>

@@ -371,6 +371,22 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
         };
         document.addEventListener('astro:page-load', window.caligoMarkers);
       })();
+      /* Touch screens have no hover, so the card passing the middle of the
+         screen takes the hover look instead: it lifts as you scroll to it
+         and settles as you scroll on. */
+      (function () {
+        if (window.caligoNearCards) return;
+        window.caligoNearCards = function () {
+          var touch = false;
+          try { touch = window.matchMedia('(hover: none)').matches; } catch (_) {}
+          if (!touch || !('IntersectionObserver' in window)) return;
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) { e.target.classList.toggle('is-near', e.isIntersecting); });
+          }, { rootMargin: '-38% 0px -38% 0px' });
+          document.querySelectorAll('a.ink-card, .ink-press, .person-card, .timeline-item').forEach(function (card) { io.observe(card); });
+        };
+        document.addEventListener('astro:page-load', window.caligoNearCards);
+      })();
     </script>
     <script is:inline>
       /* Funding-call countdown and site-wide banner. Dates compare in the
