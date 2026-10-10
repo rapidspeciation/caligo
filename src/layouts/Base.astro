@@ -345,8 +345,8 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
       })();
     </script>
     <script is:inline>
-      /* Highlighter: each .marker draws itself once, the first time it
-         scrolls into view. Without JS or with reduced motion it is simply
+      /* Highlighter: each .marker draws itself whenever it scrolls back
+         into view. Without JS or with reduced motion it is simply
          there. */
       (function () {
         if (window.caligoMarkers) return;
@@ -356,13 +356,17 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
           if (reduce || !('IntersectionObserver' in window)) return;
           var marks = document.querySelectorAll('.marker:not([data-marker])');
           if (!marks.length) return;
+          /* Redraw each time the number comes back into view; reset only
+             once it has left the viewport completely. */
           var io = new IntersectionObserver(function (entries) {
             entries.forEach(function (e) {
-              if (!e.isIntersecting) return;
-              io.unobserve(e.target);
-              requestAnimationFrame(function () { requestAnimationFrame(function () { e.target.setAttribute('data-marker', 'drawn'); }); });
+              if (e.intersectionRatio >= 0.9) {
+                requestAnimationFrame(function () { requestAnimationFrame(function () { e.target.setAttribute('data-marker', 'drawn'); }); });
+              } else if (!e.isIntersecting) {
+                e.target.setAttribute('data-marker', 'pending');
+              }
             });
-          }, { rootMargin: '0px 0px -12% 0px' });
+          }, { threshold: [0, 0.9] });
           marks.forEach(function (m) { m.setAttribute('data-marker', 'pending'); io.observe(m); });
         };
         document.addEventListener('astro:page-load', window.caligoMarkers);

@@ -285,7 +285,7 @@ const chromosomes = Array.from({ length: 21 }, (_, i) => {
     position: relative;
     margin: 0;
     padding: 0.85rem 0.75rem 0.6rem;
-    background: var(--bg-inset);
+    background: var(--tier-stage, var(--bg-inset));
     border-bottom: 1px solid var(--hairline);
     /* DNA bases: Okabe-Ito hues (tokens.css), tuned per mode. */
     --base-A: var(--trait-plant);
@@ -325,7 +325,7 @@ const chromosomes = Array.from({ length: 21 }, (_, i) => {
   .bc-unknown { font-family: var(--font-display); font-size: 20px; font-weight: 600; fill: var(--text-faint); opacity: 0; }
   .bc-answer { fill: var(--accent); font-weight: 600; font-size: 14px; }
   .bc-db ellipse, .bc-db path { fill: none; stroke: var(--text-faint); stroke-width: 2; }
-  .bc-row--miss { opacity: 0.38; }
+  .bc-row--miss { opacity: 0.55; }
   .bc-row--match .bc-name { fill: var(--accent); font-weight: 600; }
   .bc-miss { fill: var(--text-strong); }
 
@@ -412,7 +412,7 @@ const chromosomes = Array.from({ length: 21 }, (_, i) => {
   @keyframes dg-draw16 { from { stroke-dashoffset: 16; } to { stroke-dashoffset: 0; } }
   @keyframes dg-draw1 { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
   @keyframes bc-unknown { from, 96% { opacity: 1; } to { opacity: 0; } }
-  @keyframes bc-row-miss { from { opacity: 0; } 12%, 88% { opacity: 1; } to { opacity: 0.38; } }
+  @keyframes bc-row-miss { from { opacity: 0; } 12%, 88% { opacity: 1; } to { opacity: 0.55; } }
   /* Rows are 30 units apart; the frame is drawn on the last (matching) row. */
   @keyframes bc-scan {
     0% { opacity: 0; transform: translateY(-90px); }

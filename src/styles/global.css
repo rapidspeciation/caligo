@@ -371,10 +371,10 @@ kbd,
   letter-spacing: -0.005em;
   /* Pill on one line; stays a soft lozenge when a long label wraps. */
   border-radius: 1.4rem;
-  border: var(--ink-w) solid var(--ink-line);
+  border: var(--ink-w) solid var(--btn-line);
   background: var(--btn-bg);
   color: var(--btn-fg);
-  box-shadow: 3px 3px 0 var(--ink-shadow);
+  box-shadow: 3px 3px 0 var(--btn-shadow);
   text-decoration: none;
   cursor: pointer;
   transition: transform var(--dur-instant) var(--ease-glide),
@@ -384,16 +384,18 @@ kbd,
 .btn:hover {
   color: var(--btn-fg);
   transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0 var(--ink-shadow);
+  box-shadow: 4px 4px 0 var(--btn-shadow);
   background: var(--accent-strong);
 }
 .btn:active {
   transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0 var(--ink-shadow);
+  box-shadow: 1px 1px 0 var(--btn-shadow);
 }
 .btn--ghost {
   --btn-bg: var(--card);
   --btn-fg: var(--text-strong);
+  --btn-line: var(--ink-line);
+  --btn-shadow: var(--ink-shadow);
 }
 .btn--ghost:hover {
   --btn-fg: var(--text-strong);
@@ -420,10 +422,10 @@ kbd,
   box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--ink-shadow);
 }
 .ink-card--flat { box-shadow: none; }
-.ink-card--sun  { --card-fill: var(--pastel-sun); }
-.ink-card--leaf { --card-fill: var(--pastel-leaf); }
-.ink-card--sky  { --card-fill: var(--pastel-sky); }
-.ink-card--rose { --card-fill: var(--pastel-rose); }
+.ink-card--sun  { --card-fill: var(--pastel-sun);  --ink-line: var(--tone-sun);  --ink-shadow: var(--tone-sun); }
+.ink-card--leaf { --card-fill: var(--pastel-leaf); --ink-line: var(--tone-leaf); --ink-shadow: var(--tone-leaf); }
+.ink-card--sky  { --card-fill: var(--pastel-sky);  --ink-line: var(--tone-sky);  --ink-shadow: var(--tone-sky); }
+.ink-card--rose { --card-fill: var(--pastel-rose); --ink-line: var(--tone-rose); --ink-shadow: var(--tone-rose); }
 /* On a pastel fill every text role reads in ink, in both modes. */
 .ink-card--sun, .ink-card--leaf, .ink-card--sky, .ink-card--rose {
   --text: var(--on-pastel);
@@ -436,18 +438,16 @@ kbd,
   --accent-strong: var(--on-pastel);
   --hairline: color-mix(in oklab, var(--on-pastel) 28%, transparent);
   --hairline-strong: color-mix(in oklab, var(--on-pastel) 45%, transparent);
-  --ink-inner: var(--on-pastel);
+  --ink-inner: var(--ink-line);
 }
 .ink-card--sun .btn, .ink-card--leaf .btn, .ink-card--sky .btn, .ink-card--rose .btn {
   --btn-bg: var(--on-pastel);
   --btn-fg: var(--card-fill);
+  --btn-line: var(--on-pastel);
+  --btn-shadow: var(--ink-line);
 }
 .ink-card--sun .btn:hover, .ink-card--leaf .btn:hover, .ink-card--sky .btn:hover, .ink-card--rose .btn:hover {
   background: var(--on-pastel);
-}
-[data-mode='dark'] .ink-card--sun .btn, [data-mode='dark'] .ink-card--leaf .btn,
-[data-mode='dark'] .ink-card--sky .btn, [data-mode='dark'] .ink-card--rose .btn {
-  border-color: var(--on-pastel);
 }
 /* A pressable card lifts toward the pointer and sinks when clicked. */
 a.ink-card, .ink-press {
@@ -483,10 +483,10 @@ a.ink-card:active, .ink-press:active {
   white-space: nowrap;
 }
 .chip svg { width: 0.95rem; height: 0.95rem; flex: none; }
-.chip--sun  { --chip-fill: var(--pastel-sun);  color: var(--on-pastel); }
-.chip--leaf { --chip-fill: var(--pastel-leaf); color: var(--on-pastel); }
-.chip--sky  { --chip-fill: var(--pastel-sky);  color: var(--on-pastel); }
-.chip--rose { --chip-fill: var(--pastel-rose); color: var(--on-pastel); }
+.chip--sun  { --chip-fill: var(--pastel-sun);  color: var(--on-pastel); --ink-line: var(--tone-sun); }
+.chip--leaf { --chip-fill: var(--pastel-leaf); color: var(--on-pastel); --ink-line: var(--tone-leaf); }
+.chip--sky  { --chip-fill: var(--pastel-sky);  color: var(--on-pastel); --ink-line: var(--tone-sky); }
+.chip--rose { --chip-fill: var(--pastel-rose); color: var(--on-pastel); --ink-line: var(--tone-rose); }
 /* Something that has ended: same pill, dashed and unfilled. */
 .chip--done {
   --chip-fill: transparent;
@@ -495,15 +495,15 @@ a.ink-card:active, .ink-press:active {
 }
 .chip { border-color: var(--ink-inner, var(--ink-line)); }
 
-/* Yellow highlighter behind a page's one key number. Drawn once, left to
-   right, the first time it scrolls into view (Base.astro); static with
+/* Yellow highlighter behind a page's one key number. Drawn left to right
+   each time it scrolls back into view (Base.astro); static with
    reduced motion or without JavaScript. */
 .marker {
   position: relative;
   z-index: 0;
   display: inline-block;
   padding-inline: 0.1em;
-  color: var(--on-pastel);
+  color: var(--on-marker);
 }
 .marker::before {
   content: '';

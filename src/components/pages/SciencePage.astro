@@ -152,7 +152,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
 
       <div class="publication-grid">
         {publicationExamples.map((publication, index) => (
-          <article class="publication-card ink-card">
+          <article class="publication-card">
             <div class="publication-index mono" aria-hidden="true">
               {String(index + 1).padStart(2, '0')}
             </div>
@@ -423,7 +423,11 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     display: grid;
     gap: var(--space-m);
   }
+  /* Published evidence stays quiet: a hairline frame, no ink outline. */
   .publication-card {
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    background: var(--bg-raised);
     display: flex;
     flex-direction: column;
     min-width: 0;

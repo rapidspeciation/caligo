@@ -471,15 +471,26 @@
 
 :root,
 [data-mode='dark'] {
-  --ink-line: #e9dfce;        /* cream outline on warm charcoal */
-  --ink-shadow: #4a4038;     /* a dim offset print of the outline: black would vanish on charcoal */
+  /* Dark mode mirrors light mode instead of copying it: light prints ink on
+     cream, so dark prints cream on charcoal, and the hard shadow is the
+     same colour as the outline in both. Tinted cards are deep tints with
+     light text, outlined and shadowed in their own wing colour. */
+  --ink-line: #d9ccb6;
+  --ink-shadow: #d9ccb6;
   --card: #221c17;
-  --on-pastel: #1c1511;
-  --pastel-sun: #e3b83c;
-  --pastel-leaf: #9ebf84;
-  --pastel-sky: #8db3d6;
-  --pastel-rose: #de9a84;
+  --on-pastel: #f6efe2;
+  --pastel-sun: #3a2f12;
+  --pastel-leaf: #22301c;
+  --pastel-sky: #1a2a3b;
+  --pastel-rose: #3b211b;
+  --tone-sun: #e3b83c;
+  --tone-leaf: #9ebf84;
+  --tone-sky: #8db3d6;
+  --tone-rose: #e39a84;
   --marker: #e3b83c;
+  --on-marker: #1c1511;
+  --btn-line: transparent;
+  --btn-shadow: var(--c-burnt-700);
 }
 
 [data-mode='light'] {
@@ -491,7 +502,16 @@
   --pastel-leaf: #d3e6be;
   --pastel-sky: #c6dcf2;
   --pastel-rose: #f7c4b2;
+  --tone-sun: #231e1b;
+  --tone-leaf: #231e1b;
+  --tone-sky: #231e1b;
+  --tone-rose: #231e1b;
   --marker: #ffd84a;
+  --on-marker: #231e1b;
+  --btn-line: #231e1b;
+  --btn-shadow: #231e1b;
+  /* A near-white stage keeps the diagram colours crisp on cream paper. */
+  --tier-stage: #fffdf7;
 }
 
 :root {
