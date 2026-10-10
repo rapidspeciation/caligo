@@ -101,7 +101,7 @@ export const LEADERS: Person[] = [
     },
     bio: {
       en: 'Her research examines the diversity, genetics, physiology, ecology and behaviour of Neotropical butterflies, alongside broader work in entomology and insect monitoring.',
-      es: 'Gyanpriya estudia la diversidad, la genética, la fisiología, la ecología y la conducta de las mariposas neotropicales, además de otros temas de entomología y monitoreo de insectos.',
+      es: 'Gyanpriya estudia la diversidad, la genética, la fisiología, la ecología y el comportamiento de las mariposas neotropicales, además de otros temas de entomología y monitoreo de insectos.',
     },
     affiliation: 'University of Guyana',
     regionalTies: { en: 'Guyana', es: 'Guyana' },
@@ -299,11 +299,11 @@ export const EVENTS: InitiativeEvent[] = [
     id: 'bogota-2026',
     name: {
       en: 'Bogotá sequencing workshop',
-      es: 'Taller de secuenciación de Bogotá',
+      es: 'Taller de secuenciación en Bogotá',
     },
     dates: {
       en: '20–23 July 2026',
-      es: '20–23 de julio de 2026',
+      es: 'Del 20 al 23 de julio de 2026',
     },
     location: {
       en: 'Bogotá, Colombia',
@@ -321,11 +321,11 @@ export const EVENTS: InitiativeEvent[] = [
     id: 'campinas-2027',
     name: {
       en: 'Campinas hackathon',
-      es: 'Hackathon de Campinas',
+      es: 'Hackatón en Campinas',
     },
     dates: {
       en: '30 March – 3 April 2027',
-      es: '30 de marzo – 3 de abril de 2027',
+      es: 'Del 30 de marzo al 3 de abril de 2027',
     },
     location: {
       en: 'Campinas, Brazil',
@@ -335,8 +335,8 @@ export const EVENTS: InitiativeEvent[] = [
     start: '2027-03-30',
     end: '2027-04-03',
     summary: {
-      en: 'Hackathon at the Biology of Butterflies and Neotropical Lepidoptera (ELEN) congress: collaborative work to assemble reference genomes, analyse the data and strengthen the network.',
-      es: 'Hackathon durante el congreso Biology of Butterflies y Encuentro de Lepidópteros Neotropicales (ELEN): trabajo colaborativo para ensamblar genomas de referencia, analizar los datos y fortalecer la red.',
+      en: 'Hackathon at the Biology of Butterflies and ELEN (Neotropical Lepidoptera meeting) congress: participants assemble reference genomes and analyse the data together.',
+      es: 'Hackatón durante el congreso Biology of Butterflies y Encuentro de Lepidópteros Neotropicales (ELEN): los participantes ensamblan genomas de referencia y analizan los datos en conjunto.',
     },
   },
 ];

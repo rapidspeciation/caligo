@@ -64,7 +64,7 @@ export const es: Dict = {
     "about": "Acerca de",
     "participate": "Participa",
     "projects": "Proyectos piloto",
-    "join": "Unirse"
+    "join": "Únete"
   },
   "cta": {
     "exploreScience": "Explora las preguntas",
@@ -78,12 +78,12 @@ export const es: Dict = {
   "committee": {
     "heading": "Únete a un comité",
     "body": "Los comités organizan el muestreo y los permisos, la secuenciación, el análisis, la formación y la comunicación. La hoja de comités muestra cada grupo y sus integrantes actuales.",
-    "cta": "Abrir la hoja de comités"
+    "cta": "Abre la hoja de comités"
   },
   "join": {
     "title": "Únete a la red",
     "body": "El formulario de inscripción pregunta por tu país, institución, grupos taxonómicos de interés y experiencia en genómica o secuenciación. Completarlo toma pocos minutos.",
-    "cta": "Abrir el formulario de inscripción",
+    "cta": "Abre el formulario de inscripción",
     "privacyNote": "Las respuestas se recopilan mediante Google Forms y llegan al equipo organizador de Caligo.",
     "ctaSecondary": "Únete a la red"
   },
@@ -170,7 +170,7 @@ export const es: Dict = {
     "activity": {
       "eyebrow": "Actividad reciente y próxima",
       "heading": "Caligo en acción",
-      "intro": "Los talleres, hackathones y otros encuentros nos permiten aprender juntos y ampliar la red."
+      "intro": "Los talleres, hackatones y otros encuentros nos permiten aprender juntos y ampliar la red."
     },
     "pillars": {
       "eyebrow": "Cómo se orienta el trabajo",
@@ -181,12 +181,12 @@ export const es: Dict = {
       "body": "Puedes aportar ejemplares, capacidad de secuenciación, experiencia taxonómica o una pregunta de investigación. Inscríbete en la red, participa en Discord o escríbenos por correo."
     },
     "stats": {
-      "participants": "miembros",
-      "facilities": "instalaciones de secuenciación",
+      "participants": "integrantes",
+      "facilities": "centros de secuenciación",
       "countries": "países de América Latina",
       "pilots": "proyectos piloto propuestos",
       "asOf": "a septiembre de 2026",
-      "participantsNote": "Conteo de septiembre de 2026, y el formulario sigue abierto.",
+      "participantsNote": "A septiembre de 2026. La inscripción sigue abierta.",
       "facilitiesNote": "En {n} países, de Panamá a Chile.",
       "countriesNote": "Y {n} más fuera de la región.",
       "pilotsNote": "Ocho especies de Heliconius ya secuenciadas en Bogotá.",
@@ -215,7 +215,7 @@ export const es: Dict = {
       "explore": {
         "barcode": {
           "prompt": "¿De qué especie es esta mariposa?",
-          "button": "Probar con otra mariposa",
+          "button": "Prueba con otra mariposa",
           "note": "Se muestran 16 de unas 650 bases (gen COI)",
           "scanning": "Comparando con cada código de la biblioteca…",
           "match": "Las 16 bases coinciden con <i>{name}</i>. Una cruz marca cada base en la que otra especie difiere."
@@ -232,7 +232,7 @@ export const es: Dict = {
           "reads": "Se leen tramos largos de ADN de una sola mariposa, sin ningún orden.",
           "overlap": "Las lecturas que terminan y empiezan con las mismas letras se traslapan, y así cada una encuentra a su vecina.",
           "join": "Las lecturas traslapadas se unen en una sola secuencia continua.",
-          "chrom": "Luego, los datos de Hi-C ordenan los fragmentos unidos: 21 cromosomas.",
+          "chrom": "Luego otro tipo de datos, Hi-C, ordena los fragmentos unidos: 21 cromosomas.",
           "whole": "Es costoso, pero se hace una sola vez por especie. Después bastan lecturas cortas, más baratas, alineadas a esta referencia."
         }
       },
@@ -298,15 +298,15 @@ export const es: Dict = {
         "teaser": "Un estudio de 2016 encontró que la mayoría de las poblaciones seguían conectadas. ¿Lo están hoy?",
         "answer": [
           "Parides ascanius está restringida a restingas costeras y humedales del sureste de Brasil. La UICN la evaluó como Vulnerable a nivel global en 2018. La evaluación nacional de Brasil la clasificó En Peligro en 2021.",
-          "Seraphim y sus colegas compararon las poblaciones supervivientes mediante secuencias mitocondriales de COI y ocho marcadores microsatélites. El estudio de 2016 encontró poca estructura genética, ninguna señal de endogamia y una migración alta entre la mayoría de los sitios muestreados, aunque una población estaba más aislada por el entorno metropolitano.",
-          "El resultado de 2016 ofrece una línea de base, pero no muestra si las poblaciones siguen conectadas hoy. Un genoma de referencia a escala cromosómica y nuevas muestras de sus poblaciones permitirían medir cuánta diversidad queda y si la pérdida de hábitat, el drenaje o la fragmentación han interrumpido el flujo génico. Las localidades precisas deben mantenerse fuera de la comunicación pública."
+          "Seraphim y sus colegas compararon las poblaciones restantes mediante secuencias mitocondriales de COI y ocho marcadores microsatélites. El estudio de 2016 encontró poca estructura genética, ninguna señal de endogamia y una migración alta entre la mayoría de los sitios muestreados, aunque una población estaba más aislada por el entorno metropolitano.",
+          "El resultado de 2016 ofrece una línea de base, pero no muestra si las poblaciones siguen conectadas hoy. Un genoma de referencia a escala cromosómica y nuevas muestras de sus poblaciones permitirían medir cuánta diversidad queda y si la pérdida de hábitat, el drenaje o la fragmentación han interrumpido el flujo génico."
         ]
       },
       {
         "heading": "¿Cómo se desplazan las plagas y evoluciona la resistencia en los paisajes sojeros?",
         "teaser": "Polillas de especies muy parecidas pueden diferir en cómo se desplazan y resisten el control.",
         "answer": [
-          "En los cultivos de soja de Brasil conviven varias especies cercanas de polillas que pueden ser difíciles de distinguir durante el monitoreo. Identificarlas bien es importante porque su movimiento y su resistencia pueden diferir.",
+          "En los cultivos de soja de Brasil conviven varias especies de polillas estrechamente emparentadas que pueden ser difíciles de distinguir durante el monitoreo. Identificarlas bien es importante porque su movimiento y su resistencia pueden diferir.",
           "Estudios brasileños han detectado cambios en la susceptibilidad a proteínas insecticidas que exigen pruebas repetidas y específicas para cada especie. Los datos genómicos permiten distinguir las especies, comparar el movimiento entre poblaciones e identificar variantes asociadas con la resistencia.",
           "Por sí solos, los genomas no miden el daño al cultivo ni demuestran que una variante cause resistencia. Para elegir una respuesta de manejo también se necesitan ensayos de campo, bioensayos, conocimientos agronómicos y observaciones de los productores."
         ]
@@ -412,7 +412,7 @@ export const es: Dict = {
   },
   "about": {
     "metaTitle": "Acerca de | Caligo",
-    "metaDescription": "La meta de 1.000 genomas de Caligo, su equipo de liderazgo, instalaciones de secuenciación y principios para investigar desde América Latina.",
+    "metaDescription": "La meta de 1.000 genomas de Caligo, su equipo de liderazgo, centros de secuenciación y principios para investigar desde América Latina.",
     "title": "Acerca de Caligo",
     "body": "Caligo es una iniciativa liderada desde América Latina para construir genomas de referencia de mariposas y polillas neotropicales. Cada genoma queda vinculado a un ejemplar identificado y al conocimiento taxonómico necesario para confirmar su identidad. Estos genomas pueden usarse para estudiar preguntas surgidas en la región.",
     "name": {
@@ -429,7 +429,7 @@ export const es: Dict = {
       "steps": [
         "Identificar el organismo y conservar un ejemplar de referencia",
         "Acordar permisos, responsabilidades, autoría y cómo se compartirán los beneficios",
-        "Secuenciar el material en una instalación regional adecuada",
+        "Secuenciar el material en un centro regional adecuado",
         "Ensamblar el genoma y comprobar su calidad e identidad",
         "Depositar la secuencia y conectarla con los metadatos del ejemplar",
         "Usar el genoma en estudios comparativos y actualizarlo cuando haya mejores datos"
@@ -443,7 +443,7 @@ export const es: Dict = {
       "heading": "La red Caligo"
     },
     "facilities": {
-      "heading": "Instalaciones asociadas",
+      "heading": "Centros asociados",
       "intro": "Caligo cuenta con siete instituciones asociadas en Colombia, Panamá, Brasil, Ecuador y Chile que aportan plataformas de secuenciación a sus proyectos."
     },
     "positioning": {
@@ -484,7 +484,7 @@ export const es: Dict = {
         },
         {
           "title": "Una oportunidad de formación",
-          "body": "Ayuda a organizar talleres, intercambios, hackathones, cursos y mentorías que fortalezcan las capacidades de América Latina a largo plazo."
+          "body": "Ayuda a organizar talleres, intercambios, hackatones, cursos y mentorías que fortalezcan las capacidades de América Latina a largo plazo."
         },
         {
           "title": "Una colaboración",
@@ -500,7 +500,7 @@ export const es: Dict = {
       "items": [
         "Nuevas colaboraciones en torno a organismos, colecciones, métodos o preguntas de investigación",
         "Formación e intercambio de conocimientos y experiencia técnica",
-        "Proyectos conjuntos de investigación y financiamiento",
+        "Propuestas conjuntas de investigación y de financiamiento",
         "Publicaciones conjuntas que reconozcan la experiencia regional"
       ]
     },
@@ -523,7 +523,7 @@ export const es: Dict = {
     },
     "languagePolicy": {
       "heading": "Idiomas de trabajo",
-      "body": "Las comunicaciones oficiales se hacen en inglés y español. El portugués también se usa en las reuniones, con traducción informal entre quienes entienden ambos."
+      "body": "Las comunicaciones oficiales se hacen en inglés y español. El portugués también se usa en las reuniones, y los participantes se traducen entre sí de manera informal."
     }
   },
   "sourceDrawer": {

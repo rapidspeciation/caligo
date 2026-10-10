@@ -64,7 +64,7 @@ export const ABOUT_FEEDBACK = {
       en: 'Eight researchers from institutions in Latin America and Europe coordinate the community.',
       es: 'Ocho investigadores de instituciones de América Latina y Europa coordinan la comunidad.',
     },
-    facilitiesHeading: { en: 'Sequencing facilities', es: 'Instalaciones de secuenciación' },
+    facilitiesHeading: { en: 'Sequencing facilities', es: 'Centros de secuenciación' },
     relationshipsHeading: { en: 'Related sequencing networks', es: 'Redes de secuenciación relacionadas' },
     relationships: {
       beforeEarth: {

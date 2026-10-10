@@ -189,7 +189,7 @@ export const en = {
       "countries": "Latin American countries",
       "pilots": "proposed pilot projects",
       "asOf": "as of September 2026",
-      "participantsNote": "Counted in September 2026, and the form is still open.",
+      "participantsNote": "As of September 2026. Registration is still open.",
       "facilitiesNote": "In {n} countries, from Panama to Chile.",
       "countriesNote": "Plus {n} outside the region.",
       "pilotsNote": "Eight Heliconius species already sequenced in Bogotá.",
@@ -235,7 +235,7 @@ export const en = {
           "reads": "Long stretches of DNA are read from a single butterfly, in no particular order.",
           "overlap": "Reads that end and begin with the same letters overlap, so each one finds its neighbour.",
           "join": "Overlapping reads join into one continuous sequence.",
-          "chrom": "Hi-C data then puts the joined pieces in order: 21 chromosomes.",
+          "chrom": "Hi-C, a second kind of data, then puts the joined pieces in order: 21 chromosomes.",
           "whole": "Costly, but done once per species. Later butterflies need only cheaper short reads, aligned to this reference."
         }
       },
@@ -270,7 +270,7 @@ export const en = {
       }
     },
     "metaTitle": "Science | Caligo",
-    "metaDescription": "Reference genomes, shared analysis and training for Neotropical butterflies and moths, with published examples and Caligo’s research questions.",
+    "metaDescription": "Reference genomes of Neotropical butterflies and moths: what they are, published examples and the questions Caligo wants to answer.",
     "title": "Questions genomes can help answer",
     "intro": "These four research findings lead directly to Caligo's proposed pilot projects. Each shows what earlier evidence resolved and what new samples or genomic data could reveal next.",
     "questionsHeading": "Questions genomes can help answer",
@@ -300,9 +300,9 @@ export const en = {
         "heading": "Are threatened butterfly populations still connected a decade later?",
         "teaser": "A 2016 study found most populations still connected. Are they today?",
         "answer": [
-          "Parides ascanius is restricted to coastal restinga and wetlands in south-eastern Brazil. The IUCN assessed it as Vulnerable globally in 2018. Brazil's national assessment listed it as Endangered in 2021.",
+          "Parides ascanius is restricted to coastal restinga and wetlands in south-eastern Brazil. The IUCN assessed it as Vulnerable globally in 2018. Brazil’s national assessment listed it as Endangered in 2021.",
           "Seraphim and colleagues used mitochondrial COI sequences and eight microsatellite markers to compare the surviving populations. Their 2016 study found little genetic structure, no evidence of inbreeding and high migration among most sampled sites, although one population was more isolated by the metropolitan landscape.",
-          "The 2016 result provides a baseline but does not show whether the populations remain connected today. A chromosome-scale reference and new population sampling could measure how much diversity remains and whether habitat loss, drainage or fragmentation has interrupted gene flow. Precise localities should remain out of public communication."
+          "The 2016 result provides a baseline but does not show whether the populations remain connected today. A chromosome-scale reference and new population sampling could measure how much diversity remains and whether habitat loss, drainage or fragmentation has interrupted gene flow."
         ]
       },
       {
@@ -318,7 +318,7 @@ export const en = {
         "heading": "Thousands of Panacea prola fly north-east. Where do they come from?",
         "teaser": "Researchers counted 2,509 Panacea prola flying north-east in south-eastern Peru.",
         "answer": [
-          "In 2020, Gallice and colleagues recorded 2,509 Panacea prola during fifty one-hour observations in south-eastern Peru. Only 19 flew in another direction. They presented the observation as the first evidence of an Amazonian insect migration.",
+          "In 2020, Gallice and colleagues recorded 2,509 Panacea prola in 50 one-hour observations in south-eastern Peru. Only 19 flew in another direction. They presented the observation as the first evidence of an Amazonian insect migration.",
           "The closest available genomic reference is from another member of the same subfamily, Batesia hypochlora. It cannot reveal where the moving Panacea came from, whether they belonged to one population or several, or whether the movement repeats each year.",
           "Comparing samples from different places, seasons and years could estimate ancestry and connectivity. Genomes would still need to be combined with field observations, environmental data or other movement evidence."
         ]
@@ -526,7 +526,7 @@ export const en = {
     },
     "languagePolicy": {
       "heading": "Working languages",
-      "body": "Official communications are in English and Spanish. Portuguese is also used in meetings, with informal translation among participants who understand both."
+      "body": "Official communications are in English and Spanish. Portuguese is also spoken in meetings, and participants translate informally for each other."
     }
   },
   "sourceDrawer": {

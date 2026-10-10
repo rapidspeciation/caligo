@@ -60,8 +60,8 @@ export const scienceFeedback: Record<Locale, ScienceFeedbackContent> = {
       eyebrow: 'The shared resource',
       heading: 'What is a reference genome?',
       body: [
-        'Reference genomes support research in conservation, ecology, evolution, taxonomy, behaviour, agriculture and forestry. A reference genome is an assembled representation of an individual’s DNA, used as a reference for its species.',
-        'Researchers can compare it with other species to see how genes and chromosomes have changed. They can also map lower-cost short-read data from many individuals to the reference, then study relationships, population size and connectivity, natural selection and gene exchange.',
+        'A reference genome is the assembled DNA sequence of one individual, used as the standard for its species. It supports research in conservation, ecology, evolution, taxonomy, behaviour, agriculture and forestry.',
+        'Researchers can compare it with other species to see how genes and chromosomes have changed. They can also align lower-cost short-read data from many individuals to the reference, then study relationships, population size and connectivity, natural selection and gene exchange.',
       ],
       goalHeading: 'species at chromosome scale',
       goalBody: 'Caligo aims to generate 1,000 reference genomes of Neotropical butterflies and moths in and for Latin America. Chromosome-scale assembly means placing the genome into one sequence for each chromosome, rather than leaving it as many disconnected fragments.',
@@ -102,7 +102,7 @@ export const scienceFeedback: Record<Locale, ScienceFeedbackContent> = {
       eyebrow: 'El recurso compartido',
       heading: '¿Qué es un genoma de referencia?',
       body: [
-        'Los genomas de referencia sirven para investigar la conservación, la ecología, la evolución, la taxonomía, el comportamiento, la agricultura y la silvicultura. Un genoma de referencia es una representación ensamblada del ADN de un individuo, que se usa como referencia para su especie.',
+        'Un genoma de referencia es la secuencia de ADN ensamblada de un individuo, que sirve de patrón para su especie. Se usa en investigación sobre conservación, ecología, evolución, taxonomía, comportamiento, agricultura y silvicultura.',
         'Se puede comparar con los genomas de otras especies para estudiar cambios en sus genes y cromosomas. También permite alinear datos de lecturas cortas, más económicos, de muchos individuos y analizar parentesco, tamaño y conectividad de las poblaciones, selección natural e intercambio genético.',
       ],
       goalHeading: 'especies a escala cromosómica',
@@ -169,11 +169,11 @@ export const publicationExamples: readonly PublicationExample[] = [
       width: 1200,
       height: 1467,
       alt: {
-        en: 'Time-calibrated phylogenies of Mechanitis and Melinaea butterflies with wing patterns, hybridization arrows, chromosome counts, maps and elevation ranges.',
+        en: 'Time-calibrated phylogenies of Mechanitis and Melinaea butterflies with wing patterns, hybridisation arrows, chromosome counts, maps and elevation ranges.',
         es: 'Filogenias calibradas en el tiempo de mariposas Mechanitis y Melinaea con patrones alares, flechas de hibridación, conteos cromosómicos, mapas y rangos de elevación.',
       },
       caption: {
-        en: 'Two rapid radiations viewed through evolutionary relationships, geography, chromosome number and evidence of hybridization.',
+        en: 'Two rapid radiations viewed through evolutionary relationships, geography, chromosome number and evidence of hybridisation.',
         es: 'Dos radiaciones rápidas vistas a través de sus relaciones evolutivas, geografía, número de cromosomas y evidencia de hibridación.',
       },
       licence: 'CC BY 4.0',
