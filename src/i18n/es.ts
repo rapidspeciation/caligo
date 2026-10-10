@@ -232,7 +232,7 @@ export const es: Dict = {
           "reads": "Se leen tramos largos de ADN de una sola mariposa, sin ningún orden.",
           "overlap": "Las lecturas que terminan y empiezan con las mismas letras se traslapan, y así cada una encuentra a su vecina.",
           "join": "Las lecturas traslapadas se unen en una sola secuencia continua.",
-          "chrom": "Luego otro tipo de datos, Hi-C, ordena los fragmentos unidos: 21 cromosomas.",
+          "chrom": "Luego, los datos de Hi-C ordenan los fragmentos unidos: 21 cromosomas.",
           "whole": "Es costoso, pero se hace una sola vez por especie. Después bastan lecturas cortas, más baratas, alineadas a esta referencia."
         }
       },
@@ -306,7 +306,7 @@ export const es: Dict = {
         "heading": "¿Cómo se desplazan las plagas y evoluciona la resistencia en los paisajes sojeros?",
         "teaser": "Polillas de especies muy parecidas pueden diferir en cómo se desplazan y resisten el control.",
         "answer": [
-          "En los cultivos de soja de Brasil conviven varias especies de polillas estrechamente emparentadas que pueden ser difíciles de distinguir durante el monitoreo. Identificarlas bien es importante porque su movimiento y su resistencia pueden diferir.",
+          "En los cultivos de soja de Brasil conviven varias especies cercanas de polillas que pueden ser difíciles de distinguir durante el monitoreo. Identificarlas bien es importante porque su movimiento y su resistencia pueden diferir.",
           "Estudios brasileños han detectado cambios en la susceptibilidad a proteínas insecticidas que exigen pruebas repetidas y específicas para cada especie. Los datos genómicos permiten distinguir las especies, comparar el movimiento entre poblaciones e identificar variantes asociadas con la resistencia.",
           "Por sí solos, los genomas no miden el daño al cultivo ni demuestran que una variante cause resistencia. Para elegir una respuesta de manejo también se necesitan ensayos de campo, bioensayos, conocimientos agronómicos y observaciones de los productores."
         ]

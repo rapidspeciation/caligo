@@ -235,7 +235,7 @@ export const en = {
           "reads": "Long stretches of DNA are read from a single butterfly, in no particular order.",
           "overlap": "Reads that end and begin with the same letters overlap, so each one finds its neighbour.",
           "join": "Overlapping reads join into one continuous sequence.",
-          "chrom": "Hi-C, a second kind of data, then puts the joined pieces in order: 21 chromosomes.",
+          "chrom": "Hi-C data then puts the joined pieces in order: 21 chromosomes.",
           "whole": "Costly, but done once per species. Later butterflies need only cheaper short reads, aligned to this reference."
         }
       },
