@@ -45,7 +45,7 @@ export const PILOT_INTRO = {
     apply: 'Complete the application form',
     pending: 'Application form link pending.',
     share: 'Please share this opportunity with your collaborators.',
-    closedNote: 'A call for Ecuador is planned. Register with the network to hear when it opens.',
+    closedNote: 'Register with the network to hear about future calls.',
     chip: {
       open: 'Open until 30 September',
       days: 'Closes in {n} days',
@@ -97,7 +97,7 @@ export const PILOT_INTRO = {
     apply: 'Completa el formulario de postulación',
     pending: 'Enlace al formulario de postulación pendiente.',
     share: 'Comparte esta oportunidad con tus colaboradores.',
-    closedNote: 'Hay una convocatoria planeada para Ecuador. Inscríbete en la red para enterarte cuando abra.',
+    closedNote: 'Inscríbete en la red para enterarte de próximas convocatorias.',
     chip: {
       open: 'Abierta hasta el 30 de septiembre',
       days: 'Cierra en {n} días',
