@@ -231,11 +231,11 @@ export const en = {
         },
         "reference": {
           "prompt": "How do reads become chromosomes?",
-          "steps": ["Long reads", "Assembly", "Ordering", "Reuse"],
-          "pieces": "{n} pieces",
-          "reads": "Stretches of DNA thousands of bases long are read from a single butterfly.",
-          "contigs": "Overlapping reads join into {n} longer pieces, but their order is still unknown.",
-          "order": "Hi-C data shows which pieces lie together in the cell, so each one finds its place: 21 chromosomes.",
+          "steps": ["Reads", "Overlap", "Join", "Order"],
+          "reads": "Long stretches of DNA are read from a single butterfly, in no particular order.",
+          "overlap": "Reads that end and begin with the same letters overlap, so each one finds its neighbour.",
+          "join": "Overlapping reads join into one continuous sequence.",
+          "chrom": "Hi-C data then puts the joined pieces in order: 21 chromosomes.",
           "whole": "Costly, but done once per species. Later butterflies need only cheaper short reads, aligned to this reference."
         }
       },
@@ -264,7 +264,7 @@ export const en = {
         },
         "reference": {
           "title": "How a reference genome is assembled",
-          "desc": "The DNA of one butterfly is sequenced as long reads. Overlapping reads are assembled into a few dozen longer pieces whose order is not yet known. Hi-C data, which records which stretches of DNA lie close together in the cell, places each piece, giving a chromosome-scale reference with the 21 chromosomes of a typical Heliconius. This is costly but done once per species: later butterflies need only cheaper short reads, aligned to the reference.",
+          "desc": "The DNA of one butterfly is sequenced as long reads, which arrive in no particular order. Reads that end and begin with the same letters overlap, so they can be lined up and joined into one continuous sequence. Hi-C data then orders the joined pieces, giving a chromosome-scale reference with the 21 chromosomes of a typical Heliconius. This is costly but done once per species: later butterflies need only cheaper short reads, aligned to the reference.",
           "count": "21 chromosomes"
         }
       }

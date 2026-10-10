@@ -228,11 +228,11 @@ export const es: Dict = {
         },
         "reference": {
           "prompt": "¿Cómo se pasa de lecturas a cromosomas?",
-          "steps": ["Lecturas", "Ensamblaje", "Orden", "Reúso"],
-          "pieces": "{n} fragmentos",
-          "reads": "Se leen tramos de ADN de miles de bases de una sola mariposa.",
-          "contigs": "Las lecturas que se solapan se unen en {n} fragmentos más largos, todavía sin orden.",
-          "order": "Los datos de Hi-C indican qué fragmentos están juntos en la célula, y así cada uno encuentra su lugar: 21 cromosomas.",
+          "steps": ["Lecturas", "Traslape", "Unión", "Orden"],
+          "reads": "Se leen tramos largos de ADN de una sola mariposa, sin ningún orden.",
+          "overlap": "Las lecturas que terminan y empiezan con las mismas letras se traslapan, y así cada una encuentra a su vecina.",
+          "join": "Las lecturas traslapadas se unen en una sola secuencia continua.",
+          "chrom": "Luego, los datos de Hi-C ordenan los fragmentos unidos: 21 cromosomas.",
           "whole": "Es costoso, pero se hace una sola vez por especie. Después bastan lecturas cortas, más baratas, alineadas a esta referencia."
         }
       },
@@ -261,7 +261,7 @@ export const es: Dict = {
         },
         "reference": {
           "title": "Cómo se ensambla un genoma de referencia",
-          "desc": "El ADN de una mariposa se secuencia en lecturas largas. Las lecturas que se solapan se ensamblan en unas decenas de fragmentos más largos, cuyo orden aún se desconoce. Los datos de Hi-C, que registran qué tramos de ADN están cerca unos de otros en la célula, ubican cada fragmento y dan una referencia a escala cromosómica con los 21 cromosomas de un Heliconius típico. Es costoso, pero se hace una sola vez por especie: después bastan lecturas cortas, más baratas, alineadas a la referencia.",
+          "desc": "El ADN de una mariposa se secuencia en lecturas largas, que llegan sin ningún orden. Las lecturas que terminan y empiezan con las mismas letras se traslapan, así que pueden alinearse y unirse en una sola secuencia continua. Luego, los datos de Hi-C ordenan los fragmentos unidos y dan una referencia a escala cromosómica con los 21 cromosomas de un Heliconius típico. Es costoso, pero se hace una sola vez por especie: después bastan lecturas cortas, más baratas, alineadas a la referencia.",
           "count": "21 cromosomas"
         }
       }

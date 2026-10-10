@@ -16,8 +16,9 @@
  *                 butterfly, and each gets its result written above it:
  *                 identical everywhere (=), mixed in both populations (≈),
  *                 or different between populations (≠)
- *   reference     plays by itself in three steps: long reads, assembly into
- *                 unordered pieces, then ordering into 21 chromosomes
+ *   reference     plays by itself on one stretch of DNA: long reads arrive
+ *                 shuffled, slide until their shared ends overlap, join
+ *                 into one sequence, and the 21 chromosomes appear
  * Replay runs a figure again.
  */
 import { getDict, type Locale } from '../i18n';
@@ -126,81 +127,40 @@ const chromosomes = KARYOTYPE.map((h, i) => ({
   h,
 }));
 
-/* Coverage: a small, honest simulation. Each chromosome receives reads of
-   9 units at random positions; overlapping reads (by 1.5 units or more) join
-   into one piece, and stretches no read reached stay as gaps. More reads are
-   always added on top of the earlier ones. The slider starts where pieces
-   only merge from then on (with very few reads, new reads first add pieces),
-   and steps that would not change the count are dropped. */
-const READ_LEN = 9;
-const MIN_OVERLAP = 1.5;
-const COVERAGE = [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 7, 8];
-const readRand = seededRandom(7);
-const readStarts = KARYOTYPE.map((h) =>
-  Array.from({ length: Math.ceil((COVERAGE[COVERAGE.length - 1] * h) / READ_LEN) }, () => -(READ_LEN - 2) + readRand() * (h + READ_LEN - 4)),
-);
-const coverageSteps = COVERAGE.map((c) => {
-  const pieces: [number, number, number][] = [];
-  KARYOTYPE.forEach((h, ci) => {
-    const reads = readStarts[ci]
-      .slice(0, Math.round((c * h) / READ_LEN))
-      .map((s) => [Math.max(0, s), Math.min(h, s + READ_LEN)])
-      .sort((a, b) => a[0] - b[0]);
-    const contigs: number[][] = [];
-    for (const [a, b] of reads) {
-      const last = contigs[contigs.length - 1];
-      if (last && a <= last[1] - MIN_OVERLAP) last[1] = Math.max(last[1], b);
-      else contigs.push([a, b]);
-    }
-    for (const [a, b] of contigs) pieces.push([ci, r1(a), r1(b)]);
-  });
-  return pieces;
-}).filter((pieces, n, all) => n === 0 || pieces.length < all[n - 1].length);
-const stepCounts = coverageSteps.map((p) => p.length);
-if (stepCounts[stepCounts.length - 1] !== 21 || stepCounts.some((c, n) => n > 0 && c >= stepCounts[n - 1]) || coverageSteps.length < 6) {
-  throw new Error(`TierDiagram: coverage steps must fall steadily to 21 pieces (got ${stepCounts.join(', ')})`);
-}
-
-/* Assembly, in three beats. Long reads arrive as a loose cloud; they are
-   assembled into the pieces of one mid-coverage step, still unordered; then
-   each piece moves to its place on a chromosome. Scatter is seeded, so every
-   build draws the same cloud. */
-const CONTIG_PIECES = coverageSteps[Math.floor(coverageSteps.length / 2)];
-const scatter = seededRandom(11);
+/* Assembly, shown on one stretch of DNA. Seven long reads cover 42 bases and
+   each shares its last few bases with the next. They arrive shuffled, slide
+   until the shared bases line up (a staircase), then join into one piece. */
+const ASM_X0 = 82;
+const ASM_W = 6.3;
+const ASM_H = 11;
+const ASM_ROW0 = 54;
+const ASM_PITCH = 18;
+const ASM_JOIN_Y = 102;
+const asmRand = seededRandom(23);
+const ASM_SEQ = Array.from({ length: 42 }, () => (['A', 'C', 'G', 'T'] as const)[Math.floor(asmRand() * 4)]);
+const ASM_STARTS = [0, 5, 10, 16, 21, 27, 32];
+const ASM_LEN = 10;
+const ASM_SHUFFLE = [3, 0, 5, 1, 6, 2, 4];
 const FLY_AT = [40, 108] as const;
-const contigs = CONTIG_PIECES.map(([ci, a, b], i) => {
-  const c = chromosomes[ci];
-  const h = Math.max(b - a - 1.8, 1.4);
-  const y = c.top + a + 0.9;
+const asmReads = ASM_STARTS.map((start, k) => {
+  const x = r1(ASM_X0 + start * ASM_W);
+  const y = ASM_ROW0 + k * ASM_PITCH;
+  // Shuffled: another row, and pushed sideways so nothing lines up yet.
+  const sx = Math.round(ASM_X0 + asmRand() * (42 - ASM_LEN) * ASM_W - x);
+  const sy = (ASM_SHUFFLE[k] - k) * ASM_PITCH;
   return {
-    i, x: c.cx - CHR_W / 2, y: r1(y), h: r1(h),
-    sx: Math.round(100 + scatter() * 232 - c.cx),
-    sy: Math.round(26 + scatter() * 164 - (y + h / 2)),
-    sr: Math.round(scatter() * 150 - 75),
+    k, x, y, sx, sy, jy: ASM_JOIN_Y - y,
+    cells: ASM_SEQ.slice(start, start + ASM_LEN).map((base, i) => ({ base, x: r1(x + i * ASM_W) })),
+    dx: Math.round(FLY_AT[0] - (x + sx + (ASM_LEN * ASM_W) / 2)), dy: FLY_AT[1] - (y + sy),
   };
 });
-/* Every long read ends up in one piece: in the assembly step it glides to
-   that piece and the piece appears where the reads met. */
-const longReads = Array.from({ length: contigs.length * 2 }, (_, i) => {
-  const cx = Math.round(96 + scatter() * 244);
-  const cy = Math.round(20 + scatter() * 176);
-  const c = contigs[i % contigs.length];
-  return {
-    cx, cy, len: r1(10 + scatter() * 7), rot: Math.round(scatter() * 180),
-    dx: FLY_AT[0] - cx, dy: FLY_AT[1] - cy, d: i * 22,
-    tx: Math.round(c.x + CHR_W / 2 + c.sx - cx), ty: Math.round(c.y + c.h / 2 + c.sy - cy),
-  };
-});
-/* Later use: short reads from other butterflies line up beside the finished
-   chromosomes. */
-const SHORT_FROM = [40, 184] as const;
-const shortReads = chromosomes.flatMap((c) =>
-  [0.2, 0.52, 0.8].filter((_, k) => k < 2 || c.h > 40).map((at, k) => {
-    const x = r1(c.cx + CHR_W / 2 + 2.6);
-    const y = r1(c.top + c.h * at - 3.5 + (scatter() - 0.5) * 4);
-    return { x, y, dx: Math.round(SHORT_FROM[0] - x), dy: Math.round(SHORT_FROM[1] - y), d: c.i * 30 + k * 90 };
-  }),
-);
+/* Where one read's end matches the next read's start. */
+const asmOverlaps = ASM_STARTS.slice(1).map((start, k) => ({
+  x: r1(ASM_X0 + start * ASM_W - 1),
+  w: r1((ASM_STARTS[k] + ASM_LEN - start) * ASM_W + 2),
+  y: ASM_ROW0 + k * ASM_PITCH - 3,
+  k,
+}));
 
 /* What the client script needs, per kind. */
 const exploreData =
@@ -208,7 +168,7 @@ const exploreData =
     ? { copy: explore.barcode, rows: LIBRARY.map((row) => ({ name: row.name, seq: row.seq })), specimens: SPECIMENS, pitch: ROW_PITCH }
     : kind === 'resequencing'
       ? { copy: explore.resequencing, sites: SITES, pitch: SITE_PITCH, final: DEFAULT_SITE }
-      : { copy: { ...explore.reference, count: tiers.diagrams.reference.count }, contigs: contigs.length };
+      : { copy: { ...explore.reference, count: tiers.diagrams.reference.count } };
 const prompt = explore[kind].prompt;
 ---
 
@@ -256,11 +216,6 @@ const prompt = explore[kind].prompt;
           <circle cx="0" cy="-5.4" r="1.3" class="dg-fly-body" />
         </g>
       ))}
-      {kind === 'reference' && (
-        <pattern id={`${id}-hatch`} width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <path d="M0 0 V4" class="rf-hatch" />
-        </pattern>
-      )}
     </defs>
 
     {kind === 'barcode' && (
@@ -345,27 +300,22 @@ const prompt = explore[kind].prompt;
           <use href={`#${id}-fly-cydno`} class="dg-flap" data-fly />
         </g>
         {chromosomes.map((c) => (
-          <rect x={c.cx - CHR_W / 2} y={c.top} width={CHR_W} height={c.h} rx={CHR_W / 2} class="rf-ghost" fill={`url(#${id}-hatch)`} />
-        ))}
-        {chromosomes.map((c) => (
           <rect x={c.cx - CHR_W / 2} y={c.top} width={CHR_W} height={c.h} rx={CHR_W / 2} class="rf-chr" style={`--i:${c.i}`} />
         ))}
-        <g class="rf-reads">
-          {longReads.map((r) => (
-            <g class="rf-read" style={`--dx:${r.dx}px;--dy:${r.dy}px;--d:${r.d}ms;--tx:${r.tx}px;--ty:${r.ty}px`}>
-              <rect x={r1(r.cx - r.len / 2)} y={r.cy - 1.6} width={r.len} height="3.2" rx="1.6" transform={`rotate(${r.rot} ${r.cx} ${r.cy})`} />
+        <g class="rf-asm">
+          {asmOverlaps.map((o) => (
+            <rect x={o.x} y={o.y} width={o.w} height={ASM_PITCH + ASM_H + 6} rx="4" class="rf-overlap" style={`--i:${o.k}`} />
+          ))}
+          {asmReads.map((read) => (
+            <g class="rf-fly" style={`--dx:${read.dx}px;--dy:${read.dy}px;--d:${read.k * 160}ms`}>
+              <g class="rf-lr" style={`--sx:${read.sx}px;--sy:${read.sy}px;--jy:${read.jy}px;--i:${read.k}`}>
+                {read.cells.map((cell) => (
+                  <rect x={cell.x} y={read.y} width={r1(ASM_W - 1)} height={ASM_H} rx="1.2" class={`dg-base--${cell.base}`} />
+                ))}
+              </g>
             </g>
           ))}
-        </g>
-        <g class="rf-shorts">
-          {shortReads.map((r) => (
-            <rect x={r.x} y={r.y} width="3" height="7" rx="1.5" class="rf-short" style={`--dx:${r.dx}px;--dy:${r.dy}px;--d:${r.d}ms`} />
-          ))}
-        </g>
-        <g class="rf-contigs">
-          {contigs.map((c) => (
-            <rect x={c.x} y={c.y} width={CHR_W} height={c.h} rx={Math.min(3, c.h / 2)} class="rf-contig" style={`--sx:${c.sx}px;--sy:${c.sy}px;--sr:${c.sr}deg;--i:${c.i}`} />
-          ))}
+          <rect x={ASM_X0 - 4} y={ASM_JOIN_Y - 4} width={r1(42 * ASM_W + 7)} height={ASM_H + 8} rx="5" class="dg-frame rf-joined" />
         </g>
         <text x={KARYO_X0 - CHR_W / 2} y="226" class="rf-count" data-count>{tiers.diagrams.reference.count}</text>
       </g>
@@ -602,28 +552,24 @@ const prompt = explore[kind].prompt;
       };
       prepare = () => {
         stage('idle', -1);
-        rf?.classList.remove('is-reuse');
         if (count) count.textContent = '';
         say('');
       };
-      // Long reads arrive, glide together into pieces, the pieces are put
-      // in order, and the finished reference is then reused for short reads.
+      // Long reads arrive shuffled, slide until their shared ends line up,
+      // join into one sequence, and the finished chromosomes appear.
       autoplay = (done) => {
         prepare();
         after(300, () => { stage('reads', 0); say(copy.reads); });
-        after(3600, () => {
-          stage('contigs', 1);
-          if (count) count.textContent = fill(copy.pieces, { n: data.contigs });
-          say(fill(copy.contigs, { n: data.contigs }));
-        });
-        after(7200, () => { stage('order', 2); say(copy.order); });
-        after(9600, () => {
-          stage('whole', 2);
+        after(3800, () => { stage('overlap', 1); say(copy.overlap); });
+        after(7800, () => { stage('join', 2); say(copy.join); });
+        after(10800, () => {
+          stage('chrom', 3);
           if (count) count.textContent = copy.count;
+          say(copy.chrom);
           once(rf, 'is-pop');
           once(fly, 'is-flap');
         });
-        after(11400, () => { show(); once(rf, 'is-reuse'); done(); });
+        after(14200, () => { show(); done(); });
       };
     }
 
@@ -819,13 +765,13 @@ const prompt = explore[kind].prompt;
   .tier-key-item { display: inline-flex; align-items: baseline; gap: 0.35rem; }
   .tier-key-item b { font: 700 0.95rem/1 var(--font-mono); color: var(--text-strong); }
   .tier-key-item--differ b { color: var(--accent); }
-  .tier-steps { column-gap: 0.7rem; }
+  .tier-steps { column-gap: 0.6rem; }
   .tier-steps .tier-key-item { transition: color 200ms linear; }
   .tier-steps .tier-key-item b {
     display: inline-grid;
     place-items: center;
-    width: 1.35rem;
-    height: 1.35rem;
+    width: 1.25rem;
+    height: 1.25rem;
     border: 1.5px solid var(--ink-line);
     border-radius: 50%;
     font-size: 0.75rem;
@@ -837,31 +783,22 @@ const prompt = explore[kind].prompt;
   /* ---- Tier 3 ---- */
   .rf-chr { fill: var(--accent); }
   .rf-count { font-family: var(--font-display); font-size: 16px; font-weight: 600; fill: var(--text-strong); }
-  /* The empty places the pieces are sorted into. */
-  .rf-ghost { opacity: 0; stroke: var(--text-faint); stroke-width: 1.25; }
-  .rf-hatch { stroke: var(--text-faint); stroke-width: 1; opacity: 0.5; }
-  .rf-read { opacity: 0; }
-  .rf-short { fill: var(--text-muted); transform-box: fill-box; transform-origin: center; }
-  [data-stage] .rf-short { opacity: 0; }
-  .rf.is-reuse .rf-short { animation: rf-fly 0.8s var(--d) var(--ease-glide) backwards; }
-  .rf-read rect { fill: var(--text-muted); }
-  .rf-contig { opacity: 0; fill: var(--accent); stroke: var(--stage); stroke-width: 1; }
-  .rf-chr, .rf-count, .rf-read, .rf-contig { transform-box: fill-box; transform-origin: center; }
-  /* In the assembly step each read glides to its piece and fades as the
-     piece appears there. */
-  .is-live .rf-read { transition: transform 1.1s var(--ease-glide), opacity 450ms 0.75s linear; }
-  [data-stage='contigs'] .rf-read, [data-stage='order'] .rf-read { transform: translate(var(--tx), var(--ty)); }
-  .is-live .rf-contig {
-    transform: translate(var(--sx), var(--sy)) rotate(var(--sr));
-    transition: opacity 450ms 0.75s linear, transform 1.3s calc(var(--i) * 16ms) var(--ease-glide);
-  }
-  .is-live .rf-ghost { transition: opacity 400ms linear; }
-  [data-stage]:not([data-stage='whole']) .rf-chr { opacity: 0; }
-  [data-stage='whole'] .rf-contig { transition: none; }
-  [data-stage='reads'] .rf-read { opacity: 1; animation: rf-fly 0.9s var(--d) var(--ease-glide) backwards; }
-  [data-stage='contigs'] .rf-contig, [data-stage='order'] .rf-contig { opacity: 1; }
-  [data-stage='order'] .rf-contig { transform: none; }
-  [data-stage='order'] .rf-ghost { opacity: 1; }
+  .rf-chr, .rf-count, .rf-fly, .rf-lr, .rf-overlap { transform-box: fill-box; transform-origin: center; }
+  /* The stretch of DNA being assembled: only shown while it plays. */
+  .rf-asm { opacity: 0; }
+  .rf-overlap { fill: color-mix(in oklab, var(--text-strong) 12%, transparent); stroke: var(--text-strong); stroke-width: 1.5; opacity: 0; }
+  .rf-joined { opacity: 0; }
+  .is-live .rf-asm { transition: opacity 500ms linear; }
+  .is-live .rf-lr { transition: transform 1.2s calc(var(--i) * 90ms) var(--ease-glide); }
+  .is-live .rf-overlap { transition: opacity 350ms linear; }
+  .is-live .rf-joined { transition: opacity 400ms 1.2s linear; }
+  [data-stage]:not([data-stage='chrom']) .rf-chr { opacity: 0; }
+  :is([data-stage='reads'], [data-stage='overlap'], [data-stage='join']) .rf-asm { opacity: 1; }
+  [data-stage='idle'] .rf-lr, [data-stage='reads'] .rf-lr { transform: translate(var(--sx), var(--sy)); }
+  [data-stage='reads'] .rf-fly { animation: rf-fly 0.9s var(--d) var(--ease-glide) backwards; }
+  [data-stage='overlap'] .rf-overlap { opacity: 1; transition-delay: calc(1.3s + var(--i) * 220ms); }
+  [data-stage='join'] .rf-lr, [data-stage='chrom'] .rf-lr { transform: translateY(var(--jy)); }
+  [data-stage='join'] .rf-joined { opacity: 1; }
   .rf.is-pop .rf-chr { animation: rf-pop 0.42s calc(var(--i) * 14ms) var(--ease-settle) both; }
   .rf.is-pop .rf-count { transform-origin: left center; animation: dg-pop 0.45s 0.15s var(--ease-settle) both; }
 
@@ -913,7 +850,6 @@ const prompt = explore[kind].prompt;
   @keyframes rf-pop { 0%, 100% { transform: scaleY(1); } 45% { transform: scale(1.12, 1.07); } }
 
   @media (prefers-reduced-motion: reduce) {
-    .is-live :is(.bc-scan, .bc-miss, .bc-unknown, .rs-col, .rs-cell, .rf-read, .rf-contig, .rf-ghost) { transition: none; }
-    .rf.is-reuse .rf-short { animation: none; }
+    .is-live :is(.bc-scan, .bc-miss, .bc-unknown, .rs-col, .rs-cell, .rf-asm, .rf-lr, .rf-overlap, .rf-joined) { transition: none; }
   }
 </style>
