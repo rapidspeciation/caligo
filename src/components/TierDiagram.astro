@@ -154,6 +154,14 @@ const asmReads = ASM_STARTS.map((start, k) => {
     dx: Math.round(FLY_AT[0] - (x + sx + (ASM_LEN * ASM_W) / 2)), dy: FLY_AT[1] - (y + sy),
   };
 });
+/* The joined sequence then turns upright and shrinks into the first
+   chromosome, so the last step grows out of the one before. */
+const ASM_BAR = { cx: r1(ASM_X0 - 0.5 + (42 * ASM_W) / 2), cy: ASM_JOIN_Y + ASM_H / 2, w: 42 * ASM_W + 7, h: ASM_H + 8 };
+const asmMorph = [
+  `--ox:${ASM_BAR.cx}px`, `--oy:${ASM_BAR.cy}px`,
+  `--mx:${r1(chromosomes[0].cx - ASM_BAR.cx)}px`, `--my:${r1(ROW_CY[0] - ASM_BAR.cy)}px`,
+  `--ml:${(chromosomes[0].h / ASM_BAR.w).toFixed(3)}`, `--mt:${(CHR_W / ASM_BAR.h).toFixed(3)}`,
+].join(';');
 /* Where one read's end matches the next read's start. */
 const asmOverlaps = ASM_STARTS.slice(1).map((start, k) => ({
   x: r1(ASM_X0 + start * ASM_W - 1),
@@ -302,7 +310,7 @@ const prompt = explore[kind].prompt;
         {chromosomes.map((c) => (
           <rect x={c.cx - CHR_W / 2} y={c.top} width={CHR_W} height={c.h} rx={CHR_W / 2} class="rf-chr" style={`--i:${c.i}`} />
         ))}
-        <g class="rf-asm">
+        <g class="rf-asm" style={asmMorph}>
           {asmOverlaps.map((o) => (
             <rect x={o.x} y={o.y} width={o.w} height={ASM_PITCH + ASM_H + 6} rx="4" class="rf-overlap" style={`--i:${o.k}`} />
           ))}
@@ -562,14 +570,14 @@ const prompt = explore[kind].prompt;
         after(300, () => { stage('reads', 0); say(copy.reads); });
         after(3800, () => { stage('overlap', 1); say(copy.overlap); });
         after(7800, () => { stage('join', 2); say(copy.join); });
-        after(10800, () => {
-          stage('chrom', 3);
+        // The joined sequence becomes the first chromosome; the others follow.
+        after(10800, () => { stage('chrom', 3); say(copy.chrom); });
+        after(12700, () => {
           if (count) count.textContent = copy.count;
-          say(copy.chrom);
           once(rf, 'is-pop');
           once(fly, 'is-flap');
         });
-        after(14200, () => { show(); done(); });
+        after(15400, () => { show(); done(); });
       };
     }
 
@@ -788,7 +796,13 @@ const prompt = explore[kind].prompt;
   .rf-asm { opacity: 0; }
   .rf-overlap { fill: color-mix(in oklab, var(--text-strong) 12%, transparent); stroke: var(--text-strong); stroke-width: 1.5; opacity: 0; }
   .rf-joined { opacity: 0; }
+  .rf-asm { transform-box: view-box; transform-origin: var(--ox) var(--oy); }
   .is-live .rf-asm { transition: opacity 500ms linear; }
+  [data-stage='chrom'] .rf-asm {
+    transform: translate(var(--mx), var(--my)) rotate(90deg) scale(var(--ml), var(--mt));
+    transition: transform 1.2s var(--ease-glide), opacity 350ms 1.05s linear;
+  }
+  [data-stage='chrom'] .rf-chr { transition: opacity 350ms calc(1.05s + var(--i) * 40ms) linear; }
   .is-live .rf-lr { transition: transform 1.2s calc(var(--i) * 90ms) var(--ease-glide); }
   .is-live .rf-overlap { transition: opacity 350ms linear; }
   .is-live .rf-joined { transition: opacity 400ms 1.2s linear; }
