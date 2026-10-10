@@ -93,7 +93,7 @@ export const es: Dict = {
     "hero": {
       "kicker": "Genómica liderada desde América Latina",
       "title": "Una riqueza de especies.",
-      "body": "Caligo conecta investigadores, colecciones y centros de secuenciación para ampliar la información genética disponible sobre las mariposas y polillas neotropicales.",
+      "body": "Caligo conecta investigadores, colecciones y centros de secuenciación para cerrar la brecha de datos genéticos de las mariposas y polillas neotropicales.",
       "focus": "Mucho por secuenciar.",
       "scienceAction": "¿Qué preguntas puede ayudarnos a responder la genómica?",
       "projectsAction": "Conoce los proyectos piloto"
@@ -142,8 +142,8 @@ export const es: Dict = {
       "eyebrow": "Por qué mariposas y polillas",
       "title": "¿Por qué mariposas y polillas?",
       "body": [
-        "Las mariposas y polillas habitan casi todos los ecosistemas terrestres y son especialmente diversas en el Neotrópico. Son un grupo ideal para estudiar ecología, evolución y conservación, si se cuenta con la información necesaria.",
-        "La mayoría de las especies de la región aún carece de genomas de referencia y marcadores genéticos. Caligo reúne investigadores y recursos de América Latina para responder preguntas sobre identificación, descubrimiento de especies y especiación."
+        "Las mariposas y polillas habitan casi todos los ecosistemas terrestres y son especialmente diversas en el Neotrópico. Son un grupo ideal para estudiar ecología, evolución y conservación.",
+        "Pero la mayoría de las especies de la región aún no tiene genomas de referencia ni marcadores genéticos. Caligo reúne investigadores y recursos de América Latina para identificar especies, descubrir otras nuevas y estudiar cómo se originan."
       ]
     },
     "building": {
@@ -155,14 +155,14 @@ export const es: Dict = {
         },
         {
           "title": "Vincular la información genética con ejemplares",
-          "body": "Vincular cada secuencia o ensamblaje a un ejemplar de colección documentado para comprobar qué organismo se secuenció y cuál es su procedencia."
+          "body": "Cada secuencia o ensamblaje remite a un ejemplar de colección documentado, para comprobar qué organismo se secuenció y de dónde procede."
         },
         {
           "title": "Fortalecer las capacidades regionales",
           "body": "Ampliar la secuenciación, los bancos de muestras y la bioinformática en América Latina, desde las capitales hasta sitios de campo remotos en áreas de alta biodiversidad."
         },
         {
-          "title": "Formación y crédito justo",
+          "title": "Formar y dar crédito justo",
           "body": "Apoyar la formación, los datos abiertos y las publicaciones conjuntas, reconociendo a quienes aportan ejemplares, análisis o conocimientos."
         }
       ]
@@ -177,7 +177,7 @@ export const es: Dict = {
       "title": "Principios para una genómica hecha desde la región"
     },
     "closing": {
-      "title": "Súmate con una pregunta, un organismo o una perspectiva",
+      "title": "Súmate con una pregunta, un organismo o tu experiencia",
       "body": "Puedes aportar ejemplares, capacidad de secuenciación, experiencia taxonómica o una pregunta de investigación. Inscríbete en la red, participa en Discord o escríbenos por correo."
     },
     "stats": {
@@ -288,14 +288,14 @@ export const es: Dict = {
         "heading": "¿Cómo pueden los cromosomas de las mariposas dividirse y fusionarse sin dejar de funcionar?",
         "teaser": "La mayoría de Heliconius tiene 21 cromosomas; cinco especies del grupo sapho llegan a 60.",
         "answer": [
-          "El número de cromosomas se mantiene estable durante millones de años en muchos linajes animales. En algunas mariposas y polillas ocurre algo distinto. La mayoría de las especies de Heliconius tiene 21 cromosomas en el juego haploide, pero cinco especies del grupo sapho tienen entre 21 y 60 después de fisiones repetidas.",
-          "Los cromosomas de los lepidópteros son holocéntricos. Durante la división celular, la maquinaria que separa los cromosomas puede unirse a gran parte de su longitud, en lugar de hacerlo en un único centrómero. Por eso, un fragmento roto puede conservar esa maquinaria y pasar a una célula hija. Esto puede ayudar a que las fisiones cromosómicas persistan, pero no explica por qué se propagan en una población.",
+          "El número de cromosomas se mantiene estable durante millones de años en muchos linajes animales. En algunas mariposas y polillas ocurre algo distinto. La mayoría de las especies de Heliconius tiene 21 cromosomas en el juego haploide, pero cinco especies del grupo sapho llegan a 60 después de fisiones repetidas.",
+          "Los cromosomas de los lepidópteros son holocéntricos. Durante la división celular, la maquinaria que separa los cromosomas puede unirse a lo largo de todo el cromosoma, en lugar de hacerlo en un solo centrómero. Por eso, un fragmento roto puede conservar esa maquinaria y pasar a una célula hija. Esto puede ayudar a que las fisiones cromosómicas persistan, pero no explica por qué se propagan en una población.",
           "En el grupo sapho de Heliconius, los estudios genómicos identificaron tres fusiones entre el cromosoma W y autosomas. El W se fusionó con el cromosoma 4 en el ancestro común del grupo. Más tarde ocurrieron dos fusiones independientes, una con el cromosoma 9 y otra con el cromosoma 14, en dos linajes descendientes."
         ]
       },
       {
         "heading": "¿Siguen conectadas las poblaciones de una mariposa amenazada una década después?",
-        "teaser": "Un estudio de 2016 encontró que la mayoría de las poblaciones seguían conectadas. ¿Lo están hoy?",
+        "teaser": "En 2016, la mayoría de las poblaciones restantes aún intercambiaba migrantes.",
         "answer": [
           "Parides ascanius está restringida a restingas costeras y humedales del sureste de Brasil. La UICN la evaluó como Vulnerable a nivel global en 2018. La evaluación nacional de Brasil la clasificó En Peligro en 2021.",
           "Seraphim y sus colegas compararon las poblaciones restantes mediante secuencias mitocondriales de COI y ocho marcadores microsatélites. El estudio de 2016 encontró poca estructura genética, ninguna señal de endogamia y una migración alta entre la mayoría de los sitios muestreados, aunque una población estaba más aislada por el entorno metropolitano.",
@@ -307,13 +307,13 @@ export const es: Dict = {
         "teaser": "Polillas de especies muy parecidas pueden diferir en cómo se desplazan y resisten el control.",
         "answer": [
           "En los cultivos de soja de Brasil conviven varias especies cercanas de polillas que pueden ser difíciles de distinguir durante el monitoreo. Identificarlas bien es importante porque su movimiento y su resistencia pueden diferir.",
-          "Estudios brasileños han detectado cambios en la susceptibilidad a proteínas insecticidas que exigen pruebas repetidas y específicas para cada especie. Los datos genómicos permiten distinguir las especies, comparar el movimiento entre poblaciones e identificar variantes asociadas con la resistencia.",
+          "Estudios brasileños han detectado cambios en la susceptibilidad a proteínas insecticidas, por lo que cada especie necesita pruebas repetidas. Los datos genómicos permiten distinguir las especies, comparar el movimiento entre poblaciones e identificar variantes asociadas con la resistencia.",
           "Por sí solos, los genomas no miden el daño al cultivo ni demuestran que una variante cause resistencia. Para elegir una respuesta de manejo también se necesitan ensayos de campo, bioensayos, conocimientos agronómicos y observaciones de los productores."
         ]
       },
       {
         "heading": "Miles de Panacea prola vuelan hacia el noreste. ¿De dónde vienen?",
-        "teaser": "Se contaron 2.509 Panacea prola volando hacia el noreste en el sureste de Perú.",
+        "teaser": "De 2.509 Panacea prola contadas en Perú, solo 19 no volaban hacia el noreste.",
         "answer": [
           "En 2020, Gallice y sus colegas registraron 2.509 individuos de Panacea prola durante cincuenta observaciones de una hora en el sureste de Perú. Solo 19 volaron en otra dirección. Los autores presentaron el hallazgo como la primera evidencia de una migración de insectos en la Amazonía.",
           "La referencia genómica más cercana disponible pertenece a otra especie de la misma subfamilia, Batesia hypochlora. No permite saber de dónde venían las Panacea, si pertenecían a una o varias poblaciones ni si el movimiento se repite cada año.",
@@ -400,7 +400,7 @@ export const es: Dict = {
       "panacea": "Panacea prola"
     },
     "metaTitle": "Proyectos piloto propuestos | Caligo",
-    "metaDescription": "Cuatro proyectos piloto propuestos que conectan evidencia publicada con preguntas comprobables de genómica neotropical.",
+    "metaDescription": "Cuatro proyectos piloto propuestos; cada uno parte de un hallazgo publicado sobre mariposas o polillas neotropicales.",
     "title": "Proyectos piloto propuestos",
     "intro": "Estos cuatro proyectos piloto retoman preguntas que estudios anteriores dejaron abiertas. Cada uno explora qué podrían revelar nuevas muestras y datos genómicos.",
     "pilotProposal": {
@@ -412,7 +412,7 @@ export const es: Dict = {
   },
   "about": {
     "metaTitle": "Acerca de | Caligo",
-    "metaDescription": "La meta de 1.000 genomas de Caligo, su equipo de liderazgo, centros de secuenciación y principios para investigar desde América Latina.",
+    "metaDescription": "La meta de 1.000 genomas de Caligo, sus centros de secuenciación y principios para investigar desde América Latina.",
     "title": "Acerca de Caligo",
     "body": "Caligo es una iniciativa liderada desde América Latina para construir genomas de referencia de mariposas y polillas neotropicales. Cada genoma queda vinculado a un ejemplar identificado y al conocimiento taxonómico necesario para confirmar su identidad. Estos genomas pueden usarse para estudiar preguntas surgidas en la región.",
     "name": {
@@ -458,13 +458,13 @@ export const es: Dict = {
     "intro": "Caligo reúne a personas que quieren comprender, documentar y proteger la diversidad de mariposas y polillas neotropicales.",
     "contact": {
       "heading": "Inicia una conversación",
-      "body": "Escribe a Caligo y cuéntanos qué investigas, cuál es tu vínculo con las mariposas o polillas neotropicales y cómo te gustaría contribuir.",
+      "body": "Escribe a Caligo sobre una especie, una pregunta o cómo te gustaría ayudar.",
       "email": "genomica.neotropical@gmail.com",
       "ariaLabel": "Enviar un correo a Caligo a genomica.neotropical@gmail.com"
     },
     "audiences": {
       "heading": "Lo que puedes aportar",
-      "intro": "Si trabajas en taxonomía, ecología, evolución, conservación, genómica, bioinformática, historia natural, colecciones, secuenciación, educación o participación comunitaria, puedes encontrar un espacio en Caligo.",
+      "intro": "En Caligo hay espacio para quienes trabajan en taxonomía, ecología, conservación, colecciones, secuenciación, bioinformática y educación.",
       "items": [
         {
           "title": "Una pregunta",
@@ -472,7 +472,7 @@ export const es: Dict = {
         },
         {
           "title": "Un organismo",
-          "body": "¿Trabajas con una especie de mariposa o polilla, una colección o un grupo taxonómico que necesita atención genómica? Ayúdanos a definir prioridades de secuenciación."
+          "body": "¿Trabajas con una especie de mariposa o polilla, una colección o un grupo taxonómico que debería secuenciarse? Ayúdanos a definir prioridades de secuenciación."
         },
         {
           "title": "Conocimientos",
@@ -491,12 +491,12 @@ export const es: Dict = {
           "body": "Recibimos a universidades, museos, institutos de investigación, organizaciones de conservación, comunidades, financiadores e iniciativas de biodiversidad que compartan nuestros principios."
         }
       ],
-      "closing": "No necesitas tener un proyecto genómico planificado. Si tienes una idea, un ejemplar, conocimientos o infraestructura, o simplemente quieres contribuir, nos gustaría escucharte.",
+      "closing": "No necesitas tener un proyecto genómico planificado. Si quieres contribuir, escríbenos.",
       "proposalLink": "Propón una especie o una pregunta de investigación"
     },
     "benefits": {
       "heading": "Qué puede surgir de la participación",
-      "intro": "Según el proyecto y el financiamiento disponible, la participación puede abrir oportunidades para:",
+      "intro": "Según el proyecto y el financiamiento disponible, participar puede llevar a:",
       "items": [
         "Nuevas colaboraciones en torno a organismos, colecciones, métodos o preguntas de investigación",
         "Formación e intercambio de conocimientos y experiencia técnica",

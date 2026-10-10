@@ -145,8 +145,8 @@ export const en = {
       "eyebrow": "Why butterflies and moths",
       "title": "Why butterflies and moths?",
       "body": [
-        "Butterflies and moths live in nearly every terrestrial ecosystem and are especially diverse in the Neotropics. They are an ideal group for studying ecology, evolution and conservation, if the right information is available.",
-        "Reference genomes and genetic markers are still missing for most species in this region. Caligo brings researchers and resources together across Latin America to answer questions about species identification, discovery and speciation."
+        "Butterflies and moths live in nearly every terrestrial ecosystem and are especially diverse in the Neotropics. They are an ideal group for studying ecology, evolution and conservation.",
+        "But most species in the region still lack reference genomes and genetic markers. Caligo brings researchers and resources together across Latin America to identify species, discover new ones and study how they arise."
       ]
     },
     "building": {
@@ -158,14 +158,14 @@ export const en = {
         },
         {
           "title": "Link genetic information with specimens",
-          "body": "Link each sequence or assembly to a documented specimen in a collection so researchers can check which organism was sequenced and where it came from."
+          "body": "Each sequence or assembly points to a documented specimen in a collection, so researchers can check which organism was sequenced and where it came from."
         },
         {
           "title": "Build regional capacity",
           "body": "Expand sequencing, sample banking and bioinformatics in Latin America, from country capitals to remote field sites in areas of high biodiversity."
         },
         {
-          "title": "Training and fair credit",
+          "title": "Train and credit fairly",
           "body": "Support training, open data and shared publications while recognising everyone who contributes specimens, analysis or knowledge."
         }
       ]
@@ -180,7 +180,7 @@ export const en = {
       "title": "Guiding principles for regional genomics"
     },
     "closing": {
-      "title": "Bring a question, an organism or a perspective",
+      "title": "Bring a question, an organism or your expertise",
       "body": "You can contribute specimens, sequencing capacity, taxonomic knowledge or a research question. Register with the network, join the conversation on Discord or contact us by email."
     },
     "stats": {
@@ -291,14 +291,14 @@ export const en = {
         "heading": "How can butterfly chromosomes split and fuse, yet still work?",
         "teaser": "Most Heliconius have 21 chromosomes; five sapho-group species have up to 60.",
         "answer": [
-          "Chromosome number remains stable for millions of years in many animal lineages. Some butterflies and moths are different. Most Heliconius species carry 21 chromosomes in the haploid set, but five species in the sapho group have between 21 and 60 after repeated fissions.",
-          "Lepidopteran chromosomes are holocentric. During cell division, the machinery that moves them can attach along much of the chromosome instead of at one localised centromere. A broken fragment can therefore retain the machinery needed to move into a daughter cell. This may help chromosome fissions persist, but it does not explain why they spread through a population.",
+          "Chromosome number remains stable for millions of years in many animal lineages. Some butterflies and moths are different. Most Heliconius species carry 21 chromosomes in the haploid set, but five species in the sapho group have up to 60 after repeated fissions.",
+          "Lepidopteran chromosomes are holocentric. During cell division, the machinery that moves them can attach along the whole chromosome instead of at one centromere. A broken fragment can therefore retain the machinery needed to move into a daughter cell. This may help chromosome fissions persist, but it does not explain why they spread through a population.",
           "In the Heliconius sapho group, genomic studies identified three W-autosome fusion events. The W fused with chromosome 4 in their common ancestor, followed by separate fusions with chromosomes 9 and 14 in two descendant lineages."
         ]
       },
       {
         "heading": "Are threatened butterfly populations still connected a decade later?",
-        "teaser": "A 2016 study found most populations still connected. Are they today?",
+        "teaser": "In 2016, most surviving populations still exchanged migrants.",
         "answer": [
           "Parides ascanius is restricted to coastal restinga and wetlands in south-eastern Brazil. The IUCN assessed it as Vulnerable globally in 2018. Brazil’s national assessment listed it as Endangered in 2021.",
           "Seraphim and colleagues used mitochondrial COI sequences and eight microsatellite markers to compare the surviving populations. Their 2016 study found little genetic structure, no evidence of inbreeding and high migration among most sampled sites, although one population was more isolated by the metropolitan landscape.",
@@ -310,16 +310,16 @@ export const en = {
         "teaser": "Similar-looking moth species can differ in how they move and resist control.",
         "answer": [
           "Several closely related moth species occur in Brazilian soybean fields and can be difficult to distinguish during monitoring. Reliable identification matters because movement and resistance can differ among species.",
-          "Brazilian studies have found changes in susceptibility to insecticidal proteins that require repeated, species-specific testing. Genomic data can distinguish the species, compare movement among populations and identify variants associated with resistance.",
+          "Brazilian studies have found that susceptibility to insecticidal proteins is changing, so each species needs repeated testing. Genomic data can distinguish the species, compare movement among populations and identify variants associated with resistance.",
           "Genomes do not measure crop damage or prove that a variant causes resistance by themselves. Field trials, bioassays, agronomy and growers’ observations are still needed to choose a management response."
         ]
       },
       {
         "heading": "Thousands of Panacea prola fly north-east. Where do they come from?",
-        "teaser": "Researchers counted 2,509 Panacea prola flying north-east in south-eastern Peru.",
+        "teaser": "Of 2,509 Panacea prola counted in Peru, all but 19 flew north-east.",
         "answer": [
           "In 2020, Gallice and colleagues recorded 2,509 Panacea prola in 50 one-hour observations in south-eastern Peru. Only 19 flew in another direction. They presented the observation as the first evidence of an Amazonian insect migration.",
-          "The closest available genomic reference is from another member of the same subfamily, Batesia hypochlora. It cannot reveal where the moving Panacea came from, whether they belonged to one population or several, or whether the movement repeats each year.",
+          "The closest available genomic reference is from another member of the same subfamily, Batesia hypochlora. It cannot reveal where these butterflies came from, whether they belonged to one population or several, or whether the movement repeats each year.",
           "Comparing samples from different places, seasons and years could estimate ancestry and connectivity. Genomes would still need to be combined with field observations, environmental data or other movement evidence."
         ]
       }
@@ -337,7 +337,7 @@ export const en = {
     "title": "Proposed pilot projects",
     "opening": "These four pilot projects begin where earlier studies leave off. Each asks what new samples and genomic data could reveal.",
     "fieldLabels": {
-      "proposedQuestion": "What the proposed Caligo pilot project would test"
+      "proposedQuestion": "What the pilot project would test"
     }
   },
   "caligo": {
@@ -403,7 +403,7 @@ export const en = {
       "panacea": "Panacea prola"
     },
     "metaTitle": "Proposed pilot projects | Caligo",
-    "metaDescription": "Four proposed pilot projects linking published evidence to testable Neotropical genomics questions.",
+    "metaDescription": "Four proposed pilot projects, each starting from a published finding about Neotropical butterflies or moths.",
     "title": "Proposed pilot projects",
     "intro": "These four pilot projects begin where earlier studies leave off. Each asks what new samples and genomic data could reveal.",
     "pilotProposal": {
@@ -415,7 +415,7 @@ export const en = {
   },
   "about": {
     "metaTitle": "About | Caligo",
-    "metaDescription": "Caligo’s 1,000-genome goal, leadership team, sequencing facilities and principles for research led from Latin America.",
+    "metaDescription": "Caligo’s 1,000-genome goal, sequencing facilities and principles for research led from Latin America.",
     "title": "About Caligo",
     "body": "Caligo is a Latin American-led effort to build reference genomes for Neotropical butterflies and moths. Each genome is linked to an identified specimen and the taxonomic expertise needed to verify it. Researchers can then use these genomes to study questions defined in the region.",
     "name": {
@@ -461,13 +461,13 @@ export const en = {
     "intro": "Caligo brings together people who want to understand, document and protect the diversity of Neotropical butterflies and moths.",
     "contact": {
       "heading": "Start a conversation",
-      "body": "Email Caligo with your research interests, your connection to Neotropical butterflies or moths and the contribution you would like to discuss.",
+      "body": "Write to Caligo about a species, a question or how you would like to help.",
       "email": "genomica.neotropical@gmail.com",
       "ariaLabel": "Email Caligo at genomica.neotropical@gmail.com"
     },
     "audiences": {
       "heading": "What you can bring",
-      "intro": "Whether you work in taxonomy, ecology, evolution, conservation, genomics, bioinformatics, natural history, collections, sequencing, education or community engagement, there may be a place for you in Caligo.",
+      "intro": "There is a place in Caligo for people in taxonomy, ecology, conservation, collections, sequencing, bioinformatics and education.",
       "items": [
         {
           "title": "A question",
@@ -475,7 +475,7 @@ export const en = {
         },
         {
           "title": "An organism",
-          "body": "Work on a butterfly or moth species, collection or taxonomic group that deserves genomic attention? Help us identify priorities for sequencing."
+          "body": "Work on a butterfly or moth species, collection or taxonomic group that should be sequenced? Help us set sequencing priorities."
         },
         {
           "title": "Expertise",
@@ -494,12 +494,12 @@ export const en = {
           "body": "We welcome universities, museums, research institutes, conservation organisations, communities, funders and biodiversity initiatives that share our principles."
         }
       ],
-      "closing": "You do not need a genome project already planned. If you have an idea, a specimen, expertise or infrastructure, or simply want to contribute, we would like to hear from you.",
+      "closing": "You do not need a genome project already planned. If you want to contribute, write to us.",
       "proposalLink": "Suggest a species or a research question"
     },
     "benefits": {
       "heading": "What participation can lead to",
-      "intro": "Depending on the project and available funding, participants may take part in:",
+      "intro": "Depending on the project and funding, members can join:",
       "items": [
         "New collaborations around organisms, collections, methods or research questions",
         "Training, exchanges and shared technical experience",

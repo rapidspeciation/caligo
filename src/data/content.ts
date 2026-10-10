@@ -48,19 +48,19 @@ export const PRINCIPLES: { title: Bilingual; body: Bilingual }[] = [
   {
     title: { en: 'Latin American leadership', es: 'Liderazgo latinoamericano' },
     body: {
-      en: 'Researchers in Latin America help choose the questions and lead sampling, analysis and publication.',
-      es: 'Los investigadores radicados en América Latina ayudan a definir las preguntas y lideran el muestreo, el análisis y la publicación.',
+      en: 'Researchers in Latin America choose the questions and lead sampling, analysis and publication.',
+      es: 'Los investigadores radicados en América Latina definen las preguntas y lideran el muestreo, el análisis y la publicación.',
     },
   },
   {
-    title: { en: 'Prioritising capacity building', es: 'Prioridad al desarrollo de capacidades' },
+    title: { en: 'Capacity building', es: 'Desarrollo de capacidades' },
     body: {
       en: 'Invest in people, skills, knowledge and infrastructure so researchers and institutions in the region can lead biodiversity research, conservation and management.',
       es: 'Invertir en personas, capacidades, conocimiento e infraestructura para que investigadores e instituciones de la región lideren la investigación, conservación y gestión de la biodiversidad.',
     },
   },
   {
-    title: { en: 'Inclusive and democratic', es: 'Inclusiva y democrática' },
+    title: { en: 'Inclusion and democracy', es: 'Inclusión y democracia' },
     body: {
       en: 'Decisions include voices from different countries, languages, institutions and career stages.',
       es: 'Las decisiones incorporan voces de distintos países, idiomas, instituciones y etapas profesionales.',
@@ -103,8 +103,8 @@ export const PRINCIPLES: { title: Bilingual; body: Bilingual }[] = [
   {
     title: { en: 'Open data and fair credit', es: 'Datos abiertos y crédito justo' },
     body: {
-      en: 'Share data openly and credit every contribution transparently and appropriately.',
-      es: 'Compartir los datos de forma abierta y reconocer cada contribución de manera transparente y apropiada.',
+      en: 'Share data openly and credit every contribution.',
+      es: 'Compartir los datos de forma abierta y reconocer cada contribución.',
     },
   },
 ];

@@ -5,7 +5,8 @@ import PageHeader from '../PageHeader.astro';
 import Icon from '../Icon.astro';
 import CardIcon, { type CardIconName } from '../CardIcon.astro';
 import DeadlineChip from '../DeadlineChip.astro';
-import { PILOT_INTRO } from '../../data/pilot-call';
+import ProjectStructure from '../ProjectStructure.astro';
+import { PILOT_INTRO, isCallClosed } from '../../data/pilot-call';
 import MediaCandidateViewer from '../MediaCandidateViewer.astro';
 import { getDict, localePath, type Locale } from '../../i18n';
 import { PILOTS, getSource, getMediaModule } from '../../data/records';
@@ -47,6 +48,7 @@ const projectById = new Map(PROJECTS.map((pr) => [pr.id, pr]));
 const reasonIcons: readonly CardIconName[] = [
   'capacity', 'workflow', 'training', 'regulation', 'data', 'budget', 'results', 'connect',
 ];
+const callClosed = isCallClosed();
 ---
 
 <Base locale={locale} title={metaTitle} description={metaDescription} page="/projects">
@@ -60,10 +62,11 @@ const reasonIcons: readonly CardIconName[] = [
         <div class="intro-copy content-body">
           {intro.body.map((paragraph) => <p>{paragraph}</p>)}
         </div>
-        <aside class="funding-callout ink-card ink-press ink-card--rose" aria-labelledby="funding-callout-title">
+        <aside class="funding-callout ink-card ink-press ink-press--link ink-card--rose" aria-labelledby="funding-callout-title">
           <h2 id="funding-callout-title" class="funding-callout-title">{intro.call}</h2>
           <DeadlineChip locale={locale} />
-          <p class="content-body">{intro.coverage}</p>
+          <p class="content-body" data-when-call="open" hidden={callClosed}>{intro.coverage}</p>
+          <p class="content-body" data-when-call="closed" hidden={!callClosed}>{intro.descriptionClosed}</p>
           <a class="btn btn--primary" href={localePath(locale, '/funding')}>{intro.funding}<Icon name="arrow-right" /></a>
         </aside>
       </div>
@@ -79,10 +82,10 @@ const reasonIcons: readonly CardIconName[] = [
           </li>
         ))}
       </ul>
-      <p class="intro-copy content-body">{intro.closing}</p>
     </div>
   </section>
 
+  <ProjectStructure locale={locale} />
 
   {/*
     container-wide supplies the gutter and the centring. This used to come
@@ -97,7 +100,7 @@ const reasonIcons: readonly CardIconName[] = [
         publishedPilots.map((pilot) => {
           const project = projectById.get(pilotToProjectId[pilot.id]);
           return (
-            <li id={pilot.slug} class="pilot ink-card ink-press">
+            <li id={pilot.slug} class="pilot ink-card">
             <!-- Media: 5-column slot on desktop -->
             <div class="pilot-media">
               {getMediaModule(pilot.id) && (

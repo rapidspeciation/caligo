@@ -391,7 +391,8 @@ const desktopSrcset = [
   /* ---- Common section rhythm ---- */
   .section h2 {
     max-width: 32ch;
-    font-size: clamp(1.75rem, 1.55rem + 0.8vw, 2.25rem);
+    /* One section-heading size on every page. */
+    font-size: var(--step-2);
   }
   .section .lead { max-width: var(--measure); }
   .section .lead,

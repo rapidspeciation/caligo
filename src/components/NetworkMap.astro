@@ -112,7 +112,7 @@ const eventMarks = events.map((e) => {
     <h3 class="nm-list-title content-label">{copy.facilities}</h3>
     <ol class="nm-list" role="list">
       {sites.map((site) => (
-        <li class="nm-item" data-site={site.n} tabindex="0">
+        <li class="nm-item" data-site={site.n}>
           <span class="nm-num" aria-hidden="true">{site.n}</span>
           <span class="nm-item-text">
             <span class="nm-item-name">{shortName[site.facility.institution] ?? site.facility.institution}</span>
@@ -125,7 +125,7 @@ const eventMarks = events.map((e) => {
     <h3 class="nm-list-title content-label">{copy.events}</h3>
     <ul class="nm-list nm-list--events" role="list">
       {events.map(({ event }) => (
-        <li class="nm-item nm-item--event" data-site={`e-${event.id}`} tabindex="0">
+        <li class="nm-item nm-item--event" data-site={`e-${event.id}`}>
           <span class="nm-diamond" aria-hidden="true"></span>
           <span class="nm-item-text">
             <span class="nm-item-name">{pick(event.name, locale)}</span>
@@ -203,6 +203,8 @@ const eventMarks = events.map((e) => {
           var id = el.getAttribute('data-site');
           ['mouseenter', 'focus'].forEach(function (t) { el.addEventListener(t, function () { set(id, true); }); });
           ['mouseleave', 'blur'].forEach(function (t) { el.addEventListener(t, function () { set(id, false); }); });
+          // Touch: a tap lights the pair for a moment.
+          el.addEventListener('touchstart', function () { set(id, true); window.setTimeout(function () { set(id, false); }, 1600); }, { passive: true });
         });
       });
     }
@@ -233,7 +235,7 @@ const eventMarks = events.map((e) => {
 
   .nm-heading {
     max-width: 18ch;
-    font-size: clamp(1.75rem, 1.55rem + 0.8vw, 2.25rem);
+    font-size: var(--step-2);
   }
   .nm-intro {
     margin-top: var(--space-m);
@@ -319,6 +321,11 @@ const eventMarks = events.map((e) => {
   .nm-country--active {
     fill: color-mix(in oklab, var(--accent) 17%, var(--bg));
     stroke: color-mix(in oklab, var(--accent) 50%, transparent);
+  }
+  /* On a phone the place names would be a few pixels tall: the numbered
+     list beside the map carries them instead. */
+  @media (max-width: 40rem) {
+    .nm-labels, .nm-event text { display: none; }
   }
   .nm-labels text,
   .nm-event text {

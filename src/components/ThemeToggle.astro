@@ -44,6 +44,18 @@ const t = getDict(locale);
     height: 1.2rem;
     grid-area: 1 / 1;
   }
+  .theme-toggle:active { transform: translateY(1px); }
+  /* The icon turns into place each time the theme flips. */
+  :global([data-mode='dark']) .theme-toggle :global(.icon-sun),
+  :global([data-mode='light']) .theme-toggle :global(.icon-moon) { animation: theme-turn 0.4s var(--ease-settle); }
+  @keyframes theme-turn { from { transform: rotate(-90deg) scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
+  @media (pointer: coarse) {
+    .theme-toggle { width: 2.75rem; height: 2.75rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .theme-toggle :global(svg) { animation: none !important; }
+    .theme-toggle:active { transform: none; }
+  }
   /* Dark shows the sun (click to go light); light shows the moon. */
   :global([data-mode='dark']) .theme-toggle :global(.icon-moon) {
     display: none;

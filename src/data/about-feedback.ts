@@ -42,8 +42,8 @@ export const ABOUT_FEEDBACK = {
     heading: { en: 'Why the name Caligo?', es: '¿Por qué el nombre Caligo?' },
     body: [
       {
-        en: 'Caligo takes its name from a Neotropical genus of owl butterflies, known for their beauty and striking eyespots. Their beauty is readily visible, but much of the genetic history behind it remains obscure. The Latin meaning of caligo, mist or darkness, echoes that gap. Through research led in Latin America, we aim to bring Neotropical butterfly and moth genomics into the light.',
-        es: 'Caligo toma su nombre de un género neotropical de mariposas búho, conocidas por su belleza y sus llamativos ocelos. Su belleza salta a la vista, pero gran parte de la historia genética que la originó sigue sin conocerse. El significado latino de caligo, niebla u oscuridad, evoca ese vacío de conocimiento. Mediante investigación liderada desde América Latina, buscamos arrojar luz sobre la genómica de las mariposas y polillas neotropicales.',
+        en: 'Caligo is named after a Neotropical genus of owl butterflies with striking eyespots. Their beauty is easy to see, but most of the genetic history behind it is unknown. In Latin, caligo means mist or darkness. Research led from Latin America can clear some of it.',
+        es: 'Caligo toma su nombre de un género neotropical de mariposas búho con llamativos ocelos. Su belleza salta a la vista, pero casi toda la historia genética que la originó se desconoce. En latín, caligo significa niebla u oscuridad. La investigación liderada desde América Latina puede despejar parte de ella.',
       },
     ],
     etymologySource: {

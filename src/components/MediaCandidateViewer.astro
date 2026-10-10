@@ -32,6 +32,7 @@
  *     non-initial slides are always `loading="lazy"` — only the visible slide
  *     enters LCP, hidden slides load on user request.
  */
+import { italicizeSpecies } from '../data/content';
 import { getDict, type Locale } from '../i18n';
 import { getMediaModule, type MediaCandidate } from '../data/records';
 import Icon from './Icon.astro';
@@ -203,7 +204,7 @@ const clientCandidates = sorted.map((c) => ({
               {initialIndexLabel}
             </span>
           )}
-          <p class="mcv-caption-text" data-mcv-caption>{initial.caption[locale]}</p>
+          <p class="mcv-caption-text" data-mcv-caption set:html={italicizeSpecies(initial.caption[locale])} />
           <p class="mcv-credit">
             <span data-mcv-credit>{initial.credit[locale]}</span>
             <span data-mcv-source-wrap>
@@ -241,7 +242,7 @@ const clientCandidates = sorted.map((c) => ({
             </span>
           )}
         </div>
-        <p class="mcv-caption-text" data-mcv-caption>{initial.caption[locale]}</p>
+        <p class="mcv-caption-text" data-mcv-caption set:html={italicizeSpecies(initial.caption[locale])} />
         <p class="mcv-credit mono">
           <span data-mcv-credit>{initial.credit[locale]}</span>
           <span data-mcv-source-wrap>

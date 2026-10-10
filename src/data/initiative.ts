@@ -100,7 +100,7 @@ export const LEADERS: Person[] = [
       es: 'Ecología de mariposas y monitoreo de biodiversidad',
     },
     bio: {
-      en: 'Her research examines the diversity, genetics, physiology, ecology and behaviour of Neotropical butterflies, alongside broader work in entomology and insect monitoring.',
+      en: 'Gyanpriya studies the diversity, genetics, physiology, ecology and behaviour of Neotropical butterflies, alongside broader work in entomology and insect monitoring.',
       es: 'Gyanpriya estudia la diversidad, la genética, la fisiología, la ecología y el comportamiento de las mariposas neotropicales, además de otros temas de entomología y monitoreo de insectos.',
     },
     affiliation: 'University of Guyana',
@@ -127,8 +127,8 @@ export const LEADERS: Person[] = [
       es: 'Genética de la conservación y de poblaciones',
     },
     bio: {
-      en: 'Her research combines molecular ecology and conservation genetics to study Neotropical species, population history and biodiversity conservation.',
-      es: 'Su investigación combina la ecología molecular y la genética de la conservación para estudiar especies neotropicales, historia poblacional y conservación de la biodiversidad.',
+      en: 'Carmen combines molecular ecology and conservation genetics to study Neotropical species, population history and biodiversity conservation.',
+      es: 'Carmen combina la ecología molecular y la genética de la conservación para estudiar especies neotropicales, historia poblacional y conservación de la biodiversidad.',
     },
     affiliation: 'Universidade Federal de Goiás',
     regionalTies: { en: 'Brazil / Colombia', es: 'Brasil / Colombia' },
@@ -154,8 +154,8 @@ export const LEADERS: Person[] = [
       es: 'Genómica evolutiva y especiación',
     },
     bio: {
-      en: 'Carlos uses computational methods and research on Heliconius to study how species form and what limits their divergence.',
-      es: 'Carlos usa métodos computacionales e investigación en Heliconius para estudiar cómo se forman las especies y qué limita su divergencia.',
+      en: 'Carlos studies how species form and what limits their divergence, using computational methods and Heliconius butterflies.',
+      es: 'Carlos estudia cómo se forman las especies y qué limita su divergencia, con métodos computacionales y mariposas Heliconius.',
     },
     affiliation: 'Smithsonian Tropical Research Institute',
     regionalTies: { en: 'Panama', es: 'Panamá' },
@@ -178,8 +178,8 @@ export const LEADERS: Person[] = [
     },
     role: { en: 'Chromosome evolution', es: 'Evolución cromosómica' },
     bio: {
-      en: 'She studies chromosome structure and sex chromosome-autosome fusions in Heliconius, using reference genomes to investigate Lepidoptera evolution.',
-      es: 'Estudia la estructura cromosómica y las fusiones entre cromosomas sexuales y autosomas en Heliconius mediante genomas de referencia para investigar la evolución de los lepidópteros.',
+      en: 'Nicol studies chromosome structure and sex chromosome-autosome fusions in Heliconius, using reference genomes to investigate Lepidoptera evolution.',
+      es: 'Nicol estudia la estructura cromosómica y las fusiones entre cromosomas sexuales y autosomas en Heliconius, y usa genomas de referencia para investigar la evolución de los lepidópteros.',
     },
     affiliation: 'Wellcome Sanger Institute',
     regionalTies: { en: 'Colombia / United Kingdom', es: 'Colombia / Reino Unido' },
@@ -205,8 +205,8 @@ export const LEADERS: Person[] = [
       es: 'Especiación y genómica comparativa',
     },
     bio: {
-      en: 'Her research in speciation and evolutionary genomics examines how interbreeding and chromosomal rearrangements contribute to rapid adaptation and the formation of new species.',
-      es: 'Su investigación en especiación y genómica evolutiva estudia cómo la hibridación y los reordenamientos cromosómicos contribuyen a la adaptación rápida y la formación de nuevas especies.',
+      en: 'Joana works on speciation and evolutionary genomics, studying how interbreeding and chromosomal rearrangements contribute to rapid adaptation and the formation of new species.',
+      es: 'Joana trabaja en especiación y genómica evolutiva, y estudia cómo la hibridación y los reordenamientos cromosómicos contribuyen a la adaptación rápida y la formación de nuevas especies.',
     },
     affiliation: 'Wellcome Sanger Institute',
     regionalTies: { en: 'Ecuador / Peru / United Kingdom', es: 'Ecuador / Perú / Reino Unido' },
@@ -232,8 +232,8 @@ export const LEADERS: Person[] = [
       es: 'Adaptación tropical y recursos genómicos',
     },
     bio: {
-      en: 'He combines development, genomics, evolutionary biology and ecology to study how tropical butterflies adapt to environmental change.',
-      es: 'Combina desarrollo, genómica, biología evolutiva y ecología para estudiar cómo las mariposas tropicales se adaptan al cambio ambiental.',
+      en: 'Vicencio combines development, genomics, evolutionary biology and ecology to study how tropical butterflies adapt to environmental change.',
+      es: 'Vicencio combina desarrollo, genómica, biología evolutiva y ecología para estudiar cómo las mariposas tropicales se adaptan al cambio ambiental.',
     },
     affiliation: 'Queen Mary University of London',
     regionalTies: { en: 'Colombia / United Kingdom', es: 'Colombia / Reino Unido' },

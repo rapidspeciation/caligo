@@ -1,5 +1,6 @@
 ---
 import { pick, type Person } from '../data/initiative';
+import { italicizeSpecies } from '../data/content';
 import type { Locale } from '../i18n';
 
 interface Props {
@@ -30,7 +31,7 @@ const base = import.meta.env.BASE_URL;
   <div class="person-content">
     <strong class="person-name">{person.name}</strong>
     <p class="person-role">{pick(person.role, locale)}</p>
-    <p class="person-bio">{pick(person.bio, locale)}</p>
+    <p class="person-bio" set:html={italicizeSpecies(pick(person.bio, locale))} />
   </div>
 
   <div class="person-foot">
@@ -79,14 +80,15 @@ const base = import.meta.env.BASE_URL;
     margin-top: var(--space-s);
     padding-top: var(--space-s);
     border-top: 1px solid var(--hairline);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    align-content: flex-start;
-    justify-content: space-between;
+    /* Place on the left, profile link pinned bottom right on every card:
+       a long link wraps inside its column instead of dropping to a new row. */
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, max-content);
+    align-items: end;
     gap: var(--space-xs) var(--space-m);
   }
   .person-place { display: grid; gap: 0.2rem; min-width: 0; }
+  .person-source { text-align: right; max-width: 14rem; }
   /* Portraits come from different sources (studio, field, lab). One crop
      anchored on the upper third and a light shared grade make them read
      as a single set without altering anyone's likeness. */

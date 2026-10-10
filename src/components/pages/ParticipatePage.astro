@@ -27,24 +27,24 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
   <section class="section section--tight routes-section">
     <div class="container-wide">
       <ol class="routes" role="list">
-        <li id="join" class="route ink-card ink-press ink-card--sun" aria-labelledby="join-heading">
+        <li id="join" class="route ink-card ink-press ink-press--link ink-card--sun" aria-labelledby="join-heading">
           <p class="route-step"><span class="route-num" aria-hidden="true">1</span><span class="sr-only">{stepLabel} 1</span></p>
           <h2 id="join-heading" class="route-title">{t.join.title}</h2>
           <p class="route-body">{t.join.body}</p>
+          <p class="route-note">{t.join.privacyNote}</p>
           <div class="route-action">
             <a class="btn" href={LINKS.joinForm} target="_blank" rel="noopener noreferrer">
               {t.join.cta}<Icon name="external" />
             </a>
-            <p class="route-note">{t.join.privacyNote}</p>
           </div>
         </li>
-        <li class="route ink-card ink-press ink-card--sky" aria-labelledby="discord-heading">
+        <li class="route ink-card ink-press ink-press--link ink-card--sky" aria-labelledby="discord-heading">
           <p class="route-step"><span class="route-num" aria-hidden="true">2</span><span class="sr-only">{stepLabel} 2</span></p>
           <h2 id="discord-heading" class="route-title">{p.discord.heading}</h2>
           <p class="route-body">{p.discord.body}</p>
           <div class="route-action"><DiscordButton locale={locale} class="btn--ghost" showPendingNote /></div>
         </li>
-        <li class="route ink-card ink-press ink-card--leaf" aria-labelledby="committee-heading">
+        <li class="route ink-card ink-press ink-press--link ink-card--leaf" aria-labelledby="committee-heading">
           <p class="route-step"><span class="route-num" aria-hidden="true">3</span><span class="sr-only">{stepLabel} 3</span></p>
           <h2 id="committee-heading" class="route-title">{t.committee.heading}</h2>
           <p class="route-body">{t.committee.body}</p>
@@ -105,7 +105,7 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
         <p class="content-body">{p.contact.body}</p>
         <CopyEmail locale={locale} />
       </div>
-      <div class="contact-note ink-card ink-press ink-card--flat">
+      <div class="contact-note ink-card ink-card--flat">
         <h3>{p.beforeSubmitting.heading}</h3>
         <p class="content-body">{p.beforeSubmitting.body}</p>
       </div>
@@ -168,7 +168,7 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
     justify-items: start;
     gap: var(--space-xs);
   }
-  .route-action .btn { min-height: 44px; }
+  .route-action :global(.btn) { min-height: 46px; }
   .route-note {
     margin: 0;
     font-size: var(--step--2);
@@ -190,7 +190,7 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
     .ways-head { position: sticky; top: calc(var(--scroll-margin-top) + 1rem); }
   }
   .ways-head > * + * { margin-top: var(--space-m); }
-  .ways-head h2 { max-width: 16ch; }
+  .ways-head h2 { max-width: 16ch; font-size: var(--step-2); }
   .ways-closing { color: var(--text-muted); }
   .ways-layout > .ways-list { margin-top: 0; }
   .ways-list {
@@ -224,7 +224,7 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
   @media (min-width: 60rem) {
     .pair { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; }
     .pair-item:first-child { padding-right: clamp(2rem, 4vw, 4rem); }
-    .pair-item + .pair-item { padding-left: clamp(2rem, 4vw, 4rem); border-left: 1px solid var(--hairline); }
+    .pair-item + .pair-item { margin-top: 0; padding-left: clamp(2rem, 4vw, 4rem); border-left: 1px solid var(--hairline); }
   }
   .pair-item > * + * { margin-top: var(--space-m); }
   .pair-heading { font-size: var(--step-2); }
@@ -273,7 +273,7 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
     }
   }
   .contact-head > * + * { margin-top: var(--space-m); }
-  .contact-head h2 { max-width: 20ch; }
+  .contact-head h2 { max-width: 20ch; font-size: var(--step-2); }
   .contact-head :global(.email-contact) { margin-top: var(--space-m); }
   .contact-head .content-body { max-width: var(--measure); }
   .contact-note {

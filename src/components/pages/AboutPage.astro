@@ -110,6 +110,8 @@ const facilityIntro = locale === 'en'
     }
     .about-pair-item:first-child { padding-right: clamp(2rem, 4vw, 4rem); }
     .about-pair-item + .about-pair-item {
+      /* Side by side, so the stacking gap between siblings must not apply. */
+      margin-top: 0;
       padding-left: clamp(2rem, 4vw, 4rem);
       border-left: 1px solid var(--hairline);
     }

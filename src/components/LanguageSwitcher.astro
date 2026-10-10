@@ -63,5 +63,11 @@ const FULL: Record<Locale, string> = { en: 'English', es: 'Español' };
   .lang-item.is-active {
     color: var(--accent-contrast);
     background: var(--accent);
+    /* The pill slides across when the language changes. */
+    view-transition-name: lang-current;
+  }
+  .lang-item:active { transform: translateY(1px); }
+  @media (pointer: coarse) {
+    .lang-item { min-width: 2.5rem; height: 2.4rem; }
   }
 </style>

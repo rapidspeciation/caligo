@@ -18,10 +18,11 @@ const closed = isCallClosed();
   <section id="funding-opportunities" class="section section--panel" aria-labelledby="funding-call-title">
     <div class="container-wide">
       <div class="funding-layout">
-        <div class="funding-summary ink-card ink-press ink-card--rose">
+        <div class="funding-summary ink-card ink-press ink-press--link ink-card--rose">
           <h2 id="funding-call-title" class="content-heading">{intro.call}</h2>
-          <p class="content-body">{intro.description}</p>
-          <p class="content-body">{intro.coverage}</p>
+          <p class="content-body" data-when-call="open" hidden={closed}>{intro.description}</p>
+          <p class="content-body" data-when-call="open" hidden={closed}>{intro.coverage}</p>
+          <p class="content-body" data-when-call="closed" hidden={!closed}>{intro.descriptionClosed}</p>
           <p class="funding-deadline content-body"><span class="funding-deadline-label">{intro.deadline}</span><strong class="funding-date"><time datetime="2026-09-30">{intro.date}</time></strong></p>
           <DeadlineChip locale={locale} />
           <div class="funding-open" data-when-call="open" hidden={closed}>

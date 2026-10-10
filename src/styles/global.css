@@ -479,16 +479,25 @@ a.ink-card.is-near, .ink-press.is-near {
     box-shadow: calc(var(--ink-drop) + 2px) calc(var(--ink-drop) + 2px) 0 var(--ink-shadow);
   }
 }
-a.ink-card:active {
+a.ink-card:active, .ink-press--link:active {
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 var(--ink-shadow);
 }
+/* A card with one action: its button's link covers the whole card, so the
+   lift is honest. Anything else that needs clicks sits above the cover. */
+.ink-press--link { position: relative; }
+.ink-press--link .btn[href]::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+.ink-press--link :is(a:not(.btn), button, summary, input) { position: relative; z-index: 1; }
+/* The button stays put under the cover: a transform would shrink the cover
+   to the button and make the hover flicker. The card does the moving. */
+.ink-press--link .btn[href]:is(:hover, :active) { transform: none; box-shadow: 3px 3px 0 var(--btn-shadow); }
+.ink-press--link:has(.btn[href]:focus-visible) { outline: 2px solid var(--focus-ring, var(--accent)); outline-offset: 3px; }
 @media (hover: none) {
   a.ink-card, .ink-press { transition-duration: var(--dur-base); }
 }
 @media (prefers-reduced-motion: reduce) {
   a.ink-card, .ink-press { transition: none; }
-  a.ink-card:hover, a.ink-card:active, .ink-press:hover, a.ink-card.is-near, .ink-press.is-near { transform: none; }
+  a.ink-card:hover, a.ink-card:active, .ink-press:hover, .ink-press--link:active, a.ink-card.is-near, .ink-press.is-near { transform: none; }
 }
 
 /* Small ink pill for statuses and dates ("3 months ago"). */
@@ -889,4 +898,26 @@ a.ink-card:active {
 .skip-link:focus {
   transform: translateY(0);
   color: var(--accent-contrast);
+}
+
+/* ── Small feedback shared by every page ─────────────────────────────── */
+/* Text links and row toggles give a little under the pointer or finger. */
+.text-link:active, .disclosure-summary:active, .explorable-replay:active { transform: translateY(1px); }
+/* An arrow that leaves the site leans up and out; one that stays leans on. */
+a [data-icon='external'], a [data-icon='arrow-right'] {
+  transition: transform var(--dur-quick) var(--ease-glide);
+}
+@media (hover: hover) {
+  a:hover [data-icon='external'] { transform: translate(2px, -2px); }
+  a:hover [data-icon='arrow-right'] { transform: translateX(3px); }
+}
+a:active [data-icon='external'] { transform: translate(2px, -2px); }
+a:active [data-icon='arrow-right'] { transform: translateX(3px); }
+@media (pointer: coarse) {
+  /* Room for a finger around inline links that stand alone. */
+  .text-link { min-height: 44px; display: inline-flex; align-items: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .text-link:active, .disclosure-summary:active, .explorable-replay:active,
+  a :is([data-icon='external'], [data-icon='arrow-right']) { transform: none !important; transition: none; }
 }

@@ -1,0 +1,388 @@
+---
+/**
+ * How the pilot projects fit together: one shared ("umbrella") project on
+ * Heliconius that spans several countries, with independent local projects
+ * under its cover.
+ *
+ * The figure is plain HTML, so every fact is real text. The canopy is wider
+ * than the area below it, and that overhang is what says "under its cover".
+ * Status is carried by words and by line style (solid = sequenced, dashed =
+ * planned or open), never by colour alone.
+ *
+ * The markup IS the final state. With JavaScript the canopy opens from its
+ * centre and the local projects then appear beneath it, each time the figure
+ * scrolls back into view. Reduced motion skips all of it.
+ */
+import type { Locale } from '../i18n';
+import { BUTTERFLY, WING_PATTERNS } from '../data/diagram-glyphs';
+
+interface Props {
+  readonly locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const copy = {
+  en: {
+    heading: 'How the pilot projects fit together',
+    intro: 'One shared project on <em>Heliconius</em> spans four countries, and local projects sit under its cover.',
+    umbrellaLabel: 'Umbrella project',
+    umbrellaNote: 'One project, carried out across four countries',
+    countriesLabel: 'Countries in the umbrella project',
+    sequenced: 'eight species sequenced',
+    planned: 'planned',
+    countries: { panama: 'Panama', colombia: 'Colombia', ecuador: 'Ecuador', brazil: 'Brazil' },
+    localTitle: 'Local projects',
+    localNote: 'Proposed and led exclusively by local researchers.',
+    soybean: 'Soybean pest moths',
+    peru: 'Peru',
+    open: 'Any Lepidoptera species',
+    see: 'See the pilot project',
+  },
+  es: {
+    heading: 'Cómo se organizan los proyectos piloto',
+    intro: 'Un proyecto compartido sobre <em>Heliconius</em> abarca cuatro países, y los proyectos locales se ubican bajo su paraguas.',
+    umbrellaLabel: 'Proyecto paraguas',
+    umbrellaNote: 'Un solo proyecto, realizado en cuatro países',
+    countriesLabel: 'Países del proyecto paraguas',
+    sequenced: 'ocho especies secuenciadas',
+    planned: 'previsto',
+    countries: { panama: 'Panamá', colombia: 'Colombia', ecuador: 'Ecuador', brazil: 'Brasil' },
+    localTitle: 'Proyectos locales',
+    localNote: 'Propuestos y liderados exclusivamente por investigadores locales.',
+    soybean: 'Polillas plaga de la soja',
+    peru: 'Perú',
+    open: 'Cualquier especie de lepidóptero',
+    see: 'Ver el proyecto piloto',
+  },
+}[locale];
+
+// Sequencing is done in Colombia; the other three countries are planned.
+const countries = [
+  { name: copy.countries.panama, done: false },
+  { name: copy.countries.colombia, done: true },
+  { name: copy.countries.ecuador, done: false },
+  { name: copy.countries.brazil, done: false },
+];
+
+// Local projects link to the matching pilot project further down the page.
+const locals = [
+  { slug: 'parides-ascanius', name: 'Parides ascanius', taxon: true, place: copy.countries.brazil },
+  { slug: 'soybean-lepidoptera', name: copy.soybean, taxon: false, place: copy.countries.brazil },
+  { slug: 'panacea-prola', name: 'Panacea prola', taxon: true, place: copy.peru },
+];
+
+const { forewing: WING_F, hindwing: WING_H } = BUTTERFLY;
+const MARKS = WING_PATTERNS.clysonimus;
+---
+
+<section class="project-structure container-wide" aria-labelledby="project-structure-title">
+  <h2 id="project-structure-title" class="content-heading">{copy.heading}</h2>
+  <p class="ps-intro content-body" set:html={copy.intro} />
+
+  <div class="ps-figure" data-project-structure>
+    <div class="ps-canopy ink-card ink-card--leaf">
+      <svg class="ps-fly" viewBox="-29 -18 58 34" aria-hidden="true" focusable="false">
+        <defs>
+          <clipPath id="ps-clip-fore"><path d={WING_F} /></clipPath>
+          <clipPath id="ps-clip-hind"><path d={WING_H} /></clipPath>
+        </defs>
+        {[undefined, 'scale(-1 1)'].map((flip) => (
+          <g transform={flip}>
+            <path d={WING_H} class="ps-fly-wing" />
+            <path d={WING_F} class="ps-fly-wing" />
+            {(['hind', 'fore'] as const).map((wing) => (
+              <g clip-path={`url(#ps-clip-${wing})`}>
+                {MARKS.filter((m) => m.on === wing).map((m) => (
+                  <path d={m.d} class={`ps-fly-mark${m.stroke ? ' is-line' : ''}`} stroke-width={m.stroke} />
+                ))}
+              </g>
+            ))}
+          </g>
+        ))}
+        <path d={BUTTERFLY.antennae} class="ps-fly-antennae" />
+        <circle cx="-6.4" cy="-15.4" r="0.8" class="ps-fly-club" />
+        <circle cx="6.4" cy="-15.4" r="0.8" class="ps-fly-club" />
+        <ellipse cx="0" cy="5" rx="1.1" ry="5.4" class="ps-fly-body" />
+        <ellipse cx="0" cy="-1.6" rx="1.6" ry="3" class="ps-fly-body" />
+        <circle cx="0" cy="-5.4" r="1.3" class="ps-fly-body" />
+      </svg>
+      <p class="content-label">{copy.umbrellaLabel}</p>
+      <h3 class="ps-canopy-title"><em>Heliconius</em></h3>
+      <p class="ps-canopy-note content-meta">{copy.umbrellaNote}</p>
+      <ul class="ps-countries" aria-label={copy.countriesLabel}>
+        {countries.map((country, i) => (
+          <li class:list={['ps-country', country.done ? 'is-done' : 'is-planned']} style={`--i:${i}`}>
+            <svg class="ps-mark" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+              {country.done
+                ? <path d="M2.4 6.4 5 9 9.8 3.4" />
+                : <circle cx="6" cy="6" r="3.6" />}
+            </svg>
+            <span class="ps-country-name">{country.name}</span>
+            <span class="ps-country-status">{country.done ? copy.sequenced : copy.planned}</span>
+          </li>
+        ))}
+      </ul>
+      <a class="ps-canopy-link" href="#heliconius">{copy.see}</a>
+    </div>
+
+    <div class="ps-cover">
+      <div class="ps-cover-head">
+        <h3 class="ps-cover-title">{copy.localTitle}</h3>
+        <p class="ps-cover-note content-meta">{copy.localNote}</p>
+      </div>
+      <ul class="ps-locals">
+        {locals.map((local, i) => (
+          <li style={`--i:${i}`}>
+            <a class="ps-local ink-card" href={`#${local.slug}`}>
+              <span class="ps-local-name">{local.taxon ? <em>{local.name}</em> : local.name}</span>
+              <span class="ps-local-place">{local.place}</span>
+            </a>
+          </li>
+        ))}
+        <li style={`--i:${locals.length}`}>
+          <div class="ps-local ps-local--open">
+            <span class="ps-local-name">{copy.open}</span>
+            <svg class="ps-plus" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M6 2v8M2 6h8" /></svg>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Runs on first load and after every ClientRouter navigation.
+  document.addEventListener('astro:page-load', () => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (reduce.matches || !('IntersectionObserver' in window)) return;
+
+    document.querySelectorAll<HTMLElement>('[data-project-structure]:not([data-ready])').forEach((figure) => {
+      figure.dataset.ready = '';
+      figure.classList.add('is-armed');
+      const play = () => figure.classList.add('is-playing');
+
+      // Play once the figure is a quarter of the way up the screen, from
+      // either direction; re-arm only when all of it has left the viewport,
+      // so it never restarts mid-read.
+      new IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) play();
+      }, { rootMargin: '0px 0px -25% 0px' }).observe(figure);
+
+      new IntersectionObserver((entries) => {
+        if (entries.every((entry) => !entry.isIntersecting)) figure.classList.remove('is-playing');
+      }).observe(figure);
+
+      // A keyboard reader who tabs into the figure never meets a hidden link.
+      figure.addEventListener('focusin', play);
+    });
+  });
+</script>
+
+<style>
+  .project-structure {
+    margin-bottom: var(--space-m);
+  }
+  .ps-intro {
+    max-width: var(--measure);
+    margin-top: var(--space-s);
+  }
+  .ps-intro :global(em) { font-style: italic; }
+
+  .ps-figure {
+    /* How far the canopy reaches past the local projects on each side. */
+    --overhang: clamp(0.75rem, 4vw, 3.5rem);
+    --arc: clamp(2.25rem, 5vw, 4rem);
+    --fly-ink: #231c17;
+    --fly-orange: #e2742b;
+    --fly-edge: transparent;
+    --fly-feeler: var(--fly-ink);
+    margin-top: var(--space-l);
+  }
+  :global([data-mode='dark']) .ps-figure {
+    --fly-ink: #43362d;
+    --fly-edge: #cdbfa8;
+    --fly-feeler: #cdbfa8;
+  }
+
+  /* ---------- Canopy: the umbrella project ---------- */
+  .ps-canopy {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    justify-items: center;
+    gap: var(--space-2xs);
+    padding: calc(var(--arc) * 0.55 + var(--space-s)) var(--space-m) var(--space-m);
+    /* One shallow arc across the whole top edge. */
+    border-radius: 50% 50% var(--radius-card) var(--radius-card) / var(--arc) var(--arc) var(--radius-card) var(--radius-card);
+    text-align: center;
+  }
+  .ps-fly {
+    width: clamp(4.5rem, 9vw, 6rem);
+    height: auto;
+    overflow: visible;
+    margin-bottom: var(--space-2xs);
+  }
+  .ps-fly-wing { fill: var(--fly-ink); stroke: var(--fly-edge); stroke-width: 0.7; stroke-linejoin: round; }
+  .ps-fly-mark { fill: var(--fly-orange); stroke: none; }
+  .ps-fly-mark.is-line { fill: none; stroke: var(--fly-orange); stroke-linecap: round; }
+  .ps-fly-body { fill: var(--fly-ink); stroke: var(--fly-edge); stroke-width: 0.5; }
+  .ps-fly-antennae { fill: none; stroke: var(--fly-feeler); stroke-width: 0.8; stroke-linecap: round; }
+  .ps-fly-club { fill: var(--fly-feeler); }
+
+  .ps-canopy-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 560;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--text-strong);
+  }
+  .ps-canopy-note { text-wrap: balance; }
+
+  .ps-countries {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-xs);
+    margin: var(--space-s) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ps-country {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.8rem 0.3rem 0.55rem;
+    border: 1.5px solid var(--ink-line);
+    border-radius: 999px;
+    color: var(--text-strong);
+    font-size: var(--step--1);
+    line-height: 1.3;
+  }
+  /* Sequenced: solid outline, filled, with a tick. Planned: dashed and empty. */
+  .ps-country.is-done { background: var(--card); color: var(--text-on-card, var(--text-strong)); }
+  .ps-country.is-planned { border-style: dashed; }
+  .ps-country-name { font-weight: 650; }
+  .ps-country-status {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--text-muted);
+  }
+  .ps-mark { width: 0.8rem; height: 0.8rem; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .ps-country.is-planned .ps-mark { stroke-width: 1.3; stroke-dasharray: 2 1.8; }
+
+  .ps-canopy-link {
+    margin-top: var(--space-s);
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--text-strong);
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.22em;
+  }
+  .ps-canopy-link:hover { text-decoration-thickness: 3px; }
+
+  /* ---------- Cover: the local projects under the canopy ---------- */
+  .ps-cover {
+    margin-inline: var(--overhang);
+    padding: calc(var(--space-m) + var(--ink-drop)) var(--space-m) var(--space-m);
+    border: var(--ink-w) dashed color-mix(in oklab, var(--ink-line) 55%, transparent);
+    border-top: 0;
+    border-radius: 0 0 var(--radius-card) var(--radius-card);
+  }
+  .ps-cover-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2xs) var(--space-s);
+  }
+  .ps-cover-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 560;
+    line-height: 1.2;
+    color: var(--text-strong);
+  }
+  .ps-locals {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-s);
+    margin: var(--space-s) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ps-locals > li { display: grid; }
+  .ps-local {
+    display: grid;
+    align-content: space-between;
+    gap: var(--space-xs);
+    min-height: 5.5rem;
+    padding: var(--space-s);
+    color: var(--text-strong);
+  }
+  .ps-local-name {
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    font-weight: 560;
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+  .ps-local-place {
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    color: var(--text-faint);
+  }
+  a.ps-local:hover .ps-local-name { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 0.2em; }
+  /* Keep the card's own corners and hard shadow under the focus ring. */
+  a.ps-local:focus-visible {
+    border-radius: var(--radius-card);
+    box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--ink-shadow);
+  }
+  /* The open place: any other species, proposed by local researchers. */
+  .ps-local--open {
+    border: var(--ink-w) dashed color-mix(in oklab, var(--ink-line) 55%, transparent);
+    border-radius: var(--radius-card);
+    color: var(--text-muted);
+  }
+  .ps-plus { width: 0.95rem; height: 0.95rem; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+
+  @media (max-width: 62rem) {
+    .ps-locals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 34rem) {
+    .ps-canopy { padding-inline: var(--space-s); }
+    .ps-cover { padding-inline: var(--space-s); }
+    .ps-countries { display: grid; grid-template-columns: 1fr; justify-items: stretch; width: 100%; }
+    .ps-country { justify-content: flex-start; }
+    .ps-country-status { margin-left: auto; text-align: right; }
+    .ps-local { min-height: 4.75rem; }
+  }
+
+  /* ---------- Motion: the canopy opens, then the projects appear under it ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .ps-figure.is-armed:not(.is-playing) :is(.ps-canopy, .ps-country, .ps-cover, .ps-locals > li) { opacity: 0; }
+    .ps-figure.is-playing .ps-canopy { animation: ps-open 0.7s var(--ease-unfold) backwards; }
+    .ps-figure.is-playing .ps-country { animation: ps-pop 0.35s calc(0.55s + var(--i) * 0.09s) var(--ease-settle) backwards; }
+    .ps-figure.is-playing .ps-cover { animation: ps-fade 0.45s 0.95s var(--ease-glide) backwards; }
+    .ps-figure.is-playing .ps-locals > li { animation: ps-drop 0.45s calc(1.15s + var(--i) * 0.11s) var(--ease-settle) backwards; }
+  }
+  @keyframes ps-open {
+    from { clip-path: inset(-8px 50% -8px 50%); opacity: 0.4; }
+    to { clip-path: inset(-8px -8px -8px -8px); opacity: 1; }
+  }
+  @keyframes ps-pop {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes ps-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes ps-drop {
+    from { opacity: 0; transform: translateY(-0.9rem); }
+    to { opacity: 1; transform: none; }
+  }
+</style>

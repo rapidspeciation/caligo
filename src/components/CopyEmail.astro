@@ -9,7 +9,7 @@ const es = locale === 'es';
 <div class="email-contact" data-copy-email data-email={email} data-success={es ? 'Correo copiado al portapapeles.' : 'Email copied to clipboard.'} data-failure={es ? 'No se pudo copiar. Selecciona el correo y cópialo manualmente.' : 'Could not copy. Select the email and copy it manually.'}>
   <span class="email-address">{email}</span>
   <button class="btn email-copy-button" type="button" hidden aria-label={es ? `Copiar ${email}` : `Copy ${email}`}>
-    <Icon name="copy" /><span>{email}</span>
+    <Icon name="copy" class="copy-idle" /><Icon name="check" class="copy-done" /><span>{email}</span>
   </button>
   <div class="email-toast" data-email-toast role="status" aria-live="polite" aria-atomic="true" hidden>
     <span class="toast-icon" aria-hidden="true"><Icon name="check" /></span>
@@ -37,6 +37,11 @@ const es = locale === 'es';
     if (!toast || !message || !fallback) return;
     document.querySelectorAll<HTMLElement>('[data-copy-email]').forEach(hideToast);
     toast.dataset.result = copied ? 'success' : 'failure';
+    if (copied) {
+      const button = root.querySelector<HTMLButtonElement>('.email-copy-button');
+      button?.classList.add('is-copied');
+      window.setTimeout(() => button?.classList.remove('is-copied'), 2000);
+    }
     fallback.hidden = copied;
     message.textContent = '';
     toast.hidden = false;
@@ -88,6 +93,11 @@ const es = locale === 'es';
   .email-copy-button { max-width: 100%; min-height: 44px; }
   .email-copy-button[hidden] { display: none; }
   .email-copy-button :global(svg) { flex: 0 0 auto; }
+  /* For two seconds after copying, the copy icon is a tick. */
+  .email-copy-button :global(.copy-done), .email-copy-button:global(.is-copied) :global(.copy-idle) { display: none; }
+  .email-copy-button:global(.is-copied) :global(.copy-done) { display: block; animation: copy-pop 0.3s var(--ease-settle); }
+  @keyframes copy-pop { from { transform: scale(0.4); } to { transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .email-copy-button :global(.copy-done) { animation: none !important; } }
   .email-copy-button span { min-width: 0; overflow-wrap: anywhere; }
   .email-toast { position: fixed; z-index: 300; right: max(var(--space-m), env(safe-area-inset-right)); bottom: max(var(--space-m), env(safe-area-inset-bottom)); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; gap: var(--space-s); width: min(26rem, calc(100vw - 2 * var(--space-m))); padding: var(--space-s); color: var(--text); background: var(--bg-panel); border: 1px solid var(--hairline-strong); border-radius: var(--radius); box-shadow: 0 .5rem 1.5rem color-mix(in oklab, #000 22%, transparent); animation: toast-in 180ms cubic-bezier(.16, 1, .3, 1) both; }
   .email-toast[hidden] { display: none; }

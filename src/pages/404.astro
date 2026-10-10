@@ -78,6 +78,18 @@ const nEs = dictEs.notFound;
     </div>
 
   </section>
+  <!-- One file serves every missing address, so the page reads the language
+       from the address and keeps only that block. Without scripts both stay. -->
+  <script is:inline>
+    (function () {
+      var es = /\/es(\/|$)/.test(location.pathname);
+      document.documentElement.lang = es ? 'es' : 'en';
+      document.querySelectorAll('.not-found-block').forEach(function (block) {
+        block.hidden = (block.lang === 'es') !== es;
+      });
+      document.querySelectorAll('header [aria-current="page"]').forEach(function (link) { link.removeAttribute('aria-current'); });
+    })();
+  </script>
 </Base>
 
 <style>
@@ -142,6 +154,10 @@ const nEs = dictEs.notFound;
     padding-top: var(--space-l);
     border-top: 1px solid var(--hairline);
   }
+
+  /* When the page shows Spanish only, that block leads like the English one. */
+  .not-found-block[hidden] + .not-found-block { margin-top: 0; padding-top: 0; border-top: 0; }
+  .not-found-block[hidden] + .not-found-block .not-found-heading-es { font-size: var(--step-3); line-height: 1.1; max-width: 18ch; }
 
   .not-found-eyebrow {
     margin: 0 0 var(--space-s);

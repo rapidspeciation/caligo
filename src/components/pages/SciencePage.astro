@@ -10,11 +10,10 @@ import MediaCandidateViewer from '../MediaCandidateViewer.astro';
 import Icon from '../Icon.astro';
 import FigureLightbox from '../FigureLightbox.astro';
 import TierDiagram from '../TierDiagram.astro';
-import WhenChip from '../WhenChip.astro';
+import Timeline from '../Timeline.astro';
 import FissionExplainer from '../FissionExplainer.astro';
 import { getDict, localePath, type Locale } from '../../i18n';
 import { getSource, getMediaModule } from '../../data/records';
-import { EVENTS, pick } from '../../data/initiative';
 import { publicationExamples, scienceFeedback } from '../../data/science-feedback';
 import { italicizeSpecies } from '../../data/content';
 
@@ -73,7 +72,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
         </h2>
         {feedback.reference.body.map((para) => <p class="prose-para content-body">{para}</p>)}
       </div>
-      <aside class="genome-goal ink-card ink-press" aria-labelledby="genome-goal-heading">
+      <aside class="genome-goal ink-card ink-press ink-press--link" aria-labelledby="genome-goal-heading">
         <p class="goal-number"><span class="marker">{locale === 'es' ? '1.000' : '1,000'}</span></p>
         <h3 id="genome-goal-heading" class="goal-heading">{feedback.reference.goalHeading}</h3>
         <p class="content-body">{feedback.reference.goalBody}</p>
@@ -98,7 +97,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
       </div>
       <ol class="tier-list" role="list">
         {tiers.items.map((item, i) => (
-          <li class="tier-card ink-card ink-press">
+          <li class="tier-card ink-card">
             <TierDiagram locale={locale} kind={TIER_KINDS[i]} />
             <div class="tier-copy">
               <p class="tier-label mono">{tiers.tierLabel} {i + 1}</p>
@@ -126,19 +125,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
         </a>
       </div>
       </div>
-      <ul class="training-events" role="list" aria-label={feedback.analysis.eyebrow}>
-        {EVENTS.map((event, i) => (
-          <li class={`training-event ink-card ink-press training-event--${['leaf', 'sky'][i % 2]}`}>
-            <span class="training-event-when">
-              <WhenChip locale={locale} start={event.start} end={event.end} />
-              <time class="training-event-date mono" datetime={event.start}>{pick(event.dates, locale)}</time>
-            </span>
-            <span class="training-event-name">{pick(event.name, locale)}</span>
-            <span class="training-event-place">{pick(event.location, locale)}</span>
-            <p class="training-event-summary" set:html={italicizeSpecies(pick(event.summary, locale))} />
-          </li>
-        ))}
-      </ul>
+      <div class="training-events"><Timeline locale={locale} eventsOnly /></div>
     </div>
   </section>
 
@@ -300,7 +287,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     })();
   </script>
 
-  <section class="section" aria-labelledby="ethics-heading">
+  <section class="section section--tight" aria-labelledby="ethics-heading">
     <div class="container-wide prose-column">
       <h2 id="ethics-heading" class="section-heading content-heading">{feedback.ethics.heading}</h2>
       {feedback.ethics.body.map((para) => <p class="prose-para content-body">{para}</p>)}
@@ -384,41 +371,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     }
     .training-events { align-self: center; }
   }
-  .training-events {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: var(--space-m);
-  }
-  .training-event {
-    display: grid;
-    gap: 0.2rem;
-    padding: var(--space-m);
-  }
-  .training-event--leaf { --ink-line: var(--tone-leaf); --ink-shadow: var(--tone-leaf); }
-  .training-event--sky { --ink-line: var(--tone-sky); --ink-shadow: var(--tone-sky); }
-  .training-event-when { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.7rem; margin-bottom: 0.35rem; }
-  .training-event-date {
-    color: var(--text-muted);
-    font-size: var(--step--2);
-    letter-spacing: 0.02em;
-  }
-  .training-event-name {
-    color: var(--text-strong);
-    font-weight: 620;
-    line-height: 1.3;
-  }
-  .training-event-place {
-    color: var(--text-faint);
-    font-size: var(--step--1);
-  }
-  .training-event-summary {
-    margin-top: var(--space-2xs, 0.25rem);
-    color: var(--text-muted);
-    font-size: var(--step--1);
-    line-height: 1.55;
-  }
+  .training-events { min-width: 0; }
 
   /* ---- Publication examples ---- */
   .publications-section {
