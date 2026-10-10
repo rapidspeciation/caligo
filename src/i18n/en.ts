@@ -197,11 +197,41 @@ export const en = {
     }
   },
   "science": {
+    "fission": {
+      "title": "Chromosome fissions with and without a single centromere",
+      "desc": "Twenty-one chromosomes, as in most Heliconius. A slider adds fissions, each splitting one chromosome in two, up to 39 fissions and 60 chromosomes, the highest count in the sapho group. When the division machinery can attach along the whole chromosome, every piece can still move into a daughter cell. With a single centromere, as in humans, each piece without the centromere would be lost.",
+      "count": "{c} chromosomes",
+      "slider": "Fissions",
+      "unit": ["fission", "fissions"],
+      "modeLegend": "Where the division machinery attaches",
+      "modes": ["Along the chromosome, as in butterflies", "At one centromere, as in humans"],
+      "start": "No fissions: 21 chromosomes, as in most <i>Heliconius</i>.",
+      "holo": "{f}: {c} chromosomes. Every piece keeps part of the attachment line, so it can still move into a daughter cell.",
+      "holoMax": "{f}: 60 chromosomes, the highest count in the sapho group. Every piece can still move into a daughter cell.",
+      "mono": "{f}: only the 21 pieces with a centromere move into the daughter cells. The other {n} would be lost."
+    },
     "tiers": {
       "heading": "Three tiers of genomic data",
       "intro": "Each tier answers different questions, at a different cost.",
       "tierLabel": "Tier",
       "replay": "Replay",
+      "explore": {
+        "barcode": {
+          "label": "Choose a library row to compare",
+          "match": "<i>{name}</i>: all 16 bases match, so the species is identified.",
+          "miss": "<i>{name}</i>: {n} of 16 bases differ, ticked under the row. Not a match."
+        },
+        "resequencing": {
+          "label": "Position along the genome",
+          "same": "Position {i} of 21: every read has {base}. The populations agree.",
+          "differ": "Position {i} of 21: {a} above, {b} below. The populations differ here."
+        },
+        "reference": {
+          "label": "Reads sequenced",
+          "partial": "{p}% of the genome covered, in {n} pieces. Each gap is a stretch no read reached.",
+          "whole": "100% covered: 21 chromosomes, one continuous piece each."
+        }
+      },
       "items": [
         {
           "title": "DNA barcodes",

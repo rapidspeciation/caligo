@@ -194,11 +194,41 @@ export const es: Dict = {
     }
   },
   "science": {
+    "fission": {
+      "title": "Fisiones cromosómicas con y sin un único centrómero",
+      "desc": "Veintiún cromosomas, como en la mayoría de Heliconius. Un control deslizante añade fisiones, cada una divide un cromosoma en dos, hasta 39 fisiones y 60 cromosomas, el número más alto del grupo sapho. Cuando la maquinaria de división puede unirse a lo largo de todo el cromosoma, cada fragmento aún puede pasar a una célula hija. Con un solo centrómero, como en los humanos, cada fragmento sin centrómero se perdería.",
+      "count": "{c} cromosomas",
+      "slider": "Fisiones",
+      "unit": ["fisión", "fisiones"],
+      "modeLegend": "Dónde se une la maquinaria de división",
+      "modes": ["A lo largo del cromosoma, como en mariposas", "En un centrómero, como en humanos"],
+      "start": "Sin fisiones: 21 cromosomas, como en la mayoría de <i>Heliconius</i>.",
+      "holo": "{f}: {c} cromosomas. Cada fragmento conserva parte de la línea de unión, así que aún puede pasar a una célula hija.",
+      "holoMax": "{f}: 60 cromosomas, el número más alto del grupo sapho. Cada fragmento aún puede pasar a una célula hija.",
+      "mono": "{f}: solo los 21 fragmentos con centrómero pasan a las células hijas. Los otros {n} se perderían."
+    },
     "tiers": {
       "heading": "Tres niveles de datos genómicos",
       "intro": "Cada nivel responde preguntas distintas, con un costo distinto.",
       "tierLabel": "Nivel",
       "replay": "Repetir",
+      "explore": {
+        "barcode": {
+          "label": "Elige una fila de la biblioteca para comparar",
+          "match": "<i>{name}</i>: coinciden las 16 bases, así que la especie queda identificada.",
+          "miss": "<i>{name}</i>: difieren {n} de 16 bases, marcadas bajo la fila. No coincide."
+        },
+        "resequencing": {
+          "label": "Posición a lo largo del genoma",
+          "same": "Posición {i} de 21: todas las lecturas tienen {base}. Las poblaciones coinciden.",
+          "differ": "Posición {i} de 21: {a} arriba, {b} abajo. Aquí las poblaciones difieren."
+        },
+        "reference": {
+          "label": "Lecturas secuenciadas",
+          "partial": "{p}% del genoma cubierto, en {n} fragmentos. Cada hueco es un tramo que ninguna lectura alcanzó.",
+          "whole": "100% cubierto: 21 cromosomas, cada uno en un solo fragmento continuo."
+        }
+      },
       "items": [
         {
           "title": "Códigos de barras de ADN",
