@@ -127,8 +127,8 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
       </div>
       </div>
       <ul class="training-events" role="list" aria-label={feedback.analysis.eyebrow}>
-        {EVENTS.map((event) => (
-          <li class="training-event">
+        {EVENTS.map((event, i) => (
+          <li class={`training-event ink-card ink-press training-event--${['leaf', 'sky'][i % 2]}`}>
             <span class="training-event-when">
               <WhenChip locale={locale} start={event.start} end={event.end} />
               <time class="training-event-date mono" datetime={event.start}>{pick(event.dates, locale)}</time>
@@ -153,8 +153,8 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
 
       <div class="publication-grid">
         {publicationExamples.map((publication, index) => (
-          <article class="publication-card">
-            <div class="publication-index mono" aria-hidden="true">
+          <article class={`publication-card ink-card ink-press publication-card--${['leaf', 'sky', 'rose'][index % 3]}`}>
+            <div class="publication-index mono chip" aria-hidden="true">
               {String(index + 1).padStart(2, '0')}
             </div>
             <a target="_blank" class="publication-title" href={publication.url} rel="external noopener">
@@ -388,14 +388,16 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     list-style: none;
     margin: 0;
     padding: 0;
-    border-top: 1px solid var(--hairline-strong);
+    display: grid;
+    gap: var(--space-m);
   }
   .training-event {
     display: grid;
     gap: 0.2rem;
-    padding-block: var(--space-m);
-    border-bottom: 1px solid var(--hairline);
+    padding: var(--space-m);
   }
+  .training-event--leaf { --ink-line: var(--tone-leaf); --ink-shadow: var(--tone-leaf); }
+  .training-event--sky { --ink-line: var(--tone-sky); --ink-shadow: var(--tone-sky); }
   .training-event-when { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.7rem; margin-bottom: 0.35rem; }
   .training-event-date {
     color: var(--text-muted);
@@ -430,11 +432,14 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     display: grid;
     gap: var(--space-m);
   }
-  /* Published evidence stays quiet: a hairline frame, no ink outline. */
+  /* Published evidence is an ink card like the rest, on a plain fill so the
+     figure stays the loudest thing; only outline and shadow take a tone. */
+  .publication-card--leaf { --ink-line: var(--tone-leaf); --ink-shadow: var(--tone-leaf); }
+  .publication-card--sky { --ink-line: var(--tone-sky); --ink-shadow: var(--tone-sky); }
+  .publication-card--rose { --ink-line: var(--tone-rose); --ink-shadow: var(--tone-rose); }
+  .publication-card:hover .publication-title h3,
+  .publication-title:focus-visible h3 { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.18em; }
   .publication-card {
-    border: 1px solid var(--hairline);
-    border-radius: var(--radius);
-    background: var(--bg-raised);
     display: flex;
     flex-direction: column;
     min-width: 0;
@@ -442,7 +447,6 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   }
   .publication-index {
     margin-bottom: var(--space-s);
-    color: var(--accent-strong);
     font-size: var(--step--1);
   }
   .publication-title {

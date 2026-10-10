@@ -22,7 +22,7 @@
  * Touching a control stops the autoplay for good; Replay restores it.
  */
 import { getDict, type Locale } from '../i18n';
-import { BUTTERFLY, KARYOTYPE, seededRandom } from '../data/diagram-glyphs';
+import { BUTTERFLY, KARYOTYPE, WING_PATTERNS, seededRandom } from '../data/diagram-glyphs';
 
 type Kind = 'barcode' | 'resequencing' | 'reference';
 
@@ -38,8 +38,10 @@ const explore = tiers.explore;
 const id = `tier-diagram-${kind}`;
 const r1 = (v: number) => Math.round(v * 10) / 10;
 
-/* ---------- Butterfly glyph (Heliconius-like: long narrow forewings) ---------- */
-const { forewing: WING_F, hindwing: WING_H, band: BAND } = BUTTERFLY;
+/* ---------- Butterfly glyph: one per species in the barcode library ---------- */
+const { forewing: WING_F, hindwing: WING_H } = BUTTERFLY;
+const SPECIES_KEYS = ['hecale', 'ismenius', 'clysonimus', 'cydno'] as const;
+const FLY_KEYS = kind === 'barcode' ? SPECIES_KEYS : (['cydno'] as const);
 
 /* ---------- Tier 1: DNA barcode ---------- */
 type Base = 'A' | 'C' | 'G' | 'T';
@@ -189,16 +191,38 @@ const prompt = explore[kind].prompt;
     <title id={`${id}-title`}>{copy.title}</title>
     <desc id={`${id}-desc`}>{copy.desc}</desc>
     <defs>
-      <g id={`${id}-fly`} class="dg-fly">
-        <path d={WING_F} />
-        <path d={WING_F} transform="scale(-1 1)" />
-        <path d={WING_H} />
-        <path d={WING_H} transform="scale(-1 1)" />
-        <path d={BAND} class="dg-fly-band" />
-        <path d={BAND} class="dg-fly-band" transform="scale(-1 1)" />
-        <path d={BUTTERFLY.body} class="dg-fly-body" />
-        <path d={BUTTERFLY.antennae} class="dg-fly-antennae" />
+      <clipPath id={`${id}-clip-fore`}><path d={WING_F} /></clipPath>
+      <clipPath id={`${id}-clip-hind`}><path d={WING_H} /></clipPath>
+      <g id={`${id}-half`}>
+        <path d={WING_H} class="dg-fly-wing" />
+        <path d={WING_F} class="dg-fly-wing" />
       </g>
+      {FLY_KEYS.map((key) => (
+        <g id={`${id}-fly-${key}`} class="dg-fly">
+          {[undefined, 'scale(-1 1)'].map((flip) => (
+            <g transform={flip}>
+              <use href={`#${id}-half`} />
+              {(['hind', 'fore'] as const).map((wing) => (
+                <g clip-path={`url(#${id}-clip-${wing})`}>
+                  {WING_PATTERNS[key].filter((m) => m.on === wing).map((m) => (
+                    <path
+                      d={m.d}
+                      class={`dg-fly-mark dg-fly-mark--${m.tone}${m.stroke ? ' is-line' : ''}`}
+                      stroke-width={m.stroke}
+                    />
+                  ))}
+                </g>
+              ))}
+            </g>
+          ))}
+          <path d={BUTTERFLY.antennae} class="dg-fly-antennae" />
+          <circle cx="-6.4" cy="-15.4" r="0.8" class="dg-fly-club" />
+          <circle cx="6.4" cy="-15.4" r="0.8" class="dg-fly-club" />
+          <ellipse cx="0" cy="5" rx="1.1" ry="5.4" class="dg-fly-body" />
+          <ellipse cx="0" cy="-1.6" rx="1.6" ry="3" class="dg-fly-body" />
+          <circle cx="0" cy="-5.4" r="1.3" class="dg-fly-body" />
+        </g>
+      ))}
       {kind === 'reference' && (
         <pattern id={`${id}-hatch`} width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
           <path d="M0 0 V4" class="rf-hatch" />
@@ -209,7 +233,9 @@ const prompt = explore[kind].prompt;
     {kind === 'barcode' && (
       <g class="bc">
         <g transform="translate(40 52) scale(1.3)">
-          <use href={`#${id}-fly`} class="dg-flap bc-fly" data-fly />
+          <g class="dg-flap bc-fly" data-fly>
+            {SPECIES_KEYS.map((key, i) => <use href={`#${id}-fly-${key}`} class="bc-sp" data-sp={SPECIMENS.indexOf(i)} />)}
+          </g>
         </g>
         <path d="M68 52 H82" class="dg-arrow bc-arrow" />
         <path d="M78 48 L82 52 L78 56" class="dg-arrow bc-arrow-head" />
@@ -256,7 +282,7 @@ const prompt = explore[kind].prompt;
       <g class="rs">
         {/* The two populations wear different bands, as geographic races often do. */}
         {[POP1, POP2].map((pop, p) => pop.flies.map(([x, y]) => (
-          <use href={`#${id}-fly`} class={p ? 'rs-fly-alt' : undefined} transform={`translate(${x} ${y}) scale(0.78)`} />
+          <use href={`#${id}-fly-cydno`} class={p ? 'rs-fly-alt' : undefined} transform={`translate(${x} ${y}) scale(0.78)`} />
         )))}
         <g class="rs-col is-on" data-col data-kind="differ" style={`transform:translateX(${DEFAULT_SITE * SITE_PITCH}px)`}>
           <rect x={SITE_X0 - 11} y="62" width="22" height="112" rx="11" class="rs-site" />
@@ -280,7 +306,7 @@ const prompt = explore[kind].prompt;
     {kind === 'reference' && (
       <g class="rf">
         <g transform="translate(40 108) scale(1.3)">
-          <use href={`#${id}-fly`} class="dg-flap" data-fly />
+          <use href={`#${id}-fly-cydno`} class="dg-flap" data-fly />
         </g>
         {chromosomes.map((c) => (
           <rect x={c.cx - CHR_W / 2} y={c.top} width={CHR_W} height={c.h} rx={CHR_W / 2} class="rf-ghost" fill={`url(#${id}-hatch)`} />
@@ -700,10 +726,27 @@ const prompt = explore[kind].prompt;
   .tier-explore { margin-top: auto; }
 
   /* ---- Shared marks ---- */
-  .dg-fly path { fill: var(--text-muted); }
-  .dg-fly .dg-fly-band { fill: var(--band, var(--highlight)); }
-  .dg-fly .dg-fly-body { fill: none; stroke: var(--text-strong); stroke-width: 2.4; stroke-linecap: round; }
-  .dg-fly .dg-fly-antennae { fill: none; stroke: var(--text-muted); stroke-width: 1; stroke-linecap: round; }
+  /* Butterflies keep their own colours in both themes: a black Heliconius
+     does not turn white at night. A pale edge lifts it off the dark stage. */
+  .tier-diagram {
+    --fly-ink: #231c17;
+    --fly-white: #f7f2e7;
+    --fly-yellow: #f1c84b;
+    --fly-orange: #e2742b;
+    --fly-edge: transparent;
+  }
+  :global([data-mode='dark']) .tier-diagram { --fly-ink: #43362d; --fly-edge: #cdbfa8; --fly-feeler: #cdbfa8; }
+  .dg-fly-wing { fill: var(--fly-ink); stroke: var(--fly-edge); stroke-width: 0.7; stroke-linejoin: round; }
+  .dg-fly-mark { fill: var(--mark); stroke: none; }
+  .dg-fly-mark.is-line { fill: none; stroke: var(--mark); stroke-linecap: round; }
+  .dg-fly-mark--white { --mark: var(--fly-white); }
+  .dg-fly-mark--yellow { --mark: var(--fly-yellow); }
+  .dg-fly-mark--orange { --mark: var(--fly-orange); }
+  .dg-fly-mark--ink { --mark: var(--fly-ink); }
+  .dg-fly-mark--band { --mark: var(--band, var(--fly-white)); }
+  .dg-fly-body { fill: var(--fly-ink); stroke: var(--fly-edge); stroke-width: 0.5; }
+  .dg-fly-antennae { fill: none; stroke: var(--fly-feeler, var(--fly-ink)); stroke-width: 0.8; stroke-linecap: round; }
+  .dg-fly-club { fill: var(--fly-feeler, var(--fly-ink)); }
   .dg-arrow { fill: none; stroke: var(--text-faint); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   .dg-frame { fill: none; stroke: var(--text-strong); stroke-width: 2; }
   .dg-ref { fill: none; stroke: var(--accent); stroke-width: 4; stroke-linecap: round; }
@@ -734,11 +777,12 @@ const prompt = explore[kind].prompt;
   .bc-scan, .bc-check { opacity: 0; }
   .bc-scan.is-on, .bc-check.is-on { opacity: 1; }
   .bc-check { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-  /* Each specimen is a different butterfly: the band changes with it. The
-     name, not the band, carries the identification. */
-  .tier-diagram[data-specimen='1'] .bc-fly { --band: var(--accent); }
-  .tier-diagram[data-specimen='2'] .bc-fly { --band: var(--stage); }
-  .tier-diagram[data-specimen='3'] .bc-fly { --band: var(--base-C); }
+  /* Each specimen is a different butterfly, drawn with its own wing pattern. */
+  .bc-sp { display: none; }
+  .tier-diagram[data-specimen='0'] .bc-sp[data-sp='0'],
+  .tier-diagram[data-specimen='1'] .bc-sp[data-sp='1'],
+  .tier-diagram[data-specimen='2'] .bc-sp[data-sp='2'],
+  .tier-diagram[data-specimen='3'] .bc-sp[data-sp='3'] { display: inline; }
   .is-live .bc-scan { transition: transform 300ms var(--ease-settle), opacity 200ms linear; }
   .is-live .bc-miss { transition: opacity 180ms linear; }
   .is-live .bc-unknown { transition: opacity 180ms linear; }
@@ -748,7 +792,8 @@ const prompt = explore[kind].prompt;
   .is-reread .bc-letter { animation: dg-pop 0.3s calc(var(--i) * 22ms) var(--ease-settle) both; }
 
   /* ---- Tier 2 ---- */
-  .rs-fly-alt { --band: var(--stage); }
+  /* Same species, two races: a white band above, a yellow band below. */
+  .rs-fly-alt { --band: var(--fly-yellow); }
   .rs-col { opacity: 0; }
   .rs-col.is-on { opacity: 1; }
   .rs-site { fill: var(--highlight-dim); stroke: var(--text-strong); stroke-width: 1.75; }
