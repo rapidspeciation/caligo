@@ -380,8 +380,12 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
           var touch = false;
           try { touch = window.matchMedia('(hover: none)').matches; } catch (_) {}
           if (!touch || !('IntersectionObserver' in window)) return;
+          /* A card taller than the screen would stay lifted the whole time
+             it is being read, so those are left alone. */
           var io = new IntersectionObserver(function (entries) {
-            entries.forEach(function (e) { e.target.classList.toggle('is-near', e.isIntersecting); });
+            entries.forEach(function (e) {
+              e.target.classList.toggle('is-near', e.isIntersecting && e.boundingClientRect.height < window.innerHeight * 0.9);
+            });
           }, { rootMargin: '-38% 0px -38% 0px' });
           document.querySelectorAll('a.ink-card, .ink-press, .person-card, .timeline-item').forEach(function (card) { io.observe(card); });
         };

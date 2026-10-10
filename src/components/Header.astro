@@ -296,7 +296,9 @@ const isCurrent = (path: string) => path === page;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: .5rem;
     list-style: none;
-    padding-block: var(--space-xs);
+    /* The list is a container: keep its auto margins, drop the browser's indent. */
+    margin-block: 0;
+    padding: var(--space-xs) 0;
     min-height: 0;
     overflow: hidden;
   }
@@ -312,7 +314,10 @@ const isCurrent = (path: string) => path === page;
     color: var(--text);
     text-decoration: none;
   }
-  .mobile-nav a:hover { background: var(--bg-panel); }
+  .mobile-nav a:active { background: var(--bg-panel); }
+  @media (hover: hover) {
+    .mobile-nav a:hover { background: var(--bg-panel); }
+  }
   .mobile-nav a[aria-current='page'] {
     background: var(--bg-panel);
     border-color: var(--accent);

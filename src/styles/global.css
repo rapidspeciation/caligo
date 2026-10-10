@@ -363,11 +363,13 @@ kbd,
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
-  padding: 0.68em 1.15em;
+  padding: 0.58em 1.15em;
   font-family: var(--font-body);
   font-size: var(--step-0);
   font-weight: 600;
-  line-height: 1;
+  /* Room between the lines when a long label wraps on a phone. */
+  line-height: 1.2;
+  text-wrap: balance;
   letter-spacing: -0.005em;
   /* Pill on one line; stays a soft lozenge when a long label wraps. */
   border-radius: 1.4rem;
@@ -422,6 +424,11 @@ kbd,
   box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--ink-shadow);
 }
 .ink-card--flat { box-shadow: none; }
+/* The faintest text needs a little more light on a dark card than on the page. */
+:where([data-mode='dark']) .ink-card { --text-faint: #9d907f; }
+@media (pointer: coarse) {
+  .btn { min-height: 44px; }
+}
 .ink-card--sun  { --card-fill: var(--pastel-sun);  --ink-line: var(--tone-sun);  --ink-shadow: var(--tone-sun); }
 .ink-card--leaf { --card-fill: var(--pastel-leaf); --ink-line: var(--tone-leaf); --ink-shadow: var(--tone-leaf); }
 .ink-card--sky  { --card-fill: var(--pastel-sky);  --ink-line: var(--tone-sky);  --ink-shadow: var(--tone-sky); }
@@ -445,6 +452,11 @@ kbd,
   --btn-fg: var(--card-fill);
   --btn-line: var(--on-pastel);
   --btn-shadow: var(--ink-line);
+}
+/* In light mode the button is ink on an ink outline, so its shadow takes a
+   darker shade of the card instead of disappearing into the button. */
+[data-mode='light'] :is(.ink-card--sun, .ink-card--leaf, .ink-card--sky, .ink-card--rose) .btn {
+  --btn-shadow: color-mix(in oklab, var(--on-pastel) 38%, var(--card-fill));
 }
 .ink-card--sun .btn:hover, .ink-card--leaf .btn:hover, .ink-card--sky .btn:hover, .ink-card--rose .btn:hover {
   background: var(--on-pastel);

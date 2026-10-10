@@ -65,9 +65,14 @@
               color var(--disclosure-motion-duration) ease;
 }
 
-.disclosure-summary:hover {
+.disclosure-summary:active {
   background: var(--surface-hover, color-mix(in oklab, currentColor 4%, transparent));
-  color: var(--text-strong);
+}
+@media (hover: hover) {
+  .disclosure-summary:hover {
+    background: var(--surface-hover, color-mix(in oklab, currentColor 4%, transparent));
+    color: var(--text-strong);
+  }
 }
 
 .disclosure-summary:focus-visible {
