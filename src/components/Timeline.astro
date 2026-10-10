@@ -24,11 +24,12 @@ const entries: Entry[] = [
   { kind: 'call' as const, sort: PILOT_DEADLINE },
   ...EVENTS.map((event) => ({ kind: 'event' as const, sort: event.start, event })),
 ].sort((a, b) => a.sort.localeCompare(b.sort));
+const todayLabel = locale === 'es' ? 'Hoy' : 'Today';
 ---
 
-<ol class:list={['timeline-list', { 'timeline-list--compact': compact }]} role="list">
+<ol class:list={['timeline-list', { 'timeline-list--compact': compact }]} role="list" data-timeline data-locale={locale}>
   {entries.map((entry) => entry.kind === 'call' ? (
-    <li class="timeline-item ink-card" id="event-colombia-funding">
+    <li class="timeline-item ink-card" id="event-colombia-funding" data-end={PILOT_DEADLINE}>
       <div class="timeline-when">
         <DeadlineChip locale={locale} class="timeline-chip" />
         <time class="timeline-dates mono" datetime={PILOT_DEADLINE}>{funding.date}</time>
@@ -39,7 +40,7 @@ const entries: Entry[] = [
       <a class="text-link timeline-link" href={localePath(locale, '/funding')}>{funding.funding}<Icon name="arrow-right" /></a>
     </li>
   ) : (
-    <li class="timeline-item ink-card" id={`event-${entry.event.id}`}>
+    <li class="timeline-item ink-card" id={`event-${entry.event.id}`} data-end={entry.event.end ?? entry.event.start}>
       <div class="timeline-when">
         <WhenChip locale={locale} start={entry.event.start} end={entry.event.end} class="timeline-chip" />
         <time class="timeline-dates mono" datetime={entry.event.start}>{pick(entry.event.dates, locale)}</time>
@@ -49,7 +50,46 @@ const entries: Entry[] = [
       <p class="timeline-summary" set:html={italicizeSpecies(pick(entry.event.summary, locale))} />
     </li>
   ))}
+  <li class="timeline-today" data-timeline-today aria-hidden="true" hidden>
+    <span class="timeline-today-label chip chip--sun">{todayLabel} <span data-today-date></span></span>
+  </li>
 </ol>
+
+<script is:inline>
+  /* Places a "Today" pin between past and upcoming entries, in the
+     visitor's own calendar. Without JavaScript the pin stays hidden and
+     every node reads as a plain point on the track. */
+  (function () {
+    function place() {
+      document.querySelectorAll('[data-timeline]').forEach(function (list) {
+        var now = new Date();
+        var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        var items = list.querySelectorAll('.timeline-item');
+        var past = 0;
+        items.forEach(function (item, i) {
+          var p = item.getAttribute('data-end').split('-');
+          var done = new Date(+p[0], +p[1] - 1, +p[2]) < today;
+          item.setAttribute('data-when', done ? 'past' : 'upcoming');
+          item.style.order = String(i * 2);
+          if (done) past++;
+        });
+        var pin = list.querySelector('[data-timeline-today]');
+        if (!pin) return;
+        list.style.setProperty('--past', String(past));
+        list.style.setProperty('--count', String(items.length));
+        pin.style.order = String(past * 2 - 1);
+        pin.querySelector('[data-today-date]').textContent =
+          new Intl.DateTimeFormat(list.getAttribute('data-locale'), { day: 'numeric', month: 'short' }).format(today);
+        pin.hidden = false;
+      });
+    }
+    if (!window.__caligoTimeline) {
+      window.__caligoTimeline = true;
+      document.addEventListener('astro:page-load', place);
+    }
+    place();
+  })();
+</script>
 
 <style>
   .timeline-list {
@@ -104,12 +144,86 @@ const entries: Entry[] = [
     max-width: var(--measure);
   }
   .timeline-link { margin-top: auto; padding-top: 0.5rem; font-size: var(--step--1); }
+  /* ---- Track: one line through the entries in date order ----
+     Past entries sit on a solid line with filled nodes; upcoming ones on a
+     dashed line with open nodes. The Today pin falls in the gap between. */
+  .timeline-today[hidden] { display: none; }
+  .timeline-today-label { font-size: var(--step--2); }
   .timeline-list--compact {
+    --gap: 1rem;
+    --track-y: 2.6rem;
+    position: relative;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gap);
+    padding-top: calc(var(--track-y) + 1.2rem);
   }
+  .timeline-list--compact .timeline-item { position: relative; }
+  .timeline-list--compact .timeline-item::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    top: calc(-1.2rem - 7px);
+    left: 1.2rem;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--ink-line);
+    background: var(--ink-line);
+    box-sizing: border-box;
+  }
+  .timeline-list--compact .timeline-item::after {
+    content: '';
+    position: absolute;
+    top: calc(-1.2rem - 1px);
+    left: -2px;
+    width: calc(100% + var(--gap) + 4px);
+    border-top: 2px solid var(--ink-line);
+  }
+  .timeline-list--compact .timeline-item:nth-last-child(2)::after { width: calc(100% + 4px); }
+  .timeline-list--compact .timeline-item[data-when='upcoming']::before { background: var(--bg-raised); }
+  .timeline-list--compact .timeline-item[data-when='upcoming']::after {
+    border-top-style: dashed;
+    border-top-color: color-mix(in oklab, var(--ink-line) 55%, transparent);
+  }
+  /* Wide: the pin stands in the gap before the first upcoming entry. */
+  .timeline-list--compact .timeline-today {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--past) * (100% + var(--gap)) / var(--count) - var(--gap) / 2);
+    width: 0;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .timeline-list--compact .timeline-today::after {
+    content: '';
+    position: absolute;
+    top: 1.5rem;
+    bottom: 0;
+    left: -1px;
+    border-left: 2px solid var(--tone-sun);
+  }
+  .timeline-list--compact .timeline-today-label { position: absolute; top: 0; z-index: 1; }
   @media (max-width: 64rem) {
-    .timeline-list--compact {
-      grid-template-columns: 1fr;
+    /* Stacked: no track; the pin becomes a labelled rule between entries. */
+    .timeline-list--compact { display: flex; flex-direction: column; padding-top: 0; }
+    .timeline-list--compact .timeline-item::before,
+    .timeline-list--compact .timeline-item::after { content: none; }
+    .timeline-list--compact .timeline-today {
+      position: static;
+      width: auto;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 0.6rem;
     }
+    .timeline-list--compact .timeline-today::after {
+      position: static;
+      flex: 1;
+      border-left: 0;
+      border-top: 2px solid var(--tone-sun);
+    }
+    .timeline-list--compact .timeline-today-label { position: static; }
   }
 </style>
