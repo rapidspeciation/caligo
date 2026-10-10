@@ -59,9 +59,9 @@ export const LEADERS: Person[] = [
   {
     name: 'Caroline Bacquet',
     photo: {
-      path: 'media/people/caroline-bacquet-caligo.png',
-      width: 610,
-      height: 604,
+      path: 'media/people/caroline-bacquet-caligo.jpg',
+      width: 480,
+      height: 475,
       alt: { en: 'Portrait of Caroline Bacquet.', es: 'Retrato de Caroline Bacquet.' },
       source: {
         label: { en: 'Photo supplied by Caligo', es: 'Foto proporcionada por Caligo' },
@@ -141,8 +141,8 @@ export const LEADERS: Person[] = [
     name: 'Carlos Arias',
     photo: {
       path: 'media/people/carlos-arias-caligo.jpg',
-      width: 554,
-      height: 554,
+      width: 480,
+      height: 480,
       alt: { en: 'Portrait of Carlos Arias.', es: 'Retrato de Carlos Arias.' },
       source: {
         label: { en: 'Photo supplied by Caligo', es: 'Foto proporcionada por Caligo' },
@@ -168,8 +168,8 @@ export const LEADERS: Person[] = [
     name: 'Nicol Rueda',
     photo: {
       path: 'media/people/nicol-rueda-caligo.jpg',
-      width: 1024,
-      height: 1187,
+      width: 480,
+      height: 556,
       alt: { en: 'Portrait of Nicol Rueda.', es: 'Retrato de Nicol Rueda.' },
       source: {
         label: { en: 'Photo supplied by Caligo', es: 'Foto proporcionada por Caligo' },
@@ -245,9 +245,9 @@ export const LEADERS: Person[] = [
   {
     name: 'Geoff Gallice',
     photo: {
-      path: 'media/people/geoff-gallice-caligo.png',
-      width: 564,
-      height: 496,
+      path: 'media/people/geoff-gallice-caligo.jpg',
+      width: 480,
+      height: 422,
       alt: { en: 'Portrait of Geoff Gallice.', es: 'Retrato de Geoff Gallice.' },
       source: {
         label: { en: 'Photo supplied by Caligo', es: 'Foto proporcionada por Caligo' },
