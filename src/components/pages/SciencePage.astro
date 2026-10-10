@@ -73,7 +73,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
         </h2>
         {feedback.reference.body.map((para) => <p class="prose-para content-body">{para}</p>)}
       </div>
-      <aside class="genome-goal ink-card" aria-labelledby="genome-goal-heading">
+      <aside class="genome-goal ink-card ink-press" aria-labelledby="genome-goal-heading">
         <p class="goal-number"><span class="marker">{locale === 'es' ? '1.000' : '1,000'}</span></p>
         <h3 id="genome-goal-heading" class="goal-heading">{feedback.reference.goalHeading}</h3>
         <p class="content-body">{feedback.reference.goalBody}</p>
@@ -98,7 +98,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
       </div>
       <ol class="tier-list" role="list">
         {tiers.items.map((item, i) => (
-          <li class="tier-card ink-card">
+          <li class="tier-card ink-card ink-press">
             <TierDiagram locale={locale} kind={TIER_KINDS[i]} />
             <div class="tier-copy">
               <p class="tier-label mono">{tiers.tierLabel} {i + 1}</p>

@@ -60,7 +60,7 @@ const reasonIcons: readonly CardIconName[] = [
         <div class="intro-copy content-body">
           {intro.body.map((paragraph) => <p>{paragraph}</p>)}
         </div>
-        <aside class="funding-callout ink-card ink-card--rose" aria-labelledby="funding-callout-title">
+        <aside class="funding-callout ink-card ink-press ink-card--rose" aria-labelledby="funding-callout-title">
           <h2 id="funding-callout-title" class="funding-callout-title">{intro.call}</h2>
           <DeadlineChip locale={locale} />
           <p class="content-body">{intro.coverage}</p>
@@ -97,7 +97,7 @@ const reasonIcons: readonly CardIconName[] = [
         publishedPilots.map((pilot) => {
           const project = projectById.get(pilotToProjectId[pilot.id]);
           return (
-            <li id={pilot.slug} class="pilot ink-card">
+            <li id={pilot.slug} class="pilot ink-card ink-press">
             <!-- Media: 5-column slot on desktop -->
             <div class="pilot-media">
               {getMediaModule(pilot.id) && (

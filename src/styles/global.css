@@ -459,9 +459,13 @@ a.ink-card:hover, .ink-press:hover {
   transform: translate(-2px, -2px);
   box-shadow: calc(var(--ink-drop) + 2px) calc(var(--ink-drop) + 2px) 0 var(--ink-shadow);
 }
-a.ink-card:active, .ink-press:active {
+a.ink-card:active {
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 var(--ink-shadow);
+}
+@media (prefers-reduced-motion: reduce) {
+  a.ink-card, .ink-press { transition: none; }
+  a.ink-card:hover, a.ink-card:active, .ink-press:hover { transform: none; }
 }
 
 /* Small ink pill for statuses and dates ("3 months ago"). */

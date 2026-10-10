@@ -27,7 +27,7 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
   <section class="section section--tight routes-section">
     <div class="container-wide">
       <ol class="routes" role="list">
-        <li id="join" class="route ink-card ink-card--sun" aria-labelledby="join-heading">
+        <li id="join" class="route ink-card ink-press ink-card--sun" aria-labelledby="join-heading">
           <p class="route-step"><span class="route-num" aria-hidden="true">1</span><span class="sr-only">{stepLabel} 1</span></p>
           <h2 id="join-heading" class="route-title">{t.join.title}</h2>
           <p class="route-body">{t.join.body}</p>
@@ -38,13 +38,13 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
             <p class="route-note">{t.join.privacyNote}</p>
           </div>
         </li>
-        <li class="route ink-card ink-card--sky" aria-labelledby="discord-heading">
+        <li class="route ink-card ink-press ink-card--sky" aria-labelledby="discord-heading">
           <p class="route-step"><span class="route-num" aria-hidden="true">2</span><span class="sr-only">{stepLabel} 2</span></p>
           <h2 id="discord-heading" class="route-title">{p.discord.heading}</h2>
           <p class="route-body">{p.discord.body}</p>
           <div class="route-action"><DiscordButton locale={locale} class="btn--ghost" showPendingNote /></div>
         </li>
-        <li class="route ink-card ink-card--leaf" aria-labelledby="committee-heading">
+        <li class="route ink-card ink-press ink-card--leaf" aria-labelledby="committee-heading">
           <p class="route-step"><span class="route-num" aria-hidden="true">3</span><span class="sr-only">{stepLabel} 3</span></p>
           <h2 id="committee-heading" class="route-title">{t.committee.heading}</h2>
           <p class="route-body">{t.committee.body}</p>
@@ -105,7 +105,7 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
         <p class="content-body">{p.contact.body}</p>
         <CopyEmail locale={locale} />
       </div>
-      <div class="contact-note ink-card ink-card--flat">
+      <div class="contact-note ink-card ink-press ink-card--flat">
         <h3>{p.beforeSubmitting.heading}</h3>
         <p class="content-body">{p.beforeSubmitting.body}</p>
       </div>
