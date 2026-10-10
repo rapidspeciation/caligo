@@ -209,7 +209,7 @@ export const LEADERS: Person[] = [
       es: 'Su investigación en especiación y genómica evolutiva estudia cómo la hibridación y los reordenamientos cromosómicos contribuyen a la adaptación rápida y la formación de nuevas especies.',
     },
     affiliation: 'Wellcome Sanger Institute',
-    regionalTies: { en: 'Peru / United Kingdom', es: 'Perú / Reino Unido' },
+    regionalTies: { en: 'Ecuador / Peru / United Kingdom', es: 'Ecuador / Perú / Reino Unido' },
     source: {
       label: { en: 'Profile at Sanger', es: 'Perfil en Sanger' },
       href: 'https://www.sanger.ac.uk/person/meier-joana/',
