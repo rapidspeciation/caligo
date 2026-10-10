@@ -2,22 +2,23 @@
 /**
  * Didactic diagrams for the three tiers of genomic data on Science.
  *
- * One shared visual language: the same butterfly glyph, 2 px outlines,
- * reads and chromosomes as rounded bars, the palette accent for "reference"
- * (the reference line and the assembled chromosomes), and the Okabe-Ito
- * trait tokens from tokens.css as the four DNA bases.
+ * One shared visual language: the same butterfly glyph, reads and
+ * chromosomes as rounded bars, the palette accent for "reference", and the
+ * Okabe-Ito trait tokens from tokens.css as the four DNA bases.
  *
- * The markup IS the final state. Without JavaScript, or with reduced motion,
- * that is what renders. With JavaScript the figure is "armed" (animations
- * attached but paused on their first frame) and plays each time it scrolls
- * into view; Replay restarts it. Only transform, opacity and
- * stroke-dashoffset animate, so nothing reflows.
+ * The markup IS the final state. Without JavaScript that is what renders.
+ * With JavaScript each figure plays whenever it scrolls into view, and the
+ * autoplay drives the figure's own control, so the reader sees which control
+ * produced the change. Then the control gets one "your turn" nudge.
  *
- * Each diagram then becomes explorable with exactly one control, and a
- * one-line readout says what changed:
- *   barcode       choose the library row to compare (radios over the rows)
- *   resequencing  slide or drag along the genome, position by position
- *   reference     slide the number of reads; gaps close as coverage grows
+ * Each figure teaches one idea with one control:
+ *   barcode       "Try another butterfly": the same method names a new
+ *                 specimen each time (the reader changes the question)
+ *   resequencing  a slider over five sites of three kinds: identical
+ *                 everywhere (=), mixed in both populations (≈), and
+ *                 different between populations (≠)
+ *   reference     a reads slider: more reads, fewer gaps, fewer pieces,
+ *                 from a draft genome to a chromosome-scale reference
  * Touching a control stops the autoplay for good; Replay restores it.
  */
 import { getDict, type Locale } from '../i18n';
@@ -35,117 +36,109 @@ const tiers = getDict(locale).science.tiers;
 const copy = tiers.diagrams[kind];
 const explore = tiers.explore;
 const id = `tier-diagram-${kind}`;
+const r1 = (v: number) => Math.round(v * 10) / 10;
 
 /* ---------- Butterfly glyph (Heliconius-like: long narrow forewings) ---------- */
 const { forewing: WING_F, hindwing: WING_H, band: BAND } = BUTTERFLY;
 
 /* ---------- Tier 1: DNA barcode ---------- */
 type Base = 'A' | 'C' | 'G' | 'T';
-const QUERY = 'TATTAGGAGCTTCAAT';
 const LIBRARY = [
   { name: 'H. hecale', seq: 'TATCAGGAGTTTCGAT' },
   { name: 'H. ismenius', seq: 'TGTTAGGTGCTCCAAT' },
   { name: 'H. clysonimus', seq: 'TATTAAGAGCCTCAGT' },
-  { name: 'H. cydno', seq: QUERY },
+  { name: 'H. cydno', seq: 'TATTAGGAGCTTCAAT' },
 ] as const;
-const BAR_X0 = 100;
-const BAR_PITCH = 10;
-const BAR_W = 7;
-const barX = (i: number) => BAR_X0 + i * BAR_PITCH;
-const ROW_Y0 = 104;
+/* The unknown specimens, in the order "Try another butterfly" visits them:
+   each is one of the library's species (its row index). */
+const SPECIMENS = [3, 1, 0, 2];
+const N_BASES = LIBRARY[0].seq.length;
+const BAR_X0 = 96;
+const BAR_PITCH = 9.6;
+const BAR_W = 6.8;
+const barX = (i: number) => r1(BAR_X0 + i * BAR_PITCH);
+const FRAME_X = BAR_X0 - 6;
+const FRAME_W = r1((N_BASES - 1) * BAR_PITCH + BAR_W + 12);
+const NAME_X = FRAME_X + FRAME_W + 8;
+const ROW_Y0 = 106;
 const ROW_PITCH = 30;
 const ROW_H = 18;
 const rowY = (r: number) => ROW_Y0 + r * ROW_PITCH;
-const MATCH_ROW = LIBRARY.length - 1;
-/* When the scanning frame reaches each row (s), for the mismatch ticks. */
-const SCAN_AT = [3.35, 4.1, 4.9];
-const DIFFS = LIBRARY.map((row) => [...row.seq].filter((b, i) => b !== QUERY[i]).length);
-/* Radios laid over the library rows, positioned in viewBox percentages. */
-const pct = (v: number) => `${(v * 100).toFixed(3)}%`;
-const VIEW_W = 360;
-const VIEW_H = 236;
+const FIRST = SPECIMENS[0];
+const QUERY = LIBRARY[FIRST].seq;
 
 /* ---------- Tier 2: population resequencing ---------- */
 const REF_Y = 118;
-const SITE_X = 232;
 const POP1 = { cx: 42, cy: 64, flies: [[24, 66], [58, 46], [58, 86]] };
 const POP2 = { cx: 42, cy: 172, flies: [[24, 170], [58, 150], [58, 190]] };
-type Read = readonly [number, number, number];
-const READS_TOP: readonly Read[] = [
-  [90, 150, 102], [162, 244, 102], [256, 332, 102],
-  [108, 190, 88], [204, 268, 88], [280, 344, 88],
-  [128, 202, 74], [218, 292, 74], [304, 346, 74],
+/* Five sites along the reference. Each row of reads is one butterfly, so a
+   site has three letters above the reference and three below.
+     same    every butterfly carries the same letter
+     mixed   both letters occur in both populations: no help telling them apart
+     differ  one letter above, another below: the populations differ here */
+type SiteKind = 'same' | 'mixed' | 'differ';
+const SITES: readonly { kind: SiteKind; top: string; bottom: string }[] = [
+  { kind: 'same', top: 'CCC', bottom: 'CCC' },
+  { kind: 'mixed', top: 'AGA', bottom: 'GAA' },
+  { kind: 'same', top: 'GGG', bottom: 'GGG' },
+  { kind: 'differ', top: 'TTT', bottom: 'CCC' },
+  { kind: 'mixed', top: 'CTC', bottom: 'CCT' },
 ];
-const READS_BOTTOM: readonly Read[] = [
-  [92, 170, 134], [186, 250, 134], [262, 340, 134],
-  [100, 160, 148], [172, 244, 148], [256, 330, 148],
-  [118, 196, 162], [210, 282, 162], [294, 346, 162],
-];
-/* 21 positions along the reference, 12 units apart; the variable site is
-   position 12 (index 11). Population 1 carries the reference A there,
-   population 2 a G; everywhere else every read matches the reference. */
-const REF_SEQ = 'CTAGGTCATCGAACTTGCAGT';
-const POS_X0 = 100;
-const POS_PITCH = 12;
-const SITE_I = 11;
-const posX = (i: number) => POS_X0 + i * POS_PITCH;
-const coversX = ([x1, x2]: Read, x: number) => x1 + 4 < x && x2 - 4 > x;
-const baseAt = (pop: 1 | 2, i: number) => (i === SITE_I ? (pop === 1 ? 'A' : 'G') : REF_SEQ[i]) as Base;
+const SITE_X0 = 118;
+const SITE_PITCH = 52;
+const siteX = (i: number) => SITE_X0 + i * SITE_PITCH;
+const DEFAULT_SITE = SITES.findIndex((s) => s.kind === 'differ');
+const SYMBOL: Record<SiteKind, string> = { same: '=', mixed: '≈', differ: '≠' };
+/* Rows of reads, nearest the reference first. Each row is broken at two of
+   the midpoints between sites, so every site is covered in every row. */
+const ROWS_TOP = [{ y: 102, gaps: [196, 300], x0: 92, x1: 344 }, { y: 88, gaps: [144, 248], x0: 100, x1: 348 }, { y: 74, gaps: [144, 300], x0: 96, x1: 340 }];
+const ROWS_BOTTOM = [{ y: 134, gaps: [144, 248], x0: 94, x1: 346 }, { y: 148, gaps: [196, 300], x0: 102, x1: 342 }, { y: 162, gaps: [196, 248], x0: 98, x1: 348 }];
+const rowReads = (row: (typeof ROWS_TOP)[number]) => {
+  const edges = [row.x0, ...row.gaps.flatMap((g) => [g - 5, g + 5]), row.x1];
+  return [0, 2, 4].map((k) => [edges[k], edges[k + 1]] as const);
+};
 const readsAll = [
-  ...READS_TOP.map((r, i) => ({ r, pop: 1 as const, order: i, from: POP1 })),
-  ...READS_BOTTOM.map((r, i) => ({ r, pop: 2 as const, order: i, from: POP2 })),
-].map(({ r, pop, order, from }) => {
-  const mid = (r[0] + r[1]) / 2;
-  // Interleave the two populations so both stream in together.
-  const seq = order * 2 + (pop === 2 ? 1 : 0);
-  return { r, pop, dx: from.cx - mid, dy: from.cy - r[2], delay: 1.0 + seq * 0.07 };
-});
+  ...ROWS_TOP.map((row, n) => ({ row, n, pop: 1 as const, from: POP1 })),
+  ...ROWS_BOTTOM.map((row, n) => ({ row, n, pop: 2 as const, from: POP2 })),
+].flatMap(({ row, n, pop, from }) =>
+  rowReads(row).map(([x1, x2], k) => {
+    const mid = (x1 + x2) / 2;
+    // Interleave the two populations so both stream in together.
+    const seq = (n * 3 + k) * 2 + (pop === 2 ? 1 : 0);
+    return {
+      x1, x2, y: row.y,
+      dx: from.cx - mid, dy: from.cy - row.y, delay: 1.0 + seq * 0.07,
+      cells: SITES.map((s, i) => ({ i, base: (pop === 1 ? s.top : s.bottom)[n] as Base })).filter(({ i }) => siteX(i) > x1 && siteX(i) < x2),
+    };
+  }),
+);
 
 /* ---------- Tier 3: reference genome ---------- */
-const rand = seededRandom(21);
 const CHR_W = 13;
 const KARYO_X0 = 102;
 const KARYO_PITCH = 38;
-const ROW_CY = [46, 112, 178];
-const chromosomes = KARYOTYPE.map((h, i) => {
-  const cx = KARYO_X0 + (i % 7) * KARYO_PITCH;
-  const top = ROW_CY[Math.floor(i / 7)] - h / 2;
-  // 2 to 4 fragments per chromosome, cut at uneven points.
-  const k = 2 + Math.floor(rand() * 3);
-  const cuts = Array.from({ length: k - 1 }, () => 0.18 + rand() * 0.64).sort((a, b) => a - b);
-  const edges = [0, ...cuts, 1];
-  const frags = edges.slice(0, -1).map((e, j) => {
-    const y = top + e * h;
-    const fh = (edges[j + 1] - e) * h;
-    return {
-      y: Math.round((y + 0.6) * 10) / 10,
-      h: Math.round(Math.max(fh - 1.2, 4) * 10) / 10,
-      dx: Math.round((217 - cx) * 0.45 + (rand() - 0.5) * 150),
-      dy: Math.round((112 - (y + fh / 2)) * 0.4 + (rand() - 0.5) * 120),
-      rot: Math.round((rand() - 0.5) * 170),
-      appear: Math.round(rand() * 450) / 1000,
-      settle: Math.round(rand() * 550) / 1000,
-    };
-  });
-  return { i, cx, top, h, frags };
-});
+const ROW_CY = [44, 108, 172];
+const chromosomes = KARYOTYPE.map((h, i) => ({
+  i,
+  cx: KARYO_X0 + (i % 7) * KARYO_PITCH,
+  top: r1(ROW_CY[Math.floor(i / 7)] - h / 2),
+  h,
+}));
 
-/* 
 /* Coverage: a small, honest simulation. Each chromosome receives reads of
    9 units at random positions; overlapping reads (by 1.5 units or more) join
    into one piece, and stretches no read reached stay as gaps. More reads are
-   always added on top of the earlier ones, so pieces only ever merge. */
+   always added on top of the earlier ones. The slider starts where pieces
+   only merge from then on (with very few reads, new reads first add pieces),
+   and steps that would not change the count are dropped. */
 const READ_LEN = 9;
 const MIN_OVERLAP = 1.5;
-const COVERAGE = [0.5, 1, 1.5, 2, 3, 4, 6, 12];
+const COVERAGE = [1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 7, 8];
 const readRand = seededRandom(7);
 const readStarts = KARYOTYPE.map((h) =>
   Array.from({ length: Math.ceil((COVERAGE[COVERAGE.length - 1] * h) / READ_LEN) }, () => -(READ_LEN - 2) + readRand() * (h + READ_LEN - 4)),
 );
-const GENOME = KARYOTYPE.reduce((a, b) => a + b, 0);
-const r1 = (v: number) => Math.round(v * 10) / 10;
 const coverageSteps = COVERAGE.map((c) => {
-  let covered = 0;
   const pieces: [number, number, number][] = [];
   KARYOTYPE.forEach((h, ci) => {
     const reads = readStarts[ci]
@@ -158,41 +151,40 @@ const coverageSteps = COVERAGE.map((c) => {
       if (last && a <= last[1] - MIN_OVERLAP) last[1] = Math.max(last[1], b);
       else contigs.push([a, b]);
     }
-    for (const [a, b] of contigs) {
-      covered += b - a;
-      pieces.push([ci, r1(a), r1(b)]);
-    }
+    for (const [a, b] of contigs) pieces.push([ci, r1(a), r1(b)]);
   });
-  return { p: Math.round((covered / GENOME) * 100), pieces };
-});
-const lastStep = coverageSteps[coverageSteps.length - 1];
-if (lastStep.pieces.length !== 21 || lastStep.p !== 100) {
-  throw new Error('TierDiagram: the highest coverage step must assemble all 21 chromosomes');
+  return pieces;
+}).filter((pieces, n, all) => n === 0 || pieces.length < all[n - 1].length);
+const stepCounts = coverageSteps.map((p) => p.length);
+if (stepCounts[stepCounts.length - 1] !== 21 || stepCounts.some((c, n) => n > 0 && c >= stepCounts[n - 1]) || coverageSteps.length < 6) {
+  throw new Error(`TierDiagram: coverage steps must fall steadily to 21 pieces (got ${stepCounts.join(', ')})`);
 }
 
 /* What the client script needs, per kind. */
 const exploreData =
   kind === 'barcode'
-    ? { copy: explore.barcode, rows: LIBRARY.map((row, r) => ({ name: row.name, diff: DIFFS[r] })), pitch: ROW_PITCH, match: MATCH_ROW }
+    ? { copy: explore.barcode, rows: LIBRARY.map((row) => ({ name: row.name, seq: row.seq })), specimens: SPECIMENS, pitch: ROW_PITCH }
     : kind === 'resequencing'
-      ? { copy: explore.resequencing, pop1: REF_SEQ.split('').map((_, i) => baseAt(1, i)), pop2: REF_SEQ.split('').map((_, i) => baseAt(2, i)), pitch: POS_PITCH, site: SITE_I, x0: POS_X0 }
-      : { copy: explore.reference, steps: coverageSteps, chr: chromosomes.map((c) => [c.cx - CHR_W / 2, r1(c.top)]), w: CHR_W };
+      ? { copy: explore.resequencing, sites: SITES, pitch: SITE_PITCH, x0: SITE_X0, symbol: SYMBOL, initial: DEFAULT_SITE + 1 }
+      : { copy: { ...explore.reference, count: tiers.diagrams.reference.count }, steps: coverageSteps, chr: chromosomes.map((c) => [c.cx - CHR_W / 2, c.top, c.h]), w: CHR_W, fly: [40, 108] };
 const control =
   kind === 'resequencing'
-    ? { label: explore.resequencing.label, min: 1, max: REF_SEQ.length, value: SITE_I + 1 }
+    ? { min: 1, max: SITES.length, value: DEFAULT_SITE + 1 }
     : kind === 'reference'
-      ? { label: explore.reference.label, min: 1, max: COVERAGE.length, value: COVERAGE.length }
+      ? { min: 1, max: coverageSteps.length, value: coverageSteps.length }
       : undefined;
+const at = control ? (control.value - control.min) / (control.max - control.min) : 1;
+const prompt = explore[kind].prompt;
 ---
 
 <figure
   id={id}
-  class={`tier-diagram tier-diagram--${kind}`}
+  class={`tier-diagram tier-diagram--${kind}${kind === 'barcode' ? ' is-identified' : ''}`}
   data-tier-diagram
   data-kind={kind}
+  data-specimen={kind === 'barcode' ? '0' : undefined}
   data-explore={JSON.stringify(exploreData)}
 >
-  <div class="tier-stage">
   <svg viewBox="0 0 360 236" role="img" aria-labelledby={`${id}-title ${id}-desc`}>
     <title id={`${id}-title`}>{copy.title}</title>
     <desc id={`${id}-desc`}>{copy.desc}</desc>
@@ -207,242 +199,328 @@ const control =
         <path d={BUTTERFLY.body} class="dg-fly-body" />
         <path d={BUTTERFLY.antennae} class="dg-fly-antennae" />
       </g>
-      <g id={`${id}-fly-alt`} class="dg-fly dg-fly--alt">
-        <path d={WING_F} />
-        <path d={WING_F} transform="scale(-1 1)" />
-        <path d={WING_H} />
-        <path d={WING_H} transform="scale(-1 1)" />
-        <path d={BAND} class="dg-fly-band" />
-        <path d={BAND} class="dg-fly-band" transform="scale(-1 1)" />
-        <path d={BUTTERFLY.body} class="dg-fly-body" />
-        <path d={BUTTERFLY.antennae} class="dg-fly-antennae" />
-      </g>
+      {kind === 'reference' && (
+        <pattern id={`${id}-hatch`} width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <path d="M0 0 V4" class="rf-hatch" />
+        </pattern>
+      )}
     </defs>
 
     {kind === 'barcode' && (
       <g class="bc">
-        <use href={`#${id}-fly`} transform="translate(44 52) scale(1.3)" />
-        <path d="M74 52 H90" class="dg-arrow bc-arrow" />
-        <path d="M86 48 L90 52 L86 56" class="dg-arrow bc-arrow-head" />
+        <g transform="translate(40 52) scale(1.3)">
+          <use href={`#${id}-fly`} class="dg-flap bc-fly" data-fly />
+        </g>
+        <path d="M68 52 H82" class="dg-arrow bc-arrow" />
+        <path d="M78 48 L82 52 L78 56" class="dg-arrow bc-arrow-head" />
 
         {/* The specimen's short standard fragment: each base, then its bar. */}
-        <g class="bc-query">
+        <g class="bc-query" data-query>
           {[...QUERY].map((b, i) => (
-            <text x={barX(i) + BAR_W / 2} y="31" class={`bc-letter dg-base-text--${b}`} style={`--d:${(0.5 + i * 0.05).toFixed(2)}s`}>{b}</text>
+            <text x={r1(barX(i) + BAR_W / 2)} y="31" class={`bc-letter dg-base-text--${b}`} style={`--i:${i}`} data-letter>{b}</text>
           ))}
           {[...QUERY].map((b, i) => (
-            <rect x={barX(i)} y="38" width={BAR_W} height="28" rx="1.5" class={`bc-bar dg-base--${b}`} style={`--d:${(1.5 + i * 0.04).toFixed(2)}s`} />
+            <rect x={barX(i)} y="38" width={BAR_W} height="28" rx="1.5" class={`bc-bar dg-base--${b}`} style={`--i:${i}`} data-bar />
           ))}
-          <rect x={BAR_X0 - 6} y="33" width={16 * BAR_PITCH + 9} height="38" rx="6" class="dg-frame bc-qframe" />
+          <rect x={FRAME_X} y="33" width={FRAME_W} height="38" rx="6" class="dg-frame bc-qframe" />
         </g>
-        <text x="271" y="58" class="bc-unknown">?</text>
-        <text x="270" y="57" class="bc-answer dg-species">{LIBRARY[MATCH_ROW].name}</text>
+        <text x={NAME_X + 2} y="59" class="bc-unknown">?</text>
+        <text x={NAME_X} y="57" class="bc-answer dg-species" data-answer>{LIBRARY[FIRST].name}</text>
+        <text x={FRAME_X} y="89" class="dg-note">{explore.barcode.note}</text>
 
         {/* Reference library: a database glyph and four species' barcodes. */}
         <g class="bc-db">
-          <ellipse cx="44" cy="126" rx="16" ry="5" />
-          <path d="M28 126 V170 C28 176.6 60 176.6 60 170 V126" />
-          <path d="M28 141 C28 147.6 60 147.6 60 141 M28 156 C28 162.6 60 162.6 60 156" />
+          <ellipse cx="38" cy="130" rx="14" ry="4.5" />
+          <path d="M24 130 V172 C24 178 52 178 52 172 V130" />
+          <path d="M24 144 C24 150 52 150 52 144 M24 158 C24 164 52 164 52 158" />
         </g>
         {LIBRARY.map((row, r) => (
-          <g class={`bc-row ${r === MATCH_ROW ? 'bc-row--match' : 'bc-row--miss'}`} data-row={r} style={`--d:${(2.5 + r * 0.12).toFixed(2)}s`}>
+          <g class={`bc-row${r === FIRST ? ' is-match' : ''}`} data-row={r} style={`--d:${(2.4 + r * 0.12).toFixed(2)}s`}>
             {[...row.seq].map((b, i) => (
               <rect x={barX(i)} y={rowY(r)} width={BAR_W} height={ROW_H} rx="1.5" class={`dg-base--${b as Base}`} />
             ))}
-            <text x="270" y={rowY(r) + 13.5} class="dg-species bc-name">{row.name}</text>
-            {r !== MATCH_ROW && [...row.seq].map((b, i) => b !== QUERY[i] && (
-              <rect x={barX(i)} y={rowY(r) + ROW_H + 3} width={BAR_W} height="2.5" rx="1" class="bc-miss" style={`--d:${SCAN_AT[r]}s`} />
+            <text x={NAME_X} y={rowY(r) + 13.5} class="dg-species bc-name">{row.name}</text>
+            {[...row.seq].map((b, i) => (
+              <rect x={barX(i)} y={rowY(r) + ROW_H + 2.5} width={BAR_W} height="3" rx="1" class={`bc-miss${b !== QUERY[i] ? ' is-on' : ''}`} data-r={r} data-i={i} />
             ))}
           </g>
         ))}
-        {/* The scanning frame: drawn on the match, animated down from row 1. */}
-        <rect x={BAR_X0 - 6} y={rowY(MATCH_ROW) - 5} width={16 * BAR_PITCH + 9} height={ROW_H + 10} rx="6" class="dg-frame bc-scan" />
+        {/* The comparison frame and the tick that marks the match: drawn on
+            the first row and moved down by the script. */}
+        <rect x={FRAME_X} y={rowY(0) - 5} width={FRAME_W} height={ROW_H + 10} rx="6" class="dg-frame bc-scan is-on" style={`transform:translateY(${FIRST * ROW_PITCH}px)`} data-scan />
+        <path d={`M70 ${rowY(0) + 9} l4.5 5 l8 -10.5`} class="bc-check is-on" style={`transform:translateY(${FIRST * ROW_PITCH}px)`} data-check />
       </g>
     )}
 
     {kind === 'resequencing' && (
       <g class="rs">
+        {/* The two populations wear different bands, as geographic races often do. */}
         {[POP1, POP2].map((pop, p) => pop.flies.map(([x, y]) => (
-          <use href={`#${id}-fly${p ? '-alt' : ''}`} transform={`translate(${x} ${y}) scale(0.78)`} />
+          <use href={`#${id}-fly`} class={p ? 'rs-fly-alt' : undefined} transform={`translate(${x} ${y}) scale(0.78)`} />
         )))}
-        <rect x={SITE_X - 9} y="60" width="18" height="116" rx="9" class="rs-site rs-col" />
-        <path d={`M84 ${REF_Y} H348`} class="dg-ref rs-ref" pathLength="1" />
-        {readsAll.map(({ r, pop, dx, dy, delay }) => (
-          <g class="rs-read" style={`--dx:${dx}px;--dy:${dy}px;--d:${delay.toFixed(2)}s`}>
-            <path d={`M${r[0]} ${r[2]} H${r[1]}`} class="dg-read" />
-            {REF_SEQ.split('').map((_, i) => coversX(r, posX(i)) && (
-              <rect
-                x={posX(i) - 3.5}
-                y={r[2] - 5}
-                width="7"
-                height="10"
-                rx="1.5"
-                data-i={i}
-                class={`rs-cell dg-base--${baseAt(pop, i)}${i === SITE_I ? ` is-on rs-allele rs-allele--${pop}` : ''}`}
-              />
+        <g class="rs-col is-on" data-col data-kind="differ" style={`transform:translateX(${DEFAULT_SITE * SITE_PITCH}px)`}>
+          <rect x={SITE_X0 - 11} y="62" width="22" height="112" rx="11" class="rs-site" />
+          <text x={SITE_X0} y="53" class="rs-symbol" data-symbol>{SYMBOL.differ}</text>
+        </g>
+        <path d={`M84 ${REF_Y} H352`} class="dg-ref rs-ref" pathLength="1" />
+        {readsAll.map((read) => (
+          <g class="rs-read" style={`--dx:${read.dx}px;--dy:${read.dy}px;--d:${read.delay.toFixed(2)}s`}>
+            <path d={`M${read.x1} ${read.y} H${read.x2}`} class="dg-read" />
+            {read.cells.map(({ i, base }) => (
+              <g class={`rs-cell${i === DEFAULT_SITE ? ' is-on' : ''}`} data-i={i}>
+                <rect x={siteX(i) - 5.5} y={read.y - 6} width="11" height="12" rx="2.5" class={`dg-base--${base}`} />
+                <text x={siteX(i)} y={read.y + 3.3}>{base}</text>
+              </g>
             ))}
           </g>
         ))}
-        <text x={SITE_X} y="52" class="rs-letter rs-letter--1 rs-col dg-base-text--A" data-letter="1">A</text>
-        <text x={SITE_X} y="194" class="rs-letter rs-letter--2 rs-col dg-base-text--G" data-letter="2">G</text>
       </g>
     )}
 
     {kind === 'reference' && (
       <g class="rf">
-        <use href={`#${id}-fly`} transform="translate(40 112) scale(1.3)" />
-        <g class="rf-frags">
-          {chromosomes.map((c) => c.frags.map((f) => (
-            <rect
-              x={c.cx - CHR_W / 2}
-              y={f.y}
-              width={CHR_W}
-              height={f.h}
-              rx="3"
-              class="rf-frag"
-              style={`--dx:${f.dx}px;--dy:${f.dy}px;--rot:${f.rot}deg;--a:${f.appear}s;--s:${f.settle}s`}
-            />
-          )))}
+        <g transform="translate(40 108) scale(1.3)">
+          <use href={`#${id}-fly`} class="dg-flap" data-fly />
         </g>
         {chromosomes.map((c) => (
-          <rect x={c.cx - CHR_W / 2} y={c.top} width={CHR_W} height={c.h} rx={CHR_W / 2} class="rf-ghost" />
+          <rect x={c.cx - CHR_W / 2} y={c.top} width={CHR_W} height={c.h} rx={CHR_W / 2} class="rf-ghost" fill={`url(#${id}-hatch)`} />
         ))}
         {chromosomes.map((c) => (
-          <rect x={c.cx - CHR_W / 2} y={c.top} width={CHR_W} height={c.h} rx={CHR_W / 2} class="rf-chr" style={`--d:${(3.7 + c.i * 0.03).toFixed(2)}s`} />
+          <rect x={c.cx - CHR_W / 2} y={c.top} width={CHR_W} height={c.h} rx={CHR_W / 2} class="rf-chr" style={`--i:${c.i}`} />
         ))}
         <g class="rf-cov" data-pieces></g>
-        <text x="96" y="226" class="rf-count">{tiers.diagrams.reference.count}</text>
+        <text x={KARYO_X0 - CHR_W / 2} y="226" class="rf-count" data-count>{tiers.diagrams.reference.count}</text>
       </g>
     )}
   </svg>
 
-  {kind === 'barcode' && (
-    <fieldset class="bc-pick" data-pick hidden>
-      <legend class="sr-only">{explore.barcode.label}</legend>
-      {LIBRARY.map((row, r) => (
-        <label
-          class="bc-pick-row"
-          style={`top:${pct((rowY(r) - 5) / VIEW_H)};height:${pct((ROW_H + 10) / VIEW_H)};left:${pct((BAR_X0 - 6) / VIEW_W)};right:0`}
-        >
-          <input type="radio" name={`${id}-row`} value={r} checked={r === MATCH_ROW} />
-          <span class="sr-only"><i>{row.name}</i></span>
-        </label>
-      ))}
-    </fieldset>
-  )}
-  </div>
-
-  <div class="explorable-panel tier-explore" data-explore-panel hidden>
-    {kind === 'barcode' && <p class="explorable-label" aria-hidden="true">{explore.barcode.label}</p>}
-    {control && (
-      <>
-        <label class="explorable-label" for={`${id}-control`}>{control.label}</label>
-        <input
-          id={`${id}-control`}
-          class="explorable-range"
-          type="range"
-          min={control.min}
-          max={control.max}
-          step="1"
-          value={control.value}
-          data-control
-        />
-      </>
-    )}
-    <div class="explorable-foot">
-      <output class="explorable-readout" data-readout for={control ? `${id}-control` : undefined}></output>
-      <button type="button" class="explorable-replay" data-replay>
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></svg>
-        <span>{tiers.replay}</span>
-      </button>
+  <div class="explorable-panel tier-explore" data-panel hidden>
+      {control
+        ? <label class="explorable-prompt" for={`${id}-control`}>{prompt}</label>
+        : <p class="explorable-prompt">{prompt}</p>}
+    <div class="explorable-control">
+      {kind === 'barcode' && (
+        <button type="button" class="explorable-btn" data-next>
+          <svg viewBox="-26 -17 52 32" aria-hidden="true" focusable="false">
+            <path d={`${WING_F} ${WING_H}`} /><path d={`${WING_F} ${WING_H}`} transform="scale(-1 1)" />
+          </svg>
+          <span>{explore.barcode.button}</span>
+        </button>
+      )}
+      {control && (
+        <div class="explorable-slider" style={`--at:${at}`} data-slider>
+          <input id={`${id}-control`} class="explorable-range" type="range" min={control.min} max={control.max} step="1" value={control.value} data-control />
+          {kind === 'resequencing' && (
+            <div class="explorable-ticks" aria-hidden="true">
+              {SITES.map((s, i) => (
+                <span class={`rs-tick rs-tick--${s.kind}${i === DEFAULT_SITE ? ' is-current' : ''}`} style={`--p:${i / (SITES.length - 1)}`} data-tick>{SYMBOL[s.kind]}</span>
+              ))}
+            </div>
+          )}
+          {kind === 'reference' && (
+            <div class="explorable-ends" aria-hidden="true">
+              {explore.reference.ends.map((end) => <span>{end}</span>)}
+            </div>
+          )}
+        </div>
+      )}
     </div>
+    <output class="explorable-result" data-result for={control ? `${id}-control` : undefined}></output>
+      <button type="button" class="explorable-replay" data-replay aria-label={tiers.replay} title={tiers.replay}>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></svg>
+      </button>
   </div>
 </figure>
 
 <script>
   type Copy = Record<string, string>;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const figures = document.querySelectorAll<HTMLElement>('[data-tier-diagram]');
   const SVG_NS = 'http://www.w3.org/2000/svg';
-  /* When each autoplay has finished, so the readout does not give it away. */
-  const DURATION: Record<string, number> = { barcode: 6200, resequencing: 4600, reference: 5100 };
-
   const fill = (tpl: string, vars: Record<string, string | number>) =>
     tpl.replace(/\{(\w+)\}/g, (_, key: string) => String(vars[key] ?? ''));
   const base = (b: string) => `<b class="readout-base readout-base--${b}">${b}</b>`;
   const plain = (html: string) => html.replace(/<[^>]+>/g, '');
+  /** Restart a one-shot CSS animation carried by a class. */
+  const once = (el: Element | null, cls: string) => {
+    if (!el || reduce.matches) return;
+    el.classList.remove(cls);
+    void el.getBoundingClientRect();
+    el.classList.add(cls);
+  };
 
-  figures.forEach((figure) => {
+  document.querySelectorAll<HTMLElement>('[data-tier-diagram]').forEach((figure) => {
     const kind = figure.dataset.kind ?? '';
     const data = JSON.parse(figure.dataset.explore ?? '{}');
     const copy: Copy = data.copy;
-    const panel = figure.querySelector<HTMLElement>('[data-explore-panel]');
-    const readout = figure.querySelector<HTMLOutputElement>('[data-readout]');
+    const panel = figure.querySelector<HTMLElement>('[data-panel]');
+    const result = figure.querySelector<HTMLOutputElement>('[data-result]');
     const range = figure.querySelector<HTMLInputElement>('[data-control]');
+    const slider = figure.querySelector<HTMLElement>('[data-slider]');
     const replay = figure.querySelector<HTMLButtonElement>('[data-replay]');
-    if (!panel || !readout || !replay) return;
-    let doneTimer = 0;
+    const fly = figure.querySelector<SVGElement>('[data-fly]');
+    if (!panel || !result || !replay) return;
+
+    let touched = false;
+    let cued = false;
+    const timers = new Set<number>();
+    const after = (ms: number, fn: () => void) => {
+      const t = window.setTimeout(() => { timers.delete(t); fn(); }, ms);
+      timers.add(t);
+    };
+    const cancel = () => { timers.forEach((t) => window.clearTimeout(t)); timers.clear(); };
 
     const say = (html: string) => {
-      readout.innerHTML = html;
+      if (result.innerHTML !== html) result.innerHTML = html;
       range?.setAttribute('aria-valuetext', plain(html));
     };
-    const setFill = () => {
-      if (!range) return;
-      const span = Number(range.max) - Number(range.min);
-      range.style.setProperty('--fill', `${((Number(range.value) - Number(range.min)) / span) * 100}%`);
+    const setRange = (value: number) => {
+      if (!range || !slider) return;
+      range.value = String(value);
+      slider.style.setProperty('--at', String((value - Number(range.min)) / (Number(range.max) - Number(range.min))));
     };
 
-    /* ---------- One render function per kind ---------- */
-    let render: (value: number) => void = () => {};
+    /* ---------- Per kind: the resting state for a value, the state before
+       the autoplay, and the autoplay itself ---------- */
     let initial = 0;
+    let show: (value: number) => void = () => {};
+    let prepare: () => void = () => {};
+    let autoplay: (done: () => void) => void = (done) => done();
+    let cueTarget: HTMLElement | null = slider;
 
     if (kind === 'barcode') {
-      const scan = figure.querySelector<SVGElement>('.bc-scan');
+      const scan = figure.querySelector<SVGElement>('[data-scan]');
+      const check = figure.querySelector<SVGElement>('[data-check]');
+      const answer = figure.querySelector<SVGTextElement>('[data-answer]');
+      const query = figure.querySelector<SVGGElement>('[data-query]');
+      const letters = figure.querySelectorAll<SVGTextElement>('[data-letter]');
+      const bars = figure.querySelectorAll<SVGRectElement>('[data-bar]');
       const rows = figure.querySelectorAll<SVGGElement>('.bc-row');
-      initial = data.match;
-      render = (r) => {
-        const row = data.rows[r];
-        rows.forEach((g) => g.classList.toggle('is-selected', Number(g.dataset.row) === r));
-        if (scan) scan.style.transform = `translateY(${(r - data.match) * data.pitch}px)`;
-        figure.classList.toggle('is-miss', row.diff > 0);
-        say(fill(row.diff ? copy.miss : copy.match, { name: row.name, n: row.diff }));
+      const ticks = figure.querySelectorAll<SVGRectElement>('.bc-miss');
+      const next = figure.querySelector<HTMLButtonElement>('[data-next]');
+      const STEP = 720;
+      cueTarget = next;
+      if (!scan || !check || !answer || !next) return;
+
+      const seqOf = (k: number): string => data.rows[data.specimens[k]].seq;
+      const setQuery = (k: number) => {
+        const seq = seqOf(k);
+        letters.forEach((t, i) => { t.textContent = seq[i]; t.setAttribute('class', `bc-letter dg-base-text--${seq[i]}`); });
+        bars.forEach((b, i) => b.setAttribute('class', `bc-bar dg-base--${seq[i]}`));
+        figure.dataset.specimen = String(k);
       };
-      figure.querySelectorAll<HTMLInputElement>('.bc-pick input').forEach((input) => {
-        input.addEventListener('change', () => {
-          explore();
-          render(Number(input.value));
+      const tickRow = (k: number, r: number, on: boolean) => {
+        const seq = seqOf(k);
+        ticks.forEach((t) => {
+          if (Number(t.dataset.r) === r) t.classList.toggle('is-on', on && data.rows[r].seq[Number(t.dataset.i)] !== seq[Number(t.dataset.i)]);
         });
+      };
+      const moveTo = (r: number) => { scan.style.transform = `translateY(${r * data.pitch}px)`; };
+      const pending = (k: number) => {
+        setQuery(k);
+        rows.forEach((g, r) => { tickRow(k, r, false); g.classList.remove('is-match'); });
+        scan.classList.remove('is-on');
+        check.classList.remove('is-on');
+        figure.classList.remove('is-identified');
+        moveTo(0);
+        say(copy.scanning);
+      };
+      const identify = (k: number) => {
+        const m = data.specimens[k];
+        setQuery(k);
+        rows.forEach((g, r) => { tickRow(k, r, true); g.classList.toggle('is-match', r === m); });
+        moveTo(m);
+        scan.classList.add('is-on');
+        check.style.transform = `translateY(${m * data.pitch}px)`;
+        check.classList.add('is-on');
+        answer.textContent = data.rows[m].name;
+        figure.classList.add('is-identified');
+        say(fill(copy.match, { k: k + 1, n: data.specimens.length, name: data.rows[m].name }));
+      };
+      // Compare with every row in turn, ticking the bases that differ, then
+      // come back to the row with none.
+      const runScan = (k: number, t0: number, done: () => void) => {
+        const m = data.specimens[k];
+        const last = rows.length - 1;
+        after(t0, () => scan.classList.add('is-on'));
+        rows.forEach((_, r) => {
+          after(t0 + r * STEP, () => moveTo(r));
+          after(t0 + r * STEP + 320, () => tickRow(k, r, true));
+        });
+        const end = t0 + rows.length * STEP;
+        after(end, () => moveTo(m));
+        after(end + (m === last ? 0 : 360), () => {
+          identify(k);
+          once(answer, 'is-pop');
+          once(fly, 'is-flap');
+          done();
+        });
+      };
+
+      let specimen = 0;
+      show = () => identify(specimen);
+      prepare = () => pending(0);
+      autoplay = (done) => { specimen = 0; pending(0); runScan(0, 3000, done); };
+      next.addEventListener('click', () => {
+        take();
+        specimen = (specimen + 1) % data.specimens.length;
+        if (reduce.matches) { identify(specimen); return; }
+        pending(specimen);
+        once(query, 'is-reread');
+        runScan(specimen, 600, () => {});
       });
+      replay.addEventListener('click', () => { specimen = 0; });
     }
 
     if (kind === 'resequencing') {
-      const cells = figure.querySelectorAll<SVGRectElement>('.rs-cell');
-      const cols = figure.querySelectorAll<SVGElement>('.rs-col');
-      const letters = figure.querySelectorAll<SVGTextElement>('[data-letter]');
-      initial = data.site + 1;
-      render = (pos) => {
-        const i = pos - 1;
-        cells.forEach((c) => c.classList.toggle('is-on', Number(c.dataset.i) === i));
-        cols.forEach((c) => { c.style.transform = `translateX(${(i - data.site) * data.pitch}px)`; });
-        const bases = [data.pop1[i], data.pop2[i]];
-        letters.forEach((t, n) => {
-          t.textContent = bases[n];
-          t.setAttribute('class', `rs-letter rs-letter--${n + 1} rs-col dg-base-text--${bases[n]}`);
-        });
-        say(bases[0] === bases[1]
-          ? fill(copy.same, { i: pos, base: base(bases[0]) })
-          : fill(copy.differ, { i: pos, a: base(bases[0]), b: base(bases[1]) }));
-      };
-      // Direct manipulation: drag (or tap) along the reads to move the column.
       const svg = figure.querySelector<SVGSVGElement>('svg');
+      const cells = figure.querySelectorAll<SVGGElement>('.rs-cell');
+      const col = figure.querySelector<SVGGElement>('[data-col]');
+      const symbol = figure.querySelector<SVGTextElement>('[data-symbol]');
+      const marks = figure.querySelectorAll<HTMLElement>('[data-tick]');
+      const count = (letters: string, b: string) => [...letters].filter((x) => x === b).length;
+      initial = data.initial;
+      show = (pos) => {
+        const i = pos - 1;
+        const site = data.sites[i];
+        cells.forEach((c) => c.classList.toggle('is-on', Number(c.dataset.i) === i));
+        marks.forEach((m, n) => m.classList.toggle('is-current', n === i));
+        if (col) {
+          col.style.transform = `translateX(${i * data.pitch}px)`;
+          col.classList.add('is-on');
+          col.dataset.kind = site.kind;
+        }
+        if (symbol) symbol.textContent = data.symbol[site.kind];
+        const a = site.top[0];
+        const vars = { i: pos, a: base(a), b: base(site.bottom[0]), n: site.top.length, x: count(site.top, a), y: count(site.bottom, a) };
+        say(fill(copy[site.kind], vars));
+      };
+      prepare = () => {
+        setRange(1);
+        cells.forEach((c) => c.classList.remove('is-on'));
+        marks.forEach((m) => m.classList.remove('is-current'));
+        col?.classList.remove('is-on');
+        say('');
+      };
+      // After the reads have aligned, the column visits the sites one by
+      // one and stops where the populations differ.
+      autoplay = (done) => {
+        prepare();
+        for (let pos = 1; pos <= initial; pos++) {
+          after(3300 + (pos - 1) * 800, () => {
+            setRange(pos);
+            show(pos);
+            if (pos === initial) { once(symbol, 'is-pop'); done(); }
+          });
+        }
+      };
+      // Direct manipulation: tap or drag along the reads to move the column.
       if (svg && range) {
         const toPos = (event: PointerEvent) => {
           const ctm = svg.getScreenCTM();
           if (!ctm) return;
           const x = new DOMPoint(event.clientX, event.clientY).matrixTransform(ctm.inverse()).x;
           const pos = Math.min(Number(range.max), Math.max(1, Math.round((x - data.x0) / data.pitch) + 1));
-          if (String(pos) !== range.value) {
+          if (String(pos) !== range.value || !touched) {
             range.value = String(pos);
             range.dispatchEvent(new Event('input', { bubbles: true }));
           }
@@ -459,99 +537,137 @@ const control =
 
     if (kind === 'reference') {
       const layer = figure.querySelector<SVGGElement>('[data-pieces]');
-      initial = data.steps.length;
-      render = (step) => {
-        const { p, pieces } = data.steps[step - 1];
-        const whole = step === data.steps.length;
-        figure.classList.toggle('is-partial', !whole);
-        if (layer) {
-          layer.replaceChildren(...(whole ? [] : pieces.map(([c, a, b]: number[]) => {
-            const [x, top] = data.chr[c];
-            const rect = document.createElementNS(SVG_NS, 'rect');
-            const h = Math.max(b - a - 1.6, 1.2);
-            rect.setAttribute('x', String(x));
-            rect.setAttribute('y', String(top + a + 0.8));
-            rect.setAttribute('width', String(data.w));
-            rect.setAttribute('height', h.toFixed(1));
-            rect.setAttribute('rx', String(Math.min(3, h / 2)));
-            return rect;
-          })));
+      const count = figure.querySelector<SVGTextElement>('[data-count]');
+      const rf = figure.querySelector<SVGGElement>('.rf');
+      const last = data.steps.length;
+      let whole = true;
+      initial = last;
+      const draw = (step: number) => {
+        const pieces: number[][] = data.steps[step - 1];
+        layer?.replaceChildren(...(step === last ? [] : pieces.map(([c, a, b]) => {
+          const [x, top] = data.chr[c];
+          const rect = document.createElementNS(SVG_NS, 'rect');
+          const h = Math.max(b - a - 1.8, 1.4);
+          const y = top + a + 0.9;
+          rect.setAttribute('x', String(x));
+          rect.setAttribute('y', y.toFixed(1));
+          rect.setAttribute('width', String(data.w));
+          rect.setAttribute('height', h.toFixed(1));
+          rect.setAttribute('rx', String(Math.min(3, h / 2)));
+          // Where the piece flies in from during the autoplay: the butterfly.
+          rect.style.setProperty('--dx', `${(data.fly[0] - x - data.w / 2).toFixed(0)}px`);
+          rect.style.setProperty('--dy', `${(data.fly[1] - y - h / 2).toFixed(0)}px`);
+          rect.style.setProperty('--d', `${((c * 37) % 21) * 22 + ((a * 13) % 9) * 30}ms`);
+          return rect;
+        })));
+        return pieces.length;
+      };
+      show = (step) => {
+        const n = draw(step);
+        const done = step === last;
+        figure.classList.toggle('is-partial', !done);
+        if (count) count.textContent = done ? copy.count : fill(copy.pieces, { n });
+        say(done ? copy.whole : fill(copy.partial, { g: n - data.chr.length }));
+        // The last gap closing gets one small pop.
+        if (done && !whole) { once(rf, 'is-pop'); once(fly, 'is-flap'); }
+        whole = done;
+      };
+      prepare = () => {
+        setRange(1);
+        show(1);
+        layer?.replaceChildren();
+        if (count) count.textContent = '';
+        say('');
+      };
+      // The reads arrive from the butterfly, then the slider itself runs up
+      // to the last step, closing gaps as it goes.
+      autoplay = (done) => {
+        prepare();
+        after(350, () => {
+          show(1);
+          once(layer, 'is-flying');
+        });
+        for (let step = 2; step <= last; step++) {
+          after(1900 + (step - 2) * 330, () => {
+            layer?.classList.remove('is-flying');
+            setRange(step);
+            show(step);
+            if (step === last) done();
+          });
         }
-        say(whole ? copy.whole : fill(copy.partial, { p, n: pieces.length }));
       };
     }
 
-    /* ---------- Shared play / explore lifecycle ---------- */
+    /* ---------- Shared lifecycle ---------- */
+    // One gentle nudge on the control once the autoplay has shown what it does.
+    const cue = () => {
+      if (cued || touched || reduce.matches || !cueTarget) return;
+      cued = true;
+      const target = cueTarget;
+      target.classList.add('is-cue');
+      window.setTimeout(() => target.classList.remove('is-cue'), 1600);
+    };
     const play = () => {
-      window.clearTimeout(doneTimer);
-      figure.classList.remove('is-armed', 'is-playing', 'is-done');
+      cancel();
+      figure.classList.remove('is-armed', 'is-playing');
       void figure.getBoundingClientRect();
       figure.classList.add('is-armed', 'is-playing');
-      doneTimer = window.setTimeout(() => figure.classList.add('is-done'), DURATION[kind] ?? 5000);
-    };
-    // Interacting stops the autoplay where the figure already shows its
-    // final state, and the figure stays as the reader left it.
-    function explore() {
-      window.clearTimeout(doneTimer);
-      figure.dataset.touched = '';
-      figure.classList.remove('is-armed', 'is-playing');
-      figure.classList.add('is-exploring', 'is-done');
-    }
-    const reset = () => {
-      figure.classList.remove('is-exploring');
-      delete figure.dataset.touched;
-      if (range) range.value = String(initial);
-      figure.querySelectorAll<HTMLInputElement>('.bc-pick input').forEach((input) => {
-        input.checked = Number(input.value) === initial;
+      result.setAttribute('aria-live', 'off');
+      autoplay(() => {
+        result.removeAttribute('aria-live');
+        after(500, () => {
+          figure.classList.remove('is-armed', 'is-playing');
+          cue();
+        });
       });
-      setFill();
-      render(initial);
     };
+    // Touching a control stops the autoplay for good, wherever it was.
+    function take() {
+      cancel();
+      touched = true;
+      result?.removeAttribute('aria-live');
+      figure.classList.remove('is-armed', 'is-playing');
+      figure.querySelector('.is-flying')?.classList.remove('is-flying');
+    }
 
     range?.addEventListener('input', () => {
-      explore();
-      setFill();
-      render(Number(range.value));
+      take();
+      setRange(Number(range.value));
+      show(Number(range.value));
     });
     replay.addEventListener('click', () => {
-      reset();
-      if (reduce.matches) return;
+      touched = false;
+      cancel();
+      figure.classList.remove('is-armed', 'is-playing');
+      setRange(initial);
+      if (reduce.matches) { show(initial); return; }
       play();
     });
 
-    reset();
+    setRange(initial);
+    show(initial);
     panel.hidden = false;
-    figure.querySelector<HTMLElement>('[data-pick]')?.removeAttribute('hidden');
-    figure.classList.add('is-done');
-  });
+    figure.classList.add('is-live');
 
-  if (!reduce.matches && 'IntersectionObserver' in window) {
-    // Play each time a diagram comes back into view (unless the reader has
-    // taken over): start when it is mostly visible, and re-arm once it has
-    // left the viewport completely.
-    const shown = new WeakSet<Element>();
-    const observer = new IntersectionObserver(
-      (entries) => {
+    if (!reduce.matches && 'IntersectionObserver' in window) {
+      // Play each time the diagram comes back into view (unless the reader
+      // has taken over): start when it is mostly visible, and re-arm once
+      // it has left the viewport completely.
+      prepare();
+      figure.classList.add('is-armed');
+      let shown = false;
+      new IntersectionObserver((entries) => {
         for (const entry of entries) {
-          const figure = entry.target as HTMLElement;
-          if (entry.intersectionRatio >= 0.55 && !shown.has(figure)) {
-            shown.add(figure);
-            if (!('touched' in figure.dataset)) figure.querySelector<HTMLButtonElement>('[data-replay]')?.click();
+          if (entry.intersectionRatio >= 0.55 && !shown) {
+            shown = true;
+            if (!touched) play();
           } else if (!entry.isIntersecting) {
-            shown.delete(figure);
+            shown = false;
           }
         }
-      },
-      { threshold: [0, 0.55] },
-    );
-    figures.forEach((figure) => {
-      if (!('touched' in figure.dataset)) {
-        figure.classList.remove('is-done');
-        figure.classList.add('is-armed');
-      }
-      observer.observe(figure);
-    });
-  }
+      }, { threshold: [0, 0.55] }).observe(figure);
+    }
+  });
 </script>
 
 <style>
@@ -560,7 +676,7 @@ const control =
     display: flex;
     flex-direction: column;
     margin: 0;
-    padding: 0.85rem 0.75rem 0.6rem;
+    padding: 0.85rem 0.85rem 0.75rem;
     background: var(--tier-stage, var(--bg-inset));
     border-bottom: 1px solid var(--hairline);
     /* DNA bases: Okabe-Ito hues (tokens.css), tuned per mode. */
@@ -568,30 +684,32 @@ const control =
     --base-C: var(--trait-wing);
     --base-G: var(--trait-scent);
     --base-T: var(--trait-pattern);
+    --stage: var(--tier-stage, var(--bg-inset));
   }
-  .tier-stage { position: relative; margin-bottom: 0.5rem; }
-  .tier-stage > svg {
+  .tier-diagram > svg {
     display: block;
     user-select: none;
     -webkit-user-select: none;
     width: 100%;
     height: auto;
     overflow: visible;
+    margin-bottom: 0.5rem;
   }
-  /* Tier 2 can be dragged sideways; vertical swipes still scroll the page. */
-  .tier-diagram--resequencing.is-done .tier-stage > svg { touch-action: pan-y; cursor: ew-resize; }
+  /* Tier 2 can be tapped or dragged sideways; vertical swipes still scroll. */
+  .tier-diagram--resequencing.is-live > svg { touch-action: pan-y; cursor: ew-resize; }
+  .tier-explore { margin-top: auto; }
 
   /* ---- Shared marks ---- */
   .dg-fly path { fill: var(--text-muted); }
-  .dg-fly .dg-fly-band { fill: var(--highlight); }
-  .dg-fly--alt .dg-fly-band { fill: var(--bg); }
+  .dg-fly .dg-fly-band { fill: var(--band, var(--highlight)); }
   .dg-fly .dg-fly-body { fill: none; stroke: var(--text-strong); stroke-width: 2.4; stroke-linecap: round; }
   .dg-fly .dg-fly-antennae { fill: none; stroke: var(--text-muted); stroke-width: 1; stroke-linecap: round; }
   .dg-arrow { fill: none; stroke: var(--text-faint); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-  .dg-frame { fill: none; stroke: var(--text-strong); stroke-width: 1.75; }
+  .dg-frame { fill: none; stroke: var(--text-strong); stroke-width: 2; }
   .dg-ref { fill: none; stroke: var(--accent); stroke-width: 4; stroke-linecap: round; }
   .dg-read { fill: none; stroke: var(--text-muted); stroke-width: 6; stroke-linecap: round; }
   .dg-species { font-family: var(--font-body); font-size: 13px; font-style: italic; fill: var(--text-muted); }
+  .dg-note { font-family: var(--font-body); font-size: 10.5px; fill: var(--text-faint); }
   .dg-base--A { fill: var(--base-A); }
   .dg-base--C { fill: var(--base-C); }
   .dg-base--G { fill: var(--base-G); }
@@ -600,141 +718,126 @@ const control =
   .dg-base-text--C { fill: var(--base-C); }
   .dg-base-text--G { fill: var(--base-G); }
   .dg-base-text--T { fill: var(--base-T); }
+  .dg-flap { transform-box: fill-box; transform-origin: center; }
+  /* One wing-flap when a butterfly is identified or its genome is complete. */
+  .dg-flap.is-flap { animation: dg-flap 0.7s ease-in-out; }
 
-  /* ---- Tier 1 final state ---- */
-  .bc-letter { font-family: var(--font-mono); font-size: 11px; font-weight: 700; text-anchor: middle; }
-  .bc-unknown { font-family: var(--font-display); font-size: 20px; font-weight: 600; fill: var(--text-faint); opacity: 0; }
-  .bc-answer { fill: var(--accent); font-weight: 600; font-size: 14px; }
+  /* ---- Tier 1 ---- */
+  .bc-letter { font-family: var(--font-mono); font-size: 10.5px; font-weight: 700; text-anchor: middle; }
+  .bc-unknown { font-family: var(--font-display); font-size: 22px; font-weight: 600; fill: var(--text-faint); }
+  .bc-answer { fill: var(--accent); font-weight: 650; }
+  .is-identified .bc-unknown, .tier-diagram:not(.is-identified) .bc-answer { opacity: 0; }
   .bc-db ellipse, .bc-db path { fill: none; stroke: var(--text-faint); stroke-width: 2; }
-  .bc-row--miss { opacity: 0.55; }
-  .bc-row--match .bc-name { fill: var(--accent); font-weight: 600; }
-  .bc-miss { fill: var(--text-strong); }
+  .bc-row.is-match .bc-name { fill: var(--accent); font-weight: 650; }
+  .bc-miss { fill: var(--text-strong); opacity: 0; }
+  .bc-miss.is-on { opacity: 1; }
+  .bc-scan, .bc-check { opacity: 0; }
+  .bc-scan.is-on, .bc-check.is-on { opacity: 1; }
+  .bc-check { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  /* Each specimen is a different butterfly: the band changes with it. The
+     name, not the band, carries the identification. */
+  .tier-diagram[data-specimen='1'] .bc-fly { --band: var(--accent); }
+  .tier-diagram[data-specimen='2'] .bc-fly { --band: var(--stage); }
+  .tier-diagram[data-specimen='3'] .bc-fly { --band: var(--base-C); }
+  .is-live .bc-scan { transition: transform 300ms var(--ease-settle), opacity 200ms linear; }
+  .is-live .bc-miss { transition: opacity 180ms linear; }
+  .is-live .bc-unknown { transition: opacity 180ms linear; }
+  .bc-answer.is-pop, .bc-check.is-on { transform-box: fill-box; transform-origin: left center; }
+  .bc-answer.is-pop { animation: dg-pop 0.45s var(--ease-settle); }
+  .is-reread .bc-bar { animation: dg-grow 0.3s calc(var(--i) * 22ms) var(--ease-settle) both; }
+  .is-reread .bc-letter { animation: dg-pop 0.3s calc(var(--i) * 22ms) var(--ease-settle) both; }
 
-  /* ---- Tier 2 final state ---- */
-  .rs-site { fill: var(--highlight-dim); stroke: var(--highlight); stroke-width: 1.5; }
-  .rs-letter { font-family: var(--font-mono); font-size: 16px; font-weight: 700; text-anchor: middle; }
+  /* ---- Tier 2 ---- */
+  .rs-fly-alt { --band: var(--stage); }
+  .rs-col { opacity: 0; }
+  .rs-col.is-on { opacity: 1; }
+  .rs-site { fill: var(--highlight-dim); stroke: var(--text-strong); stroke-width: 1.75; }
+  .rs-col[data-kind='differ'] .rs-site { fill: color-mix(in oklab, var(--marker) 55%, transparent); }
+  .rs-symbol { font-family: var(--font-mono); font-size: 19px; font-weight: 700; text-anchor: middle; fill: var(--text-strong); }
+  .rs-col[data-kind='differ'] .rs-symbol { fill: var(--accent); }
+  /* A site's letters: small coloured marks until the column reaches them,
+     then full cells with the letter written in. */
+  .rs-cell { transform-box: fill-box; transform-origin: center; transform: scale(0.66); }
+  .rs-cell text { font-family: var(--font-mono); font-size: 9.5px; font-weight: 700; text-anchor: middle; fill: var(--stage); opacity: 0; }
+  .rs-cell.is-on { transform: scale(1); }
+  .rs-cell.is-on text { opacity: 1; }
+  .is-live .rs-col { transition: transform 260ms var(--ease-settle), opacity 200ms linear; }
+  .is-live .rs-cell { transition: transform 200ms var(--ease-settle); }
+  .rs-symbol.is-pop { transform-box: fill-box; transform-origin: center; animation: dg-pop 0.45s var(--ease-settle); }
+  .rs-tick {
+    position: absolute;
+    left: calc(var(--p) * 100%);
+    top: 0;
+    transform: translateX(-50%);
+    font: 700 0.95rem/1 var(--font-mono);
+    color: var(--text-faint);
+  }
+  .rs-tick--differ { color: var(--accent); }
+  .rs-tick.is-current { color: var(--text-strong); }
+  .rs-tick--differ.is-current { color: var(--accent); }
 
-  /* ---- Tier 3 final state ---- */
-  .rf-frags { opacity: 0; }
-  .rf-frag { fill: var(--text-muted); }
+  /* ---- Tier 3 ---- */
   .rf-chr { fill: var(--accent); }
-  .rf-count { font-family: var(--font-body); font-size: 14px; font-weight: 600; fill: var(--text-strong); }
-
-  /* ---- Explore panel: one control, one readout, Replay ---- */
-  .tier-explore { margin-top: auto; }
-  /* The readout waits for the autoplay to finish, so it never gives the
-     answer away before the diagram does. */
-  .is-armed:not(.is-done) .explorable-readout { opacity: 0; }
-  .explorable-readout { transition: opacity var(--transition-slow); }
-
-  /* ---- Tier 1: the library rows are the radio buttons ---- */
-  .bc-pick { position: absolute; inset: 0; margin: 0; padding: 0; border: 0; min-width: 0; pointer-events: none; }
-  .bc-pick-row {
-    position: absolute;
-    border-radius: 7px;
-    cursor: pointer;
-    pointer-events: auto;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .bc-pick-row input {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    opacity: 0;
-    cursor: pointer;
-  }
-  .bc-pick-row:hover:not(:has(:checked)) { outline: 1.5px dashed var(--text-faint); outline-offset: -1px; }
-  .bc-pick-row:has(:focus-visible) { outline: var(--focus-ring) solid var(--accent); outline-offset: 2px; }
-  .is-exploring .bc-row { opacity: 0.38; transition: opacity var(--transition); }
-  .is-exploring .bc-row.is-selected { opacity: 1; }
-  .is-exploring .bc-scan { transition: transform 320ms var(--ease-settle); }
-  .is-exploring .bc-answer, .is-exploring .bc-unknown { transition: opacity var(--transition); }
-  .is-exploring.is-miss .bc-answer { opacity: 0; }
-  .is-exploring.is-miss .bc-unknown { opacity: 1; }
-
-  /* ---- Tier 2: only the cells under the column show their base ---- */
-  .rs-cell { opacity: 0; }
-  .rs-cell.is-on { opacity: 1; }
-  .is-exploring .rs-col { transition: transform 160ms var(--ease-glide); }
-
-  /* ---- Tier 3: partial coverage shows pieces inside dashed outlines ---- */
-  .rf-ghost { fill: none; stroke: none; }
-  .rf-cov :global(rect) { fill: var(--accent); }
+  .rf-count { font-family: var(--font-display); font-size: 16px; font-weight: 600; fill: var(--text-strong); }
+  /* A gap is a stretch no read reached: an empty, hatched outline. */
+  .rf-ghost { display: none; stroke: var(--text-faint); stroke-width: 1.25; }
+  .rf-hatch { stroke: var(--text-faint); stroke-width: 1; opacity: 0.5; }
+  .rf-cov :global(rect) { fill: var(--accent); stroke: var(--stage); stroke-width: 1; }
   .is-partial .rf-chr { opacity: 0; }
-  .is-partial .rf-ghost { stroke: var(--text-faint); stroke-width: 1; stroke-dasharray: 2 2.5; }
-  .is-partial .rf-count { opacity: 0; }
+  .is-partial .rf-ghost { display: block; }
+  .rf-chr, .rf-count, .rf-cov :global(rect) { transform-box: fill-box; transform-origin: center; }
+  .rf.is-pop .rf-chr { animation: rf-pop 0.42s calc(var(--i) * 14ms) var(--ease-settle) both; }
+  .rf.is-pop .rf-count { transform-origin: left center; animation: dg-pop 0.45s 0.15s var(--ease-settle) both; }
+  .rf-cov:global(.is-flying) :global(rect) { animation: rf-fly 0.9s var(--d) var(--ease-glide) both; }
 
-  /* ================= Animation (armed by JS, paused until in view) ================= */
-  :is(.bc-arrow, .bc-arrow-head, .bc-letter, .bc-bar, .bc-qframe, .bc-unknown, .bc-answer, .bc-row, .bc-miss, .bc-scan, .rs-ref, .rs-read, .rs-allele, .rs-site, .rs-letter, .rf-frag, .rf-frags, .rf-chr, .rf-count) {
+  /* ================= Intro animation (armed by JS, paused until in view) ================= */
+  :is(.bc-arrow, .bc-arrow-head, .bc-letter, .bc-bar, .bc-qframe, .bc-row, .rs-ref, .rs-read) {
     transform-box: fill-box;
     transform-origin: center;
   }
   .bc-bar { transform-origin: top; }
 
-  /* Tier 1: fragment → letters → bars → compare row by row → identified. */
+  /* Tier 1: fragment → letters → bars → library; the script then compares. */
   .is-armed .bc-arrow { stroke-dasharray: 16; animation: dg-draw16 0.4s 0.25s ease-out; }
   .is-armed .bc-arrow-head { animation: dg-fade 0.2s 0.55s ease-out; }
-  .is-armed .bc-letter { animation: dg-pop 0.3s var(--d) var(--ease-settle); }
-  .is-armed .bc-bar { animation: dg-grow 0.35s var(--d) var(--ease-settle); }
-  .is-armed .bc-qframe { animation: dg-fade 0.4s 2.3s ease-out; }
-  .is-armed .bc-unknown { animation: bc-unknown 5.75s 0s linear; }
-  .is-armed .bc-answer { animation: dg-pop 0.45s 5.75s var(--ease-settle); }
-  .is-armed .bc-row--match { animation: dg-fade 0.4s var(--d) ease-out; }
-  .is-armed .bc-row--miss { animation: bc-row-miss 3.5s var(--d) ease-out; }
-  .is-armed .bc-miss { animation: dg-grow-x 0.3s var(--d) var(--ease-settle); }
-  .is-armed .bc-scan { animation: bc-scan 2.75s 3s var(--ease-glide); }
+  .is-armed .bc-letter { animation: dg-pop 0.3s calc(0.5s + var(--i) * 0.05s) var(--ease-settle); }
+  .is-armed .bc-bar { animation: dg-grow 0.35s calc(1.5s + var(--i) * 0.04s) var(--ease-settle); }
+  .is-armed .bc-qframe { animation: dg-fade 0.4s 2.2s ease-out; }
+  .is-armed .bc-row { animation: dg-fade 0.4s var(--d) ease-out; }
 
-  /* Tier 2: reference drawn → reads stream in and align → the variable site lights up. */
+  /* Tier 2: reference drawn → reads stream in and align; the script then
+     moves the column from site to site. */
   .is-armed .rs-ref { stroke-dasharray: 1; animation: dg-draw1 0.8s 0.2s ease-out; }
   .is-armed .rs-read { animation: rs-align 0.9s var(--d) var(--ease-glide); }
-  .is-armed .rs-site { animation: dg-fade 0.5s 3.3s ease-out; }
-  .is-armed .rs-allele { animation: dg-pop 0.35s 3.6s var(--ease-settle); }
-  .is-armed .rs-allele--2 { animation-delay: 3.95s; }
-  .is-armed .rs-letter--1 { animation: dg-pop 0.4s 3.8s var(--ease-settle); }
-  .is-armed .rs-letter--2 { animation: dg-pop 0.4s 4.15s var(--ease-settle); }
-
-  /* Tier 3: fragments appear jumbled → settle into place → each chromosome becomes one. */
-  .is-armed .rf-frags { animation: dg-fade-out 0.45s 3.75s ease-in; }
-  .is-armed .rf-frag { animation: rf-appear 0.45s var(--a) ease-out, rf-settle 1.1s calc(1.5s + var(--s)) var(--ease-glide); }
-  .is-armed .rf-chr { animation: dg-fade 0.35s var(--d) ease-out; }
-  .is-armed .rf-count { animation: dg-fade 0.5s 4.6s ease-out; }
 
   /* After the shorthands above, which would otherwise reset these. */
-  .is-armed :is(.bc-arrow, .bc-arrow-head, .bc-letter, .bc-bar, .bc-qframe, .bc-unknown, .bc-answer, .bc-row, .bc-miss, .bc-scan, .rs-ref, .rs-read, .rs-allele, .rs-site, .rs-letter, .rf-frag, .rf-frags, .rf-chr, .rf-count) {
+  .is-armed :is(.bc-arrow, .bc-arrow-head, .bc-letter, .bc-bar, .bc-qframe, .bc-row, .rs-ref, .rs-read) {
     animation-fill-mode: both;
     animation-play-state: paused;
   }
-  .is-armed.is-playing :is(.bc-arrow, .bc-arrow-head, .bc-letter, .bc-bar, .bc-qframe, .bc-unknown, .bc-answer, .bc-row, .bc-miss, .bc-scan, .rs-ref, .rs-read, .rs-allele, .rs-site, .rs-letter, .rf-frag, .rf-frags, .rf-chr, .rf-count) {
+  .is-armed.is-playing :is(.bc-arrow, .bc-arrow-head, .bc-letter, .bc-bar, .bc-qframe, .bc-row, .rs-ref, .rs-read) {
     animation-play-state: running;
   }
 
   @keyframes dg-fade { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes dg-fade-out { from { opacity: 1; } to { opacity: 0; } }
   @keyframes dg-pop { from { opacity: 0; transform: scale(0.4); } 70% { opacity: 1; transform: scale(1.12); } to { opacity: 1; transform: scale(1); } }
   @keyframes dg-grow { from { opacity: 0; transform: scaleY(0); } to { opacity: 1; transform: scaleY(1); } }
-  @keyframes dg-grow-x { from { opacity: 0; transform: scaleX(0); } to { opacity: 1; transform: scaleX(1); } }
   @keyframes dg-draw16 { from { stroke-dashoffset: 16; } to { stroke-dashoffset: 0; } }
   @keyframes dg-draw1 { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-  @keyframes bc-unknown { from, 96% { opacity: 1; } to { opacity: 0; } }
-  @keyframes bc-row-miss { from { opacity: 0; } 12%, 88% { opacity: 1; } to { opacity: 0.55; } }
-  /* Rows are 30 units apart; the frame is drawn on the last (matching) row. */
-  @keyframes bc-scan {
-    0% { opacity: 0; transform: translateY(-90px); }
-    8%, 25% { opacity: 1; transform: translateY(-90px); }
-    35%, 55% { transform: translateY(-60px); }
-    65%, 85% { transform: translateY(-30px); }
-    95%, 100% { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes dg-flap { 0%, 100% { transform: scaleX(1); } 22% { transform: scaleX(0.3); } 48% { transform: scaleX(1.04); } 70% { transform: scaleX(0.55); } }
   @keyframes rs-align {
     from { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.25); }
     25% { opacity: 1; }
     to { opacity: 1; transform: translate(0, 0) scale(1); }
   }
-  @keyframes rf-appear { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes rf-settle {
-    from { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); }
-    to { transform: translate(0, 0) rotate(0deg); }
+  @keyframes rf-fly {
+    from { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.3); }
+    30% { opacity: 1; }
+    to { opacity: 1; transform: translate(0, 0) scale(1); }
+  }
+  @keyframes rf-pop { 0%, 100% { transform: scaleY(1); } 45% { transform: scale(1.12, 1.07); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .is-live :is(.bc-scan, .bc-miss, .bc-unknown, .rs-col, .rs-cell) { transition: none; }
   }
 </style>

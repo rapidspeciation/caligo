@@ -679,7 +679,8 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     gap: clamp(1rem, 1.6vw, 1.5rem);
   }
   /* Subgrid keeps the diagrams, and the copy under them, level across the
-     three cards even though each explore panel has a different height. */
+     three cards; the explore panels share one layout (prompt, control,
+     result) so their rows line up too. */
   .tier-card {
     min-width: 0;
     display: grid;

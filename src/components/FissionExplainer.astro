@@ -4,12 +4,19 @@
  * Heliconius: 21 chromosomes, as in most species, split by up to 39 fissions
  * into 60, the highest count in the sapho group (Rueda-M et al. 2024).
  *
- * A toggle compares the butterflies' holocentric chromosomes, where the
- * division machinery can attach along the whole length, with a single
- * centromere, as in humans: there, every piece without the centromere would
- * be lost at cell division. Shape carries the difference (an attachment line
- * on every piece versus one dot; lost pieces become dashed outlines), so it
- * does not depend on colour.
+ * The one idea: a fission only persists if both pieces can still be moved
+ * into the daughter cells. A toggle compares the holocentric chromosomes of
+ * butterflies and moths, where the division machinery can attach along the
+ * whole length, with a single centromere, as in most animals: there, every
+ * piece left without the centromere is lost (the textbook behaviour of an
+ * acentric fragment, labelled as a simplification). Shape carries the
+ * difference (an attachment line on every piece versus one dot; lost pieces
+ * become tilted dashed outlines), so it does not depend on colour.
+ *
+ * Laid out across the full prose column: karyotype on the left, the two
+ * questions and the result on the right, stacked when the column is narrow.
+ * The slider's two ends are the two real anchors: 21 (most Heliconius) and
+ * 60 (the sapho-group maximum).
  *
  * The markup is the final state (39 fissions, holocentric). With JavaScript
  * and motion allowed, the slider runs from 0 to 39 each time the figure comes
@@ -32,6 +39,7 @@ const id = 'fission-explainer';
 const MAX_FISSIONS = 39;
 const W = 13;
 const X0 = 60;
+const VIEW = '46 10 268 226';
 const PITCH = 40;
 const ROW_CY = [44, 110, 176];
 const GAP = 1.6;
@@ -87,45 +95,55 @@ const data = {
   max: MAX_FISSIONS,
   w: W,
   chr: chromosomes.map((c) => ({ x: c.x, top: c.top, h: c.h, cen: c.centromere, cuts: c.cuts.map((k) => [k.at, k.n]) })),
-  copy: { unit: copy.unit, start: copy.start, holo: copy.holo, holoMax: copy.holoMax, mono: copy.mono, count: copy.count },
+  copy: { unit: copy.unit, start: copy.start, monoStart: copy.monoStart, holo: copy.holo, holoMax: copy.holoMax, mono: copy.mono, count: copy.count, countLost: copy.countLost },
 };
 ---
 
-<figure id={id} class="fission" data-fission data-config={JSON.stringify(data)} data-mode="holo">
-  <svg viewBox="0 0 360 222" role="img" aria-labelledby={`${id}-title ${id}-desc`}>
-    <title id={`${id}-title`}>{copy.title}</title>
-    <desc id={`${id}-desc`}>{copy.desc}</desc>
-    <g data-karyotype>
-      {chromosomes.map((c, i) => finalState[i].map((p) => (
-        <g class="fs-piece">
-          <rect x={c.x} y={p.y} width={W} height={p.h} rx={Math.min(W / 2, p.h / 2)} class="fs-bar" />
-          <path d={`M${c.x + W / 2} ${p.y + 2.5} V${p.y + p.h - 2.5}`} class="fs-line" />
-        </g>
-      )))}
-    </g>
-    <text x={X0 - W / 2} y="218" class="fs-count" data-count>{copy.count.replace('{c}', '60')}</text>
-  </svg>
+<figure id={id} class="fission ink-card" data-fission data-config={JSON.stringify(data)} data-mode="holo">
+  <div class="fission-grid">
+    <svg viewBox={VIEW} role="img" aria-labelledby={`${id}-title ${id}-desc`}>
+      <title id={`${id}-title`}>{copy.title}</title>
+      <desc id={`${id}-desc`}>{copy.desc}</desc>
+      <g data-karyotype>
+        {chromosomes.map((c, i) => finalState[i].map((p) => (
+          <g class="fs-piece">
+            <rect x={c.x} y={p.y} width={W} height={p.h} rx={Math.min(W / 2, p.h / 2)} class="fs-bar" />
+            <path d={`M${c.x + W / 2} ${p.y + 2.5} V${p.y + p.h - 2.5}`} class="fs-line" />
+          </g>
+        )))}
+      </g>
+      <text x={X0 - W / 2} y="228" class="fs-count" data-count>{copy.count.replace('{c}', '60')}</text>
+    </svg>
 
-  <div class="explorable-panel" data-panel hidden>
-    <label class="explorable-label" for={`${id}-range`}>{copy.slider}</label>
-    <input id={`${id}-range`} class="explorable-range" type="range" min="0" max={MAX_FISSIONS} step="1" value={MAX_FISSIONS} data-range />
-    <fieldset class="fission-mode">
-      <legend class="explorable-label">{copy.modeLegend}</legend>
-      <div class="explorable-toggle">
-        {copy.modes.map((label, n) => (
-          <label>
-            <input type="radio" name={`${id}-mode`} value={n === 0 ? 'holo' : 'mono'} checked={n === 0} />
-            {label}
-          </label>
-        ))}
+    <div class="explorable-panel fission-panel" data-panel hidden>
+          <label class="explorable-prompt" for={`${id}-range`}>{copy.slider}</label>
+      <div class="explorable-control">
+        <div class="explorable-slider" style="--at:1" data-slider>
+          <input id={`${id}-range`} class="explorable-range" type="range" min="0" max={MAX_FISSIONS} step="1" value={MAX_FISSIONS} data-range />
+          <div class="explorable-ends" aria-hidden="true">
+            {copy.ends.map((end) => <span set:html={end} />)}
+          </div>
+        </div>
       </div>
-    </fieldset>
-    <div class="explorable-foot">
-      <output class="explorable-readout" for={`${id}-range`} data-readout></output>
-      <button type="button" class="explorable-replay" data-replay>
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></svg>
-        <span>{replay}</span>
-      </button>
+      <fieldset class="fission-mode">
+        <legend class="explorable-prompt">{copy.modeLegend}</legend>
+        <div class="explorable-toggle">
+          {copy.modes.map((label, n) => (
+            <label>
+              <input type="radio" name={`${id}-mode`} value={n === 0 ? 'holo' : 'mono'} checked={n === 0} />
+              <svg class="fission-key" viewBox="0 0 14 30" aria-hidden="true" focusable="false">
+                <rect x="1" y="1" width="12" height="28" rx="6" />
+                {n === 0 ? <path d="M7 5 V25" /> : <circle cx="7" cy="12" r="3" />}
+              </svg>
+              <span>{label}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <output class="explorable-result" for={`${id}-range`} data-result></output>
+        <button type="button" class="explorable-replay" data-replay aria-label={replay} title={replay}>
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></svg>
+        </button>
     </div>
   </div>
 </figure>
@@ -141,13 +159,16 @@ const data = {
     const layer = figure.querySelector<SVGGElement>('[data-karyotype]');
     const count = figure.querySelector<SVGTextElement>('[data-count]');
     const range = figure.querySelector<HTMLInputElement>('[data-range]');
-    const readout = figure.querySelector<HTMLOutputElement>('[data-readout]');
+    const slider = figure.querySelector<HTMLElement>('[data-slider]');
+    const result = figure.querySelector<HTMLOutputElement>('[data-result]');
     const replay = figure.querySelector<HTMLButtonElement>('[data-replay]');
     const panel = figure.querySelector<HTMLElement>('[data-panel]');
     const modes = figure.querySelectorAll<HTMLInputElement>('input[type="radio"]');
-    if (!layer || !count || !range || !readout || !replay || !panel) return;
+    if (!layer || !count || !range || !slider || !result || !replay || !panel) return;
     let frame = 0;
+    let cueTimer = 0;
     let touched = false;
+    let cued = false;
 
     const el = (name: string, attrs: Record<string, string | number>) => {
       const node = document.createElementNS(SVG_NS, name);
@@ -160,49 +181,67 @@ const data = {
       const mono = figure.dataset.mode === 'mono';
       const w = cfg.w;
       const nodes: SVGElement[] = [];
+      let n = 0;
       for (const c of cfg.chr) {
-        const edges = [0, ...c.cuts.filter(([, n]: number[]) => n < f).map(([at]: number[]) => at).sort((a: number, b: number) => a - b), c.h];
+        const edges = [0, ...c.cuts.filter(([, k]: number[]) => k < f).map(([at]: number[]) => at).sort((a: number, b: number) => a - b), c.h];
         for (let j = 0; j < edges.length - 1; j++) {
           const a = edges[j];
           const b = edges[j + 1];
           const y = c.top + a + (a > 0 ? 1.6 : 0);
           const h = c.top + b - (b < c.h ? 1.6 : 0) - y;
           const kept = a <= c.cen && c.cen <= b;
-          const g = el('g', { class: `fs-piece${mono && !kept ? ' is-lost' : ''}` });
+          const lost = mono && !kept;
+          const g = el('g', { class: `fs-piece${lost ? ' is-lost' : ''}` }) as SVGGElement;
+          // A lost piece tilts out of line, alternately left and right.
+          if (lost) g.style.setProperty('--tilt', `${n % 2 ? 16 : -16}deg`);
           g.append(el('rect', { x: c.x, y: y.toFixed(1), width: w, height: h.toFixed(1), rx: Math.min(w / 2, h / 2).toFixed(1), class: 'fs-bar' }));
           if (!mono) g.append(el('path', { d: `M${c.x + w / 2} ${(y + 2.5).toFixed(1)} V${(y + h - 2.5).toFixed(1)}`, class: 'fs-line' }));
           else if (kept) g.append(el('circle', { cx: c.x + w / 2, cy: (c.top + c.cen).toFixed(1), r: 3.2, class: 'fs-centromere' }));
           nodes.push(g);
+          n++;
         }
       }
       layer.replaceChildren(...nodes);
-      const passed = mono ? 21 : 21 + f;
-      count.textContent = fill(cfg.copy.count, { c: passed });
+      const total = 21 + f;
+      count.textContent = mono && f > 0 ? fill(cfg.copy.countLost, { c: 21, n: f }) : fill(cfg.copy.count, { c: total });
       const unit = `${f} ${cfg.copy.unit[f === 1 ? 0 : 1]}`;
       const text = f === 0
-        ? cfg.copy.start
+        ? (mono ? cfg.copy.monoStart : cfg.copy.start)
         : mono
           ? fill(cfg.copy.mono, { f: unit, n: f })
-          : fill(f === cfg.max ? cfg.copy.holoMax : cfg.copy.holo, { f: unit, c: passed });
-      readout.innerHTML = text;
+          : fill(f === cfg.max ? cfg.copy.holoMax : cfg.copy.holo, { f: unit, c: total });
+      if (result.innerHTML !== text) result.innerHTML = text;
       range.setAttribute('aria-valuetext', text.replace(/<[^>]+>/g, ''));
-      range.style.setProperty('--fill', `${(f / cfg.max) * 100}%`);
+      slider.style.setProperty('--at', String(f / cfg.max));
     };
 
-    const stop = () => { cancelAnimationFrame(frame); frame = 0; };
-    const take = () => { stop(); touched = true; };
+    const stop = () => { cancelAnimationFrame(frame); window.clearTimeout(cueTimer); frame = 0; };
+    const take = () => { stop(); touched = true; result.removeAttribute('aria-live'); };
+    // "Your turn": the slider has just moved by itself, so the nudge goes to
+    // the question the reader has not seen answered yet.
+    const cue = () => {
+      const other = [...modes].find((input) => !input.checked)?.closest('label');
+      if (cued || touched || !other) return;
+      cued = true;
+      other.classList.add('is-cue');
+      window.setTimeout(() => other.classList.remove('is-cue'), 1600);
+    };
 
     // The autoplay: the slider itself runs from 0 to 39, so the reader sees
     // which control produced the change.
     const play = () => {
       stop();
+      result.setAttribute('aria-live', 'off');
       const t0 = performance.now();
       const run = (now: number) => {
-        const k = Math.min(1, (now - t0 - 300) / 2600);
+        const k = Math.min(1, (now - t0 - 300) / 2800);
         const eased = k <= 0 ? 0 : 1 - Math.pow(1 - k, 2);
         range.value = String(Math.round(eased * cfg.max));
         render();
-        frame = k < 1 ? requestAnimationFrame(run) : 0;
+        if (k < 1) { frame = requestAnimationFrame(run); return; }
+        frame = 0;
+        result.removeAttribute('aria-live');
+        cueTimer = window.setTimeout(cue, 500);
       };
       frame = requestAnimationFrame(run);
     };
@@ -212,10 +251,16 @@ const data = {
       take();
       figure.dataset.mode = input.value;
       render();
+      if (!reduce.matches) {
+        figure.classList.remove('is-switching');
+        void figure.getBoundingClientRect();
+        figure.classList.add('is-switching');
+      }
     }));
     replay.addEventListener('click', () => {
       touched = false;
       figure.dataset.mode = 'holo';
+      figure.classList.remove('is-switching');
       modes.forEach((input) => { input.checked = input.value === 'holo'; });
       if (reduce.matches) { range.value = String(cfg.max); render(); return; }
       play();
@@ -242,36 +287,58 @@ const data = {
 
 <style>
   .fission {
-    margin: 0 0 var(--space-m);
-    max-width: 30rem;
-    padding: 0.85rem 0.85rem 0.75rem;
-    background: var(--bg-inset);
-    border: 1px solid var(--hairline);
-    border-radius: var(--radius);
+    --stage: var(--tier-stage, var(--card));
+    container-type: inline-size;
+    /* Room on the right for the card's hard shadow. */
+    margin: var(--space-s) var(--ink-drop) var(--space-m) 0;
+    padding: 1rem 1.1rem;
+    background: var(--stage);
   }
-  .fission > svg {
+  .fission-grid { display: grid; gap: 0.75rem; }
+  .fission-grid > svg {
     display: block;
     user-select: none;
     width: 100%;
+    max-width: 22rem;
     height: auto;
-    margin-bottom: 0.5rem;
+    margin-inline: auto;
+    overflow: visible;
+  }
+  /* Karyotype left, questions and result right, once there is room. */
+  @container (min-width: 36rem) {
+    .fission-grid { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr); gap: 1.5rem; align-items: center; }
+    .fission-panel { padding-top: 0; padding-left: 1.5rem; border-top: 0; border-left: 1px dashed var(--surface-border-strong); }
+    .fission-panel :global(.explorable-replay) { top: -0.15rem; }
   }
   /* Pieces are redrawn by the script, so these rules are global, scoped
      by the figure's own class instead. */
   .fission :global(.fs-bar) { fill: var(--accent); }
+  .fission :global(.fs-piece) { transform-box: fill-box; transform-origin: center; }
   /* Holocentric: a line of attachment points runs the length of every piece. */
-  .fission :global(.fs-line) { fill: none; stroke: var(--bg-inset); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 0.1 3.4; }
-  /* One centromere: a single dot; pieces without it are lost. */
-  .fission :global(.fs-centromere) { fill: var(--bg-inset); }
-  .fission :global(.is-lost .fs-bar) { fill: none; stroke: var(--text-faint); stroke-width: 1; stroke-dasharray: 2 2.5; }
-  .fs-count { font-family: var(--font-body); font-size: 14px; font-weight: 600; fill: var(--text-strong); }
+  .fission :global(.fs-line) { fill: none; stroke: var(--stage); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 0.1 3.4; }
+  /* One centromere: a single dot; pieces without it tilt out of line, lost. */
+  .fission :global(.fs-centromere) { fill: var(--stage); }
+  .fission :global(.is-lost) { transform: rotate(var(--tilt, 0deg)); }
+  .fission :global(.is-lost .fs-bar) { fill: none; stroke: var(--text-muted); stroke-width: 1.25; stroke-dasharray: 2 2.2; }
+  .fission:global(.is-switching) :global(.is-lost) { animation: fs-lose 0.45s var(--ease-settle) both; }
+  .fs-count { font-family: var(--font-display); font-size: 16px; font-weight: 600; fill: var(--text-strong); }
+  @keyframes fs-lose { from { transform: rotate(0deg); opacity: 0.2; } to { transform: rotate(var(--tilt, 0deg)); opacity: 1; } }
 
+  .fission-panel :global(.explorable-control) { min-height: 0; margin-bottom: 0.35rem; }
+  /* The longest result runs to three lines; reserve them so nothing jumps. */
+  .fission-panel :global(.explorable-result) { min-height: 3lh; }
   .fission-mode {
     display: grid;
-    margin: 0.35rem 0 0.25rem;
+    gap: 0.45rem;
+    margin: 0;
     padding: 0;
     border: 0;
     min-width: 0;
   }
-  .fission-mode legend { padding: 0; margin-bottom: 0.4rem; }
+  .fission-mode legend { padding: 0; margin-bottom: 0.45rem; }
+  /* Each answer carries the mark it draws on the chromosomes. */
+  .fission-key { flex: none; width: 0.7rem; height: 1.5rem; }
+  .fission-key rect { fill: var(--accent); }
+  .fission-key path { fill: none; stroke: var(--stage); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 0.1 3.4; }
+  .fission-key circle { fill: var(--stage); }
 </style>

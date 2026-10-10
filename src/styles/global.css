@@ -598,97 +598,164 @@ a.ink-card:active, .ink-press:active {
 }
 
 /* ============================ Explorable controls ============================
-   Shared by the Science diagrams (TierDiagram, FissionExplainer): one labelled
-   control per figure and a one-line readout of what it now shows. Native
-   inputs, so keyboard, touch and screen readers work without extra code. */
+   Shared by the Science diagrams (TierDiagram, FissionExplainer). Every
+   panel has the same three rows, so cards line up and nothing jumps:
+     head     one prompt phrased as a question, Replay tucked at its right
+     control  one native input (a slider, a button or a pair of radios)
+     result   one line that says what the figure now shows, height reserved
+   Native inputs, so keyboard, touch and screen readers work without extra
+   code. `.is-cue` is the single "your turn" nudge after the autoplay. */
 .explorable-panel {
+  position: relative;
   display: grid;
-  gap: 0.35rem;
-  padding-top: 0.6rem;
-  border-top: 1px dashed var(--hairline);
+  gap: 0.45rem;
+  padding-top: 0.7rem;
+  border-top: 1px dashed var(--surface-border-strong);
 }
 .explorable-panel[hidden] { display: none; }
-.explorable-foot {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.75rem;
-}
-.explorable-replay {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  min-height: 1.75rem;
-  padding: 0.2rem 0.55rem;
-  border: 1px solid var(--hairline);
-  border-radius: 999px;
-  background: var(--bg-inset);
-  color: var(--text-faint);
-  font: 500 0.72rem/1.2 var(--font-body);
-  cursor: pointer;
-  transition: color var(--transition), border-color var(--transition);
-}
-.explorable-replay:hover { color: var(--text-strong); border-color: var(--surface-border-strong); }
-.explorable-replay svg { width: 0.8rem; height: 0.8rem; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.explorable-label {
-  color: var(--text-muted);
-  font-size: var(--step--1);
+.explorable-prompt {
+  display: block;
+  margin: 0;
+  padding: 0 2.5rem 0 0;
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-size: var(--step-0);
   font-weight: 560;
   line-height: 1.3;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.explorable-replay {
+  /* Last in the markup so the keyboard reaches the control first; shown at
+     the right of the prompt. */
+  position: absolute;
+  top: 0.55rem;
+  right: 0;
+  display: inline-grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 1.5px solid var(--surface-border-strong);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--transition), border-color var(--transition), transform var(--transition);
+}
+/* A larger touch target than the visible circle. */
+.explorable-replay::before { content: ''; position: absolute; inset: -0.5rem; }
+.explorable-replay:hover { color: var(--text-strong); border-color: var(--ink-line); transform: rotate(-30deg); }
+.explorable-replay svg { width: 0.85rem; height: 0.85rem; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.explorable-control {
+  display: flex;
+  align-items: flex-start;
+  min-height: 3.4rem;
+}
+.explorable-slider {
+  --thumb: 1.5rem;
+  --at: 1;
+  /* The thumb's centre, as a distance from the left edge of the track. */
+  --thumb-x: calc(var(--thumb) / 2 + (100% - var(--thumb)) * var(--at));
+  position: relative;
+  flex: 1;
+  min-width: 0;
 }
 .explorable-range {
-  --fill: 100%;
   -webkit-appearance: none;
   appearance: none;
   display: block;
   width: 100%;
-  height: 1.75rem;
+  height: 2.25rem;
   margin: 0;
   background: transparent;
   cursor: pointer;
   touch-action: pan-y;
 }
 .explorable-range::-webkit-slider-runnable-track {
-  height: 4px;
-  border-radius: 2px;
-  background: linear-gradient(to right, var(--accent) var(--fill), var(--surface-border-strong) var(--fill));
+  box-sizing: border-box;
+  height: 8px;
+  border: 1.5px solid var(--ink-line);
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--accent) var(--thumb-x), var(--stage, var(--card)) var(--thumb-x));
 }
 .explorable-range::-moz-range-track {
-  height: 4px;
-  border-radius: 2px;
-  background: linear-gradient(to right, var(--accent) var(--fill), var(--surface-border-strong) var(--fill));
+  height: 5px;
+  border: 1.5px solid var(--ink-line);
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--accent) var(--thumb-x), var(--stage, var(--card)) var(--thumb-x));
 }
 .explorable-range::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-top: calc(2px - 0.625rem);
-  border: 3px solid var(--bg-inset);
+  box-sizing: border-box;
+  width: var(--thumb);
+  height: var(--thumb);
+  margin-top: calc(2.5px - var(--thumb) / 2);
+  border: 2px solid var(--ink-line);
   border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent);
-  transition: transform var(--transition);
+  background: var(--marker);
+  box-shadow: 2px 2px 0 var(--ink-shadow);
+  transition: transform var(--transition), box-shadow var(--transition);
 }
 .explorable-range::-moz-range-thumb {
-  width: 1.25rem;
-  height: 1.25rem;
   box-sizing: border-box;
-  border: 3px solid var(--bg-inset);
+  width: var(--thumb);
+  height: var(--thumb);
+  border: 2px solid var(--ink-line);
   border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent);
+  background: var(--marker);
+  box-shadow: 2px 2px 0 var(--ink-shadow);
 }
-.explorable-range:active::-webkit-slider-thumb { transform: scale(1.15); }
-.explorable-range:focus-visible { outline-offset: 1px; }
-.explorable-readout {
+/* Pressed, the thumb sinks into its shadow, like the buttons. */
+.explorable-range:active::-webkit-slider-thumb { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--ink-shadow); }
+/* Keyboard focus rings the thumb itself, so it never crowds the marks below. */
+.explorable-range:focus-visible { outline: none; }
+.explorable-range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 2px var(--stage, var(--card)), 0 0 0 4.5px var(--accent); }
+.explorable-range:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 2px var(--stage, var(--card)), 0 0 0 4.5px var(--accent); }
+/* Marks under the track, placed at the thumb's stops. */
+.explorable-ticks {
+  position: relative;
+  height: 1.1rem;
+  margin: 0 calc(var(--thumb) / 2);
+  pointer-events: none;
+}
+.explorable-ends {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--text-muted);
+  font-size: var(--step--2);
+  line-height: 1.3;
+  pointer-events: none;
+}
+.explorable-ends > :last-child { text-align: right; }
+.explorable-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  padding: 0.4rem 0.95rem 0.4rem 0.75rem;
+  border: 2px solid var(--ink-line);
+  border-radius: 999px;
+  background: var(--marker);
+  color: var(--on-marker);
+  box-shadow: 3px 3px 0 var(--ink-shadow);
+  font: 600 var(--step--1)/1.2 var(--font-body);
+  cursor: pointer;
+  transition: transform var(--dur-instant, 90ms) var(--ease-glide), box-shadow var(--dur-instant, 90ms) var(--ease-glide);
+}
+.explorable-btn svg { width: 1.5rem; height: auto; flex: none; fill: currentColor; }
+.explorable-btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink-shadow); }
+.explorable-btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink-shadow); }
+.explorable-result {
   display: block;
   min-height: 2lh;
   color: var(--text);
   font-size: var(--step--1);
   line-height: 1.45;
 }
+.explorable-result i { white-space: nowrap; }
 .readout-base {
   font-family: var(--font-mono);
   font-weight: 700;
@@ -698,8 +765,7 @@ a.ink-card:active, .ink-press:active {
 .readout-base--G { color: var(--base-G, var(--trait-scent)); }
 .readout-base--T { color: var(--base-T, var(--trait-pattern)); }
 .explorable-toggle {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: 0.4rem;
   margin: 0;
   padding: 0;
@@ -708,16 +774,16 @@ a.ink-card:active, .ink-press:active {
 }
 .explorable-toggle label {
   position: relative;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.45rem;
-  min-height: 2.25rem;
-  padding: 0.35rem 0.8rem;
-  border: 1px solid var(--surface-border-strong);
-  border-radius: 999px;
+  gap: 0.6rem;
+  min-height: 2.5rem;
+  padding: 0.4rem 0.8rem;
+  border: 1.5px solid var(--surface-border-strong);
+  border-radius: 0.75rem;
   color: var(--text-muted);
   font-size: var(--step--1);
-  line-height: 1.25;
+  line-height: 1.3;
   cursor: pointer;
   transition: color var(--transition), border-color var(--transition), background var(--transition);
 }
@@ -730,23 +796,55 @@ a.ink-card:active, .ink-press:active {
   opacity: 0;
   cursor: pointer;
 }
-/* Checked is shown by a filled dot as well as colour. */
+/* Checked is shown by a filled dot and a heavier outline as well as colour. */
 .explorable-toggle label::before {
   content: '';
   flex: none;
-  width: 0.6rem;
-  height: 0.6rem;
-  border: 1.5px solid currentColor;
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 2px solid currentColor;
   border-radius: 50%;
 }
 .explorable-toggle label:has(:checked) {
-  border-color: var(--accent);
-  background: var(--accent-dim);
+  border-color: var(--ink-line);
+  box-shadow: 0 0 0 0.75px var(--ink-line);
+  background: color-mix(in oklab, var(--marker) 30%, transparent);
   color: var(--text-strong);
+  font-weight: 560;
 }
-.explorable-toggle label:has(:checked)::before { background: var(--accent); border-color: var(--accent); }
+.explorable-toggle label:has(:checked)::before { background: var(--ink-line); border-color: var(--ink-line); }
 .explorable-toggle label:has(:focus-visible) { outline: var(--focus-ring) solid var(--accent); outline-offset: 2px; }
-.explorable-toggle label:hover { color: var(--text-strong); }
+.explorable-toggle label:hover { color: var(--text-strong); border-color: var(--ink-line); }
+
+/* "Your turn": one ring spreads from the control, once, after the autoplay. */
+.explorable-slider.is-cue::after,
+.explorable-btn.is-cue::after,
+.explorable-toggle label.is-cue::after {
+  content: '';
+  position: absolute;
+  border: 2px solid var(--ink-line);
+  border-radius: 999px;
+  pointer-events: none;
+  animation: explorable-cue 1.2s var(--ease-glide) 1 both;
+}
+.explorable-slider.is-cue::after {
+  left: calc(var(--thumb-x) - var(--thumb) / 2);
+  top: calc(1.125rem - var(--thumb) / 2);
+  width: var(--thumb);
+  height: var(--thumb);
+}
+.explorable-btn { position: relative; }
+.explorable-btn.is-cue::after { inset: -2px; }
+.explorable-toggle label.is-cue::after { inset: -2px; border-radius: 0.75rem; }
+@keyframes explorable-cue {
+  from { opacity: 0.9; transform: scale(1); }
+  to { opacity: 0; transform: scale(var(--cue-grow, 2.2)); }
+}
+.explorable-btn.is-cue, .explorable-toggle label.is-cue { --cue-grow: 1.18; }
+@media (prefers-reduced-motion: reduce) {
+  .explorable-slider.is-cue::after, .explorable-btn.is-cue::after, .explorable-toggle label.is-cue::after { animation: none; opacity: 0; }
+  .explorable-replay:hover { transform: none; }
+}
 
 .skip-link {
   position: fixed;

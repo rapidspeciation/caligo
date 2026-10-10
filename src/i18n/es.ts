@@ -196,16 +196,19 @@ export const es: Dict = {
   "science": {
     "fission": {
       "title": "Fisiones cromosómicas con y sin un único centrómero",
-      "desc": "Veintiún cromosomas, como en la mayoría de Heliconius. Un control deslizante añade fisiones, cada una divide un cromosoma en dos, hasta 39 fisiones y 60 cromosomas, el número más alto del grupo sapho. Cuando la maquinaria de división puede unirse a lo largo de todo el cromosoma, cada fragmento aún puede pasar a una célula hija. Con un solo centrómero, como en los humanos, cada fragmento sin centrómero se perdería.",
+      "desc": "Veintiún cromosomas, como en la mayoría de Heliconius. Un control deslizante añade fisiones, cada una divide un cromosoma en dos, hasta 39 fisiones y 60 cromosomas, el número más alto del grupo sapho. Cuando la maquinaria de división puede unirse a lo largo de todo el cromosoma, como en mariposas y polillas, cada fragmento aún puede pasar a las células hijas. Con un solo centrómero, como en la mayoría de los animales, cada fragmento que queda sin centrómero se pierde. Es una imagen simplificada.",
       "count": "{c} cromosomas",
-      "slider": "Fisiones",
+      "countLost": "{c} se conservan, {n} se pierden",
+      "slider": "¿Cuántas veces se dividen los cromosomas?",
+      "ends": ["21: la mayoría de <i>Heliconius</i>", "60: máximo del grupo sapho"],
       "unit": ["fisión", "fisiones"],
-      "modeLegend": "Dónde se une la maquinaria de división",
-      "modes": ["A lo largo del cromosoma, como en mariposas", "En un centrómero, como en humanos"],
+      "modeLegend": "¿Dónde se une la maquinaria de división?",
+      "modes": ["A lo largo de todo el cromosoma (mariposas y polillas)", "En un solo centrómero (la mayoría de los animales)"],
       "start": "Sin fisiones: 21 cromosomas, como en la mayoría de <i>Heliconius</i>.",
-      "holo": "{f}: {c} cromosomas. Cada fragmento conserva parte de la línea de unión, así que aún puede pasar a una célula hija.",
-      "holoMax": "{f}: 60 cromosomas, el número más alto del grupo sapho. Cada fragmento aún puede pasar a una célula hija.",
-      "mono": "{f}: solo los 21 fragmentos con centrómero pasan a las células hijas. Los otros {n} se perderían."
+      "monoStart": "Sin fisiones: cada uno de los 21 cromosomas tiene su centrómero.",
+      "holo": "{f}: cada fragmento aún puede unirse, así que los {c} pasan a las células hijas.",
+      "holoMax": "{f}: 60 cromosomas, el máximo del grupo sapho, y todos siguen pasando a las células hijas.",
+      "mono": "{f}: solo los 21 fragmentos con centrómero pasan a las células hijas. Los otros {n} se pierden (simplificado)."
     },
     "tiers": {
       "heading": "Tres niveles de datos genómicos",
@@ -214,19 +217,24 @@ export const es: Dict = {
       "replay": "Repetir",
       "explore": {
         "barcode": {
-          "label": "Elige una fila de la biblioteca para comparar",
-          "match": "<i>{name}</i>: coinciden las 16 bases, así que la especie queda identificada.",
-          "miss": "<i>{name}</i>: difieren {n} de 16 bases, marcadas bajo la fila. No coincide."
+          "prompt": "¿De qué especie es esta mariposa?",
+          "button": "Probar con otra mariposa",
+          "note": "Se muestran 16 de unas 650 bases (gen COI)",
+          "scanning": "Comparando con cada código de la biblioteca…",
+          "match": "Mariposa {k} de {n}: las 16 bases coinciden con <i>{name}</i>. Las marcas señalan las diferencias."
         },
         "resequencing": {
-          "label": "Posición a lo largo del genoma",
-          "same": "Posición {i} de 21: todas las lecturas tienen {base}. Las poblaciones coinciden.",
-          "differ": "Posición {i} de 21: {a} arriba, {b} abajo. Aquí las poblaciones difieren."
+          "prompt": "¿Dónde difieren las dos poblaciones?",
+          "same": "Sitio {i}: {a} en las seis mariposas. Aquí no hay nada que comparar.",
+          "mixed": "Sitio {i}: {a} en {x} de {n} arriba y en {y} de {n} abajo. Mezclado en ambas, así que no las distingue.",
+          "differ": "Sitio {i}: {a} en {n} de {n} arriba, {b} en {n} de {n} abajo. Aquí las poblaciones difieren."
         },
         "reference": {
-          "label": "Lecturas secuenciadas",
-          "partial": "{p}% del genoma cubierto, en {n} fragmentos. Cada hueco es un tramo que ninguna lectura alcanzó.",
-          "whole": "100% cubierto: 21 cromosomas, cada uno en un solo fragmento continuo."
+          "prompt": "¿Cuántas lecturas cierran los huecos?",
+          "ends": ["Menos lecturas", "Más lecturas"],
+          "pieces": "{n} fragmentos",
+          "partial": "Genoma en borrador: {g} huecos sin lecturas aún parten los cromosomas en fragmentos.",
+          "whole": "Referencia a escala cromosómica: los 21 cromosomas, cada uno en un solo fragmento."
         }
       },
       "items": [
@@ -246,15 +254,15 @@ export const es: Dict = {
       "diagrams": {
         "barcode": {
           "title": "Cómo un código de barras de ADN identifica una especie",
-          "desc": "Una mariposa de especie desconocida aporta un fragmento corto y estandarizado de ADN. Cada una de sus bases, A, C, G o T, se convierte en una barra de color y forma un código de barras. El código se compara con los de cuatro especies de Heliconius en una biblioteca de referencia. Tres difieren en algunas posiciones; la cuarta es idéntica, así que el ejemplar se identifica como Heliconius cydno."
+          "desc": "Una mariposa de especie desconocida aporta un fragmento corto y estandarizado de ADN. Cada una de sus bases, A, C, G o T, se convierte en una barra de color y forma un código de barras. El código se compara con los de cuatro especies de Heliconius en una biblioteca de referencia. Tres difieren en algunas posiciones, señaladas con marcas; uno es idéntico, así que el ejemplar queda identificado, primero como Heliconius cydno. Un botón trae otra mariposa desconocida y la misma comparación le pone nombre. Se dibujan dieciséis bases; un código de barras animal real tiene unas 650 bases del gen COI."
         },
         "resequencing": {
           "title": "Cómo la resecuenciación compara poblaciones",
-          "desc": "Se secuencian en lecturas cortas tres mariposas de una población y tres de otra. Las lecturas se alinean a lo largo de un genoma de referencia: las de la primera población por encima y las de la segunda por debajo. En una posición, todas las lecturas de la primera población tienen una A y todas las de la segunda una G: un sitio donde las dos poblaciones difieren."
+          "desc": "Se secuencian en lecturas cortas tres mariposas de una población y tres de otra. Las lecturas se alinean a lo largo de un genoma de referencia, una fila por mariposa: la primera población por encima y la segunda por debajo. Hay cinco sitios señalados. En dos, las seis mariposas tienen la misma letra. En dos, ambas letras aparecen en las dos poblaciones, así que ese sitio no sirve para distinguirlas. En uno, todas las mariposas de arriba tienen una T y todas las de abajo una C: un sitio donde las dos poblaciones difieren."
         },
         "reference": {
           "title": "Cómo se ensambla un genoma de referencia",
-          "desc": "El ADN de una mariposa se secuencia en muchos fragmentos. Los fragmentos se ordenan y se unen hasta que cada cromosoma es una secuencia continua. El resultado es el cariotipo de un Heliconius típico: 21 cromosomas.",
+          "desc": "El ADN de una mariposa se secuencia en muchas lecturas cortas. Donde las lecturas se solapan, se unen en fragmentos; los tramos que ninguna lectura ha alcanzado quedan como huecos. Con pocas lecturas el resultado es un genoma en borrador, en decenas de fragmentos. Al sumar lecturas los huecos se cierran y los fragmentos se unen, hasta que cada cromosoma es una secuencia continua: una referencia a escala cromosómica con los 21 cromosomas de un Heliconius típico.",
           "count": "21 cromosomas"
         }
       }

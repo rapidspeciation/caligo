@@ -199,16 +199,19 @@ export const en = {
   "science": {
     "fission": {
       "title": "Chromosome fissions with and without a single centromere",
-      "desc": "Twenty-one chromosomes, as in most Heliconius. A slider adds fissions, each splitting one chromosome in two, up to 39 fissions and 60 chromosomes, the highest count in the sapho group. When the division machinery can attach along the whole chromosome, every piece can still move into a daughter cell. With a single centromere, as in humans, each piece without the centromere would be lost.",
+      "desc": "Twenty-one chromosomes, as in most Heliconius. A slider adds fissions, each splitting one chromosome in two, up to 39 fissions and 60 chromosomes, the highest count in the sapho group. When the division machinery can attach along the whole chromosome, as in butterflies and moths, every piece can still be passed on to the daughter cells. With a single centromere, as in most animals, each piece left without the centromere is lost. This is a simplified picture.",
       "count": "{c} chromosomes",
-      "slider": "Fissions",
+      "countLost": "{c} kept, {n} lost",
+      "slider": "How many times do the chromosomes split?",
+      "ends": ["21: most <i>Heliconius</i>", "60: sapho-group maximum"],
       "unit": ["fission", "fissions"],
-      "modeLegend": "Where the division machinery attaches",
-      "modes": ["Along the chromosome, as in butterflies", "At one centromere, as in humans"],
+      "modeLegend": "Where does the division machinery attach?",
+      "modes": ["Along the whole chromosome (butterflies and moths)", "One centromere (most animals)"],
       "start": "No fissions: 21 chromosomes, as in most <i>Heliconius</i>.",
-      "holo": "{f}: {c} chromosomes. Every piece keeps part of the attachment line, so it can still move into a daughter cell.",
-      "holoMax": "{f}: 60 chromosomes, the highest count in the sapho group. Every piece can still move into a daughter cell.",
-      "mono": "{f}: only the 21 pieces with a centromere move into the daughter cells. The other {n} would be lost."
+      "monoStart": "No fissions: each of the 21 chromosomes has its centromere.",
+      "holo": "{f}: every piece can still attach, so all {c} are passed on.",
+      "holoMax": "{f}: 60 chromosomes, the most in the sapho group, and every piece is still passed on.",
+      "mono": "{f}: only the 21 pieces with a centromere are passed on. The other {n} cannot attach and are lost (simplified)."
     },
     "tiers": {
       "heading": "Three tiers of genomic data",
@@ -217,19 +220,24 @@ export const en = {
       "replay": "Replay",
       "explore": {
         "barcode": {
-          "label": "Choose a library row to compare",
-          "match": "<i>{name}</i>: all 16 bases match, so the species is identified.",
-          "miss": "<i>{name}</i>: {n} of 16 bases differ, ticked under the row. Not a match."
+          "prompt": "Which species is this butterfly?",
+          "button": "Try another butterfly",
+          "note": "16 of about 650 bases shown (COI gene)",
+          "scanning": "Comparing with each barcode in the library…",
+          "match": "Butterfly {k} of {n}: all 16 bases match <i>{name}</i>. The ticks mark where the others differ."
         },
         "resequencing": {
-          "label": "Position along the genome",
-          "same": "Position {i} of 21: every read has {base}. The populations agree.",
-          "differ": "Position {i} of 21: {a} above, {b} below. The populations differ here."
+          "prompt": "Where do the two populations differ?",
+          "same": "Site {i}: {a} in all six butterflies. Nothing to compare here.",
+          "mixed": "Site {i}: {a} in {x} of {n} above and {y} of {n} below. Mixed in both, so it does not tell them apart.",
+          "differ": "Site {i}: {a} in {n} of {n} above, {b} in {n} of {n} below. The populations differ here."
         },
         "reference": {
-          "label": "Reads sequenced",
-          "partial": "{p}% of the genome covered, in {n} pieces. Each gap is a stretch no read reached.",
-          "whole": "100% covered: 21 chromosomes, one continuous piece each."
+          "prompt": "How many reads until the gaps close?",
+          "ends": ["Fewer reads", "More reads"],
+          "pieces": "{n} pieces",
+          "partial": "A draft genome: {g} gaps that no read has reached still break the chromosomes into pieces.",
+          "whole": "A chromosome-scale reference: each of the 21 chromosomes is one continuous piece."
         }
       },
       "items": [
@@ -249,15 +257,15 @@ export const en = {
       "diagrams": {
         "barcode": {
           "title": "How a DNA barcode identifies a species",
-          "desc": "A butterfly of unknown species gives a short, standard stretch of DNA. Each of its bases, A, C, G or T, becomes a coloured bar, forming a barcode. The barcode is compared with the barcodes of four Heliconius species in a reference library. Three differ at a few positions; the fourth is identical, so the specimen is identified as Heliconius cydno."
+          "desc": "A butterfly of unknown species gives a short, standard stretch of DNA. Each of its bases, A, C, G or T, becomes a coloured bar, forming a barcode. The barcode is compared with the barcodes of four Heliconius species in a reference library. Three differ at a few positions, marked with ticks; one is identical, so the specimen is identified, first as Heliconius cydno. A button swaps in another unknown butterfly and the same comparison names it. Sixteen bases are drawn; a real animal barcode is about 650 bases of the COI gene."
         },
         "resequencing": {
           "title": "How population resequencing compares populations",
-          "desc": "Three butterflies from one population and three from another are sequenced as short reads. The reads line up along a reference genome, those of the first population above it and those of the second below. At one position every read from the first population carries an A and every read from the second carries a G: a site where the two populations differ."
+          "desc": "Three butterflies from one population and three from another are sequenced as short reads. The reads line up along a reference genome, one row per butterfly: the first population above it and the second below. Five sites are marked. At two, all six butterflies carry the same letter. At two, both letters occur in both populations, so that site cannot tell them apart. At one, every butterfly above carries a T and every butterfly below a C: a site where the two populations differ."
         },
         "reference": {
           "title": "How a reference genome is assembled",
-          "desc": "The DNA of one butterfly is sequenced as many fragments. The fragments are ordered and joined until each chromosome is one continuous sequence. The result is the karyotype of a typical Heliconius: 21 chromosomes.",
+          "desc": "The DNA of one butterfly is sequenced as many short reads. Where reads overlap they join into pieces; stretches no read has reached stay as gaps. With few reads the result is a draft genome in dozens of pieces. As reads are added the gaps close and the pieces merge, until each chromosome is one continuous sequence: a chromosome-scale reference with the 21 chromosomes of a typical Heliconius.",
           "count": "21 chromosomes"
         }
       }
