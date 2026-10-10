@@ -201,7 +201,7 @@ const data = {
       const total = 21 + f;
       count.textContent = mono && f > 0 ? fill(cfg.copy.countLost, { c: 21, n: f }) : fill(cfg.copy.count, { c: total });
       const unit = `${f} ${cfg.copy.unit[f === 1 ? 0 : 1]}`;
-      const text = f === 0
+      const text = f === 0 && !mono
         ? cfg.copy.start
         : f < cfg.max
           ? cfg.copy.splitting
@@ -237,33 +237,44 @@ const data = {
       figure.classList.add('is-switching');
     };
 
-    // The autoplay: the chromosomes split 39 times and all 60 pieces are
-    // kept; the same splits are then shown with one centromere, where 39
-    // pieces are lost; and it comes back to the butterfly.
-    const play = () => {
-      stop();
-      result.setAttribute('aria-live', 'off');
+    // The chromosomes split 39 times, one fission after another.
+    const split = (lead: number, done: () => void) => {
       const t0 = performance.now();
       const run = (now: number) => {
-        const k = Math.min(1, (now - t0 - 1400) / 3200);
+        const k = Math.min(1, (now - t0 - lead) / 3200);
         const eased = k <= 0 ? 0 : 1 - Math.pow(1 - k, 2);
         fissions = Math.round(eased * cfg.max);
         render();
         if (k < 1) { frame = requestAnimationFrame(run); return; }
         frame = 0;
+        done();
+      };
+      frame = requestAnimationFrame(run);
+    };
+
+    // The autoplay: all 60 pieces are kept; the same splits are then shown
+    // with one centromere, where 39 pieces are lost; and it comes back to
+    // the butterfly.
+    const play = () => {
+      stop();
+      result.setAttribute('aria-live', 'off');
+      split(1400, () => {
         after(3200, () => setMode('mono'));
         after(7400, () => {
           setMode('holo');
           result.removeAttribute('aria-live');
           cueTimer = window.setTimeout(cue, 600);
         });
-      };
-      frame = requestAnimationFrame(run);
+      });
     };
 
     modes.forEach((input) => input.addEventListener('change', () => {
+      // Choosing an answer replays the splits for that answer.
       take();
-      setMode(input.value);
+      figure.classList.remove('is-switching');
+      figure.dataset.mode = input.value;
+      if (reduce.matches) { render(); return; }
+      split(500, () => {});
     }));
     replay.addEventListener('click', () => {
       touched = false;
