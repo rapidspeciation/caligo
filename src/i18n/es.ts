@@ -221,7 +221,7 @@ export const es: Dict = {
           "button": "Probar con otra mariposa",
           "note": "Se muestran 16 de unas 650 bases (gen COI)",
           "scanning": "Comparando con cada código de la biblioteca…",
-          "match": "Mariposa {k} de {n}: las 16 bases coinciden con <i>{name}</i>. Las marcas señalan las diferencias."
+          "match": "Las 16 bases coinciden con <i>{name}</i>. Una cruz marca cada base en la que otra especie difiere."
         },
         "resequencing": {
           "prompt": "¿Dónde difieren las dos poblaciones?",
@@ -231,18 +231,18 @@ export const es: Dict = {
         },
         "reference": {
           "prompt": "¿Cómo se pasa de lecturas a cromosomas?",
-          "steps": ["Lecturas largas", "Ensamblaje", "Orden con Hi-C"],
+          "steps": ["Lecturas", "Ensamblaje", "Orden", "Reúso"],
           "pieces": "{n} fragmentos",
           "reads": "Se leen tramos de ADN de miles de bases de una sola mariposa.",
           "contigs": "Las lecturas que se solapan se unen en {n} fragmentos más largos, todavía sin orden.",
-          "order": "Los datos de Hi-C indican qué fragmentos están juntos en la célula, y así cada uno encuentra su lugar.",
-          "whole": "Referencia a escala cromosómica: los fragmentos quedan ordenados en 21 cromosomas."
+          "order": "Los datos de Hi-C indican qué fragmentos están juntos en la célula, y así cada uno encuentra su lugar: 21 cromosomas.",
+          "whole": "Es costoso, pero se hace una sola vez por especie. Después bastan lecturas cortas, más baratas, alineadas a esta referencia."
         }
       },
       "items": [
         {
           "title": "Códigos de barras de ADN",
-          "body": "Un fragmento corto y estandarizado de ADN, comparado con una biblioteca de referencia, identifica la especie. Con el mismo método se leen muestras mixtas, como el polen que lleva una probóscide."
+          "body": "Un fragmento corto y estandarizado de ADN, comparado con una biblioteca de referencia, identifica la especie. Es el más económico de los tres niveles."
         },
         {
           "title": "Resecuenciación poblacional",
@@ -256,7 +256,7 @@ export const es: Dict = {
       "diagrams": {
         "barcode": {
           "title": "Cómo un código de barras de ADN identifica una especie",
-          "desc": "Una mariposa de especie desconocida aporta un fragmento corto y estandarizado de ADN. Cada una de sus bases, A, C, G o T, se convierte en una barra de color y forma un código de barras. El código se compara con los de cuatro especies de Heliconius en una biblioteca de referencia. Tres difieren en algunas posiciones, señaladas con marcas; uno es idéntico, así que el ejemplar queda identificado, primero como Heliconius cydno. Un botón trae otra mariposa desconocida y la misma comparación le pone nombre. Se dibujan dieciséis bases; un código de barras animal real tiene unas 650 bases del gen COI."
+          "desc": "Una mariposa de especie desconocida aporta un fragmento corto y estandarizado de ADN. Cada una de sus bases, A, C, G o T, se convierte en una barra de color y forma un código de barras. El código se compara con los de cuatro especies de Heliconius en una biblioteca de referencia. Tres difieren en algunas posiciones, señaladas con cruces; uno es idéntico, así que el ejemplar queda identificado, primero como Heliconius cydno. Un botón trae otra mariposa desconocida y la misma comparación le pone nombre. Se dibujan dieciséis bases; un código de barras animal real tiene unas 650 bases del gen COI."
         },
         "resequencing": {
           "title": "Cómo la resecuenciación compara poblaciones",
@@ -264,7 +264,7 @@ export const es: Dict = {
         },
         "reference": {
           "title": "Cómo se ensambla un genoma de referencia",
-          "desc": "El ADN de una mariposa se secuencia en lecturas largas. Las lecturas que se solapan se ensamblan en unas decenas de fragmentos más largos, cuyo orden aún se desconoce. Los datos de Hi-C, que registran qué tramos de ADN están cerca unos de otros en la célula, ubican cada fragmento y dan una referencia a escala cromosómica con los 21 cromosomas de un Heliconius típico.",
+          "desc": "El ADN de una mariposa se secuencia en lecturas largas. Las lecturas que se solapan se ensamblan en unas decenas de fragmentos más largos, cuyo orden aún se desconoce. Los datos de Hi-C, que registran qué tramos de ADN están cerca unos de otros en la célula, ubican cada fragmento y dan una referencia a escala cromosómica con los 21 cromosomas de un Heliconius típico. Es costoso, pero se hace una sola vez por especie: después bastan lecturas cortas, más baratas, alineadas a la referencia.",
           "count": "21 cromosomas"
         }
       }

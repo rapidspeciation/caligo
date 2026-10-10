@@ -224,7 +224,7 @@ export const en = {
           "button": "Try another butterfly",
           "note": "16 of about 650 bases shown (COI gene)",
           "scanning": "Comparing with each barcode in the library…",
-          "match": "Butterfly {k} of {n}: all 16 bases match <i>{name}</i>. The ticks mark where the others differ."
+          "match": "All 16 bases match <i>{name}</i>. A cross marks each base where another species differs."
         },
         "resequencing": {
           "prompt": "Where do the two populations differ?",
@@ -234,18 +234,18 @@ export const en = {
         },
         "reference": {
           "prompt": "How do reads become chromosomes?",
-          "steps": ["Long reads", "Assembly", "Hi-C ordering"],
+          "steps": ["Long reads", "Assembly", "Ordering", "Reuse"],
           "pieces": "{n} pieces",
           "reads": "Stretches of DNA thousands of bases long are read from a single butterfly.",
           "contigs": "Overlapping reads join into {n} longer pieces, but their order is still unknown.",
-          "order": "Hi-C data shows which pieces lie together in the cell, so each one finds its place.",
-          "whole": "A chromosome-scale reference: the pieces are ordered into 21 chromosomes."
+          "order": "Hi-C data shows which pieces lie together in the cell, so each one finds its place: 21 chromosomes.",
+          "whole": "Costly, but done once per species. Later butterflies need only cheaper short reads, aligned to this reference."
         }
       },
       "items": [
         {
           "title": "DNA barcodes",
-          "body": "A short, standard stretch of DNA, matched against a reference library, identifies the species. The same approach reads mixed samples, such as pollen carried on a proboscis."
+          "body": "A short, standard stretch of DNA, matched against a reference library, identifies the species. It is the cheapest of the three tiers."
         },
         {
           "title": "Population resequencing",
@@ -259,7 +259,7 @@ export const en = {
       "diagrams": {
         "barcode": {
           "title": "How a DNA barcode identifies a species",
-          "desc": "A butterfly of unknown species gives a short, standard stretch of DNA. Each of its bases, A, C, G or T, becomes a coloured bar, forming a barcode. The barcode is compared with the barcodes of four Heliconius species in a reference library. Three differ at a few positions, marked with ticks; one is identical, so the specimen is identified, first as Heliconius cydno. A button swaps in another unknown butterfly and the same comparison names it. Sixteen bases are drawn; a real animal barcode is about 650 bases of the COI gene."
+          "desc": "A butterfly of unknown species gives a short, standard stretch of DNA. Each of its bases, A, C, G or T, becomes a coloured bar, forming a barcode. The barcode is compared with the barcodes of four Heliconius species in a reference library. Three differ at a few positions, marked with crosses; one is identical, so the specimen is identified, first as Heliconius cydno. A button swaps in another unknown butterfly and the same comparison names it. Sixteen bases are drawn; a real animal barcode is about 650 bases of the COI gene."
         },
         "resequencing": {
           "title": "How population resequencing compares populations",
@@ -267,7 +267,7 @@ export const en = {
         },
         "reference": {
           "title": "How a reference genome is assembled",
-          "desc": "The DNA of one butterfly is sequenced as long reads. Overlapping reads are assembled into a few dozen longer pieces whose order is not yet known. Hi-C data, which records which stretches of DNA lie close together in the cell, places each piece, giving a chromosome-scale reference with the 21 chromosomes of a typical Heliconius.",
+          "desc": "The DNA of one butterfly is sequenced as long reads. Overlapping reads are assembled into a few dozen longer pieces whose order is not yet known. Hi-C data, which records which stretches of DNA lie close together in the cell, places each piece, giving a chromosome-scale reference with the 21 chromosomes of a typical Heliconius. This is costly but done once per species: later butterflies need only cheaper short reads, aligned to the reference.",
           "count": "21 chromosomes"
         }
       }
