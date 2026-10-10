@@ -27,8 +27,8 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
   <section class="section section--tight routes-section">
     <div class="container-wide">
       <ol class="routes" role="list">
-        <li id="join" class="route route--primary" aria-labelledby="join-heading">
-          <p class="route-step content-label">{stepLabel} 1</p>
+        <li id="join" class="route ink-card ink-card--sun" aria-labelledby="join-heading">
+          <p class="route-step"><span class="route-num" aria-hidden="true">1</span><span class="sr-only">{stepLabel} 1</span></p>
           <h2 id="join-heading" class="route-title">{t.join.title}</h2>
           <p class="route-body">{t.join.body}</p>
           <div class="route-action">
@@ -38,14 +38,14 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
             <p class="route-note">{t.join.privacyNote}</p>
           </div>
         </li>
-        <li class="route" aria-labelledby="discord-heading">
-          <p class="route-step content-label">{stepLabel} 2</p>
+        <li class="route ink-card ink-card--sky" aria-labelledby="discord-heading">
+          <p class="route-step"><span class="route-num" aria-hidden="true">2</span><span class="sr-only">{stepLabel} 2</span></p>
           <h2 id="discord-heading" class="route-title">{p.discord.heading}</h2>
           <p class="route-body">{p.discord.body}</p>
           <div class="route-action"><DiscordButton locale={locale} class="btn--ghost" showPendingNote /></div>
         </li>
-        <li class="route" aria-labelledby="committee-heading">
-          <p class="route-step content-label">{stepLabel} 3</p>
+        <li class="route ink-card ink-card--leaf" aria-labelledby="committee-heading">
+          <p class="route-step"><span class="route-num" aria-hidden="true">3</span><span class="sr-only">{stepLabel} 3</span></p>
           <h2 id="committee-heading" class="route-title">{t.committee.heading}</h2>
           <p class="route-body">{t.committee.body}</p>
           <div class="route-action">
@@ -92,7 +92,7 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
         <h2 id="lang-policy-heading" class="pair-heading">{p.languagePolicy.heading}</h2>
         <p class="content-body">{p.languagePolicy.body}</p>
         <p class="languages" aria-hidden="true">
-          <span lang="es">Español</span><span lang="en">English</span><span lang="pt">Português</span>
+          <span class="chip chip--sun" lang="es">Español</span><span class="chip chip--sky" lang="en">English</span><span class="chip chip--leaf" lang="pt">Português</span>
         </p>
       </div>
     </div>
@@ -105,7 +105,7 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
         <p class="content-body">{p.contact.body}</p>
         <CopyEmail locale={locale} />
       </div>
-      <div class="contact-note">
+      <div class="contact-note ink-card ink-card--flat">
         <h3>{p.beforeSubmitting.heading}</h3>
         <p class="content-body">{p.beforeSubmitting.body}</p>
       </div>
@@ -131,16 +131,26 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
     flex-direction: column;
     gap: var(--space-s);
     padding: clamp(1.25rem, 2.4vw, 1.9rem);
-    border: 1px solid var(--hairline);
-    border-radius: var(--radius-lg);
-    background: var(--bg-raised);
     scroll-margin-top: var(--scroll-margin-top);
   }
-  .route--primary {
-    border-color: color-mix(in oklab, var(--accent) 45%, transparent);
-    background: color-mix(in oklab, var(--accent) 7%, var(--bg-raised));
+  /* The steps really are an order, so each carries its number as a
+     stamped ink disc (read out as "Step 1"). */
+  .route-step { display: flex; align-items: center; gap: 0.6rem; margin: 0; }
+  .route-num {
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    border: var(--ink-w) solid var(--ink-inner, var(--ink-line));
+    border-radius: 50%;
+    background: var(--card);
+    color: var(--text-strong);
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1;
   }
-  .route-step { color: var(--accent-strong); }
+  :global([data-mode='dark']) .route-num { background: var(--on-pastel); color: var(--card-fill); }
   .route-title {
     margin: 0;
     font-size: var(--step-2);
@@ -242,13 +252,11 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
     flex-wrap: wrap;
     gap: var(--space-xs);
   }
-  .languages span {
-    padding: 0.35rem 0.8rem;
-    border: 1px solid var(--hairline-strong);
-    border-radius: 999px;
+  .languages .chip {
+    padding: 0.3rem 0.85rem;
     font-family: var(--font-display);
     font-size: var(--step-0);
-    color: var(--text-strong);
+    font-weight: 560;
   }
 
   /* ---- Contact ---- */
@@ -270,9 +278,6 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
   .contact-head .content-body { max-width: var(--measure); }
   .contact-note {
     padding: var(--space-m) var(--space-l);
-    border: 1px solid var(--hairline);
-    border-radius: var(--radius-lg);
-    background: var(--bg);
   }
   .contact-note h3 {
     margin: 0 0 var(--space-xs);

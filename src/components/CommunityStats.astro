@@ -9,13 +9,13 @@ interface Props {
 
 const { locale } = Astro.props;
 const h = getDict(locale).home;
-const { facilities } = facilityStats();
+const { facilities, countries } = facilityStats();
 
 const metrics = [
-  { kind: 'participants', value: PARTICIPANTS.value, label: h.stats.participants, asOf: h.stats.asOf, href: `${localePath(locale, '/about')}#about-community` },
-  { kind: 'facilities', value: facilities, label: h.stats.facilities, href: `${localePath(locale, '/about')}#about-facilities` },
-  { kind: 'countries', value: MEMBER_COUNTRIES.latinAmerica, label: h.stats.countries, href: `${localePath(locale, '/about')}#about-community` },
-  { kind: 'pilots', value: PROJECTS.length, label: h.stats.pilots, href: localePath(locale, '/projects') },
+  { kind: 'participants', value: PARTICIPANTS.value, label: h.stats.participants, note: h.stats.participantsNote, href: `${localePath(locale, '/about')}#about-community` },
+  { kind: 'facilities', value: facilities, label: h.stats.facilities, note: h.stats.facilitiesNote.replace('{n}', String(countries)), href: `${localePath(locale, '/about')}#about-facilities` },
+  { kind: 'countries', value: MEMBER_COUNTRIES.latinAmerica, label: h.stats.countries, note: h.stats.countriesNote.replace('{n}', String(MEMBER_COUNTRIES.outsideRegion)), href: `${localePath(locale, '/about')}#about-community` },
+  { kind: 'pilots', value: PROJECTS.length, label: h.stats.pilots, note: h.stats.pilotsNote, href: localePath(locale, '/projects') },
 ] as const;
 ---
 

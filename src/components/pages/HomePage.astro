@@ -502,7 +502,11 @@ const desktopSrcset = [
   .hero-overlay { align-items: center; }
   .hero-copy { padding-bottom: 1rem; }
   .hero-actions { gap: .75rem; }
-  .hero-actions .btn { border-radius: 3px; }
+  /* The hero keeps its own quiet buttons: no ink outline or hard shadow
+     over the photograph. */
+  .hero-actions .btn { border-radius: 3px; border-width: 1px; box-shadow: none; }
+  .hero-actions .btn:hover { transform: translateY(-1px); box-shadow: none; }
+  .hero-actions .btn:active { transform: none; box-shadow: none; }
   .hero-btn-ghost { border-color: transparent; padding-inline: 0; text-decoration: underline; text-underline-offset: .4em; }
   .hero-attribution { font-family: var(--font-body); max-width: 48ch; }
   .intro-layout { display: grid; grid-template-columns: 1fr; }

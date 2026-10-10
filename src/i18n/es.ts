@@ -185,7 +185,12 @@ export const es: Dict = {
       "facilities": "instalaciones de secuenciación",
       "countries": "países de América Latina",
       "pilots": "proyectos piloto propuestos",
-      "asOf": "a septiembre de 2026"
+      "asOf": "a septiembre de 2026",
+      "participantsNote": "Conteo de septiembre de 2026, y el formulario sigue abierto.",
+      "facilitiesNote": "En {n} países, de Panamá a Chile.",
+      "countriesNote": "Y {n} más fuera de la región.",
+      "pilotsNote": "Ocho especies de Heliconius ya secuenciadas en Bogotá.",
+      "whenNow": "En curso"
     }
   },
   "science": {

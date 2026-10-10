@@ -149,16 +149,19 @@
 
 /* Boxed — used by Projects for a stronger interactive surface. */
 .disclosure--boxed {
-  border: 1px solid var(--disclosure-border);
+  --disclosure-radius: 10px;
+  border: var(--ink-w) solid var(--ink-line);
   border-radius: var(--disclosure-radius);
-  background: var(--surface-elev, transparent);
+  background: var(--card);
+  box-shadow: 3px 3px 0 var(--ink-shadow);
 }
 .disclosure--boxed > .disclosure-summary {
   border-block: 0;
   border-radius: var(--disclosure-radius);
+  font-weight: 600;
 }
 .disclosure--boxed[open] > .disclosure-summary {
-  border-bottom: 1px solid var(--disclosure-border);
+  border-bottom: 1px solid var(--hairline);
   border-end-start-radius: 0;
   border-end-end-radius: 0;
 }

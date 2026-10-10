@@ -60,7 +60,7 @@ const reasonIcons: readonly CardIconName[] = [
         <div class="intro-copy content-body">
           {intro.body.map((paragraph) => <p>{paragraph}</p>)}
         </div>
-        <aside class="funding-callout" aria-labelledby="funding-callout-title">
+        <aside class="funding-callout ink-card ink-card--rose" aria-labelledby="funding-callout-title">
           <h2 id="funding-callout-title" class="funding-callout-title">{intro.call}</h2>
           <DeadlineChip locale={locale} />
           <p class="content-body">{intro.coverage}</p>
@@ -97,7 +97,7 @@ const reasonIcons: readonly CardIconName[] = [
         publishedPilots.map((pilot) => {
           const project = projectById.get(pilotToProjectId[pilot.id]);
           return (
-            <li id={pilot.slug} class="pilot">
+            <li id={pilot.slug} class="pilot ink-card">
             <!-- Media: 5-column slot on desktop -->
             <div class="pilot-media">
               {getMediaModule(pilot.id) && (
@@ -110,7 +110,7 @@ const reasonIcons: readonly CardIconName[] = [
               <h2 class="pilot-heading content-heading" set:html={italicizeSpecies(pilot.heading[locale])} />
 
               {pilot.taxon && (
-                <p class="pilot-taxon content-meta mono">
+                <p class="pilot-taxon content-meta mono chip chip--rose">
                   <em>{pilot.taxon}</em>
                 </p>
               )}
@@ -212,9 +212,6 @@ const reasonIcons: readonly CardIconName[] = [
     justify-items: start;
     gap: var(--space-s);
     padding: var(--space-l);
-    border: 1px solid var(--hairline-strong);
-    border-radius: var(--radius);
-    background: var(--bg-panel);
   }
   .funding-callout-title {
     margin: 0;
@@ -234,22 +231,25 @@ const reasonIcons: readonly CardIconName[] = [
   .pilots {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: var(--space-m) 0 var(--space-xl);
     display: grid;
-    gap: 0;
+    gap: var(--space-l);
     min-width: 0;
   }
 
+  /* Each pilot project is one ink card: its photograph framed as a print,
+     its question and leads beside it. */
   .pilot {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-m);
-    padding-block: var(--space-l);
-    border-top: 1px solid var(--hairline);
+    padding: clamp(1rem, 2.2vw, 1.75rem);
     scroll-margin-top: var(--scroll-margin-top);
   }
-  .pilot:first-child {
-    border-top: 0;
+  .pilot-media :global(.mcv-stage) {
+    border: var(--ink-w) solid var(--ink-line);
+    border-radius: 8px;
+    overflow: hidden;
   }
 
   /* Desktop: 5 media / 7 text grid */
@@ -312,7 +312,6 @@ const reasonIcons: readonly CardIconName[] = [
     width: fit-content;
   }
   .pilot-taxon em {
-    color: var(--highlight-strong);
     font-style: italic;
   }
 

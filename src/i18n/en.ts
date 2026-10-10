@@ -188,7 +188,12 @@ export const en = {
       "facilities": "sequencing facilities",
       "countries": "Latin American countries",
       "pilots": "proposed pilot projects",
-      "asOf": "as of September 2026"
+      "asOf": "as of September 2026",
+      "participantsNote": "Counted in September 2026, and the form is still open.",
+      "facilitiesNote": "In {n} countries, from Panama to Chile.",
+      "countriesNote": "Plus {n} outside the region.",
+      "pilotsNote": "Eight Heliconius species already sequenced in Bogotá.",
+      "whenNow": "Happening now"
     }
   },
   "science": {

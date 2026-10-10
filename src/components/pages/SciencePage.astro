@@ -10,6 +10,7 @@ import MediaCandidateViewer from '../MediaCandidateViewer.astro';
 import Icon from '../Icon.astro';
 import FigureLightbox from '../FigureLightbox.astro';
 import TierDiagram from '../TierDiagram.astro';
+import WhenChip from '../WhenChip.astro';
 import { getDict, localePath, type Locale } from '../../i18n';
 import { getSource, getMediaModule } from '../../data/records';
 import { EVENTS, pick } from '../../data/initiative';
@@ -71,8 +72,8 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
         </h2>
         {feedback.reference.body.map((para) => <p class="prose-para content-body">{para}</p>)}
       </div>
-      <aside class="genome-goal" aria-labelledby="genome-goal-heading">
-        <p class="goal-number mono">{locale === 'es' ? '1.000' : '1,000'}</p>
+      <aside class="genome-goal ink-card" aria-labelledby="genome-goal-heading">
+        <p class="goal-number"><span class="marker">{locale === 'es' ? '1.000' : '1,000'}</span></p>
         <h3 id="genome-goal-heading" class="goal-heading">{feedback.reference.goalHeading}</h3>
         <p class="content-body">{feedback.reference.goalBody}</p>
         <a target="_blank"
@@ -96,7 +97,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
       </div>
       <ol class="tier-list" role="list">
         {tiers.items.map((item, i) => (
-          <li class="tier-card">
+          <li class="tier-card ink-card">
             <TierDiagram locale={locale} kind={TIER_KINDS[i]} />
             <div class="tier-copy">
               <p class="tier-label mono">{tiers.tierLabel} {i + 1}</p>
@@ -127,7 +128,10 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
       <ul class="training-events" role="list" aria-label={feedback.analysis.eyebrow}>
         {EVENTS.map((event) => (
           <li class="training-event">
-            <time class="training-event-date mono">{pick(event.dates, locale)}</time>
+            <span class="training-event-when">
+              <WhenChip locale={locale} start={event.start} end={event.end} />
+              <time class="training-event-date mono" datetime={event.start}>{pick(event.dates, locale)}</time>
+            </span>
             <span class="training-event-name">{pick(event.name, locale)}</span>
             <span class="training-event-place">{pick(event.location, locale)}</span>
             <p class="training-event-summary" set:html={italicizeSpecies(pick(event.summary, locale))} />
@@ -148,7 +152,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
 
       <div class="publication-grid">
         {publicationExamples.map((publication, index) => (
-          <article class="publication-card" data-lift>
+          <article class="publication-card ink-card">
             <div class="publication-index mono" aria-hidden="true">
               {String(index + 1).padStart(2, '0')}
             </div>
@@ -327,17 +331,16 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   }
   .genome-goal {
     padding: var(--space-l);
-    border: 1px solid var(--hairline-strong);
-    border-radius: var(--radius);
-    background: var(--bg);
   }
   .goal-number {
-    margin-bottom: var(--space-xs);
-    color: var(--accent-strong);
-    font-size: clamp(3.5rem, 10vw, 7rem);
-    font-weight: 440;
-    letter-spacing: -0.08em;
-    line-height: 0.9;
+    margin-bottom: var(--space-s);
+    color: var(--text-strong);
+    font-family: var(--font-display);
+    font-size: clamp(3.5rem, 9vw, 6.5rem);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.05em;
+    line-height: 0.95;
   }
   .goal-heading {
     margin-bottom: var(--space-s);
@@ -386,10 +389,11 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     padding-block: var(--space-m);
     border-bottom: 1px solid var(--hairline);
   }
+  .training-event-when { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.7rem; margin-bottom: 0.35rem; }
   .training-event-date {
-    color: var(--accent-strong);
-    font-size: var(--step--1);
-    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    font-size: var(--step--2);
+    letter-spacing: 0.02em;
   }
   .training-event-name {
     color: var(--text-strong);
@@ -424,9 +428,6 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     flex-direction: column;
     min-width: 0;
     padding: var(--space-m);
-    border: 1px solid var(--hairline-strong);
-    border-radius: var(--radius);
-    background: var(--bg);
   }
   .publication-index {
     margin-bottom: var(--space-s);
@@ -671,9 +672,6 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    background: var(--bg);
-    border: 1px solid var(--hairline);
-    border-radius: var(--radius);
   }
   .tier-copy { padding: var(--space-s) var(--space-m) var(--space-m); }
   .tier-label {

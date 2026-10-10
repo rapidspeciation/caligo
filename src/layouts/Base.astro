@@ -345,6 +345,30 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
       })();
     </script>
     <script is:inline>
+      /* Highlighter: each .marker draws itself once, the first time it
+         scrolls into view. Without JS or with reduced motion it is simply
+         there. */
+      (function () {
+        if (window.caligoMarkers) return;
+        window.caligoMarkers = function () {
+          var reduce = false;
+          try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) {}
+          if (reduce || !('IntersectionObserver' in window)) return;
+          var marks = document.querySelectorAll('.marker:not([data-marker])');
+          if (!marks.length) return;
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              if (!e.isIntersecting) return;
+              io.unobserve(e.target);
+              requestAnimationFrame(function () { requestAnimationFrame(function () { e.target.setAttribute('data-marker', 'drawn'); }); });
+            });
+          }, { rootMargin: '0px 0px -12% 0px' });
+          marks.forEach(function (m) { m.setAttribute('data-marker', 'pending'); io.observe(m); });
+        };
+        document.addEventListener('astro:page-load', window.caligoMarkers);
+      })();
+    </script>
+    <script is:inline>
       /* Funding-call countdown and site-wide banner. Dates compare in the
          visitor's local calendar, so a static build never shows a stale
          count. Runs before paint: from FundingBanner's inline call on first
@@ -359,11 +383,24 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
           var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
           return Math.round((end - today) / DAY);
         }
+        /* "9 days ago", "in 6 months": the coarsest unit that still reads
+           as a whole number, in the page's language. */
+        function relative(n) {
+          var lang = document.documentElement.lang || 'en';
+          var abs = Math.abs(n), unit = 'day', v = n;
+          if (abs >= 70) { unit = 'month'; v = Math.round(n / 30.44); }
+          else if (abs >= 14) { unit = 'week'; v = Math.round(n / 7); }
+          try { return new Intl.RelativeTimeFormat(lang, { numeric: 'auto' }).format(v, unit); }
+          catch (_) { return null; }
+        }
+        window.caligoRelative = relative;
+        window.caligoDaysUntil = daysLeft;
         window.caligoDeadlines = function () {
           document.querySelectorAll('[data-deadline]').forEach(function (chip) {
             var n = daysLeft(chip.getAttribute('data-deadline'));
             var d = chip.dataset;
-            var text = n < 0 ? d.closed : n === 0 ? d.today : n === 1 ? d.tomorrow : d.days.replace('{n}', n);
+            var ago = n < 0 && d.closedAgo ? relative(n) : null;
+            var text = n < 0 ? (ago ? d.closedAgo.replace('{ago}', ago) : d.closed) : n === 0 ? d.today : n === 1 ? d.tomorrow : d.days.replace('{n}', n);
             chip.setAttribute('data-state', n < 0 ? 'closed' : 'open');
             var label = chip.querySelector('[data-deadline-text]');
             if (label) label.textContent = text;
@@ -375,6 +412,16 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
               el.hidden = (el.getAttribute('data-when-call') === 'closed') !== callClosed;
             });
           }
+          /* Event chips: "3 months ago", "this week", "in 6 months". */
+          document.querySelectorAll('[data-when-start]').forEach(function (chip) {
+            var start = daysLeft(chip.getAttribute('data-when-start'));
+            var end = daysLeft(chip.getAttribute('data-when-end') || chip.getAttribute('data-when-start'));
+            var state = end < 0 ? 'past' : start > 0 ? 'upcoming' : 'now';
+            var text = state === 'now' ? chip.getAttribute('data-when-now') : relative(state === 'past' ? end : start);
+            var label = chip.querySelector('[data-when-text]');
+            if (text && label) label.textContent = text.charAt(0).toUpperCase() + text.slice(1);
+            chip.setAttribute('data-state', state);
+          });
           var bar = document.querySelector('[data-funding-banner]');
           if (!bar) return;
           var key = 'caligo-banner-dismissed';

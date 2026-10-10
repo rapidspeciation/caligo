@@ -18,11 +18,11 @@ const closed = isCallClosed();
   <section id="funding-opportunities" class="section section--panel" aria-labelledby="funding-call-title">
     <div class="container-wide">
       <div class="funding-layout">
-        <div class="funding-summary">
+        <div class="funding-summary ink-card ink-card--rose">
           <h2 id="funding-call-title" class="content-heading">{intro.call}</h2>
           <p class="content-body">{intro.description}</p>
           <p class="content-body">{intro.coverage}</p>
-          <p class="funding-deadline content-body">{intro.deadline}<br /><strong><time datetime="2026-09-30">{intro.date}</time></strong></p>
+          <p class="funding-deadline content-body"><span class="funding-deadline-label">{intro.deadline}</span><strong class="funding-date"><time datetime="2026-09-30">{intro.date}</time></strong></p>
           <DeadlineChip locale={locale} />
           <div class="funding-open" data-when-call="open" hidden={closed}>
             {PILOT_APPLICATION_URL ? (
@@ -50,10 +50,12 @@ const closed = isCallClosed();
 <style>
   .funding-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-xl); margin-top: var(--space-m); }
   .funding-summary { display: grid; align-content: start; justify-items: start; gap: var(--space-s); }
-  .funding-deadline { padding-block: var(--space-s); }
+  .funding-summary { padding: clamp(1.25rem, 2.6vw, 2rem); }
+  .funding-deadline { display: grid; gap: 0.15rem; padding-block: var(--space-xs) 0; }
+  .funding-deadline-label { font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: 0.08em; text-transform: uppercase; }
+  .funding-date { font-family: var(--font-display); font-size: var(--step-2); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
   .funding-open, .funding-closed { display: grid; justify-items: start; gap: var(--space-s); }
   .funding-open[hidden], .funding-closed[hidden] { display: none; }
-  .funding-deadline strong { color: var(--accent-strong); }
   .funding-conditions ul { padding-left: 1.25rem; margin-block: var(--space-m); }
   .funding-conditions li + li { margin-top: var(--space-s); }
 

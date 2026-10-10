@@ -1,5 +1,5 @@
 ---
-import { FACILITIES, facilityStats, pick } from '../data/initiative';
+import { FACILITIES, pick } from '../data/initiative';
 import type { Locale } from '../i18n';
 
 interface Props {
@@ -8,10 +8,22 @@ interface Props {
 
 const { locale } = Astro.props;
 
-const stats = facilityStats();
 
-const facilityLabel: Record<typeof locale, string> = { en: 'facilities', es: 'instalaciones' };
-const countryLabel: Record<typeof locale, string> = { en: 'countries', es: 'países' };
+// "NextSeq 2000, MinION, PromethION (Hi-C expertise planned)" becomes one
+// tag per instrument; commas inside parentheses stay with their tag.
+function splitPlatforms(text: string): string[] {
+  const out: string[] = [];
+  let depth = 0, current = '';
+  for (const ch of text) {
+    if (ch === '(') depth++;
+    if (ch === ')') depth--;
+    if (ch === ',' && depth === 0) { out.push(current.trim()); current = ''; continue; }
+    current += ch;
+  }
+  if (current.trim()) out.push(current.trim());
+  return out;
+}
+
 
 const labels = {
   caption:     { en: 'Partner facilities', es: 'Instalaciones asociadas' },
@@ -19,11 +31,10 @@ const labels = {
   country:     { en: 'Country', es: 'País' },
   platforms:   { en: 'Platforms', es: 'Plataformas' },
   website:     { en: 'Website', es: 'Sitio web' },
-  total:       { en: 'Total', es: 'Total' },
 } as const;
 ---
 
-<div class="facility-table-wrapper">
+<div class="facility-table-wrapper ink-card">
   <table class="facility-table">
     <caption class="facility-caption">{labels.caption[locale]}</caption>
     <thead>
@@ -39,7 +50,11 @@ const labels = {
         <tr>
           <td class="cell-institution">{facility.institution}</td>
           <td class="cell-country">{pick(facility.country, locale)}</td>
-          <td class="cell-platforms">{facility.platforms}</td>
+          <td class="cell-platforms">
+            <ul class="platform-list" role="list">
+              {splitPlatforms(facility.platforms).map((platform) => <li class="platform">{platform}</li>)}
+            </ul>
+          </td>
           <td class="cell-website">
             {facility.websites.map((website) => (
               <a href={website.href} target="_blank" rel="noopener noreferrer external">
@@ -50,13 +65,6 @@ const labels = {
         </tr>
       ))}
     </tbody>
-    <tfoot>
-      <tr class="tfoot-row">
-        <td class="tfoot-agg mono" colspan="4">
-          {labels.total[locale]}: {stats.facilities} {facilityLabel[locale]} · {stats.countries} {countryLabel[locale]}
-        </td>
-      </tr>
-    </tfoot>
   </table>
 </div>
 
@@ -64,8 +72,6 @@ const labels = {
   .facility-table-wrapper {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    border: 1px solid var(--hairline);
-    border-radius: var(--radius);
   }
   .facility-table {
     width: 100%;
@@ -82,9 +88,9 @@ const labels = {
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--text-faint);
-    border-bottom: 1px solid var(--hairline);
-    background: var(--bg-inset);
+    color: var(--on-pastel);
+    background: var(--pastel-leaf);
+    border-bottom: var(--ink-w) solid var(--ink-line);
   }
   thead th {
     padding: var(--space-s) var(--space-m);
@@ -95,7 +101,6 @@ const labels = {
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-faint);
-    background: var(--bg-inset);
     border-bottom: 1px solid var(--hairline-strong);
     white-space: nowrap;
   }
@@ -112,10 +117,28 @@ const labels = {
     vertical-align: top;
   }
   .cell-institution {
-    font-weight: 560;
+    font-weight: 600;
     color: var(--text-strong);
   }
   .cell-country {
+    white-space: nowrap;
+  }
+  .platform-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .platform {
+    padding: 0.05rem 0.5rem;
+    border: 1px solid var(--surface-border-strong);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--text-strong);
     white-space: nowrap;
   }
   .cell-website {
@@ -125,16 +148,6 @@ const labels = {
   .cell-website a {
     color: var(--accent-strong);
     text-underline-offset: 0.16em;
-  }
-  .tfoot-row {
-    background: var(--bg-inset);
-    border-top: 1px solid var(--hairline-strong);
-  }
-  .tfoot-agg {
-    padding: var(--space-s) var(--space-m);
-    font-size: var(--step--2);
-    color: var(--text-muted);
-    letter-spacing: 0.04em;
   }
   /* Phones: each facility becomes a short record, so nobody has to pan
      sideways to reach the website column. */
@@ -146,12 +159,13 @@ const labels = {
     tbody td { padding: 0.15rem var(--space-m); }
     tbody tr { padding-block: var(--space-s); }
     .cell-institution { padding-bottom: 0.3rem; }
-    .cell-country, .cell-platforms { color: var(--text-muted); white-space: normal; }
-    .cell-website { padding-top: 0.4rem; }
-    .tfoot-row, .tfoot-row td { display: block; }
+    .cell-country { color: var(--text-muted); white-space: normal; }
+    .cell-platforms { padding-block: 0.3rem; }
+    .platform { white-space: normal; }
+    .facility-table td.cell-website { display: grid; padding-top: 0.4rem; }
   }
-  .col-institution { width: 34%; }
-  .col-country     { width: 15%; }
-  .col-platforms   { width: 29%; }
+  .col-institution { width: 32%; }
+  .col-country     { width: 12%; }
+  .col-platforms   { width: 34%; }
   .col-website     { width: 22%; }
 </style>

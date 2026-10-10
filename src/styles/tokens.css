@@ -253,11 +253,11 @@
 [data-palette='caligo'][data-mode='light'] {
   color-scheme: light;
 
-  --bg: var(--c-warm-050);
-  --bg-raised: #ffffff;
-  --bg-panel: #ffffff;
-  --bg-panel-hover: #ecece6;
-  --bg-inset: #e8e6de;
+  --bg: #fcf6ea; /* cream paper: a collection-drawer label, warmer than the logo ivory */
+  --bg-raised: #fffdf7;
+  --bg-panel: #fffdf7;
+  --bg-panel-hover: #f5ecd9;
+  --bg-inset: #f2e8d4;
 
   --hairline: color-mix(in oklab, var(--c-warm-500) 22%, transparent);
   --hairline-strong: color-mix(in oklab, var(--c-burnt-600) 34%, transparent);
@@ -267,7 +267,7 @@
   --text: #2b2a2c;
   --text-strong: #16151a;
   --text-muted: var(--c-warm-500);
-  --text-faint: #6e665c; /* was #77706a = 4.47:1 (AA fail); #6e665c = 5.18:1 on --bg */
+  --text-faint: #6b6258; /* 5.2:1 on the cream --bg */
 
   --accent: var(--c-burnt-600);
   --accent-strong: var(--c-burnt-700);
@@ -452,6 +452,52 @@
   --canopy-glow: color-mix(in oklab, var(--c-morpho-500) 18%, transparent);
 
   --shadow: 0 1px 2px rgba(22, 30, 60, 0.05), 0 16px 34px -22px rgba(22, 30, 60, 0.22);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INK CARDS — the "playful data card" layer (see DESIGN.md, October 2026).
+
+   Cards are drawn like specimen labels in a collection drawer: a cream
+   label, a solid ink outline and a hard offset shadow with no blur. Four
+   pastel fills come from Neotropical wings and each always marks the same
+   kind of thing across the site:
+     sun  (Heliconius yellow band) — the highlighter on a page's key number
+     leaf (Passiflora host plant)  — places: facilities, finished events
+     sky  (Morpho blue)            — countries and upcoming events
+     rose (Heliconius red, softened toward the logo orange) — pilot projects
+                                     and the funding call
+   They vary by mode only, so every palette shares them.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root,
+[data-mode='dark'] {
+  --ink-line: #e9dfce;        /* cream outline on warm charcoal */
+  --ink-shadow: #4a4038;     /* a dim offset print of the outline: black would vanish on charcoal */
+  --card: #221c17;
+  --on-pastel: #1c1511;
+  --pastel-sun: #e3b83c;
+  --pastel-leaf: #9ebf84;
+  --pastel-sky: #8db3d6;
+  --pastel-rose: #de9a84;
+  --marker: #e3b83c;
+}
+
+[data-mode='light'] {
+  --ink-line: #231e1b;
+  --ink-shadow: #231e1b;
+  --card: #fffdf7;
+  --on-pastel: #231e1b;
+  --pastel-sun: #ffd84a;
+  --pastel-leaf: #d3e6be;
+  --pastel-sky: #c6dcf2;
+  --pastel-rose: #f7c4b2;
+  --marker: #ffd84a;
+}
+
+:root {
+  --ink-w: 2px;
+  --ink-drop: 4px;
+  --radius-card: 12px;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════

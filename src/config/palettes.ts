@@ -54,7 +54,7 @@ export const PALETTES: Readonly<Record<PaletteId, PaletteMeta>> = {
     descEs: 'Marfil cálido y naranja quemado, del logotipo provisional de Caligo.',
     preview: {
       dark:  ['#171310', '#201A16', '#F2ECE1', '#E38249'],
-      light: ['#F6F7F3', '#FFFFFF', '#2B2A2C', '#B45621'],
+      light: ['#FCF6EA', '#FFFDF7', '#2B2A2C', '#B45621'],
     },
   },
   canopy: {
@@ -87,7 +87,7 @@ export const PALETTES: Readonly<Record<PaletteId, PaletteMeta>> = {
  * checked structurally by verify-palette-engine.
  */
 export const MODE_COLORS: Readonly<Record<PaletteId, Readonly<Record<ModeId, `#${string}`>>>> = {
-  caligo: { dark: '#171310', light: '#F6F7F3' },
+  caligo: { dark: '#171310', light: '#FCF6EA' },
   canopy: { dark: '#07100D', light: '#EEF4F0' },
   morpho: { dark: '#0A101B', light: '#EEF1F7' },
 } as const;

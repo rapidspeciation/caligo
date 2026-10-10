@@ -1,0 +1,49 @@
+---
+/**
+ * How far away an event is, in the visitor's own calendar: "3 months ago",
+ * "Happening now", "In 6 months". The build renders the formatted date as a
+ * fallback; `caligoDeadlines()` in Base.astro replaces it on load.
+ * Finished events use the dashed "done" pill, upcoming ones the sky pill.
+ */
+import { getDict, type Locale } from '../i18n';
+
+interface Props {
+  readonly locale: Locale;
+  /** ISO dates (YYYY-MM-DD), inclusive. */
+  readonly start: string;
+  readonly end?: string;
+  readonly class?: string;
+}
+const { locale, start, end = start, class: className } = Astro.props;
+const now = new Date();
+const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+const toDate = (iso: string) => { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d); };
+const state = toDate(end) < today ? 'past' : toDate(start) > today ? 'upcoming' : 'now';
+// Same wording the browser script produces, so the build is already right
+// on the day it was made and only refreshes the count afterwards.
+const days = Math.round(((state === 'past' ? toDate(end) : toDate(start)).getTime() - today.getTime()) / 86400000);
+const abs = Math.abs(days);
+const [value, unit]: [number, Intl.RelativeTimeFormatUnit] =
+  abs >= 70 ? [Math.round(days / 30.44), 'month'] : abs >= 14 ? [Math.round(days / 7), 'week'] : [days, 'day'];
+const nowText = getDict(locale).home.stats.whenNow;
+const raw = state === 'now' ? nowText : new Intl.RelativeTimeFormat(locale, { numeric: 'auto' }).format(value, unit);
+const text = raw.charAt(0).toUpperCase() + raw.slice(1);
+---
+
+<span
+  class:list={['chip', 'when-chip', className]}
+  data-when-start={start}
+  data-when-end={end}
+  data-when-now={nowText}
+  data-state={state}
+><span data-when-text>{text}</span></span>
+
+<style>
+  .when-chip[data-state='past'] {
+    --chip-fill: transparent;
+    border-style: dashed;
+    color: var(--text-muted);
+  }
+  .when-chip[data-state='now'] { --chip-fill: var(--pastel-sun); color: var(--on-pastel); }
+  .when-chip[data-state='upcoming'] { --chip-fill: var(--pastel-sky); color: var(--on-pastel); }
+</style>

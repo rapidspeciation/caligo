@@ -289,6 +289,9 @@ export type InitiativeEvent = {
   summary: Bilingual;
   /** [longitude, latitude] of the host city, used on the network map. */
   lonLat: readonly [number, number];
+  /** First and last day (ISO), for the "3 months ago" chips. */
+  start: string;
+  end: string;
 };
 
 export const EVENTS: InitiativeEvent[] = [
@@ -307,6 +310,8 @@ export const EVENTS: InitiativeEvent[] = [
       es: 'Bogotá, Colombia',
     },
     lonLat: [-74.07, 4.62],
+    start: '2026-07-20',
+    end: '2026-07-23',
     summary: {
       en: 'The network’s first activity in Latin America, with the Red Colombiana de Genómica. Eight Heliconius species were sequenced during the workshop.',
       es: 'La primera actividad de la red en América Latina, con la Red Colombiana de Genómica. Durante el taller se secuenciaron ocho especies de Heliconius.',
@@ -327,6 +332,8 @@ export const EVENTS: InitiativeEvent[] = [
       es: 'Campinas, Brasil',
     },
     lonLat: [-47.06, -22.91],
+    start: '2027-03-30',
+    end: '2027-04-03',
     summary: {
       en: 'Hackathon at the Biology of Butterflies and Neotropical Lepidoptera (ELEN) congress: collaborative work to assemble reference genomes, analyse the data and strengthen the network.',
       es: 'Hackathon durante el congreso Biology of Butterflies y Encuentro de Lepidópteros Neotropicales (ELEN): trabajo colaborativo para ensamblar genomas de referencia, analizar los datos y fortalecer la red.',
