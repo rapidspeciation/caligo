@@ -491,6 +491,10 @@
   --on-marker: #1c1511;
   --btn-line: transparent;
   --btn-shadow: var(--c-burnt-700);
+  --tone-person-leaf: #9ebf84;
+  --tone-person-sky: #8db3d6;
+  --tone-person-rose: #e39a84;
+  --tone-person-sun: #e3b83c;
 }
 
 [data-mode='light'] {
@@ -512,6 +516,10 @@
   --btn-shadow: #231e1b;
   /* A near-white stage keeps the diagram colours crisp on cream paper. */
   --tier-stage: #fffdf7;
+  --tone-person-leaf: #7fae5c;
+  --tone-person-sky: #5f9bd3;
+  --tone-person-rose: #e58a6c;
+  --tone-person-sun: #e0b020;
 }
 
 :root {

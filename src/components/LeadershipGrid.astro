@@ -8,11 +8,13 @@ interface Props {
 }
 
 const { locale } = Astro.props;
+/* One wing colour per card, so hovering lights each person differently. */
+const TONES = ['leaf', 'sky', 'rose', 'sun'] as const;
 ---
 
 <div class="leadership-grid">
-  {LEADERS.map((person) => (
-    <PersonCard person={person} locale={locale} />
+  {LEADERS.map((person, i) => (
+    <PersonCard person={person} locale={locale} tone={TONES[i % TONES.length]} />
   ))}
 </div>
 

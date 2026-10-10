@@ -5,14 +5,16 @@ import type { Locale } from '../i18n';
 interface Props {
   readonly person: Person;
   readonly locale: Locale;
+  readonly tone?: 'leaf' | 'sky' | 'rose' | 'sun';
 }
 
-const { person, locale } = Astro.props;
+const { person, locale, tone = 'leaf' } = Astro.props;
+const ties = pick(person.regionalTies, locale).split(' / ');
 const regionalTiesLabel = locale === 'en' ? 'Regional ties' : 'Vínculos regionales';
 const base = import.meta.env.BASE_URL;
 ---
 
-<article class="person-card ink-card ink-card--flat">
+<article class="person-card ink-card ink-card--flat" style={`--tone: var(--tone-person-${tone})`}>
   <figure class="person-media">
     <img
       class="person-photo"
@@ -34,8 +36,9 @@ const base = import.meta.env.BASE_URL;
   <div class="person-foot">
     <div class="person-place">
       <p class="person-affil mono">{person.affiliation}</p>
-      <p class="person-region mono">
-        <span>{regionalTiesLabel}:</span> {pick(person.regionalTies, locale)}
+      <p class="person-region">
+        <span class="sr-only">{regionalTiesLabel}: </span>
+        {ties.map((tie) => <span class="chip person-tie">{tie}</span>)}
       </p>
     </div>
     <a
@@ -44,7 +47,7 @@ const base = import.meta.env.BASE_URL;
       target="_blank"
       rel="noopener noreferrer external"
     >
-      {pick(person.source.label, locale)} <span aria-hidden="true">↗</span>
+      {pick(person.source.label, locale)} <span class="person-source-arrow" aria-hidden="true">↗</span>
     </a>
   </div>
 </article>
@@ -149,13 +152,19 @@ const base = import.meta.env.BASE_URL;
     line-height: 1.45;
   }
   .person-region {
-    margin: 0;
-    font-size: var(--step--2);
-    color: var(--text-faint);
-    letter-spacing: 0.04em;
+    margin: 0.2rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
   }
-  .person-region span {
-    color: var(--text-muted);
+  .person-tie {
+    font-size: var(--step--2);
+    font-weight: 560;
+    padding: 0.1rem 0.55rem;
+    border-color: color-mix(in oklab, var(--tone) 70%, transparent);
+    background: color-mix(in oklab, var(--tone) 16%, transparent);
+    color: var(--text-strong);
+    transition: background var(--transition), border-color var(--transition);
   }
   .person-source {
     color: var(--accent);
@@ -165,13 +174,41 @@ const base = import.meta.env.BASE_URL;
     text-decoration-color: color-mix(in oklab, var(--accent) 35%, transparent);
     text-underline-offset: 0.18em;
   }
-  .person-source:hover {
-    color: var(--accent-strong);
-    text-decoration-color: currentColor;
-  }
-  .person-source:focus-visible {
+  .person-source-arrow { display: inline-block; transition: transform var(--dur-quick) var(--ease-glide); }
+  /* The whole card opens the profile; the link stays the accessible name. */
+  .person-card { position: relative; }
+  .person-source::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+  .person-source:focus-visible { outline: none; }
+  .person-card:has(.person-source:focus-visible) {
     outline: 2px solid var(--accent);
     outline-offset: 3px;
-    border-radius: 2px;
+  }
+
+  /* Hover: the card lifts onto a hard shadow in its own wing colour, the
+     portrait drops its warm grade and comes forward, the arrow leaves. */
+  .person-card {
+    transition: transform var(--dur-quick) var(--ease-glide),
+      box-shadow var(--dur-quick) var(--ease-glide),
+      border-color var(--dur-quick) var(--ease-glide);
+  }
+  .person-photo { transition: transform var(--dur-base) var(--ease-glide), filter var(--dur-base) var(--ease-glide); }
+  .person-media::after { transition: opacity var(--dur-base) var(--ease-glide); }
+  .person-name { transition: color var(--dur-quick) var(--ease-glide); }
+  @media (hover: hover) and (pointer: fine) {
+    .person-card:hover {
+      transform: translate(-3px, -3px);
+      border-color: var(--tone);
+      box-shadow: 6px 6px 0 var(--tone);
+    }
+    .person-card:hover .person-photo { transform: scale(1.05); filter: none; }
+    .person-card:hover .person-media::after { opacity: 0; }
+    .person-card:hover .person-tie { background: color-mix(in oklab, var(--tone) 34%, transparent); border-color: var(--tone); }
+    .person-card:hover .person-source { color: var(--accent-strong); text-decoration-color: currentColor; }
+    .person-card:hover .person-source-arrow { transform: translate(2px, -2px); }
+    .person-card:active { transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--tone); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .person-card:hover, .person-card:active { transform: none; }
+    .person-card:hover .person-photo { transform: none; }
   }
 </style>
