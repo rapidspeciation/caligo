@@ -98,7 +98,7 @@ const callClosed = isCallClosed();
         publishedPilots.map((pilot) => {
           const project = projectById.get(pilotToProjectId[pilot.id]);
           return (
-            <li id={pilot.slug} class="pilot ink-card">
+            <li id={pilot.slug} class="pilot ink-card ink-press" data-pilot>
             <!-- Media: 5-column slot on desktop -->
             <div class="pilot-media">
               {getMediaModule(pilot.id) && (
@@ -191,8 +191,19 @@ const callClosed = isCallClosed();
       var more = target && target.querySelector('[data-pilot-more]');
       if (more) more.open = true;
     }
+    /* The whole card is the switch for its background: a click anywhere
+       that is not already a link, a button or selected text opens or
+       closes it, through the summary so keyboard and animation agree. */
+    function toggleCard(event) {
+      var card = event.target.closest && event.target.closest('[data-pilot]');
+      if (!card || event.target.closest('a, button, summary, input, [data-pilot-more] .disclosure-body')) return;
+      if (String(window.getSelection && window.getSelection()).length) return;
+      var summary = card.querySelector('[data-pilot-more] > summary');
+      if (summary) summary.click();
+    }
     if (!window.__caligoPilotHash) {
       window.__caligoPilotHash = true;
+      document.addEventListener('click', toggleCard);
       document.addEventListener('astro:page-load', openTarget);
       window.addEventListener('hashchange', openTarget);
     }
@@ -333,6 +344,12 @@ const callClosed = isCallClosed();
     max-width: var(--measure);
   }
   /* The background is a plain row closing the card, not a box inside it. */
+  /* The card opens its own background, so it reads as pressable; once open
+     it is a page of text and stays still. */
+  .pilot { cursor: pointer; }
+  .pilot:has(.pilot-more:not([open])):active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink-shadow); }
+  .pilot:has(.pilot-more[open]) { cursor: auto; transform: none; box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--ink-shadow); }
+  .pilot :global(.pilot-more > summary) { cursor: pointer; }
   .pilot-more { --disclosure-pad-x: 0; }
   .pilot-more > :global(.disclosure-summary) { font-weight: 600; }
   .pilot-more:not([open]) > :global(.disclosure-summary) { border-bottom-color: transparent; }

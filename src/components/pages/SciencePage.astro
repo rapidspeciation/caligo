@@ -207,7 +207,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
           .map((sourceId) => getSource(sourceId))
           .filter((source) => source !== undefined);
         return (
-          <details id={anchor} class="question disclosure" data-question>
+          <details id={anchor} class="question disclosure ink-card ink-press" data-question>
             <summary class="question-summary">
               {thumb && (
                 <img class="question-thumb" src={`${base}${thumb.path}`} alt="" width={thumb.width} height={thumb.height} loading="lazy" decoding="async" />
@@ -527,11 +527,16 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   }
 
   /* ---- Questions: one expandable row each ---- */
+  /* Each question is a card that opens. Closed, it lifts and presses like
+     the other cards; open, it is a page of text and stays still. */
   .question {
     scroll-margin-top: 5rem;
-    border-top: 1px solid var(--hairline);
+    padding-inline: var(--space-m);
   }
-  .question:last-of-type { border-bottom: 1px solid var(--hairline); }
+  .question + .question { margin-top: var(--space-m); }
+  .question:not([open]):active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink-shadow); }
+  .question[open], .question[open]:hover { transform: none; box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--ink-shadow); }
+  .question > :global(summary) { border: 0; }
   .question-summary {
     list-style: none;
     display: grid;
