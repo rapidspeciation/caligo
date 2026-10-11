@@ -61,12 +61,12 @@ const callClosed = isCallClosed();
         <div class="intro-copy content-body">
           {intro.body.map((paragraph) => <p>{paragraph}</p>)}
         </div>
-        <aside class="funding-callout ink-card ink-press ink-press--link ink-card--rose" aria-labelledby="funding-callout-title">
+        <aside class="funding-callout ink-card ink-card--rose" data-card="link" aria-labelledby="funding-callout-title">
           <h2 id="funding-callout-title" class="funding-callout-title">{intro.call}</h2>
           <DeadlineChip locale={locale} />
           <p class="content-body" data-when-call="open" hidden={callClosed}>{intro.coverage}</p>
           <p class="content-body" data-when-call="closed" hidden={!callClosed}>{intro.descriptionClosed}</p>
-          <a class="btn btn--primary" href={localePath(locale, '/funding')}>{intro.funding}<Icon name="arrow-right" /></a>
+          <a class="btn btn--primary card-link" href={localePath(locale, '/funding')}>{intro.funding}<Icon name="arrow-right" /></a>
         </aside>
       </div>
       <h2 id="pilot-purpose" class="content-heading">{intro.why}</h2>
@@ -98,9 +98,9 @@ const callClosed = isCallClosed();
         publishedPilots.map((pilot) => {
           const project = projectById.get(pilotToProjectId[pilot.id]);
           return (
-            <li id={pilot.slug} class="pilot ink-card ink-press" data-pilot>
+            <li id={pilot.slug} class="pilot ink-card" data-card="toggle">
             <!-- Media: 5-column slot on desktop -->
-            <div class="pilot-media">
+            <div class="pilot-media card-media">
               {getMediaModule(pilot.id) && (
                 <MediaCandidateViewer moduleId={pilot.id} locale={locale} aspectRatio="4 / 3" captionMode="compact" singleImage />
               )}
@@ -191,22 +191,8 @@ const callClosed = isCallClosed();
       var more = target && target.querySelector('[data-pilot-more]');
       if (more) more.open = true;
     }
-    /* The whole card is the switch for its background: a click anywhere
-       that is not already a link, a button or selected text opens or
-       closes it, through the summary so keyboard and animation agree. */
-    function toggleCard(event) {
-      var card = event.target.closest && event.target.closest('[data-pilot]');
-      if (!card || event.target.closest('a, button, summary, input, figure')) return;
-      // Text inside the card is for reading and selecting, not for toggling.
-      var text = event.target.closest('p, h1, h2, h3, h4, li, dt, dd, figcaption, output, table');
-      if (text && text !== card && card.contains(text)) return;
-      if (String(window.getSelection && window.getSelection()).length) return;
-      var summary = card.querySelector('[data-pilot-more] > summary');
-      if (summary) summary.click();
-    }
     if (!window.__caligoPilotHash) {
       window.__caligoPilotHash = true;
-      document.addEventListener('click', toggleCard);
       document.addEventListener('astro:page-load', openTarget);
       window.addEventListener('hashchange', openTarget);
     }
@@ -347,22 +333,6 @@ const callClosed = isCallClosed();
     max-width: var(--measure);
   }
   /* The background is a plain row closing the card, not a box inside it. */
-  /* The card opens its own background, so it reads as pressable; once open
-     it is a page of text and stays still. */
-  .pilot { cursor: pointer; }
-  .pilot:has(.pilot-more:not([open])):active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink-shadow); }
-  .pilot:has(.pilot-more[open]) { transform: none; box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--ink-shadow); }
-  .pilot :global(.pilot-more > summary) { cursor: pointer; }
-  /* The photograph leans in a little when its card is hovered, or on touch
-     when it passes mid-screen, as the leadership portraits do. */
-  .pilot-media :global(img) { transition: transform var(--dur-base) var(--ease-glide); }
-  @media (hover: hover) and (pointer: fine) {
-    .pilot:hover .pilot-media :global(img) { transform: scale(1.05); }
-  }
-  .pilot:global(.is-near) .pilot-media :global(img) { transform: scale(1.05); }
-  @media (prefers-reduced-motion: reduce) {
-    .pilot-media :global(img) { transform: none !important; transition: none; }
-  }
   .pilot-more { --disclosure-pad-x: 0; }
   .pilot-more > :global(.disclosure-summary) { font-weight: 600; }
   .pilot-more:not([open]) > :global(.disclosure-summary) { border-bottom-color: transparent; }

@@ -387,9 +387,32 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
               e.target.classList.toggle('is-near', e.isIntersecting && e.boundingClientRect.height < window.innerHeight * 0.9);
             });
           }, { rootMargin: '-38% 0px -38% 0px' });
-          document.querySelectorAll('a.ink-card, .ink-press, .person-card, .timeline-item').forEach(function (card) { io.observe(card); });
+          document.querySelectorAll('[data-card]').forEach(function (card) { io.observe(card); });
         };
         document.addEventListener('astro:page-load', window.caligoNearCards);
+      })();
+      /* data-card="toggle": the card is the switch for its <details>. A
+         click on its empty parts opens or closes it, through the summary so
+         keyboard and animation agree. Text is left alone so it can be
+         selected, and so are the card's own controls and any card nested
+         inside it (a diagram, for instance). */
+      (function () {
+        if (window.caligoCardToggle) return;
+        window.caligoCardToggle = true;
+        var TEXT = 'p, h1, h2, h3, h4, li, dt, dd, figcaption, output, table';
+        document.addEventListener('click', function (event) {
+          var target = event.target;
+          var card = target.closest && target.closest('[data-card="toggle"]');
+          if (!card || target.closest('a, button, summary, input, label, figure, svg')) return;
+          var inner = target.closest('.ink-card');
+          if (inner && inner !== card) return;
+          var text = target.closest(TEXT);
+          if (text && text !== card && card.contains(text)) return;
+          if (String(window.getSelection && window.getSelection()).length) return;
+          var details = card.matches('details') ? card : card.querySelector('details');
+          var summary = details && details.querySelector(':scope > summary');
+          if (summary) summary.click();
+        });
       })();
       /* A row opened with the mouse or a finger does not need the keyboard
          focus ring that browsers draw on <summary>; keyboard users keep it. */

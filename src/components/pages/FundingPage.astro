@@ -18,7 +18,7 @@ const closed = isCallClosed();
   <section id="funding-opportunities" class="section section--panel" aria-labelledby="funding-call-title">
     <div class="container-wide">
       <div class="funding-layout">
-        <div class="funding-summary ink-card ink-press ink-press--link ink-card--rose">
+        <div class="funding-summary ink-card ink-card--rose" data-card="link">
           <h2 id="funding-call-title" class="content-heading">{intro.call}</h2>
           <p class="content-body" data-when-call="open" hidden={closed}>{intro.description}</p>
           <p class="content-body" data-when-call="open" hidden={closed}>{intro.coverage}</p>
@@ -27,7 +27,7 @@ const closed = isCallClosed();
           <DeadlineChip locale={locale} />
           <div class="funding-open" data-when-call="open" hidden={closed}>
             {PILOT_APPLICATION_URL ? (
-              <a class="btn btn--primary" href={PILOT_APPLICATION_URL} target="_blank" rel="external noopener">{intro.apply}<Icon name="external" /></a>
+              <a class="btn btn--primary card-link" href={PILOT_APPLICATION_URL} target="_blank" rel="external noopener">{intro.apply}<Icon name="external" /></a>
             ) : (
               <p class="content-meta">{intro.pending}</p>
             )}
@@ -35,7 +35,7 @@ const closed = isCallClosed();
           </div>
           <div class="funding-closed" data-when-call="closed" hidden={!closed}>
             <p class="content-body">{intro.closedNote}</p>
-            <a class="btn btn--primary" href={LINKS.joinForm} target="_blank" rel="noopener noreferrer">{join.cta}<Icon name="external" /></a>
+            <a class="btn btn--primary card-link" href={LINKS.joinForm} target="_blank" rel="noopener noreferrer">{join.cta}<Icon name="external" /></a>
           </div>
         </div>
         <div class="funding-conditions">

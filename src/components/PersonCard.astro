@@ -15,8 +15,8 @@ const regionalTiesLabel = locale === 'en' ? 'Regional ties' : 'Vínculos regiona
 const base = import.meta.env.BASE_URL;
 ---
 
-<article class="person-card ink-card ink-card--flat" style={`--tone: var(--tone-person-${tone})`}>
-  <figure class="person-media">
+<article class="person-card ink-card ink-card--flat" data-card="link" style={`--tone: var(--tone-person-${tone}); --card-tone: var(--tone-person-${tone})`}>
+  <figure class="person-media card-media">
     <img
       class="person-photo"
       src={`${base}${person.photo.path}`}
@@ -43,7 +43,7 @@ const base = import.meta.env.BASE_URL;
       </p>
     </div>
     <a
-      class="person-source mono"
+      class="person-source card-link mono"
       href={person.source.href}
       target="_blank"
       rel="noopener noreferrer external"
@@ -177,52 +177,18 @@ const base = import.meta.env.BASE_URL;
     text-underline-offset: 0.18em;
   }
   .person-source-arrow { display: inline-block; transition: transform var(--dur-quick) var(--ease-glide); }
-  /* The whole card opens the profile; the link stays the accessible name. */
-  .person-card { position: relative; }
-  .person-source::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
-  .person-source:focus-visible { outline: none; }
-  .person-card:has(.person-source:focus-visible) {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
-  }
-
-  /* Hover: the card lifts onto a hard shadow in its own wing colour, the
-     portrait drops its warm grade and comes forward, the arrow leaves. */
-  .person-card {
-    transition: transform var(--dur-quick) var(--ease-glide),
-      box-shadow var(--dur-quick) var(--ease-glide),
-      border-color var(--dur-quick) var(--ease-glide);
-  }
+  /* Raised (see global.css, "Card behaviour"): the portrait drops its warm
+     grade, the country chips fill in and the arrow leaves. */
   .person-photo { transition: transform var(--dur-base) var(--ease-glide), filter var(--dur-base) var(--ease-glide); }
   .person-media::after { transition: opacity var(--dur-base) var(--ease-glide); }
-  .person-name { transition: color var(--dur-quick) var(--ease-glide); }
+  .person-card:global(.is-near) .person-photo { filter: none; }
+  .person-card:global(.is-near) .person-media::after { opacity: 0; }
+  .person-card:global(.is-near) .person-tie { background: color-mix(in oklab, var(--tone) 34%, transparent); border-color: var(--tone); }
   @media (hover: hover) and (pointer: fine) {
-    .person-card:hover {
-      transform: translate(-3px, -3px);
-      border-color: var(--tone);
-      box-shadow: 6px 6px 0 var(--tone);
-    }
-    .person-card:hover .person-photo { transform: scale(1.05); filter: none; }
+    .person-card:hover .person-photo { filter: none; }
     .person-card:hover .person-media::after { opacity: 0; }
     .person-card:hover .person-tie { background: color-mix(in oklab, var(--tone) 34%, transparent); border-color: var(--tone); }
     .person-card:hover .person-source { color: var(--accent-strong); text-decoration-color: currentColor; }
     .person-card:hover .person-source-arrow { transform: translate(2px, -2px); }
-    .person-card:active { transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--tone); }
-  }
-  /* On touch, the card passing the middle of the screen (Base.astro). */
-  .person-card:global(.is-near) {
-    transform: translate(-3px, -3px);
-    border-color: var(--tone);
-    box-shadow: 6px 6px 0 var(--tone);
-  }
-  .person-card:global(.is-near) .person-photo { transform: scale(1.05); filter: none; }
-  .person-card:global(.is-near) .person-media::after { opacity: 0; }
-  .person-card:global(.is-near) .person-tie { background: color-mix(in oklab, var(--tone) 34%, transparent); border-color: var(--tone); }
-  @media (hover: none) {
-    .person-card:active { transform: translate(1px, 1px); box-shadow: 2px 2px 0 var(--tone); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .person-card:hover, .person-card:active, .person-card:global(.is-near) { transform: none; }
-    .person-card:hover .person-photo, .person-card:global(.is-near) .person-photo { transform: none; }
   }
 </style>

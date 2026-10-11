@@ -72,12 +72,12 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
         </h2>
         {feedback.reference.body.map((para) => <p class="prose-para content-body">{para}</p>)}
       </div>
-      <aside class="genome-goal ink-card ink-press ink-press--link" aria-labelledby="genome-goal-heading">
+      <aside class="genome-goal ink-card" data-card="link" aria-labelledby="genome-goal-heading">
         <p class="goal-number"><span class="marker">{locale === 'es' ? '1.000' : '1,000'}</span></p>
         <h3 id="genome-goal-heading" class="goal-heading">{feedback.reference.goalHeading}</h3>
         <p class="content-body">{feedback.reference.goalBody}</p>
         <a target="_blank"
-          class="btn standards-link"
+          class="btn standards-link card-link"
           href="https://www.earthbiogenome.org/report-on-assembly-standards"
           rel="external noopener"
         >
@@ -140,17 +140,17 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
 
       <div class="publication-grid">
         {publicationExamples.map((publication, index) => (
-          <article class={`publication-card ink-card ink-press ink-press--link publication-card--${['leaf', 'sky', 'rose'][index % 3]}`}>
+          <article class={`publication-card ink-card publication-card--${['leaf', 'sky', 'rose'][index % 3]}`} data-card="link">
             <div class="publication-index mono chip" aria-hidden="true">
               {String(index + 1).padStart(2, '0')}
             </div>
-            <a target="_blank" class="publication-title" href={publication.url} rel="external noopener">
+            <a target="_blank" class="publication-title card-link" href={publication.url} rel="external noopener">
               <h3 set:html={italicizeSpecies(publication.title)} />
               <Icon name="external" />
             </a>
             <figure>
               <a
-                class="publication-image-wrap"
+                class="publication-image-wrap card-media"
                 href={`${base}${publication.figure.src}`}
                 aria-label={`${feedback.publications.figureLabel}: ${publication.title}`}
                 data-lightbox
@@ -207,10 +207,10 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
           .map((sourceId) => getSource(sourceId))
           .filter((source) => source !== undefined);
         return (
-          <details id={anchor} class="question disclosure ink-card ink-press" data-question>
+          <details id={anchor} class="question disclosure ink-card" data-card="toggle" data-question>
             <summary class="question-summary">
               {thumb && (
-                <span class="question-thumb"><img src={`${base}${thumb.path}`} alt="" width={thumb.width} height={thumb.height} loading="lazy" decoding="async" /></span>
+                <span class="question-thumb card-media"><img src={`${base}${thumb.path}`} alt="" width={thumb.width} height={thumb.height} loading="lazy" decoding="async" /></span>
               )}
               <span class="question-summary-text">
                 <span class="question-label content-label">{i + 1} · {t.home.researchLabels[i]}</span>
@@ -278,22 +278,8 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
         var target = id && document.getElementById(id);
         if (target && target.matches('[data-question]')) target.open = true;
       }
-      /* An open question closes from the empty parts of its card. Text is
-         left alone so it can be selected, and so are the card's own
-         controls (links, buttons, the figure, the diagram). */
-      function closeCard(event) {
-        var card = event.target.closest && event.target.closest('[data-question][open]');
-        if (!card || event.target.closest('a, button, summary, input, label, figure, svg, [data-fission]')) return;
-        // Text inside the card is for reading and selecting, not for toggling.
-        var text = event.target.closest('p, h1, h2, h3, h4, li, dt, dd, figcaption, output, table');
-        if (text && text !== card && card.contains(text)) return;
-        if (String(window.getSelection && window.getSelection()).length) return;
-        var summary = card.querySelector(':scope > summary');
-        if (summary) summary.click();
-      }
       if (!window.__caligoQuestionHash) {
         window.__caligoQuestionHash = true;
-        document.addEventListener('click', closeCard);
         document.addEventListener('astro:page-load', openTarget);
         window.addEventListener('hashchange', openTarget);
       }
@@ -404,13 +390,8 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   .publication-card--leaf { --ink-line: var(--tone-leaf); --ink-shadow: var(--tone-leaf); }
   .publication-card--sky { --ink-line: var(--tone-sky); --ink-shadow: var(--tone-sky); }
   .publication-card--rose { --ink-line: var(--tone-rose); --ink-shadow: var(--tone-rose); }
-  /* The title's link covers the card, so clicking anywhere opens the paper;
-     the figure (which zooms) and the credit links stay on top. */
-  .publication-card .publication-title { position: static; }
-  .publication-title::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
-  .publication-title:focus-visible { outline: none; }
-  .publication-card:has(.publication-title:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
-  .publication-card :is(.publication-image-wrap, .publication-credit a) { position: relative; z-index: 1; }
+  /* The figure zooms on its own click and leans in only slightly. */
+  .publication-card { --card-zoom: 1.03; }
   .publication-card:hover .publication-title h3,
   .publication-title:focus-visible h3 { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.18em; }
   .publication-card {
@@ -548,12 +529,9 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     padding-inline: var(--space-m);
   }
   .question + .question { margin-top: var(--space-m); }
-  .question:not([open]):active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink-shadow); }
-  .question[open], .question[open]:hover { transform: none; box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--ink-shadow); }
   .question > :global(summary) { border: 0; }
-  .question[open] { cursor: pointer; }
-  .question[open] :is(a, button, figure, label, :global(.fission)) { cursor: auto; }
-  .question[open] :is(a, button, label) { cursor: pointer; }
+  .question { --card-zoom: 1.07; }
+  .question[open] :is(p, h3, li, figure, :global(.fission)) { cursor: auto; }
   .question-summary {
     list-style: none;
     display: grid;
@@ -574,18 +552,6 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     border: 1px solid var(--hairline);
   }
   .question-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
-  /* Photographs lean in a little when their card is hovered, or on touch
-     when it passes mid-screen, as the leadership portraits do. */
-  .question-thumb img, .publication-image-wrap img { transition: transform var(--dur-base) var(--ease-glide); }
-  @media (hover: hover) and (pointer: fine) {
-    .question:not([open]):hover .question-thumb img { transform: scale(1.07); }
-    .publication-card:hover .publication-image-wrap img { transform: scale(1.03); }
-  }
-  .question:global(.is-near):not([open]) .question-thumb img { transform: scale(1.07); }
-  .publication-card:global(.is-near) .publication-image-wrap img { transform: scale(1.03); }
-  @media (prefers-reduced-motion: reduce) {
-    .question-thumb img, .publication-image-wrap img { transform: none !important; transition: none; }
-  }
   /* Once open, the large photo beside the answer takes over. */
   .question[open] .question-thumb { display: none; }
   .question[open] .question-summary { grid-template-columns: minmax(0, 1fr) auto; }

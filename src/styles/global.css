@@ -461,43 +461,79 @@ kbd,
 .ink-card--sun .btn:hover, .ink-card--leaf .btn:hover, .ink-card--sky .btn:hover, .ink-card--rose .btn:hover {
   background: var(--on-pastel);
 }
-/* A pressable card lifts toward the pointer and sinks when clicked. */
-a.ink-card, .ink-press {
+/* ── Card behaviour ──────────────────────────────────────────────────
+   `.ink-card` is the look. A card that does something says so in markup:
+
+     data-card="link"     it goes somewhere. Either the card is the <a>, or
+                          one link inside it carries `.card-link` and covers
+                          the whole card.
+     data-card="toggle"   it opens and closes a <details>: itself, or the
+                          one inside it. Base.astro wires the click.
+
+   Every such card lifts on hover, sinks when pressed, shows a focus ring
+   and holds still under reduced motion. On touch screens Base.astro sets
+   `.is-near` on the card passing mid-screen, which looks like hover.
+
+     --card-tone          colour of outline and shadow while raised
+     .card-media          a photo frame inside: its image leans in while
+                          the card is raised (`--card-zoom` sets how far)   */
+[data-card] {
+  --card-lift: 2px;
+  position: relative;
   text-decoration: none;
-  transition: transform var(--dur-instant) var(--ease-glide),
-    box-shadow var(--dur-instant) var(--ease-glide);
+  cursor: pointer;
+  transition: transform var(--dur-quick) var(--ease-glide),
+    box-shadow var(--dur-quick) var(--ease-glide),
+    border-color var(--dur-quick) var(--ease-glide);
 }
-/* `.is-near` is the touch stand-in for hover: Base.astro sets it on the
-   card passing the middle of the screen. */
-a.ink-card.is-near, .ink-press.is-near {
-  transform: translate(-2px, -2px);
-  box-shadow: calc(var(--ink-drop) + 2px) calc(var(--ink-drop) + 2px) 0 var(--ink-shadow);
+[data-card].is-near {
+  transform: translate(calc(-1 * var(--card-lift)), calc(-1 * var(--card-lift)));
+  border-color: var(--card-tone, var(--ink-line));
+  box-shadow: calc(var(--ink-drop) + var(--card-lift)) calc(var(--ink-drop) + var(--card-lift)) 0 var(--card-tone, var(--ink-shadow));
 }
 @media (hover: hover) {
-  a.ink-card:hover, .ink-press:hover {
-    transform: translate(-2px, -2px);
-    box-shadow: calc(var(--ink-drop) + 2px) calc(var(--ink-drop) + 2px) 0 var(--ink-shadow);
+  [data-card]:hover {
+    transform: translate(calc(-1 * var(--card-lift)), calc(-1 * var(--card-lift)));
+    border-color: var(--card-tone, var(--ink-line));
+    box-shadow: calc(var(--ink-drop) + var(--card-lift)) calc(var(--ink-drop) + var(--card-lift)) 0 var(--card-tone, var(--ink-shadow));
   }
 }
-a.ink-card:active, .ink-press--link:active {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0 var(--ink-shadow);
+[data-card]:active {
+  transform: translate(var(--card-lift), var(--card-lift));
+  box-shadow: 1px 1px 0 var(--card-tone, var(--ink-shadow));
 }
-/* A card with one action: its button's link covers the whole card, so the
-   lift is honest. Anything else that needs clicks sits above the cover. */
-.ink-press--link { position: relative; }
-.ink-press--link .btn[href]::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
-.ink-press--link :is(a:not(.btn), button, summary, input) { position: relative; z-index: 1; }
-/* The button stays put under the cover: a transform would shrink the cover
-   to the button and make the hover flicker. The card does the moving. */
-.ink-press--link .btn[href]:is(:hover, :active) { transform: none; box-shadow: 3px 3px 0 var(--btn-shadow); }
-.ink-press--link:has(.btn[href]:focus-visible) { outline: 2px solid var(--focus-ring, var(--accent)); outline-offset: 3px; }
+/* An opened card is a page of text: it rests, whatever the pointer does. */
+[data-card='toggle']:is([open], :has(details[open])) {
+  transform: none;
+  border-color: var(--ink-line);
+  box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--ink-shadow);
+}
+
+/* The link that covers its card. Anything else clickable sits above it. */
+a.card-link::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+.card-link:focus-visible { outline: none; }
+[data-card]:is(:focus-visible, :has(.card-link:focus-visible)) { outline: 2px solid var(--accent); outline-offset: 3px; }
+/* Zero specificity, so a control that positions itself keeps its own rule. */
+:where([data-card]) :where(a:not(.card-link), button, summary, input, label) { position: relative; z-index: 1; }
+/* A link that covers its card stays put: a transform would shrink the
+   cover to the link itself, and the click would miss. The card does the moving. */
+a.card-link:is(:hover, :active) { transform: none; }
+.btn.card-link:is(:hover, :active) { box-shadow: 3px 3px 0 var(--btn-shadow); }
+
+/* Photographs lean in while their card is raised. The frame clips them. */
+.card-media img { transition: transform var(--dur-base) var(--ease-glide); }
+[data-card].is-near .card-media img { transform: scale(var(--card-zoom, 1.05)); }
+@media (hover: hover) and (pointer: fine) {
+  [data-card]:hover .card-media img { transform: scale(var(--card-zoom, 1.05)); }
+}
+[data-card='toggle']:is([open], :has(details[open])) .card-media img { transform: none; }
+
 @media (hover: none) {
-  a.ink-card, .ink-press { transition-duration: var(--dur-base); }
+  [data-card] { transition-duration: var(--dur-base); }
 }
 @media (prefers-reduced-motion: reduce) {
-  a.ink-card, .ink-press { transition: none; }
-  a.ink-card:hover, a.ink-card:active, .ink-press:hover, .ink-press--link:active, a.ink-card.is-near, .ink-press.is-near { transform: none; }
+  [data-card], .card-media img { transition: none; }
+  [data-card], [data-card] .card-media img { transform: none !important; }
 }
 
 /* Small ink pill for statuses and dates ("3 months ago"). */

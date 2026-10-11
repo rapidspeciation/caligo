@@ -30,7 +30,7 @@ const tones: Record<MetricKind, string | undefined> = { participants: undefined,
   <ul class="metric-cards" role="list">
     {metrics.map((metric) => (
       <li class="metric-card">
-        <a class:list={['metric-card__link', 'ink-card', metric.kind && tones[metric.kind]]} href={metric.href}>
+        <a class:list={['metric-card__link', 'ink-card', metric.kind && tones[metric.kind]]} data-card="link" href={metric.href}>
           <span class="metric-card__label">{metric.label}</span>
           {metric.kind && <CardIcon name={icons[metric.kind]} class="metric-icon" />}
           <strong class="metric-card__value">
@@ -110,7 +110,6 @@ const tones: Record<MetricKind, string | undefined> = { participants: undefined,
     font-size: .84rem;
     line-height: 1.45;
   }
-  .metric-card__link:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 
   .stat-bar {
     display: flex;
