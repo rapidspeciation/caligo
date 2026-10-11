@@ -387,7 +387,7 @@ export const PILOTS: readonly Pilot[] = [
     },
     taxon: 'Panacea prola',
     publishedContext: {
-      en: 'In 2020, Gallice and colleagues recorded 2,509 Panacea prola during fifty one-hour observations in south-eastern Peru. Only 19 flew in another direction. The authors presented this as the first evidence of an Amazonian insect migration. Pham and colleagues published the first Biblidinae reference genome, for Batesia hypochlora, in 2026. It is the closest genomic reference for Panacea, but it cannot say where these butterflies came from.',
+      en: 'In 2020, Gallice and colleagues recorded 2,509 Panacea prola in 50 one-hour observations in south-eastern Peru. Only 19 flew in another direction. The authors presented this as the first evidence of an Amazonian insect migration. Pham and colleagues published the first Biblidinae reference genome, for Batesia hypochlora, in 2026. It is the closest genomic reference for Panacea, but it cannot say where these butterflies came from.',
       es: 'En 2020, Gallice y sus colegas registraron 2.509 individuos de Panacea prola durante cincuenta observaciones de una hora en el sureste de Perú. Solo 19 volaron en otra dirección. Los autores presentaron el hallazgo como la primera evidencia de una migración de insectos en la Amazonía. Pham y sus colegas publicaron en 2026 el primer genoma de referencia de una especie de Biblidinae: Batesia hypochlora. Es la referencia genómica más cercana para Panacea, pero no permite saber de dónde venían esas mariposas.',
     },
     proposedQuestion: {
