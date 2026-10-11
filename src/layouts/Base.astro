@@ -398,21 +398,21 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
       })();
       /* data-card="toggle": the card is the switch for its <details>. A
          click on its empty parts opens or closes it, through the summary so
-         keyboard and animation agree. Text is left alone so it can be
-         selected, and so are the card's own controls and any card nested
-         inside it (a diagram, for instance). */
+         keyboard and animation agree. A click anywhere counts, text
+         included, except in the part that opens: closing would hide what
+         was clicked. Dragging to select text never toggles. The card's own
+         controls and any card nested inside it (a diagram) are left alone. */
       (function () {
         if (window.caligoCardToggle) return;
         window.caligoCardToggle = true;
-        var TEXT = 'p, h1, h2, h3, h4, li, dt, dd, figcaption, output, table';
         document.addEventListener('click', function (event) {
           var target = event.target;
           var card = target.closest && target.closest('[data-card="toggle"]');
           if (!card || target.closest('a, button, summary, input, label, figure, svg')) return;
           var inner = target.closest('.ink-card');
           if (inner && inner !== card) return;
-          var text = target.closest(TEXT);
-          if (text && text !== card && card.contains(text)) return;
+          var opened = target.closest('details > :not(summary)');
+          if (opened && card.contains(opened)) return;
           if (String(window.getSelection && window.getSelection()).length) return;
           var details = card.matches('details') ? card : card.querySelector('details');
           var summary = details && details.querySelector(':scope > summary');
