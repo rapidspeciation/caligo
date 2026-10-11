@@ -33,7 +33,6 @@ export const en = {
     "documentaryType": "Documentary image",
     "aiConceptType": "Concept illustration",
     "codeNativeType": "Explanatory graphic",
-    "imageDetailsLabel": "Image details",
     "sourceLinkLabel": "Source"
   },
   "nav": {

@@ -30,7 +30,6 @@ export const es: Dict = {
     "documentaryType": "Imagen documental",
     "aiConceptType": "Ilustración conceptual",
     "codeNativeType": "Gráfico explicativo",
-    "imageDetailsLabel": "Detalles de la imagen",
     "sourceLinkLabel": "Fuente"
   },
   "nav": {

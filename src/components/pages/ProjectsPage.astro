@@ -102,7 +102,7 @@ const callClosed = isCallClosed();
             <!-- Media: 5-column slot on desktop -->
             <div class="pilot-media card-media">
               {getMediaModule(pilot.id) && (
-                <MediaCandidateViewer moduleId={pilot.id} locale={locale} aspectRatio="4 / 3" captionMode="compact" singleImage sizes="(min-width: 68rem) 17rem, 100vw" />
+                <MediaCandidateViewer moduleId={pilot.id} locale={locale} aspectRatio="4 / 3" singleImage sizes="(min-width: 68rem) 17rem, 100vw" />
               )}
             </div>
 
@@ -276,6 +276,7 @@ const callClosed = isCallClosed();
   /* ============================================================
      Media slot
      ============================================================ */
+  .pilot-media :global(.mcv-caption-text) { font-size: var(--step--1); line-height: 1.45; }
   .pilot-media {
     min-width: 0;
   }

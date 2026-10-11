@@ -24,8 +24,7 @@
  *     Ilustración conceptual generada con IA") and carry a mandatory
  *     conceptCaveat in their credit line — never presented as documentary.
  *   - Documentary candidates render licence + link back to the original file
- *     page. Compact cards keep these details in a native disclosure directly
- *     beneath the image.
+ *     page, beneath the image.
  *   - Every rendered <img> gets `width`/`height` from records so intrinsic size
  *     is known before the file loads.
  *   - Initial slide gets `loading="eager"` OR the caller-supplied loading value;
@@ -44,7 +43,6 @@ interface Props {
   readonly aspectRatio?: string;
   readonly class?: string;
   readonly loading?: 'eager' | 'lazy';
-  readonly captionMode?: 'full' | 'compact';
   readonly singleImage?: boolean;
   /** How wide the photo is shown, for the browser to pick a file size (`sizes`). */
   readonly sizes?: string;
@@ -57,7 +55,6 @@ const {
   class: className = '',
   sizes = '100vw',
   loading = 'lazy',
-  captionMode = 'full',
   singleImage = false,
 } = Astro.props;
 
@@ -110,7 +107,7 @@ const resolveBackground = (c: MediaCandidate): string | undefined =>
   c.background ?? module_.background;
 const stageAspectRatio = module_.aspectRatio ?? aspectRatio;
 
-const indexLabel = captionMode === 'compact' ? '{n} / {total}' : labels.imageOfLabel;
+const indexLabel = labels.imageOfLabel;
 const initialIndexLabel = indexLabel
   .replace('{n}', String(initialIndex + 1))
   .replace('{total}', String(total));
@@ -129,7 +126,7 @@ const clientCandidates = sorted.map((c) => ({
 ---
 
 <figure
-  class:list={['media-candidate-viewer', `mcv--${captionMode}`, className]}
+  class:list={['media-candidate-viewer', className]}
   data-media-viewer
   data-module-id={moduleId}
   data-count={total}
@@ -197,48 +194,9 @@ const clientCandidates = sorted.map((c) => ({
   </div>
 
   <figcaption id={`${moduleId}-caption`} class="mcv-caption">
-    {captionMode === 'compact' ? (
-      <details class="mcv-info">
-        <summary>
-          <span class="sr-only">{labels.imageDetailsLabel}</span>
-          <Icon name="info" class="mcv-info-open" />
-          <Icon name="close" class="mcv-info-close" />
-        </summary>
-        <div class="mcv-info-body">
-          {hasControls && (
-            <span class="mcv-index mono" aria-live="polite" data-mcv-index>
-              {initialIndexLabel}
-            </span>
-          )}
-          <p class="mcv-caption-text" data-mcv-caption set:html={italicizeSpecies(initial.caption[locale])} />
-          <p class="mcv-credit">
-            <span data-mcv-credit>{initial.credit[locale]}</span>
-            <span data-mcv-source-wrap>
-              {initial.sourceItemPage && (
-                <>
-                  {' · '}
-                  <a target="_blank" href={initial.sourceItemPage} rel="external noopener" data-mcv-source-link>
-                    {labels.sourceLinkLabel}
-                  </a>
-                </>
-              )}
-            </span>
-            <span data-mcv-licence-wrap>
-              {initial.licence && initial.licenceUrl && (
-                <>
-                  {' · '}
-                  <a target="_blank" href={initial.licenceUrl} rel="license external noopener" data-mcv-licence-link>
-                    <span data-mcv-licence-text>{initial.licence}</span>
-                  </a>
-                </>
-              )}
-            </span>
-          </p>
-        </div>
-      </details>
-    ) : (
       <>
-        <div class="mcv-chips">
+        {/* One documentary photograph needs no label; anything else says what it is. */}
+        {(hasControls || initial.kind !== 'documentary') && <div class="mcv-chips">
           <span class="mcv-type mono" data-mcv-type>
             {kindLabelFor(initial.kind)}
           </span>
@@ -247,7 +205,7 @@ const clientCandidates = sorted.map((c) => ({
               {initialIndexLabel}
             </span>
           )}
-        </div>
+        </div>}
         <p class="mcv-caption-text" data-mcv-caption set:html={italicizeSpecies(initial.caption[locale])} />
         <p class="mcv-credit mono">
           <span data-mcv-credit>{initial.credit[locale]}</span>
@@ -273,7 +231,6 @@ const clientCandidates = sorted.map((c) => ({
           </span>
         </p>
       </>
-    )}
   </figcaption>
 </figure>
 
@@ -476,76 +433,6 @@ const clientCandidates = sorted.map((c) => ({
     flex-direction: column;
     gap: 0.4rem;
     margin: 0;
-  }
-  /* Compact cards: provenance sits behind a small (i) on the image corner,
-     so the card shows the specimen and the question, not a credit row. */
-  .mcv--compact {
-    position: relative;
-    gap: 0;
-  }
-  .mcv--compact .mcv-caption {
-    position: absolute;
-    inset: auto 0 0 0;
-    z-index: 3;
-    display: block;
-    pointer-events: none;
-  }
-  .mcv-info summary {
-    position: absolute;
-    right: 0.6rem;
-    bottom: 0.6rem;
-    z-index: 1;
-    display: grid;
-    place-items: center;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background: rgba(12, 11, 10, 0.6);
-    color: #F6F7F3;
-    cursor: pointer;
-    list-style: none;
-    pointer-events: auto;
-    backdrop-filter: blur(6px);
-    transition: background var(--transition);
-  }
-  .mcv-info summary::-webkit-details-marker { display: none; }
-  .mcv-info summary:hover { background: rgba(12, 11, 10, 0.85); }
-  .mcv-info summary:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-  .mcv-info summary :global(svg) { width: 1.1rem; height: 1.1rem; }
-  .mcv-info :global(.mcv-info-close),
-  .mcv-info[open] :global(.mcv-info-open) { display: none; }
-  .mcv-info[open] :global(.mcv-info-close) { display: block; }
-  .mcv-info-body {
-    display: grid;
-    gap: 0.3rem;
-    padding: 0.8rem 3.2rem 0.8rem var(--space-m);
-    background: rgba(12, 11, 10, 0.86);
-    color: #F6F7F3;
-    pointer-events: auto;
-    backdrop-filter: blur(6px);
-    animation: mcv-info-in 180ms ease-out;
-  }
-  .mcv-info-body .mcv-caption-text {
-    color: #F6F7F3;
-    font-size: var(--step--1);
-    line-height: 1.45;
-  }
-  .mcv-info-body .mcv-credit {
-    color: rgba(246, 247, 243, 0.72);
-    letter-spacing: 0;
-  }
-  .mcv-info-body .mcv-credit a,
-  .mcv-info-body .mcv-credit a:hover { color: #F6F7F3; }
-  .mcv-info-body .mcv-index { color: rgba(246, 247, 243, 0.72); font-size: var(--step--2); }
-  @keyframes mcv-info-in {
-    from { opacity: 0; transform: translateY(0.5rem); }
-    to { opacity: 1; transform: none; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .mcv-info-body { animation: none; }
   }
   .mcv-chips {
     display: flex;
