@@ -176,6 +176,7 @@ export const es: Dict = {
       "intro": "Cada nivel responde preguntas distintas, con un costo distinto.",
       "tierLabel": "Nivel",
       "replay": "Repetir",
+      "play": "Reproducir la animación",
       "explore": {
         "barcode": {
           "prompt": "¿De qué especie es esta mariposa?",

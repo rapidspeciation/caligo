@@ -179,6 +179,7 @@ export const en = {
       "intro": "Each tier answers different questions, at a different cost.",
       "tierLabel": "Tier",
       "replay": "Replay",
+      "play": "Play the animation",
       "explore": {
         "barcode": {
           "prompt": "Which species is this butterfly?",

@@ -6,14 +6,19 @@
  * chromosomes as rounded bars, the palette accent for "reference", and the
  * Okabe-Ito trait tokens from tokens.css as the four DNA bases.
  *
- * The markup IS the final state. Tiers 1 and 2 are still figures with a
- * caption: a DNA barcode matched against a library, and five sites compared
- * between two populations (= same in all, ≈ mixed in both, ≠ differs).
+ * The markup IS the final state, and without JavaScript that is what shows.
+ *
+ * Tiers 1 and 2 rest on the finished picture with a caption. A Play button
+ * runs their animation on demand: a DNA barcode compared with each library
+ * row, and five sites read butterfly by butterfly (= same in all, ≈ mixed in
+ * both, ≠ differs). They never start by themselves, so the three figures do
+ * not compete for attention.
  *
  * Tier 3 plays whenever it scrolls into view, on one stretch of DNA: long
  * reads arrive shuffled, slide until their shared ends overlap, join into
- * one sequence, and that sequence becomes the first of 21 chromosomes.
- * Replay runs it again.
+ * one sequence, and that sequence becomes the first of 21 chromosomes. Each
+ * of its four steps is a button that holds the figure there; Replay sets it
+ * going again.
  */
 import { getDict, type Locale } from '../i18n';
 import { BUTTERFLY, KARYOTYPE, WING_PATTERNS, seededRandom } from '../data/diagram-glyphs';
@@ -156,8 +161,13 @@ const asmOverlaps = ASM_STARTS.slice(1).map((start, k) => ({
   k,
 }));
 
-/* What the client script needs: only tier 3 plays. */
-const exploreData = kind === 'reference' ? { copy: { ...explore.reference, count: tiers.diagrams.reference.count } } : undefined;
+/* What the client script needs to play each figure. */
+const exploreData =
+  kind === 'reference'
+    ? { copy: { ...explore.reference, count: tiers.diagrams.reference.count } }
+    : kind === 'resequencing'
+      ? { sites: SITES.map((site) => site.kind), pitch: SITE_PITCH, final: DEFAULT_SITE }
+      : { first: FIRST, pitch: ROW_PITCH };
 const prompt = explore[kind].prompt;
 /* The sentence under the two still figures. */
 const baseHtml = (b: string) => `<b class="readout-base readout-base--${b}">${b}</b>`;
@@ -177,7 +187,7 @@ const caption =
   class={`tier-diagram tier-diagram--${kind}`}
   data-tier-diagram
   data-kind={kind}
-  data-explore={exploreData && JSON.stringify(exploreData)}
+  data-explore={JSON.stringify(exploreData)}
 >
   <svg viewBox="0 0 360 236" role="img" aria-labelledby={`${id}-title ${id}-desc`}>
     <title id={`${id}-title`}>{copy.title}</title>
@@ -228,10 +238,10 @@ const caption =
         {/* The specimen's short standard fragment: each base, then its bar. */}
         <g class="bc-query" data-query>
           {[...QUERY].map((b, i) => (
-            <text x={r1(barX(i) + BAR_W / 2)} y="31" class={`bc-letter dg-base-text--${b}`}>{b}</text>
+            <text x={r1(barX(i) + BAR_W / 2)} y="31" class={`bc-letter dg-base-text--${b}`} style={`--i:${i}`}>{b}</text>
           ))}
           {[...QUERY].map((b, i) => (
-            <rect x={barX(i)} y="38" width={BAR_W} height="28" rx="1.5" class={`bc-bar dg-base--${b}`} />
+            <rect x={barX(i)} y="38" width={BAR_W} height="28" rx="1.5" class={`bc-bar dg-base--${b}`} style={`--i:${i}`} />
           ))}
           <rect x={FRAME_X} y="33" width={FRAME_W} height="38" rx="6" class="dg-frame bc-qframe" />
         </g>
@@ -318,8 +328,10 @@ const caption =
     )}
   </svg>
 
-  {/* Tiers 1 and 2 are still pictures with a caption. Tier 3 plays: its
-      panel stays hidden until the script is ready to drive it. */}
+  {/* Tiers 1 and 2 rest on the finished picture with a caption, and play
+      only when asked. Tier 3 plays by itself: its panel stays hidden until
+      the script is ready, and each of its steps is a button that holds the
+      figure on that step. */}
   <div class="explorable-panel tier-explore" data-panel hidden={kind === 'reference'}>
     <p class="explorable-prompt">{prompt}</p>
     {kind !== 'barcode' && (
@@ -334,7 +346,7 @@ const caption =
         {kind === 'reference' && (
           <ol class="tier-key tier-steps" role="list">
             {explore.reference.steps.map((step, n) => (
-              <li class="tier-key-item" data-step={n}><b>{n + 1}</b>{step}</li>
+              <li><button type="button" class="tier-key-item tier-step" data-step={n} aria-pressed="false"><b>{n + 1}</b>{step}</button></li>
             ))}
           </ol>
         )}
@@ -343,9 +355,13 @@ const caption =
     {kind === 'reference'
       ? <output class="explorable-result" data-result></output>
       : <p class="explorable-result" set:html={caption} />}
-    {kind === 'reference' && (
+    {kind === 'reference' ? (
       <button type="button" class="explorable-replay" data-replay aria-label={tiers.replay} title={tiers.replay}>
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></svg>
+      </button>
+    ) : (
+      <button type="button" class="explorable-replay explorable-play" data-play hidden aria-label={tiers.play} title={tiers.play}>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8.5 5.5v13l10-6.5z" /></svg>
       </button>
     )}
   </div>
@@ -362,28 +378,120 @@ const caption =
     el.classList.add(cls);
   };
 
-  /* Only the reference-genome figure plays. Bound on every page load: with
-     the client router this script runs once, but the figure arrives each
-     time Science is opened. */
-  const init = () => document.querySelectorAll<HTMLElement>('[data-tier-diagram][data-kind="reference"]').forEach((figure) => {
+  /* Tier 3 plays by itself; tiers 1 and 2 play when their button is
+     pressed. Bound on every page load: with the client router this script
+     runs once, but the figures arrive each time Science is opened. */
+  const init = () => document.querySelectorAll<HTMLElement>('[data-tier-diagram]').forEach((figure) => {
     if (figure.dataset.bound) return;
     figure.dataset.bound = 'true';
-    const copy: Copy = JSON.parse(figure.dataset.explore ?? '{}').copy;
-    const panel = figure.querySelector<HTMLElement>('[data-panel]');
-    const result = figure.querySelector<HTMLOutputElement>('[data-result]');
-    const replay = figure.querySelector<HTMLButtonElement>('[data-replay]');
-    const fly = figure.querySelector<SVGElement>('[data-fly]');
-    const count = figure.querySelector<SVGTextElement>('[data-count]');
-    const rf = figure.querySelector<SVGGElement>('.rf');
-    const steps = figure.querySelectorAll<HTMLElement>('[data-step]');
-    if (!panel || !result || !replay) return;
-
+    const kind = figure.dataset.kind;
+    const data = JSON.parse(figure.dataset.explore ?? '{}');
     const timers = new Set<number>();
     const after = (ms: number, fn: () => void) => {
       const t = window.setTimeout(() => { timers.delete(t); fn(); }, ms);
       timers.add(t);
     };
     const cancel = () => { timers.forEach((t) => window.clearTimeout(t)); timers.clear(); };
+    const on = (el: Element | null | undefined, state = true) => el?.classList.toggle('is-on', state);
+
+    /* ---------- Tiers 1 and 2: the finished picture, replayed on demand ---------- */
+    if (kind !== 'reference') {
+      const button = figure.querySelector<HTMLButtonElement>('[data-play]');
+      if (!button || reduce.matches) return;
+      let run: () => void = () => {};
+
+      if (kind === 'barcode') {
+        const scan = figure.querySelector<SVGElement>('[data-scan]');
+        const check = figure.querySelector<SVGElement>('[data-check]');
+        const answer = figure.querySelector<SVGElement>('[data-answer]');
+        const query = figure.querySelector<SVGElement>('[data-query]');
+        const rows = [...figure.querySelectorAll<SVGElement>('.bc-row')];
+        const crosses = [...figure.querySelectorAll<SVGElement>('.bc-miss')];
+        const differs = new Set(crosses.filter((c) => c.classList.contains('is-on')));
+        const moveTo = (r: number) => { if (scan) scan.style.transform = `translateY(${r * data.pitch}px)`; };
+        // The fragment is read again, then compared with each library row in
+        // turn; a cross marks every base that differs, and the row with none
+        // is the match.
+        run = () => {
+          cancel();
+          figure.classList.add('is-pending');
+          crosses.forEach((c) => on(c, false));
+          on(scan, false); on(check, false);
+          rows.forEach((row) => row.classList.remove('is-match'));
+          moveTo(0);
+          once(query, 'is-reread');
+          const T0 = 1100;
+          const STEP = 720;
+          after(T0, () => on(scan));
+          rows.forEach((_, r) => {
+            after(T0 + r * STEP, () => moveTo(r));
+            after(T0 + r * STEP + 320, () => crosses.forEach((c) => { if (Number(c.dataset.r) === r && differs.has(c)) on(c); }));
+          });
+          after(T0 + rows.length * STEP, () => {
+            moveTo(data.first);
+            on(check);
+            rows[data.first]?.classList.add('is-match');
+            figure.classList.remove('is-pending');
+            once(answer, 'is-pop');
+          });
+        };
+      } else {
+        const cells = [...figure.querySelectorAll<SVGGElement>('.rs-cell')];
+        const verdicts = figure.querySelectorAll<SVGTextElement>('[data-v]');
+        const col = figure.querySelector<SVGGElement>('[data-col]');
+        const sites: string[] = data.sites;
+        // A site's letters from the top butterfly to the bottom one.
+        const column = (i: number) => cells
+          .filter((c) => Number(c.dataset.i) === i)
+          .sort((a, b) => Number(a.dataset.y) - Number(b.dataset.y));
+        const moveCol = (i: number, state: string) => {
+          if (!col) return;
+          col.style.transform = `translateX(${i * data.pitch}px)`;
+          on(col);
+          col.dataset.kind = state;
+        };
+        // The column visits every site: it reads each butterfly's letter in
+        // turn, then the result is written above. It ends on the site where
+        // the populations differ.
+        run = () => {
+          cancel();
+          cells.forEach((c) => on(c, false));
+          verdicts.forEach((v) => on(v, false));
+          on(col, false);
+          const STEP = 1300;
+          const LETTER = 110;
+          sites.forEach((state, i) => {
+            const t = 300 + i * STEP;
+            const letters = column(i);
+            after(t, () => moveCol(i, 'reading'));
+            letters.forEach((c, k) => after(t + 220 + k * LETTER, () => on(c)));
+            after(t + 300 + letters.length * LETTER, () => {
+              moveCol(i, state);
+              on(verdicts[i]);
+              once(verdicts[i], 'is-pop');
+            });
+          });
+          after(300 + sites.length * STEP + 150, () => moveCol(data.final, 'differ'));
+        };
+      }
+
+      button.hidden = false;
+      figure.classList.add('is-live');
+      button.addEventListener('click', run);
+      return;
+    }
+
+    /* ---------- Tier 3: plays in view; each step can be held ---------- */
+    const copy: Copy = data.copy;
+    const panel = figure.querySelector<HTMLElement>('[data-panel]');
+    const result = figure.querySelector<HTMLOutputElement>('[data-result]');
+    const replay = figure.querySelector<HTMLButtonElement>('[data-replay]');
+    const fly = figure.querySelector<SVGElement>('[data-fly]');
+    const count = figure.querySelector<SVGTextElement>('[data-count]');
+    const rf = figure.querySelector<SVGGElement>('.rf');
+    const steps = figure.querySelectorAll<HTMLButtonElement>('[data-step]');
+    if (!panel || !result || !replay) return;
+
     const say = (html: string) => {
       if (result.innerHTML !== html) result.innerHTML = html;
     };
@@ -391,7 +499,10 @@ const caption =
     // reader without scripts sees.
     const stage = (name: string, step: number) => {
       if (name) figure.dataset.stage = name; else delete figure.dataset.stage;
-      steps.forEach((el, k) => el.classList.toggle('is-current', k === step));
+      steps.forEach((el, k) => {
+        el.classList.toggle('is-current', k === step);
+        el.setAttribute('aria-pressed', String(k === step));
+      });
     };
     const show = () => {
       stage('', steps.length - 1);
@@ -422,8 +533,22 @@ const caption =
       after(15400, () => { show(); result.removeAttribute('aria-live'); });
     };
 
+    // Pressing a step stops the playback and holds the figure there, until
+    // Replay sets it going again.
+    let held = false;
+    const HOLD: [string, string][] = [['reads', copy.reads], ['overlap', copy.overlap], ['join', copy.join]];
+    steps.forEach((el, k) => el.addEventListener('click', () => {
+      cancel();
+      held = true;
+      result.removeAttribute('aria-live');
+      if (k >= HOLD.length) { show(); return; }
+      stage(HOLD[k][0], k);
+      if (count) count.textContent = '';
+      say(HOLD[k][1]);
+    }));
     replay.addEventListener('click', () => {
       cancel();
+      held = false;
       if (reduce.matches) { show(); return; }
       play();
     });
@@ -441,7 +566,7 @@ const caption =
         for (const entry of entries) {
           if (entry.intersectionRatio >= 0.55 && !shown) {
             shown = true;
-            play();
+            if (!held) play();
           } else if (!entry.isIntersecting) {
             shown = false;
           }
@@ -531,6 +656,15 @@ const caption =
   .bc-scan, .bc-check { opacity: 0; }
   .bc-scan.is-on, .bc-check.is-on { opacity: 1; }
   .bc-check { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  /* Played on demand (the Play button): the answer waits, the fragment is
+     read again and the comparison frame moves down the library. */
+  .is-pending .bc-answer { opacity: 0; }
+  .is-live .bc-scan { transition: transform 300ms var(--ease-settle), opacity 200ms linear; }
+  .is-live :is(.bc-miss, .bc-check) { transition: opacity 180ms linear; }
+  .bc-bar, .bc-letter { transform-box: fill-box; transform-origin: center; }
+  .bc-bar { transform-origin: top; }
+  .is-reread .bc-bar { animation: dg-grow 0.3s calc(0.35s + var(--i) * 22ms) var(--ease-settle) both; }
+  .is-reread .bc-letter { animation: dg-pop 0.3s calc(var(--i) * 22ms) var(--ease-settle) both; }
   .bc-answer.is-pop, .bc-check.is-on { transform-box: fill-box; transform-origin: left center; }
   .bc-answer.is-pop { animation: dg-pop 0.45s var(--ease-settle); }
 
@@ -550,6 +684,8 @@ const caption =
   .rs-cell text { font-family: var(--font-mono); font-size: 9.5px; font-weight: 700; text-anchor: middle; fill: var(--stage); opacity: 0; }
   .rs-cell.is-on { transform: scale(1); }
   .rs-cell.is-on text { opacity: 1; }
+  .is-live .rs-col { transition: transform 260ms var(--ease-settle), opacity 200ms linear; }
+  .is-live .rs-cell { transition: transform 200ms var(--ease-settle); }
   .rs-symbol.is-pop { transform-box: fill-box; transform-origin: center; animation: dg-pop 0.45s var(--ease-settle); }
 
   /* The key under tiers 2 and 3: what each mark means, or which step is playing. */
@@ -567,6 +703,23 @@ const caption =
   .tier-key-item b { font: 700 0.95rem/1 var(--font-mono); color: var(--text-strong); }
   .tier-key-item--differ b { color: var(--accent); }
   .tier-steps { column-gap: 0.6rem; }
+  /* Each step is a button: pressing it holds the figure on that step. */
+  .tier-step {
+    padding: 0.15rem 0.3rem 0.15rem 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+  .tier-step:hover { color: var(--text-strong); }
+  .tier-step:hover b { border-color: var(--accent); }
+  .tier-step:active { transform: translateY(1px); }
+  .tier-step:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 0.4rem; }
+  .explorable-play svg { fill: currentColor; stroke-width: 1.6; }
+  /* The replay arrow turns on hover; a play triangle should not. */
+  .explorable-play:hover { transform: scale(1.08); }
+  .explorable-play:active { transform: scale(0.96); }
   .tier-steps .tier-key-item { transition: color 200ms linear; }
   .tier-steps .tier-key-item b {
     display: inline-grid;
@@ -610,6 +763,7 @@ const caption =
   .rf.is-pop .rf-count { transform-origin: left center; animation: dg-pop 0.45s 0.15s var(--ease-settle) both; }
 
   @keyframes dg-pop { from { opacity: 0; transform: scale(0.4); } 70% { opacity: 1; transform: scale(1.12); } to { opacity: 1; transform: scale(1); } }
+  @keyframes dg-grow { from { opacity: 0; transform: scaleY(0); } to { opacity: 1; transform: scaleY(1); } }
   @keyframes dg-flap { 0%, 100% { transform: scaleX(1); } 22% { transform: scaleX(0.3); } 48% { transform: scaleX(1.04); } 70% { transform: scaleX(0.55); } }
   @keyframes rf-fly {
     from { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.3); }
@@ -619,6 +773,6 @@ const caption =
   @keyframes rf-pop { 0%, 100% { transform: scaleY(1); } 45% { transform: scale(1.12, 1.07); } }
 
   @media (prefers-reduced-motion: reduce) {
-    .is-live :is(.rf-asm, .rf-lr, .rf-overlap, .rf-joined) { transition: none; }
+    .is-live :is(.rf-asm, .rf-lr, .rf-overlap, .rf-joined, .bc-scan, .bc-miss, .bc-check, .rs-col, .rs-cell) { transition: none; }
   }
 </style>
