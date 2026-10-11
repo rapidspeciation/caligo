@@ -368,14 +368,12 @@ kbd,
   text-decoration: none;
   cursor: pointer;
   transition: transform var(--dur-instant) var(--ease-glide),
-    box-shadow var(--dur-instant) var(--ease-glide),
-    background var(--transition), color var(--transition);
+    box-shadow var(--dur-instant) var(--ease-glide);
 }
 .btn:hover {
   color: var(--btn-fg);
   transform: translate(-1px, -1px);
   box-shadow: 4px 4px 0 var(--btn-shadow);
-  background: var(--accent-strong);
 }
 .btn:active {
   transform: translate(2px, 2px);
@@ -386,10 +384,6 @@ kbd,
   --btn-fg: var(--text-strong);
   --btn-line: var(--ink-line);
   --btn-shadow: var(--ink-shadow);
-}
-.btn--ghost:hover {
-  --btn-fg: var(--text-strong);
-  background: var(--bg-panel-hover);
 }
 .btn svg {
   width: 1.05em;
@@ -445,9 +439,6 @@ kbd,
    darker shade of the card instead of disappearing into the button. */
 [data-mode='light'] :is(.ink-card--sun, .ink-card--leaf, .ink-card--sky, .ink-card--rose) .btn {
   --btn-shadow: color-mix(in oklab, var(--on-pastel) 38%, var(--card-fill));
-}
-.ink-card--sun .btn:hover, .ink-card--leaf .btn:hover, .ink-card--sky .btn:hover, .ink-card--rose .btn:hover {
-  background: var(--on-pastel);
 }
 /* ── Card behaviour ──────────────────────────────────────────────────
    `.ink-card` is the look. A card that does something says so in markup:
