@@ -921,3 +921,15 @@ a:active [data-icon='arrow-right'] { transform: translateX(3px); }
   .text-link:active, .disclosure-summary:active, .explorable-replay:active,
   a :is([data-icon='external'], [data-icon='arrow-right']) { transform: none !important; transition: none; }
 }
+
+/* ── Moving between pages ────────────────────────────────────────────── */
+/* The header is the same on every page, so it does not take part in the
+   page fade: it stays put while the content below changes, and only the
+   menu underline and the language fill move (see Header, LanguageSwitcher). */
+.site-header { view-transition-name: site-header; }
+::view-transition-old(site-header) { display: none; }
+::view-transition-new(site-header) { animation: none; }
+::view-transition-group(nav-current), ::view-transition-group(lang-current) {
+  animation-duration: 260ms;
+  animation-timing-function: var(--ease-glide);
+}

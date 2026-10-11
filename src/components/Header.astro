@@ -221,10 +221,16 @@ const isCurrent = (path: string) => path === page;
   .primary-nav a:hover {
     color: var(--text-strong);
   }
-  .primary-nav a[aria-current='page'] {
-    color: var(--text-strong);
-    border-bottom-color: var(--accent);
-    /* The underline glides to the next page's link on navigation. */
+  .primary-nav a { position: relative; }
+  .primary-nav a[aria-current='page'] { color: var(--text-strong); }
+  /* The underline is its own piece, so on navigation only the bar glides
+     to the next page's link while the words stay where they are. */
+  .primary-nav a[aria-current='page']::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 -2px 0;
+    height: 2px;
+    background: var(--accent);
     view-transition-name: nav-current;
   }
   .primary-nav a:active { transform: translateY(1px); }

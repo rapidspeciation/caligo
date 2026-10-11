@@ -140,7 +140,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
 
       <div class="publication-grid">
         {publicationExamples.map((publication, index) => (
-          <article class={`publication-card ink-card ink-press publication-card--${['leaf', 'sky', 'rose'][index % 3]}`}>
+          <article class={`publication-card ink-card ink-press ink-press--link publication-card--${['leaf', 'sky', 'rose'][index % 3]}`}>
             <div class="publication-index mono chip" aria-hidden="true">
               {String(index + 1).padStart(2, '0')}
             </div>
@@ -390,6 +390,13 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   .publication-card--leaf { --ink-line: var(--tone-leaf); --ink-shadow: var(--tone-leaf); }
   .publication-card--sky { --ink-line: var(--tone-sky); --ink-shadow: var(--tone-sky); }
   .publication-card--rose { --ink-line: var(--tone-rose); --ink-shadow: var(--tone-rose); }
+  /* The title's link covers the card, so clicking anywhere opens the paper;
+     the figure (which zooms) and the credit links stay on top. */
+  .publication-card .publication-title { position: static; }
+  .publication-title::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+  .publication-title:focus-visible { outline: none; }
+  .publication-card:has(.publication-title:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .publication-card :is(.publication-image-wrap, .publication-credit a) { position: relative; z-index: 1; }
   .publication-card:hover .publication-title h3,
   .publication-title:focus-visible h3 { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.18em; }
   .publication-card {

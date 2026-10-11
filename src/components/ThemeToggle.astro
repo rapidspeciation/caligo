@@ -46,8 +46,7 @@ const t = getDict(locale);
   }
   .theme-toggle:active { transform: translateY(1px); }
   /* The icon turns into place each time the theme flips. */
-  :global([data-mode='dark']) .theme-toggle :global(.icon-sun),
-  :global([data-mode='light']) .theme-toggle :global(.icon-moon) { animation: theme-turn 0.4s var(--ease-settle); }
+  .theme-toggle:global(.is-flipped) :global(svg) { animation: theme-turn 0.4s var(--ease-settle); }
   @keyframes theme-turn { from { transform: rotate(-90deg) scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
   @media (pointer: coarse) {
     .theme-toggle { width: 2.75rem; height: 2.75rem; }
@@ -83,6 +82,10 @@ const t = getDict(locale);
       const cur = document.documentElement.getAttribute('data-mode') === 'light' ? 'light' : 'dark';
       const next: 'dark' | 'light' = cur === 'light' ? 'dark' : 'light';
       document.documentElement.setAttribute('data-mode', next);
+      // The icon turns only when the visitor flips the theme, not on every page.
+      btn.classList.remove('is-flipped');
+      void btn.getBoundingClientRect();
+      btn.classList.add('is-flipped');
       try {
         localStorage.setItem(KEY, next);
       } catch (e) {
