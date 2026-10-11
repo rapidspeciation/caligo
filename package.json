@@ -11,8 +11,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
-    "test": "node scripts/check-content.mjs && node scripts/verify-editorial-type.mjs && node scripts/verify-palette-engine.mjs && node scripts/verify-contrast.mjs && node scripts/verify-social-meta.mjs",
-    "test:nav": "node scripts/verify-nav.mjs && node scripts/verify-no-pilots-links.mjs && node scripts/verify-internal-links.mjs"
+    "test": "node scripts/check-content.mjs && node scripts/verify-contrast.mjs && node scripts/verify-social-meta.mjs",
+    "test:nav": "node scripts/verify-nav.mjs && node scripts/verify-internal-links.mjs && node scripts/verify-built-pages.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

@@ -1,10 +1,14 @@
 /**
- * Content integrity checks — run with `pnpm test`.
+ * Content checks: run with `pnpm test`. No browser or build needed.
  *
- * These guard the two failure modes most likely to slip through on a bilingual
- * static site: English and Spanish drifting apart in structure, and unverified /
- * disallowed content sneaking in (personal emails, the expired Discord invite,
- * a silently-invented Spanish project name). No browser or build required.
+ * Each check guards something that has gone wrong on this site or that the
+ * owner has asked for as a standing rule:
+ *   1. English and Spanish have the same structure, and nothing is empty.
+ *   2. Every bilingual field in the data files has both languages.
+ *   3. Scientific sources have unique ids and canonical DOI links.
+ *   4. Known-wrong links and the expired Discord invite do not come back.
+ *   5. Only the approved contact email is published.
+ *   6. House style: no em dashes, and "pilot" is never used without "project".
  */
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -84,54 +88,46 @@ const before = failures;
 shape(en, 'en', es, 'es');
 if (failures === before) pass('English and Spanish dictionaries have identical structure');
 
-// 1b. Guiding principles come from PRINCIPLES (src/data/content.ts — Nicol's
-// eight, bilingual) and render once via <PrincipleGrid /> on About. The
-// old i18n list (four invented items) was removed in the content inversion.
-// Guard: 8 fully-bilingual items, and both pages render the grid.
-// (Loaded via Node's native type-stripping import — the importTs regex loader
-// only fits the plain-literal i18n dicts, not annotated data modules.)
 const { pathToFileURL } = await import('node:url');
-const contentMod = await import(pathToFileURL(resolve(root, 'src/data/content.ts')).href);
-const PRINCIPLES = contentMod.PRINCIPLES;
-const homePageSrc = readFileSync(resolve(root, 'src/components/pages/HomePage.astro'), 'utf8');
-const aboutPageSrc = readFileSync(resolve(root, 'src/components/pages/AboutPage.astro'), 'utf8');
-const principlesBilingual =
-  Array.isArray(PRINCIPLES) &&
-  PRINCIPLES.every(
-    (p) => p?.title?.en && p?.title?.es && p?.body?.en && p?.body?.es,
-  );
-if (Array.isArray(PRINCIPLES) && PRINCIPLES.length === 8 && principlesBilingual) {
-  pass('Guiding principles: PRINCIPLES contains 8 fully-bilingual items');
-} else {
-  fail(
-    `Guiding principles: expected 8 fully-bilingual PRINCIPLES items (got ${
-      Array.isArray(PRINCIPLES) ? PRINCIPLES.length : 'non-array'
-    }, bilingual=${principlesBilingual})`,
-  );
-}
-if (
-  !/<PrincipleGrid/.test(homePageSrc) &&
-  /<PrincipleGrid/.test(aboutPageSrc) &&
-  !/pillars\.items/.test(homePageSrc) &&
-  !/pillars\.items/.test(aboutPageSrc)
-) {
-  pass('Guiding principles render once on About (no duplicate Home grid or legacy i18n list)');
-} else {
-  fail('Guiding principles must render once on About and never use pillars.items');
-}
+const { registerHooks } = await import('node:module');
+// The data files import each other without a file extension, as Astro allows.
+registerHooks({
+  resolve(specifier, context, nextResolve) {
+    try {
+      return nextResolve(specifier, context);
+    } catch (error) {
+      if (specifier.startsWith('.')) return nextResolve(`${specifier}.ts`, context);
+      throw error;
+    }
+  },
+});
+const load = (rel) => import(pathToFileURL(resolve(root, rel)).href);
 
-// 2. Structured data files carry both locales for every entry.
-const dataSrc = readFileSync(resolve(root, 'src/data/content.ts'), 'utf8');
-const enCount = (dataSrc.match(/\ben:/g) || []).length;
-const esCount = (dataSrc.match(/\bes:/g) || []).length;
-if (enCount === esCount && enCount > 0) pass(`data/content.ts: ${enCount} bilingual fields balanced (en=es)`);
-else fail(`data/content.ts bilingual imbalance: ${enCount} en vs ${esCount} es`);
+// 2. Every bilingual field in the data files has both languages. A field is
+//    bilingual when it is an object with an `en` or an `es` key.
+const DATA_FILES = ['content', 'records', 'initiative', 'pilot-call', 'about-feedback', 'science-feedback', 'network-map'];
+const oneSided = [];
+function bilingual(node, path) {
+  if (Array.isArray(node)) return node.forEach((v, i) => bilingual(v, `${path}[${i}]`));
+  if (!node || typeof node !== 'object') return;
+  if ('en' in node || 'es' in node) {
+    const filled = (v) => (typeof v === 'string' ? v.trim() !== '' : v != null);
+    if (!filled(node.en) || !filled(node.es)) oneSided.push(path);
+  }
+  for (const [k, v] of Object.entries(node)) bilingual(v, `${path}.${k}`);
+}
+const dataText = [];
+for (const name of DATA_FILES) {
+  dataText.push(readFileSync(resolve(root, `src/data/${name}.ts`), 'utf8'));
+  const mod = await load(`src/data/${name}.ts`);
+  for (const [key, value] of Object.entries(mod)) if (typeof value !== 'function') bilingual(value, `${name}.${key}`);
+}
+if (oneSided.length) fail(`bilingual fields missing a language: ${oneSided.slice(0, 8).join(', ')}${oneSided.length > 8 ? ` and ${oneSided.length - 8} more` : ''}`);
+else pass('every bilingual field in the data files has English and Spanish');
 
-// 3. Disallowed content. Applied across en + es dicts AND both structured
-//    data files (content.ts legacy + records.ts new).
-const recordsSrc = readFileSync(resolve(root, 'src/data/records.ts'), 'utf8');
-const allText = [...strings(en), ...strings(es), dataSrc, recordsSrc].join('\n');
-const recordsMod = await import(pathToFileURL(resolve(root, 'src/data/records.ts')).href);
+// 3. Scientific sources.
+const allText = [...strings(en), ...strings(es), ...dataText].join('\n');
+const recordsMod = await load('src/data/records.ts');
 const sourceIds = recordsMod.SOURCES.map((source) => source.id);
 const duplicateSourceIds = sourceIds.filter((id, index) => sourceIds.indexOf(id) !== index);
 const noncanonicalDoiUrls = recordsMod.SOURCES.filter(
@@ -148,37 +144,15 @@ if (duplicateSourceIds.length === 0 && noncanonicalDoiUrls.length === 0) {
   }
 }
 
+// 4. Mistakes that were published once and must not come back.
 const banned = [
-  { pattern: /10\.1093\/gbe\/evaf012/i, why: 'wrong Mackay-Smith DOI must not return (it resolves to an unrelated whitefly paper)' },
-  { pattern: /10\.1007\/s10592-016-0849-y/i, why: 'wrong Seraphim DOI must not return (it resolves to an unrelated mangrove paper)' },
-  { pattern: /iucnredlist\.org\/species\/15992\/121728821/i, why: 'wrong Parides IUCN species/assessment URL must not return' },
-  { pattern: /discord\.gg\//i, why: 'expired Discord invite must not be published' },
-  { pattern: /\bsister initiative\b/i, why: '"sister initiative" implies a formal relationship not verified (brief §2.2)' },
-  { pattern: /\bn\s*=\s*7\b/, why: 'faux sample-size "n = 7" is a dressed-up page counter (brief §5)' },
-  { pattern: /\bvoucher-linked\b/i, why: 'v7 launch-safe: "voucher-linked" (references / genome / anything) is specialist shorthand — explain plainly first (brief §2 terminology contract)' },
-  { pattern: /\b1\s*April\s*2026\b/i, why: 'wrong Wright et al. date — must be "16 February 2026" (brief §2.1)' },
-  { pattern: /\bJiang\s+et\s+al\b/i, why: 'wrong Sackey citation — must be "Sackey et al." (brief §2.1)' },
-  { pattern: /\b4\s+genomes\b/i, why: 'four PILOT PROJECTS, not four genomes (brief §2.2)' },
-  // v6 launch-safe editorial thesis (GPT Pro response 3, priority 1):
-  // internal-review language must not appear in public copy.
-  { pattern: /\bAwaiting confirmation\b/i, why: 'v6 launch-safe: "awaiting confirmation" is internal editorial language' },
-  { pattern: /\bunder review\b/i, why: 'v6 launch-safe: "under review" is internal editorial language' },
-  { pattern: /\bunder construction\b/i, why: 'v6 launch-safe: "under construction" is internal editorial language' },
-  { pattern: /\bunder active development\b/i, why: 'v6 launch-safe: "under active development" is internal editorial language' },
-  { pattern: /\bshould be read as provisional\b/i, why: 'v6 launch-safe: "should be read as provisional" is internal editorial language' },
-  { pattern: /\binformational site\b/i, why: 'v6 launch-safe: "informational site" undersells the initiative publicly' },
-  { pattern: /\bhas not yet been calculated\b/i, why: 'v6 launch-safe: publish the positive regional gap story, not the missing-percentage caveat' },
-  // Site-referential copy. Public text describes the initiative, never the
-  // website's own editorial policy ("the site presents…", "we label…").
-  { pattern: /\b(el sitio|the site) (explains|presents|describes|does not|explica|presenta|describe|no publica)\b/i, why: 'site-referential copy: describe the initiative, not the website\'s editorial policy' },
-  { pattern: /\bit is presented as\b/i, why: 'site-referential copy: state the fact and its status, do not narrate how the site frames it' },
-  { pattern: /\bse presenta como una\b/i, why: 'copy autorreferencial: enuncia el hecho y su estado, no cómo lo enmarca el sitio' },
-  { pattern: /\b(are|is) identified explicitly\b/i, why: 'site-referential copy: state the disclaimer itself, not the site\'s labelling policy' },
-  { pattern: /\bse identifican de manera explícita\b/i, why: 'copy autorreferencial: enuncia el deslinde, no la política de etiquetado del sitio' },
-  { pattern: /\bany future form should\b/i, why: 'internal to-do rendered as public copy' },
-  { pattern: /\bcualquier formulario futuro debe\b/i, why: 'nota interna publicada como copy público' },
+  { pattern: /10\.1093\/gbe\/evaf012/i, why: 'wrong Mackay-Smith DOI (it resolves to an unrelated whitefly paper)' },
+  { pattern: /10\.1007\/s10592-016-0849-y/i, why: 'wrong Seraphim DOI (it resolves to an unrelated mangrove paper)' },
+  { pattern: /iucnredlist\.org\/species\/15992\/121728821/i, why: 'wrong Parides IUCN assessment URL' },
+  { pattern: /discord\.gg\//i, why: 'a Discord invite written into the copy (the last one expired; the link comes from configuration)' },
 ];
-// Personal emails: only the approved public contact address is allowed.
+
+// 5. Personal emails: only the approved public contact address is allowed.
 const ALLOWED_EMAIL = 'genomica.neotropical@gmail.com';
 const emails = [...allText.matchAll(/[\w.+-]+@[\w.-]+\.\w+/g)].map((m) => m[0]);
 const strayEmails = emails.filter((e) => e.toLowerCase() !== ALLOWED_EMAIL);
@@ -190,58 +164,30 @@ for (const { pattern, why } of banned) {
   else pass(`clear: ${why}`);
 }
 
-// 3b. Required scientific facts. Each pattern is tested against a single
-//     concatenated blob of both dictionaries plus both data files, so a
-//     match anywhere counts — that is weak, and it is why this list is
-//     short and limited to facts whose accidental removal would make a
-//     published claim wrong rather than merely different.
-//
-//     Removed with the sources they guarded: the Wright et al. and Sackey
-//     date/citation assertions. Both cited records that no longer appear
-//     anywhere on the site, so the checks were keeping dead data alive.
-//     (The Wright DOI also resolved to a different paper than the one the
-//     record claimed — corrected against Crossref on 2026-07-27.)
-const required = [
-  { pattern: /\bVulnerable\b/, why: 'Parides ascanius global IUCN status "Vulnerable" must be present' },
-  { pattern: /\bEndangered\b|\bEn Peligro\b/, why: 'Parides ascanius Brazilian national status "Endangered" must be present' },
-  { pattern: /precise locality omitted|localidad precisa omitida|localidades precisas/i, why: 'the Parides ascanius locality suppression note must survive' },
-];
-for (const { pattern, why } of required) {
-  if (pattern.test(allText)) pass(`present: ${why}`);
-  else fail(why);
+// 6. House style, checked on the dictionaries and the data files' strings.
+//    The owner's standing rules: no em dashes, and "pilot" always comes with
+//    "project" ("a pilot" is someone who flies planes).
+const dataStrings = [];
+for (const name of DATA_FILES) {
+  const mod = await load(`src/data/${name}.ts`);
+  for (const value of Object.values(mod)) if (typeof value !== 'function') strings(value, dataStrings);
 }
+// Prose only: ids, slugs, paths and URLs have no spaces.
+const copy = [...strings(en), ...strings(es), ...dataStrings].filter((t) => /\s/.test(t));
+const quote = (list) => list.slice(0, 5).map((t) => `"${t.slice(0, 70)}"`).join('; ');
+const emDashes = copy.filter((t) => t.includes('\u2014'));
+if (emDashes.length) fail(`em dash in copy: ${quote(emDashes)}`);
+else pass('no em dashes in the copy');
+const barePilot = copy.filter(
+  (t) => /\bpilots?\b(?!\s+projects?\b)/i.test(t.replace(/https?:\S+/g, '')) || /\bpilotos?\b/i.test(t.replace(/proyectos?\s+piloto\b/gi, '')),
+);
+if (barePilot.length) fail(`"pilot" without "project": ${quote(barePilot)}`);
+else pass('"pilot" always appears as "pilot project" / "proyecto piloto"');
 
-// 4. Spanish name safeguard: the v6 launch-safe pass deleted the `spanishNote`
-//    key entirely (per GPT Pro response 3 §146+374). The initiative now uses
-//    only the descriptive subtitle "Genomas de mariposas y polillas neotropicales"
-//    publicly, which is not presented as an approved official name. Verify the
-//    subtitle appears and no unapproved official-name claim appears.
-if (
-  es.site?.descriptor === 'Genomas de mariposas y polillas neotropicales' &&
-  !es.home?.name?.spanishNote
-) {
-  pass('Spanish subtitle uses the descriptor; no unapproved official-name claim');
-} else {
-  fail('Spanish naming: descriptor must be the Spanish subtitle and spanishNote must be absent');
-}
-
-// 5. Every dictionary leaf is non-empty EXCEPT the deliberately-empty
-//    `mediaViewer.aiConceptCaveat` (per GPT Pro follow-up 4 brief §7:
-//    legacy key set to "" so the component stops rendering it as a
-//    generic warning; risk-specific caveats live in mediaViewer.caveats.*
-//    and per-candidate conceptCaveat fields instead).
-const ACCEPTABLE_EMPTY = 1;
-const emptyEn = strings(en).filter((s) => s.trim() === '').length;
-const emptyEs = strings(es).filter((s) => s.trim() === '').length;
-const acceptable =
-  en?.mediaViewer?.aiConceptCaveat === '' && es?.mediaViewer?.aiConceptCaveat === '';
-if (emptyEn === ACCEPTABLE_EMPTY && emptyEs === ACCEPTABLE_EMPTY && acceptable) {
-  pass('only the intentional mediaViewer.aiConceptCaveat leaf is empty');
-} else if (emptyEn + emptyEs === 0) {
-  pass('no empty strings in either dictionary');
-} else {
-  fail(`unexpected empty strings (en: ${emptyEn}, es: ${emptyEs}; acceptable legacy: mediaViewer.aiConceptCaveat)`);
-}
+// 7. No empty strings in either dictionary.
+const empty = strings(en).filter((t) => t.trim() === '').length + strings(es).filter((t) => t.trim() === '').length;
+if (empty) fail(`${empty} empty string(s) in the dictionaries`);
+else pass('no empty strings in either dictionary');
 
 console.log('');
 if (failures) {

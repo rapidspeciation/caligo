@@ -16,6 +16,7 @@ import { getDict, localePath, type Locale } from '../../i18n';
 import { getSource, getMediaModule } from '../../data/records';
 import { publicationExamples, scienceFeedback } from '../../data/science-feedback';
 import { italicizeSpecies } from '../../data/content';
+import { srcsetFor } from '../../data/image-variants';
 
 interface Props {
   locale: Locale;
@@ -159,6 +160,8 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
                 <span class="publication-zoom" aria-hidden="true"><Icon name="zoom-in" /></span>
                 <img
                   src={`${base}${publication.figure.src}`}
+                  srcset={srcsetFor(publication.figure.src, publication.figure.width, base)}
+                  sizes="(min-width: 60rem) 26rem, 100vw"
                   alt={publication.figure.alt[locale]}
                   width={publication.figure.width}
                   height={publication.figure.height}
@@ -210,7 +213,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
           <details id={anchor} class="question disclosure ink-card" data-card="toggle" data-question>
             <summary class="question-summary">
               {thumb && (
-                <span class="question-thumb card-media"><img src={`${base}${thumb.path}`} alt="" width={thumb.width} height={thumb.height} loading="lazy" decoding="async" /></span>
+                <span class="question-thumb card-media"><img src={`${base}${thumb.path}`} srcset={thumb.width ? srcsetFor(thumb.path, thumb.width, base) : undefined} sizes="7rem" alt="" width={thumb.width} height={thumb.height} loading="lazy" decoding="async" /></span>
               )}
               <span class="question-summary-text">
                 <span class="question-label content-label">{i + 1} · {t.home.researchLabels[i]}</span>
@@ -256,7 +259,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
 
               {aside.photo && (
                 <div class="split-figure">
-                  <MediaCandidateViewer moduleId={aside.photo} locale={locale} aspectRatio="4 / 3" captionMode="compact" singleImage />
+                  <MediaCandidateViewer moduleId={aside.photo} locale={locale} aspectRatio="4 / 3" captionMode="compact" singleImage sizes="(min-width: 60rem) 40vw, 100vw" />
                 </div>
               )}
             </div>

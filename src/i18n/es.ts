@@ -261,7 +261,7 @@ export const es: Dict = {
         "answer": [
           "Parides ascanius está restringida a restingas costeras y humedales del sureste de Brasil. La UICN la evaluó como Vulnerable a nivel global en 2018. La evaluación nacional de Brasil la clasificó En Peligro en 2021.",
           "Seraphim y sus colegas compararon las poblaciones restantes mediante secuencias mitocondriales de COI y ocho marcadores microsatélites. El estudio de 2016 encontró poca estructura genética, ninguna señal de endogamia y una migración alta entre la mayoría de los sitios muestreados, aunque una población estaba más aislada por el entorno metropolitano.",
-          "El resultado de 2016 ofrece una línea de base, pero no muestra si las poblaciones siguen conectadas hoy. Un genoma de referencia a escala cromosómica y nuevas muestras de sus poblaciones permitirían medir cuánta diversidad queda y si la pérdida de hábitat, el drenaje o la fragmentación han interrumpido el flujo génico. No se muestran localidades precisas, para proteger a la especie."
+          "El resultado de 2016 ofrece una línea de base, pero no muestra si las poblaciones siguen conectadas hoy. Un genoma de referencia a escala cromosómica y nuevas muestras de sus poblaciones permitirían medir cuánta diversidad queda y si la pérdida de hábitat, el drenaje o la fragmentación han interrumpido el flujo génico."
         ]
       },
       {

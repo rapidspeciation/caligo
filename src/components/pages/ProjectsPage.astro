@@ -102,7 +102,7 @@ const callClosed = isCallClosed();
             <!-- Media: 5-column slot on desktop -->
             <div class="pilot-media card-media">
               {getMediaModule(pilot.id) && (
-                <MediaCandidateViewer moduleId={pilot.id} locale={locale} aspectRatio="4 / 3" captionMode="compact" singleImage />
+                <MediaCandidateViewer moduleId={pilot.id} locale={locale} aspectRatio="4 / 3" captionMode="compact" singleImage sizes="(min-width: 68rem) 17rem, 100vw" />
               )}
             </div>
 
