@@ -21,9 +21,8 @@ interface Props {
 
 const { metrics, variant = 'bar' } = Astro.props;
 const icons: Record<MetricKind, CardIconName> = { participants: 'people', facilities: 'facility', countries: 'globe', pilots: 'project' };
-// Members stay on cream so the highlighter can carry them; the other
-// three take the site-wide tone for their kind of thing.
-const tones: Record<MetricKind, string | undefined> = { participants: undefined, facilities: 'ink-card--leaf', countries: 'ink-card--sky', pilots: 'ink-card--rose' };
+// One pastel per kind of thing, the same four the rest of the site uses.
+const tones: Record<MetricKind, string> = { participants: 'ink-card--sun', facilities: 'ink-card--leaf', countries: 'ink-card--sky', pilots: 'ink-card--rose' };
 ---
 
 {metrics.length >= 2 && variant === 'community-cards' && (
@@ -34,7 +33,7 @@ const tones: Record<MetricKind, string | undefined> = { participants: undefined,
           <span class="metric-card__label">{metric.label}</span>
           {metric.kind && <CardIcon name={icons[metric.kind]} class="metric-icon" />}
           <strong class="metric-card__value">
-            {metric.kind === 'participants' ? <span class="marker">{metric.value}</span> : metric.value}
+            {metric.value}
           </strong>
           {(metric.note ?? metric.asOf) && <span class="metric-card__note" set:html={italicizeSpecies(metric.note ?? metric.asOf ?? '')} />}
         </a>
