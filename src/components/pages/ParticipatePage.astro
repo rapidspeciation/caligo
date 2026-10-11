@@ -65,7 +65,7 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
         <p class="content-body">{p.audiences.intro}</p>
         <p class="content-body ways-closing">{p.audiences.closing}</p>
       </div>
-      <ul class="ways-list" role="list">
+      <ul class="rule-list ways-list" role="list">
         {p.audiences.items.map((item, i) => (
           <li class="way">
             <h3>{item.title}</h3>
@@ -92,7 +92,7 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
         <h2 id="lang-policy-heading" class="pair-heading">{p.languagePolicy.heading}</h2>
         <p class="content-body">{p.languagePolicy.body}</p>
         <p class="languages" aria-hidden="true">
-          <span class="chip chip--sun" lang="es">Español</span><span class="chip chip--sky" lang="en">English</span><span class="chip chip--leaf" lang="pt">Português</span>
+          <span class="chip chip--lg chip--sun" lang="es">Español</span><span class="chip chip--lg chip--sky" lang="en">English</span><span class="chip chip--lg chip--leaf" lang="pt">Português</span>
         </p>
       </div>
     </div>
@@ -193,28 +193,10 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
   .ways-head h2 { max-width: 16ch; font-size: var(--step-2); }
   .ways-closing { color: var(--text-muted); }
   .ways-layout > .ways-list { margin-top: 0; }
-  .ways-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: var(--space-l);
-    border-top: 1px solid var(--hairline-strong);
-  }
-  .way {
-    padding-block: var(--space-m);
-    border-bottom: 1px solid var(--hairline);
-    display: grid;
-    align-content: start;
-    gap: var(--space-xs);
-  }
-  .way h3 { font-size: var(--step-0); font-family: var(--font-body); font-weight: 620; }
+  /* Structure and titles come from `.rule-list` (global.css). */
+  .way { display: grid; align-content: start; gap: var(--space-xs); }
   .way p { margin: 0; }
   .way .text-link { font-size: var(--step--1); margin-top: var(--space-2xs); }
-  @media (max-width: 40rem) {
-    .ways-list { grid-template-columns: 1fr; }
-  }
 
   /* ---- Outcomes and languages ---- */
   .pair {
@@ -251,12 +233,6 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-xs);
-  }
-  .languages .chip {
-    padding: 0.3rem 0.85rem;
-    font-family: var(--font-display);
-    font-size: var(--step-0);
-    font-weight: 560;
   }
 
   /* ---- Contact ---- */

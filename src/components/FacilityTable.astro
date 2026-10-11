@@ -52,7 +52,7 @@ const labels = {
           <td class="cell-country">{pick(facility.country, locale)}</td>
           <td class="cell-platforms">
             <ul class="platform-list" role="list">
-              {splitPlatforms(facility.platforms).map((platform) => <li class="platform">{platform}</li>)}
+              {splitPlatforms(facility.platforms).map((platform) => <li class="chip chip--sm chip--mono platform">{platform}</li>)}
             </ul>
           </td>
           <td class="cell-website">
@@ -130,16 +130,6 @@ const labels = {
     margin: 0;
     padding: 0;
     list-style: none;
-  }
-  .platform {
-    padding: 0.05rem 0.5rem;
-    border: 1px solid var(--surface-border-strong);
-    border-radius: 999px;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    line-height: 1.5;
-    color: var(--text-strong);
-    white-space: nowrap;
   }
   .cell-website {
     display: grid;

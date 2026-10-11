@@ -70,12 +70,12 @@ const callClosed = isCallClosed();
         </aside>
       </div>
       <h2 id="pilot-purpose" class="content-heading">{intro.why}</h2>
-      <ul class="pilot-reasons">
+      <ul class="rule-list pilot-reasons" role="list">
         {intro.reasons.map(([title, body], i) => (
           <li class="content-body">
             <CardIcon name={reasonIcons[i]} />
             <div>
-              <strong>{title}</strong>
+              <strong class="rule-title">{title}</strong>
               <p>{body}</p>
             </div>
           </li>
@@ -224,14 +224,11 @@ const callClosed = isCallClosed();
     line-height: 1.25;
   }
   .funding-callout .btn { margin-top: var(--space-xs); }
-  .pilot-reasons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-m) var(--space-xl); list-style: none; padding: 0; margin-block: var(--space-m); }
-  .pilot-reasons li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-s); align-items: start; border-top: 1px solid var(--hairline); padding-top: var(--space-s); }
-  .pilot-reasons strong { color: var(--text-strong); }
+  /* Structure and titles come from `.rule-list` (global.css). */
+  .pilot-reasons { margin-block: var(--space-m); }
+  .pilot-reasons li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-s); align-items: start; }
   .pilot-reasons p { margin-top: var(--space-xs); }
   .projects-heading { padding-top: var(--space-l); }
-  @media (max-width: 48rem) {
-    .pilot-reasons { grid-template-columns: 1fr; }
-  }
 
   .pilots {
     list-style: none;
