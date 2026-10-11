@@ -415,6 +415,11 @@ kbd,
 .ink-card:where(:nth-child(4n + 3 of .ink-card)) { --card-tone: var(--tone-person-rose); }
 .ink-card:where(:nth-child(4n + 4 of .ink-card)) { --card-tone: var(--tone-person-sun); }
 :where(.ink-card) .ink-card { --card-tone: inherit; }
+/* To force a colour, name it: data-tone="leaf | sky | rose | sun". */
+.ink-card[data-tone='leaf'] { --card-tone: var(--tone-person-leaf); }
+.ink-card[data-tone='sky']  { --card-tone: var(--tone-person-sky); }
+.ink-card[data-tone='rose'] { --card-tone: var(--tone-person-rose); }
+.ink-card[data-tone='sun']  { --card-tone: var(--tone-person-sun); }
 .ink-card--flat { box-shadow: none; }
 /* The faintest text needs a little more light on a dark card than on the page. */
 :where([data-mode='dark']) .ink-card { --text-faint: #9d907f; }
