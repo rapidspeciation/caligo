@@ -5,7 +5,6 @@ import PageHeader from '../PageHeader.astro';
 import Icon from '../Icon.astro';
 import CardIcon, { type CardIconName } from '../CardIcon.astro';
 import DeadlineChip from '../DeadlineChip.astro';
-import ProjectStructure from '../ProjectStructure.astro';
 import { PILOT_INTRO, isCallClosed } from '../../data/pilot-call';
 import MediaCandidateViewer from '../MediaCandidateViewer.astro';
 import { getDict, localePath, type Locale } from '../../i18n';
@@ -85,7 +84,6 @@ const callClosed = isCallClosed();
     </div>
   </section>
 
-  <ProjectStructure locale={locale} />
 
   {/*
     container-wide supplies the gutter and the centring. This used to come

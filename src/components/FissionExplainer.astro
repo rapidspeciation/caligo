@@ -145,7 +145,11 @@ const data = {
   const fill = (tpl: string, vars: Record<string, string | number>) =>
     tpl.replace(/\{(\w+)\}/g, (_, key: string) => String(vars[key] ?? ''));
 
-  document.querySelectorAll<HTMLElement>('[data-fission]').forEach((figure) => {
+  /* Bound on every page load: with the client router this script runs once,
+     but the figure arrives each time Science is opened. */
+  const init = () => document.querySelectorAll<HTMLElement>('[data-fission]').forEach((figure) => {
+    if (figure.dataset.bound) return;
+    figure.dataset.bound = 'true';
     const cfg = JSON.parse(figure.dataset.config ?? '{}');
     const layer = figure.querySelector<SVGGElement>('[data-karyotype]');
     const count = figure.querySelector<SVGTextElement>('[data-count]');
@@ -303,6 +307,8 @@ const data = {
       }, { threshold: [0, 0.6] }).observe(figure.querySelector('svg') ?? figure);
     }
   });
+  document.addEventListener('astro:page-load', init);
+  init();
 </script>
 
 <style>

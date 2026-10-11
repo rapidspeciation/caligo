@@ -6,20 +6,14 @@
  * chromosomes as rounded bars, the palette accent for "reference", and the
  * Okabe-Ito trait tokens from tokens.css as the four DNA bases.
  *
- * The markup IS the final state. Without JavaScript that is what renders.
- * With JavaScript each figure plays whenever it scrolls into view.
+ * The markup IS the final state. Tiers 1 and 2 are still figures with a
+ * caption: a DNA barcode matched against a library, and five sites compared
+ * between two populations (= same in all, ≈ mixed in both, ≠ differs).
  *
- * Each figure teaches one idea:
- *   barcode       "Try another butterfly": the same method names a new
- *                 specimen each time (the one control the reader gets)
- *   resequencing  plays by itself: five sites are read butterfly by
- *                 butterfly, and each gets its result written above it:
- *                 identical everywhere (=), mixed in both populations (≈),
- *                 or different between populations (≠)
- *   reference     plays by itself on one stretch of DNA: long reads arrive
- *                 shuffled, slide until their shared ends overlap, join
- *                 into one sequence, and the 21 chromosomes appear
- * Replay runs a figure again.
+ * Tier 3 plays whenever it scrolls into view, on one stretch of DNA: long
+ * reads arrive shuffled, slide until their shared ends overlap, join into
+ * one sequence, and that sequence becomes the first of 21 chromosomes.
+ * Replay runs it again.
  */
 import { getDict, type Locale } from '../i18n';
 import { BUTTERFLY, KARYOTYPE, WING_PATTERNS, seededRandom } from '../data/diagram-glyphs';
@@ -178,6 +172,17 @@ const exploreData =
       ? { copy: explore.resequencing, sites: SITES, pitch: SITE_PITCH, final: DEFAULT_SITE }
       : { copy: { ...explore.reference, count: tiers.diagrams.reference.count } };
 const prompt = explore[kind].prompt;
+/* The sentence under the two still figures. */
+const baseHtml = (b: string) => `<b class="readout-base readout-base--${b}">${b}</b>`;
+const caption =
+  kind === 'barcode'
+    ? explore.barcode.match.replace('{name}', LIBRARY[FIRST].name)
+    : kind === 'resequencing'
+      ? explore.resequencing.summary
+          .replace('{n}', String(SITES.length))
+          .replace('{a}', baseHtml(SITES[DEFAULT_SITE].top[0]))
+          .replace('{b}', baseHtml(SITES[DEFAULT_SITE].bottom[0]))
+      : '';
 ---
 
 <figure
@@ -330,45 +335,42 @@ const prompt = explore[kind].prompt;
     )}
   </svg>
 
-  <div class="explorable-panel tier-explore" data-panel hidden>
+  {/* Tiers 1 and 2 are still pictures with a caption. Tier 3 plays: its
+      panel stays hidden until the script is ready to drive it. */}
+  <div class="explorable-panel tier-explore" data-panel hidden={kind === 'reference'}>
     <p class="explorable-prompt">{prompt}</p>
-    <div class="explorable-control">
-      {kind === 'barcode' && (
-        <button type="button" class="explorable-btn" data-next>
-          <svg viewBox="-28 -17 56 32" aria-hidden="true" focusable="false">
-            <path d={`${WING_F} ${WING_H}`} /><path d={`${WING_F} ${WING_H}`} transform="scale(-1 1)" />
-          </svg>
-          <span>{explore.barcode.button}</span>
-        </button>
-      )}
-      {kind === 'resequencing' && (
-        <ul class="tier-key" role="list">
-          {(['same', 'mixed', 'differ'] as const).map((k, n) => (
-            <li class={`tier-key-item tier-key-item--${k}`}><b>{SYMBOL[k]}</b>{explore.resequencing.legend[n]}</li>
-          ))}
-        </ul>
-      )}
-      {kind === 'reference' && (
-        <ol class="tier-key tier-steps" role="list">
-          {explore.reference.steps.map((step, n) => (
-            <li class="tier-key-item" data-step={n}><b>{n + 1}</b>{step}</li>
-          ))}
-        </ol>
-      )}
-    </div>
-    <output class="explorable-result" data-result></output>
+    {kind !== 'barcode' && (
+      <div class="explorable-control">
+        {kind === 'resequencing' && (
+          <ul class="tier-key" role="list">
+            {(['same', 'mixed', 'differ'] as const).map((k, n) => (
+              <li class={`tier-key-item tier-key-item--${k}`}><b>{SYMBOL[k]}</b>{explore.resequencing.legend[n]}</li>
+            ))}
+          </ul>
+        )}
+        {kind === 'reference' && (
+          <ol class="tier-key tier-steps" role="list">
+            {explore.reference.steps.map((step, n) => (
+              <li class="tier-key-item" data-step={n}><b>{n + 1}</b>{step}</li>
+            ))}
+          </ol>
+        )}
+      </div>
+    )}
+    {kind === 'reference'
+      ? <output class="explorable-result" data-result></output>
+      : <p class="explorable-result" set:html={caption} />}
+    {kind === 'reference' && (
       <button type="button" class="explorable-replay" data-replay aria-label={tiers.replay} title={tiers.replay}>
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></svg>
       </button>
+    )}
   </div>
 </figure>
 
 <script>
   type Copy = Record<string, string>;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const fill = (tpl: string, vars: Record<string, string | number>) =>
-    tpl.replace(/\{(\w+)\}/g, (_, key: string) => String(vars[key] ?? ''));
-  const base = (b: string) => `<b class="readout-base readout-base--${b}">${b}</b>`;
   /** Restart a one-shot CSS animation carried by a class. */
   const once = (el: Element | null, cls: string) => {
     if (!el || reduce.matches) return;
@@ -377,245 +379,68 @@ const prompt = explore[kind].prompt;
     el.classList.add(cls);
   };
 
-  document.querySelectorAll<HTMLElement>('[data-tier-diagram]').forEach((figure) => {
-    const kind = figure.dataset.kind ?? '';
-    const data = JSON.parse(figure.dataset.explore ?? '{}');
-    const copy: Copy = data.copy;
+  /* Only the reference-genome figure plays. Bound on every page load: with
+     the client router this script runs once, but the figure arrives each
+     time Science is opened. */
+  const init = () => document.querySelectorAll<HTMLElement>('[data-tier-diagram][data-kind="reference"]').forEach((figure) => {
+    if (figure.dataset.bound) return;
+    figure.dataset.bound = 'true';
+    const copy: Copy = JSON.parse(figure.dataset.explore ?? '{}').copy;
     const panel = figure.querySelector<HTMLElement>('[data-panel]');
     const result = figure.querySelector<HTMLOutputElement>('[data-result]');
     const replay = figure.querySelector<HTMLButtonElement>('[data-replay]');
     const fly = figure.querySelector<SVGElement>('[data-fly]');
+    const count = figure.querySelector<SVGTextElement>('[data-count]');
+    const rf = figure.querySelector<SVGGElement>('.rf');
+    const steps = figure.querySelectorAll<HTMLElement>('[data-step]');
     if (!panel || !result || !replay) return;
 
-    let touched = false;
-    let cued = false;
     const timers = new Set<number>();
     const after = (ms: number, fn: () => void) => {
       const t = window.setTimeout(() => { timers.delete(t); fn(); }, ms);
       timers.add(t);
     };
     const cancel = () => { timers.forEach((t) => window.clearTimeout(t)); timers.clear(); };
-
     const say = (html: string) => {
       if (result.innerHTML !== html) result.innerHTML = html;
     };
-
-    /* ---------- Per kind: the resting state, the state before the
-       autoplay, and the autoplay itself ---------- */
-    let show: () => void = () => {};
-    let prepare: () => void = () => {};
-    let autoplay: (done: () => void) => void = (done) => done();
-    let cueTarget: HTMLElement | null = null;
-
-    if (kind === 'barcode') {
-      const scan = figure.querySelector<SVGElement>('[data-scan]');
-      const check = figure.querySelector<SVGElement>('[data-check]');
-      const answer = figure.querySelector<SVGTextElement>('[data-answer]');
-      const query = figure.querySelector<SVGGElement>('[data-query]');
-      const letters = figure.querySelectorAll<SVGTextElement>('[data-letter]');
-      const bars = figure.querySelectorAll<SVGRectElement>('[data-bar]');
-      const rows = figure.querySelectorAll<SVGGElement>('.bc-row');
-      const ticks = figure.querySelectorAll<SVGPathElement>('.bc-miss');
-      const next = figure.querySelector<HTMLButtonElement>('[data-next]');
-      const STEP = 720;
-      cueTarget = next;
-      if (!scan || !check || !answer || !next) return;
-
-      const seqOf = (k: number): string => data.rows[data.specimens[k]].seq;
-      const setQuery = (k: number) => {
-        const seq = seqOf(k);
-        letters.forEach((t, i) => { t.textContent = seq[i]; t.setAttribute('class', `bc-letter dg-base-text--${seq[i]}`); });
-        bars.forEach((b, i) => b.setAttribute('class', `bc-bar dg-base--${seq[i]}`));
-        figure.dataset.specimen = String(k);
-      };
-      const tickRow = (k: number, r: number, on: boolean) => {
-        const seq = seqOf(k);
-        ticks.forEach((t) => {
-          if (Number(t.dataset.r) === r) t.classList.toggle('is-on', on && data.rows[r].seq[Number(t.dataset.i)] !== seq[Number(t.dataset.i)]);
-        });
-      };
-      const moveTo = (r: number) => { scan.style.transform = `translateY(${r * data.pitch}px)`; };
-      const pending = (k: number) => {
-        setQuery(k);
-        rows.forEach((g, r) => { tickRow(k, r, false); g.classList.remove('is-match'); });
-        scan.classList.remove('is-on');
-        check.classList.remove('is-on');
-        figure.classList.remove('is-identified');
-        moveTo(0);
-        say(copy.scanning);
-      };
-      const identify = (k: number) => {
-        const m = data.specimens[k];
-        setQuery(k);
-        rows.forEach((g, r) => { tickRow(k, r, true); g.classList.toggle('is-match', r === m); });
-        moveTo(m);
-        scan.classList.add('is-on');
-        check.style.transform = `translateY(${m * data.pitch}px)`;
-        check.classList.add('is-on');
-        answer.textContent = data.rows[m].name;
-        figure.classList.add('is-identified');
-        say(fill(copy.match, { name: data.rows[m].name }));
-      };
-      // Compare with every row in turn, ticking the bases that differ, then
-      // come back to the row with none.
-      const runScan = (k: number, t0: number, done: () => void) => {
-        const m = data.specimens[k];
-        const last = rows.length - 1;
-        after(t0, () => scan.classList.add('is-on'));
-        rows.forEach((_, r) => {
-          after(t0 + r * STEP, () => moveTo(r));
-          after(t0 + r * STEP + 320, () => tickRow(k, r, true));
-        });
-        const end = t0 + rows.length * STEP;
-        after(end, () => moveTo(m));
-        after(end + (m === last ? 0 : 360), () => {
-          identify(k);
-          once(answer, 'is-pop');
-          once(fly, 'is-flap');
-          done();
-        });
-      };
-
-      let specimen = 0;
-      show = () => identify(specimen);
-      prepare = () => pending(0);
-      autoplay = (done) => { specimen = 0; pending(0); runScan(0, 3000, done); };
-      next.addEventListener('click', () => {
-        take();
-        specimen = (specimen + 1) % data.specimens.length;
-        if (reduce.matches) { identify(specimen); return; }
-        pending(specimen);
-        once(query, 'is-reread');
-        runScan(specimen, 600, () => {});
-      });
-      replay.addEventListener('click', () => { specimen = 0; });
-    }
-
-    if (kind === 'resequencing') {
-      const cells = [...figure.querySelectorAll<SVGGElement>('.rs-cell')];
-      const verdicts = figure.querySelectorAll<SVGTextElement>('[data-v]');
-      const col = figure.querySelector<SVGGElement>('[data-col]');
-      const n: number = data.sites.length;
-      const final: number = data.final;
-      // A site's letters from the top butterfly to the bottom one.
-      const column = (i: number) => cells
-        .filter((c) => Number(c.dataset.i) === i)
-        .sort((a, b) => Number(a.dataset.y) - Number(b.dataset.y));
-      const moveCol = (i: number, kind: string) => {
-        if (!col) return;
-        col.style.transform = `translateX(${i * data.pitch}px)`;
-        col.classList.add('is-on');
-        col.dataset.kind = kind;
-      };
-      show = () => {
-        cells.forEach((c) => c.classList.add('is-on'));
-        verdicts.forEach((v) => v.classList.add('is-on'));
-        moveCol(final, 'differ');
-        const site = data.sites[final];
-        say(fill(copy.summary, { n, a: base(site.top[0]), b: base(site.bottom[0]) }));
-      };
-      prepare = () => {
-        cells.forEach((c) => c.classList.remove('is-on'));
-        verdicts.forEach((v) => v.classList.remove('is-on'));
-        col?.classList.remove('is-on');
-        say('');
-      };
-      // Once the reads have aligned, the column visits every site: it reads
-      // the letter of each butterfly in turn, then the result is written
-      // above the site. It ends on the site where the populations differ.
-      autoplay = (done) => {
-        prepare();
-        const T0 = 3300;
-        const STEP = 1300;
-        const LETTER = 110;
-        for (let i = 0; i < n; i++) {
-          const t = T0 + i * STEP;
-          const letters = column(i);
-          after(t, () => { moveCol(i, 'reading'); say(fill(copy.scanning, { i: i + 1, n })); });
-          letters.forEach((c, k) => after(t + 220 + k * LETTER, () => c.classList.add('is-on')));
-          after(t + 300 + letters.length * LETTER, () => {
-            moveCol(i, data.sites[i].kind);
-            verdicts[i]?.classList.add('is-on');
-            once(verdicts[i], 'is-pop');
-          });
-        }
-        after(T0 + n * STEP + 150, () => { show(); once(verdicts[final], 'is-pop'); done(); });
-      };
-    }
-
-    if (kind === 'reference') {
-      const count = figure.querySelector<SVGTextElement>('[data-count]');
-      const rf = figure.querySelector<SVGGElement>('.rf');
-      const steps = figure.querySelectorAll<HTMLElement>('[data-step]');
-      // No stage attribute is the finished genome, which is also what a
-      // reader without scripts sees.
-      const stage = (name: string, step: number) => {
-        if (name) figure.dataset.stage = name; else delete figure.dataset.stage;
-        steps.forEach((el, k) => el.classList.toggle('is-current', k === step));
-      };
-      show = () => {
-        stage('', steps.length - 1);
-        if (count) count.textContent = copy.count;
-        say(copy.whole);
-      };
-      prepare = () => {
-        stage('idle', -1);
-        if (count) count.textContent = '';
-        say('');
-      };
-      // Long reads arrive shuffled, slide until their shared ends line up,
-      // join into one sequence, and the finished chromosomes appear.
-      autoplay = (done) => {
-        prepare();
-        after(300, () => { stage('reads', 0); say(copy.reads); });
-        after(3800, () => { stage('overlap', 1); say(copy.overlap); });
-        after(7800, () => { stage('join', 2); say(copy.join); });
-        // The joined sequence becomes the first chromosome; the others follow.
-        after(10800, () => { stage('chrom', 3); say(copy.chrom); });
-        after(12700, () => {
-          if (count) count.textContent = copy.count;
-          once(rf, 'is-pop');
-          once(fly, 'is-flap');
-        });
-        after(15400, () => { show(); done(); });
-      };
-    }
-
-    /* ---------- Shared lifecycle ---------- */
-    // One gentle nudge on the control once the autoplay has shown what it does.
-    const cue = () => {
-      if (cued || touched || reduce.matches || !cueTarget) return;
-      cued = true;
-      const target = cueTarget;
-      target.classList.add('is-cue');
-      window.setTimeout(() => target.classList.remove('is-cue'), 1600);
+    // No stage attribute is the finished genome, which is also what a
+    // reader without scripts sees.
+    const stage = (name: string, step: number) => {
+      if (name) figure.dataset.stage = name; else delete figure.dataset.stage;
+      steps.forEach((el, k) => el.classList.toggle('is-current', k === step));
     };
+    const show = () => {
+      stage('', steps.length - 1);
+      if (count) count.textContent = copy.count;
+      say(copy.whole);
+    };
+    const prepare = () => {
+      stage('idle', -1);
+      if (count) count.textContent = '';
+      say('');
+    };
+    // Long reads arrive shuffled, slide until their shared ends line up,
+    // join into one sequence, and that sequence becomes the first of the
+    // 21 chromosomes.
     const play = () => {
       cancel();
-      figure.classList.remove('is-armed', 'is-playing');
-      void figure.getBoundingClientRect();
-      figure.classList.add('is-armed', 'is-playing');
       result.setAttribute('aria-live', 'off');
-      autoplay(() => {
-        result.removeAttribute('aria-live');
-        after(500, () => {
-          figure.classList.remove('is-armed', 'is-playing');
-          cue();
-        });
+      prepare();
+      after(300, () => { stage('reads', 0); say(copy.reads); });
+      after(3800, () => { stage('overlap', 1); say(copy.overlap); });
+      after(7800, () => { stage('join', 2); say(copy.join); });
+      after(10800, () => { stage('chrom', 3); say(copy.chrom); });
+      after(12700, () => {
+        if (count) count.textContent = copy.count;
+        once(rf, 'is-pop');
+        once(fly, 'is-flap');
       });
+      after(15400, () => { show(); result.removeAttribute('aria-live'); });
     };
-    // Touching a control stops the autoplay for good, wherever it was.
-    function take() {
-      cancel();
-      touched = true;
-      result?.removeAttribute('aria-live');
-      figure.classList.remove('is-armed', 'is-playing');
-    }
 
     replay.addEventListener('click', () => {
-      touched = false;
       cancel();
-      figure.classList.remove('is-armed', 'is-playing');
       if (reduce.matches) { show(); return; }
       play();
     });
@@ -625,17 +450,15 @@ const prompt = explore[kind].prompt;
     figure.classList.add('is-live');
 
     if (!reduce.matches && 'IntersectionObserver' in window) {
-      // Play each time the diagram comes back into view (unless the reader
-      // has taken over): start when it is mostly visible, and re-arm once
-      // it has left the viewport completely.
+      // Play each time the figure comes back into view: start when it is
+      // mostly visible, and re-arm once it has left the viewport completely.
       prepare();
-      figure.classList.add('is-armed');
       let shown = false;
       new IntersectionObserver((entries) => {
         for (const entry of entries) {
           if (entry.intersectionRatio >= 0.55 && !shown) {
             shown = true;
-            if (!touched) play();
+            play();
           } else if (!entry.isIntersecting) {
             shown = false;
           }
@@ -643,6 +466,8 @@ const prompt = explore[kind].prompt;
       }, { threshold: [0, 0.55] }).observe(figure);
     }
   });
+  document.addEventListener('astro:page-load', init);
+  init();
 </script>
 
 <style>
