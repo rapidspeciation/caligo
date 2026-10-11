@@ -95,10 +95,10 @@ const callClosed = isCallClosed();
     <h2 id="proposed-projects" class="content-heading projects-heading">{intro.projects}</h2>
     <ol class="pilots" aria-label={pageTitle}>
       {
-        publishedPilots.map((pilot) => {
+        publishedPilots.map((pilot, i) => {
           const project = projectById.get(pilotToProjectId[pilot.id]);
           return (
-            <li id={pilot.slug} class="pilot ink-card" data-card="toggle">
+            <li id={pilot.slug} class="pilot ink-card" data-card="toggle" style={`--card-tone: var(--tone-person-${['leaf', 'sky', 'rose', 'sun'][i % 4]})`}>
             <!-- Media: 5-column slot on desktop -->
             <div class="pilot-media card-media">
               {getMediaModule(pilot.id) && (
@@ -333,6 +333,14 @@ const callClosed = isCallClosed();
   .pilot-more { --disclosure-pad-x: 0; }
   .pilot-more > :global(.disclosure-summary) { font-weight: 600; }
   .pilot-more:not([open]) > :global(.disclosure-summary) { border-bottom-color: transparent; }
+  /* Raised and still closed: the row that opens takes the accent and its
+     arrow dips, to say the whole card opens. */
+  .pilot:global(.is-near) .pilot-more:not([open]) > :global(.disclosure-summary) { color: var(--accent-strong); }
+  .pilot:global(.is-near) .pilot-more:not([open]) :global(.disclosure-summary-inner)::after { transform: rotate(45deg) translate(1px, 1px); }
+  @media (hover: hover) {
+    .pilot:hover .pilot-more:not([open]) > :global(.disclosure-summary) { color: var(--accent-strong); }
+    .pilot:hover .pilot-more:not([open]) :global(.disclosure-summary-inner)::after { transform: rotate(45deg) translate(1px, 1px); }
+  }
   .pilot-more-body {
     display: grid;
     gap: var(--space-s);

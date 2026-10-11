@@ -487,8 +487,8 @@ kbd,
 /* An opened card is a page of text: it rests, whatever the pointer does. */
 [data-card='toggle']:is([open], :has(details[open])) {
   transform: none;
-  border-color: var(--ink-line);
-  box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--ink-shadow);
+  border-color: var(--card-tone, var(--ink-line));
+  box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--card-tone, var(--ink-shadow));
 }
 
 /* The link that covers its card. Anything else clickable sits above it. */
