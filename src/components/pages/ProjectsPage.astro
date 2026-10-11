@@ -95,10 +95,10 @@ const callClosed = isCallClosed();
     <h2 id="proposed-projects" class="content-heading projects-heading">{intro.projects}</h2>
     <ol class="pilots" aria-label={pageTitle}>
       {
-        publishedPilots.map((pilot, i) => {
+        publishedPilots.map((pilot) => {
           const project = projectById.get(pilotToProjectId[pilot.id]);
           return (
-            <li id={pilot.slug} class="pilot ink-card" data-card="toggle" style={`--card-tone: var(--tone-person-${['leaf', 'sky', 'rose', 'sun'][i % 4]})`}>
+            <li id={pilot.slug} class="pilot ink-card" data-card="toggle">
             <!-- Media: 5-column slot on desktop -->
             <div class="pilot-media card-media">
               {getMediaModule(pilot.id) && (

@@ -170,7 +170,7 @@ The four explainers:
 
 - `data-card="link"`: the card goes somewhere. Either the card is the `<a>`, or one link inside carries `.card-link` and covers the whole card.
 - `data-card="toggle"`: the card opens and closes a `<details>` (itself, or the one inside). Clicks on text, on the card's own controls and on any nested card are left alone.
-- `--card-tone`: colour of the outline and shadow while the card is raised.
+- `--card-tone`: colour of the outline and shadow, at rest and raised. Never set by hand: `global.css` assigns green, blue, coral, yellow by the card's position among its siblings, a nested card inherits its parent's, and pastel cards keep an ink outline.
 - `.card-media`: a photo frame inside the card; its image leans in while the card is raised (`--card-zoom` sets how far). The frame must clip its image.
 
 Every such card lifts on hover, sinks when pressed, takes the hover look on touch screens when it passes mid-screen (`.is-near`), shows a focus ring and holds still under reduced motion. A card without `data-card` does none of this, so a card that lifts is always a card that does something.

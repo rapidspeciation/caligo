@@ -70,6 +70,8 @@ for (const file of pages) {
 
   // Each opening tag that declares a card, with the markup up to the next card.
   const cards = [...html.matchAll(/<([a-z]+)\b[^>]*\sdata-card="(link|toggle)"[^>]*>/g)];
+  // A card's colour comes from its position (global.css), never from markup.
+  if (/style="[^"]*--card-tone/.test(html)) problems.card.push(`${page}: a card colour set by hand`);
   cards.forEach((match, i) => {
     const [, tag, kind] = match;
     const inside = html.slice(match.index, cards[i + 1]?.index ?? html.length);

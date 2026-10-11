@@ -7,16 +7,15 @@ import type { Locale } from '../i18n';
 interface Props {
   readonly person: Person;
   readonly locale: Locale;
-  readonly tone?: 'leaf' | 'sky' | 'rose' | 'sun';
 }
 
-const { person, locale, tone = 'leaf' } = Astro.props;
+const { person, locale } = Astro.props;
 const ties = pick(person.regionalTies, locale).split(' / ');
 const regionalTiesLabel = locale === 'en' ? 'Regional ties' : 'Vínculos regionales';
 const base = import.meta.env.BASE_URL;
 ---
 
-<article class="person-card ink-card ink-card--flat" data-card="link" style={`--tone: var(--tone-person-${tone}); --card-tone: var(--tone-person-${tone})`}>
+<article class="person-card ink-card ink-card--flat" data-card="link">
   <figure class="person-media card-media">
     <img
       class="person-photo"
@@ -163,8 +162,8 @@ const base = import.meta.env.BASE_URL;
     gap: 0.35rem;
   }
   .person-tie {
-    border-color: color-mix(in oklab, var(--tone) 70%, transparent);
-    background: color-mix(in oklab, var(--tone) 16%, transparent);
+    border-color: color-mix(in oklab, var(--card-tone) 70%, transparent);
+    background: color-mix(in oklab, var(--card-tone) 16%, transparent);
     color: var(--text-strong);
     transition: background var(--transition), border-color var(--transition);
   }
@@ -183,11 +182,11 @@ const base = import.meta.env.BASE_URL;
   .person-media::after { transition: opacity var(--dur-base) var(--ease-glide); }
   .person-card:global(.is-near) .person-photo { filter: none; }
   .person-card:global(.is-near) .person-media::after { opacity: 0; }
-  .person-card:global(.is-near) .person-tie { background: color-mix(in oklab, var(--tone) 34%, transparent); border-color: var(--tone); }
+  .person-card:global(.is-near) .person-tie { background: color-mix(in oklab, var(--card-tone) 34%, transparent); border-color: var(--card-tone); }
   @media (hover: hover) and (pointer: fine) {
     .person-card:hover .person-photo { filter: none; }
     .person-card:hover .person-media::after { opacity: 0; }
-    .person-card:hover .person-tie { background: color-mix(in oklab, var(--tone) 34%, transparent); border-color: var(--tone); }
+    .person-card:hover .person-tie { background: color-mix(in oklab, var(--card-tone) 34%, transparent); border-color: var(--card-tone); }
     .person-card:hover .person-source { color: var(--accent-strong); text-decoration-color: currentColor; }
     .person-card:hover .person-source-arrow { transform: translate(2px, -2px); }
   }

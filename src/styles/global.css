@@ -401,20 +401,30 @@ kbd,
   min-width: 0;
   background: var(--card-fill);
   color: var(--text);
-  border: var(--ink-w) solid var(--ink-line);
+  border: var(--ink-w) solid var(--card-tone);
   border-radius: var(--radius-card);
-  box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--ink-shadow);
+  box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--card-tone);
 }
+/* Tone. Nobody picks a card's colour: it follows the card's place among
+   the cards beside it, so a row runs green, blue, coral, yellow and a new
+   card joins the sequence by itself. A card inside a card takes its
+   parent's colour. Pastel cards (below) keep their ink outline; :where()
+   keeps these rules weak enough for them to win. */
+.ink-card { --card-tone: var(--tone-person-leaf); }
+.ink-card:where(:nth-child(4n + 2 of .ink-card)) { --card-tone: var(--tone-person-sky); }
+.ink-card:where(:nth-child(4n + 3 of .ink-card)) { --card-tone: var(--tone-person-rose); }
+.ink-card:where(:nth-child(4n + 4 of .ink-card)) { --card-tone: var(--tone-person-sun); }
+:where(.ink-card) .ink-card { --card-tone: inherit; }
 .ink-card--flat { box-shadow: none; }
 /* The faintest text needs a little more light on a dark card than on the page. */
 :where([data-mode='dark']) .ink-card { --text-faint: #9d907f; }
 @media (pointer: coarse) {
   .btn { min-height: 44px; }
 }
-.ink-card--sun  { --card-fill: var(--pastel-sun);  --ink-line: var(--tone-sun);  --ink-shadow: var(--tone-sun); }
-.ink-card--leaf { --card-fill: var(--pastel-leaf); --ink-line: var(--tone-leaf); --ink-shadow: var(--tone-leaf); }
-.ink-card--sky  { --card-fill: var(--pastel-sky);  --ink-line: var(--tone-sky);  --ink-shadow: var(--tone-sky); }
-.ink-card--rose { --card-fill: var(--pastel-rose); --ink-line: var(--tone-rose); --ink-shadow: var(--tone-rose); }
+.ink-card--sun  { --card-fill: var(--pastel-sun);  --ink-line: var(--tone-sun);  --card-tone: var(--tone-sun); }
+.ink-card--leaf { --card-fill: var(--pastel-leaf); --ink-line: var(--tone-leaf); --card-tone: var(--tone-leaf); }
+.ink-card--sky  { --card-fill: var(--pastel-sky);  --ink-line: var(--tone-sky);  --card-tone: var(--tone-sky); }
+.ink-card--rose { --card-fill: var(--pastel-rose); --ink-line: var(--tone-rose); --card-tone: var(--tone-rose); }
 /* On a pastel fill every text role reads in ink, in both modes. */
 .ink-card--sun, .ink-card--leaf, .ink-card--sky, .ink-card--rose {
   --text: var(--on-pastel);
@@ -453,7 +463,7 @@ kbd,
    and holds still under reduced motion. On touch screens Base.astro sets
    `.is-near` on the card passing mid-screen, which looks like hover.
 
-     --card-tone          colour of outline and shadow
+     --card-tone          colour of outline and shadow; set by position, never by hand
      .card-media          a photo frame inside: its image leans in while
                           the card is raised (`--card-zoom` sets how far)   */
 [data-card] {
@@ -464,25 +474,20 @@ kbd,
   transition: transform var(--dur-quick) var(--ease-glide),
     box-shadow var(--dur-quick) var(--ease-glide),
     border-color var(--dur-quick) var(--ease-glide);
-  /* A card with a tone wears it at rest too, in both themes. */
-  border-color: var(--card-tone, var(--ink-line));
 }
-[data-card]:not(.ink-card--flat) { box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--card-tone, var(--ink-shadow)); }
 [data-card].is-near {
   transform: translate(calc(-1 * var(--card-lift)), calc(-1 * var(--card-lift)));
-  border-color: var(--card-tone, var(--ink-line));
-  box-shadow: calc(var(--ink-drop) + var(--card-lift)) calc(var(--ink-drop) + var(--card-lift)) 0 var(--card-tone, var(--ink-shadow));
+  box-shadow: calc(var(--ink-drop) + var(--card-lift)) calc(var(--ink-drop) + var(--card-lift)) 0 var(--card-tone);
 }
 @media (hover: hover) {
   [data-card]:hover {
     transform: translate(calc(-1 * var(--card-lift)), calc(-1 * var(--card-lift)));
-    border-color: var(--card-tone, var(--ink-line));
-    box-shadow: calc(var(--ink-drop) + var(--card-lift)) calc(var(--ink-drop) + var(--card-lift)) 0 var(--card-tone, var(--ink-shadow));
+    box-shadow: calc(var(--ink-drop) + var(--card-lift)) calc(var(--ink-drop) + var(--card-lift)) 0 var(--card-tone);
   }
 }
 [data-card]:active {
   transform: translate(var(--card-lift), var(--card-lift));
-  box-shadow: 1px 1px 0 var(--card-tone, var(--ink-shadow));
+  box-shadow: 1px 1px 0 var(--card-tone);
 }
 
 /* The link that covers its card. Anything else clickable sits above it. */

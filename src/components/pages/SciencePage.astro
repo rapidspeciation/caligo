@@ -141,7 +141,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
 
       <div class="publication-grid">
         {publicationExamples.map((publication, index) => (
-          <article class={`publication-card ink-card publication-card--${['leaf', 'sky', 'rose'][index % 3]}`} data-card="link">
+          <article class="publication-card ink-card" data-card="link">
             <div class="publication-index mono chip" aria-hidden="true">
               {String(index + 1).padStart(2, '0')}
             </div>
@@ -210,7 +210,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
           .map((sourceId) => getSource(sourceId))
           .filter((source) => source !== undefined);
         return (
-          <details id={anchor} class="question disclosure ink-card" data-card="toggle" data-question style={`--card-tone: var(--tone-person-${['leaf', 'sky', 'rose', 'sun'][i % 4]})`}>
+          <details id={anchor} class="question disclosure ink-card" data-card="toggle" data-question>
             <summary class="question-summary">
               {thumb && (
                 <span class="question-thumb card-media"><img src={`${base}${thumb.path}`} srcset={thumb.width ? srcsetFor(thumb.path, thumb.width, base) : undefined} sizes="7rem" alt="" width={thumb.width} height={thumb.height} loading="lazy" decoding="async" /></span>
@@ -388,10 +388,8 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     gap: var(--space-m);
   }
   /* Published evidence is an ink card like the rest, on a plain fill so the
-     figure stays the loudest thing; only outline and shadow take a tone. */
-  .publication-card--leaf { --ink-line: var(--tone-person-leaf); --ink-shadow: var(--tone-person-leaf); }
-  .publication-card--sky { --ink-line: var(--tone-person-sky); --ink-shadow: var(--tone-person-sky); }
-  .publication-card--rose { --ink-line: var(--tone-person-rose); --ink-shadow: var(--tone-person-rose); }
+     figure stays the loudest thing; its number chip takes the card's tone. */
+  .publication-card { --ink-line: var(--card-tone); }
   /* The figure zooms on its own click and leans in only slightly. */
   .publication-card { --card-zoom: 1.03; }
   .publication-card:hover .publication-title h3,

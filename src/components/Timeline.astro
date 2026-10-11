@@ -29,24 +29,22 @@ const entries: Entry[] = [
 ].sort((a, b) => a.sort.localeCompare(b.sort));
 const todayLabel = locale === 'es' ? 'Hoy' : 'Today';
 /* Every card leads somewhere, so the whole card is the link. */
-const eventLinks: Record<string, { href: string; label: string; external?: boolean; tone: string }> = {
+const eventLinks: Record<string, { href: string; label: string; external?: boolean }> = {
   'bogota-2026': {
     href: `${localePath(locale, '/projects')}#heliconius`,
     label: locale === 'es' ? 'Proyecto piloto de Heliconius' : 'The Heliconius pilot project',
-    tone: 'leaf',
   },
   'campinas-2027': {
     href: 'https://www.even3.com.br/bob-elen-2027/',
     label: locale === 'es' ? 'Sitio del congreso' : 'Congress website',
     external: true,
-    tone: 'sky',
   },
 };
 ---
 
 <ol class:list={['timeline-list', { 'timeline-list--compact': compact }]} role="list" data-timeline data-locale={locale} style={`--cols: ${entries.length}`}>
   {entries.map((entry) => entry.kind === 'call' ? (
-    <li class="timeline-item ink-card" data-card="link" id="event-colombia-funding" data-end={PILOT_DEADLINE} style="--tone: var(--tone-person-rose); --card-tone: var(--tone-person-rose)">
+    <li class="timeline-item ink-card" data-card="link" id="event-colombia-funding" data-end={PILOT_DEADLINE}>
       <div class="timeline-when">
         <DeadlineChip locale={locale} class="timeline-chip" />
         <time class="timeline-dates mono" datetime={PILOT_DEADLINE}>{funding.date}</time>
@@ -59,7 +57,7 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
       <a class="text-link timeline-link card-link" href={localePath(locale, '/funding')}>{funding.funding}<Icon name="arrow-right" /></a>
     </li>
   ) : (
-    <li class="timeline-item ink-card" data-card="link" id={`event-${entry.event.id}`} data-end={entry.event.end ?? entry.event.start} style={`--tone: var(--tone-person-${eventLinks[entry.event.id]?.tone ?? 'leaf'}); --card-tone: var(--tone-person-${eventLinks[entry.event.id]?.tone ?? 'leaf'})`}>
+    <li class="timeline-item ink-card" data-card="link" id={`event-${entry.event.id}`} data-end={entry.event.end ?? entry.event.start}>
       <div class="timeline-when">
         <WhenChip locale={locale} start={entry.event.start} end={entry.event.end} class="timeline-chip" />
         <time class="timeline-dates mono" datetime={entry.event.start}>{pick(entry.event.dates, locale)}</time>
@@ -184,8 +182,8 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
     .timeline-list--compact .timeline-item:hover::before,
     .timeline-list--compact .timeline-item[data-when]:hover::before {
       transform: translate(var(--card-lift), var(--card-lift)) scale(1.5);
-      background: var(--tone);
-      border-color: var(--tone);
+      background: var(--card-tone);
+      border-color: var(--card-tone);
     }
     .timeline-list--compact .timeline-item:hover::after { transform: translate(var(--card-lift), var(--card-lift)); }
     .timeline-item:hover .timeline-name { color: var(--accent-strong); }
