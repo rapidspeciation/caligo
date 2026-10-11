@@ -9,36 +9,22 @@
 export const en = {
   "site": {
     "name": "Caligo",
-    "descriptor": "Genomes of Neotropical butterflies and moths",
-    "proposition": "Caligo is a Latin American-led network building reference genomes for Neotropical butterflies and moths. Each genome is linked to a documented specimen."
+    "descriptor": "Genomes of Neotropical butterflies and moths"
   },
   "common": {
     "skipToContent": "Skip to content",
     "menu": "Menu",
     "close": "Close",
-    "openMenu": "Open menu",
-    "closeMenu": "Close menu",
     "theme": "Theme",
     "toggleTheme": "Switch between light and dark themes",
     "language": "Language",
     "chooseLanguage": "Choose language",
-    "externalNote": "Opens an external site",
     "backTo": "Back to",
-    "onThisPage": "On this page",
-    "lastReviewed": "Evidence checked",
-    "leads": "Scientific leads",
-    "status": "Status",
-    "privacy": "Privacy",
-    "exploreQuestion": "Explore this question",
-    "exploreThisPilot": "Explore this pilot project"
+    "status": "Status"
   },
   "status": {
-    "publishedEvidence": "Published evidence",
-    "databaseSnapshot": "Dated database snapshot",
     "proposedCaligoWork": "Proposed pilot project",
-    "proposedPilot": "Proposed pilot project",
-    "preprint": "Preprint",
-    "externalContext": "Related external context"
+    "proposedPilot": "Proposed pilot project"
   },
   "mediaViewer": {
     "previousImage": "Previous visual",
@@ -48,16 +34,7 @@ export const en = {
     "aiConceptType": "Concept illustration",
     "codeNativeType": "Explanatory graphic",
     "imageDetailsLabel": "Image details",
-    "sourceLinkLabel": "Source",
-    "aiGeneratedCredit": "Generated with AI for Caligo",
-    "caveats": {
-      "fieldSite": "Illustrative field scene",
-      "specimen": "Illustrative organism",
-      "map": "Generalised landscape view",
-      "laboratory": "Illustrative laboratory workflow",
-      "data": "Explanatory data schematic",
-      "repository": "Illustrative repository interface"
-    }
+    "sourceLinkLabel": "Source"
   },
   "nav": {
     "funding": "Funding opportunities",
@@ -70,12 +47,7 @@ export const en = {
     "join": "Join"
   },
   "cta": {
-    "exploreScience": "Explore the questions",
-    "seeProposedPilots": "Meet the proposed pilot projects",
-    "contact": "Contact Caligo",
     "join": "Start a conversation",
-    "seeScience": "See how the science works",
-    "howToTakePart": "Ways to take part",
     "readVision": "Read about Caligo"
   },
   "committee": {
@@ -107,10 +79,6 @@ export const en = {
       "Movement and resistance",
       "Seasonal migration"
     ],
-    "questions": {
-      "heading": "Four questions genomes can help answer",
-      "intro": "Each starts from a published finding and leads to a proposed pilot project."
-    },
     "researchCards": [
       {
         "question": "How can butterfly chromosomes split and fuse, yet still work?",
@@ -137,10 +105,6 @@ export const en = {
         "projectTopic": "Pilot project: tracing the migration wave"
       }
     ],
-    "pilotsTeaser": {
-      "heading": "From questions to pilot projects",
-      "intro": "Caligo is shaping four projects on chromosome change, threatened-population connectivity, crop pests and seasonal migration."
-    },
     "intro": {
       "eyebrow": "Why butterflies and moths",
       "title": "Why butterflies and moths?",
@@ -171,13 +135,8 @@ export const en = {
       ]
     },
     "activity": {
-      "eyebrow": "Recent and upcoming",
       "heading": "Caligo in action",
       "intro": "Workshops, hackathons and other events help us learn together and grow the network."
-    },
-    "pillars": {
-      "eyebrow": "How the work is shaped",
-      "title": "Guiding principles for regional genomics"
     },
     "closing": {
       "title": "Bring a question, an organism or your expertise",
@@ -188,7 +147,6 @@ export const en = {
       "facilities": "sequencing facilities",
       "countries": "Latin American countries",
       "pilots": "proposed pilot projects",
-      "asOf": "as of September 2026",
       "participantsNote": "As of September 2026. Registration is still open.",
       "facilitiesNote": "In {n} countries, from Panama to Chile.",
       "countriesNote": "Plus {n} outside the region.",
@@ -202,9 +160,15 @@ export const en = {
       "desc": "Twenty-one chromosomes, as in most Heliconius. Fissions are added one by one, each splitting one chromosome in two, up to 39 fissions and 60 chromosomes, the highest count in the sapho group. When the division machinery can attach along the whole chromosome, as in butterflies and moths, every piece can still be passed on to the daughter cells. With a single centromere, as in most animals, each piece left without the centromere is lost. This is a simplified picture.",
       "count": "{c} chromosomes",
       "countLost": "{c} kept, {n} lost",
-      "unit": ["fission", "fissions"],
+      "unit": [
+        "fission",
+        "fissions"
+      ],
       "modeLegend": "Where does the division machinery attach?",
-      "modes": ["Along the whole chromosome (butterflies and moths)", "One centromere (most animals)"],
+      "modes": [
+        "Along the whole chromosome (butterflies and moths)",
+        "One centromere (most animals)"
+      ],
       "start": "No fissions: 21 chromosomes, as in most <i>Heliconius</i>.",
       "splitting": "Each fission splits one chromosome in two.",
       "holoMax": "{f}: 60 chromosomes, the most in the sapho group, and every piece is still passed on.",
@@ -223,12 +187,21 @@ export const en = {
         },
         "resequencing": {
           "prompt": "Where do the two populations differ?",
-          "legend": ["same in all", "mixed in both", "differs"],
+          "legend": [
+            "same in all",
+            "mixed in both",
+            "differs"
+          ],
           "summary": "1 of {n} sites tells the populations apart: {a} above, {b} below. The others are shared or mixed."
         },
         "reference": {
           "prompt": "How do reads become chromosomes?",
-          "steps": ["Reads", "Overlap", "Join", "Order"],
+          "steps": [
+            "Reads",
+            "Overlap",
+            "Join",
+            "Order"
+          ],
           "reads": "Long stretches of DNA are read from a single butterfly, in no particular order.",
           "overlap": "Reads that end and begin with the same letters overlap, so each one finds its neighbour.",
           "join": "Overlapping reads join into one continuous sequence.",
@@ -268,20 +241,12 @@ export const en = {
     },
     "metaTitle": "Science | Caligo",
     "metaDescription": "Reference genomes of Neotropical butterflies and moths: what they are, published examples and the questions Caligo wants to answer.",
-    "title": "Questions genomes can help answer",
-    "intro": "These four research findings lead directly to Caligo's proposed pilot projects. Each shows what earlier evidence resolved and what new samples or genomic data could reveal next.",
-    "questionsHeading": "Questions genomes can help answer",
     "pilotContinuationLabel": "What Caligo proposes next",
     "chromosomeFigure": {
       "src": "media/figures-published/rueda-2024-fig1-chromosome-counts.jpg",
-      "citation": "Rueda-M et al. 2024, PLOS Genetics, Fig 1",
       "sourceId": "rueda-2024",
       "licence": "CC0 1.0",
-      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-      "width": 1600,
-      "height": 1187,
-      "alt": "Phylogeny of the Heliconius sara/sapho clade. Grey boxes give haploid chromosome counts along the tree, ranging from 21 to 56–60. Three dashed arrows mark separate W–autosome fusion events, labelled W+4, W+9 and W+14. Range maps and wing photographs of each subspecies sit to the right.",
-      "caption": "The published evidence behind this section. Read the grey boxes: haploid chromosome counts run from 21 in most of the clade to between 56 and 60 in the sapho and eleuchia lineages. The three dashed arrows mark the separate occasions on which an autosome fused to the W."
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
     },
     "questions": [
       {
@@ -299,7 +264,7 @@ export const en = {
         "answer": [
           "Parides ascanius is restricted to coastal restinga and wetlands in south-eastern Brazil. The IUCN assessed it as Vulnerable globally in 2018. Brazil’s national assessment listed it as Endangered in 2021.",
           "Seraphim and colleagues used mitochondrial COI sequences and eight microsatellite markers to compare the surviving populations. Their 2016 study found little genetic structure, no evidence of inbreeding and high migration among most sampled sites, although one population was more isolated by the metropolitan landscape.",
-          "The 2016 result provides a baseline but does not show whether the populations remain connected today. A chromosome-scale reference and new population sampling could measure how much diversity remains and whether habitat loss, drainage or fragmentation has interrupted gene flow."
+          "The 2016 result provides a baseline but does not show whether the populations remain connected today. A chromosome-scale reference and new population sampling could measure how much diversity remains and whether habitat loss, drainage or fragmentation has interrupted gene flow. Precise localities are not shown, to protect the species."
         ]
       },
       {
@@ -322,89 +287,26 @@ export const en = {
       }
     ],
     "ethics": {
-      "heading": "Planning responsible sampling",
-      "body": [
-        "Sampling plans need permits, specimen records, agreements on how research results, training and other benefits will be shared, and a plan for managing data. Requirements differ among countries, so local collaborators need to be involved from the start."
-      ]
+      "heading": "Planning responsible sampling"
     }
   },
   "pilots": {
     "metaTitle": "Proposed pilot projects | Caligo",
-    "metaDescription": "Four proposed investigations linking chromosome evolution, threatened-population connectivity, sustainable agriculture and seasonal movement to documented genomic evidence.",
     "title": "Proposed pilot projects",
-    "opening": "These four pilot projects begin where earlier studies leave off. Each asks what new samples and genomic data could reveal.",
     "fieldLabels": {
       "proposedQuestion": "What the pilot project would test"
     }
   },
-  "caligo": {
-    "metaTitle": "Discover Caligo | Eye, eyespot and evidence",
-    "metaDescription": "A popular-science story about the Caligo genus, compound eyes, wing eyespots, scales and how competing explanations are tested.",
-    "meetTheNamesake": {
-      "heading": "Meet the owl butterflies",
-      "body": "Caligo is a Neotropical genus of owl butterflies, known for their beauty and the large eyespots on their wings.",
-      "sourceNote": "Caligo is a Neotropical genus of owl butterflies."
-    },
-    "compoundEye": {
-      "eyebrow": "Look at the right structure",
-      "heading": "Compound eye, not wing eyespot",
-      "body": "The bright round feature in the photograph is the butterfly’s compound eye, a visual organ built from many small units called ommatidia. The large ringed marks on the wings are eyespots: patterns formed by scales. They can resemble eyes in a photograph, but they are different structures with different functions. Keeping that distinction clear is the first step before asking what either feature does."
-    },
-    "hypotheses": {
-      "heading": "What might a wing eyespot do?",
-      "intro": "An eyespot can look obvious to us and still have several possible biological explanations. Each hypothesis makes a different prediction, and its importance can change with predator, light, behaviour and species.",
-      "labels": {
-        "prediction": "What we would expect",
-        "limitation": "What this does not settle"
-      },
-      "rows": [
-        {
-          "hypothesis": "Resemble the eye of a larger animal",
-          "prediction": "Some predators should hesitate or avoid attacking when the pattern is visible.",
-          "limitation": "Avoidance must be tested against simpler effects of size, contrast and novelty. A human impression of “an eye” is not enough."
-        },
-        {
-          "hypothesis": "Redirect an attack toward the wing",
-          "prediction": "Strikes should land more often near the eyespot, potentially sparing the head or body.",
-          "limitation": "More wing strikes do not automatically mean fewer attacks or higher survival, and outcomes depend on the predator and damage."
-        },
-        {
-          "hypothesis": "Attract attention because it is conspicuous",
-          "prediction": "High contrast, placement or motion should draw a predator’s attention even when the mark is not interpreted as an eye.",
-          "limitation": "Conspicuousness alone does not say whether the effect helps the butterfly, harms it or changes with context."
-        },
-        {
-          "hypothesis": "Play a role in signalling among butterflies",
-          "prediction": "Responses should vary with sex, courtship, territorial behaviour or the light environment in which butterflies see one another.",
-          "limitation": "Evidence must separate communication between butterflies from predator-related effects."
-        }
-      ],
-      "resultNarrow": "In a 2024 field experiment with Caligo martia, damage patterns were consistent with attacks being redirected toward the wings, but the eyespots did not reduce overall attack risk. That supports deflection in this system. It does not establish one universal function for every Caligo species. [S18]",
-      "sourceNote": "Primary source: Iserhard et al. 2024 [S18]."
-    },
-    "scales": {
-      "heading": "A wing pattern is built from thousands of scales",
-      "body": "Butterfly scales are tiny structures that overlap across the wing. Pigments absorb some wavelengths. Microscopic architecture can scatter, reflect or suppress light. A study of a dark eyespot region in Caligo memnon described nanoscale structures associated with its black appearance. Elsewhere in the Neotropics, the glasswing Greta oto achieves transparency through much lower scale density, narrow bristle-like scales and irregular wax nanopillars that reduce reflection. Similar-looking effects can arise from very different physical arrangements. That is another reason to connect visible traits with microscopy, development and comparative genomics. [S19][S12]"
-    },
-    "genomicsCould": {
-      "heading": "From the visible butterfly to inherited information",
-      "body": "A genome adds another layer of evidence beneath the visible organism. Researchers can compare genes and regulatory regions involved in scale development, pigmentation, vision or behaviour across related species, then investigate when those regions changed, crossed between lineages or evolved under different pressures. Experiments, microscopy, natural history and sensory biology remain essential for understanding perception and behaviour."
-    }
-  },
   "projects": {
     "rail": {
-      "overview": "Overview",
       "heliconius": "Heliconius",
       "parides": "Parides ascanius",
-      "soybean": "Soybean Lepidoptera",
       "panacea": "Panacea prola"
     },
     "metaTitle": "Proposed pilot projects | Caligo",
     "metaDescription": "Four proposed pilot projects, each starting from a published finding about Neotropical butterflies or moths.",
     "title": "Proposed pilot projects",
-    "intro": "These four pilot projects begin where earlier studies leave off. Each asks what new samples and genomic data could reveal.",
     "pilotProposal": {
-      "heading": "The proposed Caligo pilot project",
       "leadsLabel": "Pilot project leads",
       "resourcesLabel": "Starting material and capacity",
       "backgroundLabel": "Published background and resources"
@@ -414,41 +316,17 @@ export const en = {
     "metaTitle": "About | Caligo",
     "metaDescription": "Caligo’s 1,000-genome goal, sequencing facilities and principles for research led from Latin America.",
     "title": "About Caligo",
-    "body": "Caligo is a Latin American-led effort to build reference genomes for Neotropical butterflies and moths. Each genome is linked to an identified specimen and the taxonomic expertise needed to verify it. Researchers can then use these genomes to study questions defined in the region.",
-    "name": {
-      "heading": "Why Caligo",
-      "body": [
-        "Caligo takes its name from a Neotropical genus of owl butterflies, known for their beauty and striking eyespots. In one species, these false eyes redirect bird attacks toward the wings and away from the body. Look closer and the pattern resolves into thousands of scales, whose pigments and microscopic structures create its colour. The name reflects the curiosity behind Caligo: beginning with the diversity we can see, then using genomes to understand how it evolved."
-      ]
-    },
     "workflow": {
-      "eyebrow": "From specimen to shared evidence",
-      "heading": "Keep every genome linked to its specimen",
-      "projectName": "Project Psyche",
-      "introAfter": " coordinates butterfly and moth sequencing across Europe through sampling hubs, shared standards and openly released genomes. Caligo draws on that model for a Latin American-led programme focused on Neotropical species.",
-      "steps": [
-        "Identify the organism and preserve a voucher specimen",
-        "Agree permissions, roles, credit and benefit sharing",
-        "Sequence the material with an appropriate regional facility",
-        "Assemble the genome and check its quality and identity",
-        "Deposit the sequence and connect it to specimen metadata",
-        "Use the genome in comparative studies and update it when better data become available"
-      ]
+      "projectName": "Project Psyche"
     },
     "leadership": {
-      "heading": "Leadership",
-      "intro": "The initiative is coordinated by researchers from institutions in Latin America and internationally."
+      "heading": "Leadership"
     },
     "network": {
       "heading": "The Caligo network"
     },
     "facilities": {
-      "heading": "Partner facilities",
-      "intro": "Seven partner institutions in Colombia, Panama, Brazil, Ecuador and Chile provide sequencing platforms for Caligo projects."
-    },
-    "positioning": {
-      "heading": "Connections and context",
-      "body": "Caligo is engaged with EBP Latin America, the Earth BioGenome Project's regional initiative, and with Genotropics, a network working on the genomic diversity of tropical organisms."
+      "heading": "Partner facilities"
     }
   },
   "participate": {
@@ -459,8 +337,7 @@ export const en = {
     "contact": {
       "heading": "Start a conversation",
       "body": "Write to Caligo about a species, a question or how you would like to help.",
-      "email": "genomica.neotropical@gmail.com",
-      "ariaLabel": "Email Caligo at genomica.neotropical@gmail.com"
+      "email": "genomica.neotropical@gmail.com"
     },
     "audiences": {
       "heading": "What you can bring",
@@ -526,20 +403,6 @@ export const en = {
       "body": "Official communications are in English and Spanish. Portuguese is also spoken in meetings, and participants translate informally for each other."
     }
   },
-  "sourceDrawer": {
-    "open": "Sources and methods",
-    "close": "Close sources and methods",
-    "citationLabel": "Evidence",
-    "checkedDate": "Checked",
-    "databaseAccessed": "Database accessed",
-    "scopeLabel": "What this source supports",
-    "limitsLabel": "Limits and exclusions",
-    "methodNote": "Method note",
-    "externalContext": "Related external context",
-    "preprint": "Preprint. A peer-reviewed journal version was not found when this source was checked.",
-    "sensitiveLocalities": "Precise sensitive-species localities are not shown.",
-    "mutableData": "Mutable database or institutional record. The access date is shown."
-  },
   "notFound": {
     "title": "This page hasn’t been sequenced yet",
     "body": "The address may have changed, or the page never existed. Like this moth, you may be circling the wrong light.",
@@ -548,10 +411,8 @@ export const en = {
   "footer": {
     "tagline": "A Latin American network building reference genomes for the butterflies and moths of the Neotropics.",
     "rights": "Caligo",
-    "contact": "Contact",
     "navHeading": "Explore",
-    "languageHeading": "Language",
-    "sources": "Sources and methods"
+    "languageHeading": "Language"
   }
 } as const;
 
