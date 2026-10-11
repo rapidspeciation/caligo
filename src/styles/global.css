@@ -462,7 +462,7 @@ kbd,
    and holds still under reduced motion. On touch screens Base.astro sets
    `.is-near` on the card passing mid-screen, which looks like hover.
 
-     --card-tone          colour of outline and shadow while raised
+     --card-tone          colour of outline and shadow
      .card-media          a photo frame inside: its image leans in while
                           the card is raised (`--card-zoom` sets how far)   */
 [data-card] {
@@ -473,7 +473,10 @@ kbd,
   transition: transform var(--dur-quick) var(--ease-glide),
     box-shadow var(--dur-quick) var(--ease-glide),
     border-color var(--dur-quick) var(--ease-glide);
+  /* A card with a tone wears it at rest too, in both themes. */
+  border-color: var(--card-tone, var(--ink-line));
 }
+[data-card]:not(.ink-card--flat) { box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--card-tone, var(--ink-shadow)); }
 [data-card].is-near {
   transform: translate(calc(-1 * var(--card-lift)), calc(-1 * var(--card-lift)));
   border-color: var(--card-tone, var(--ink-line));
