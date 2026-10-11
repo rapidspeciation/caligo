@@ -126,7 +126,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
         </a>
       </div>
       </div>
-      <div class="training-events"><Timeline locale={locale} eventsOnly /></div>
+      <Timeline locale={locale} eventsOnly compact />
     </div>
   </section>
 
@@ -365,16 +365,15 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     margin-top: var(--space-m);
     width: fit-content;
   }
-  .analysis-heading-group, .analysis-copy { max-width: 70ch; }
-  .analysis-heading-group .section-heading { max-width: none; }
+  .analysis-heading-group .section-heading { max-width: 16ch; margin-bottom: 0; }
+  .analysis-main { display: grid; gap: var(--space-m); }
   @media (min-width: 60rem) {
-    .analysis-layout {
-      grid-template-columns: minmax(0, 1.12fr) minmax(20rem, 0.88fr);
-      column-gap: clamp(3rem, 7vw, 7rem);
+    /* Heading beside its text; the two events run beneath on one track. */
+    .analysis-main {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
+      column-gap: clamp(2rem, 5vw, 5rem);
     }
-    .training-events { align-self: center; }
   }
-  .training-events { min-width: 0; }
 
   /* ---- Publication examples ---- */
   .publications-section {

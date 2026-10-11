@@ -44,7 +44,7 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
 };
 ---
 
-<ol class:list={['timeline-list', { 'timeline-list--compact': compact }]} role="list" data-timeline data-locale={locale}>
+<ol class:list={['timeline-list', { 'timeline-list--compact': compact }]} role="list" data-timeline data-locale={locale} style={`--cols: ${entries.length}`}>
   {entries.map((entry) => entry.kind === 'call' ? (
     <li class="timeline-item ink-card" data-card="link" id="event-colombia-funding" data-end={PILOT_DEADLINE} style="--tone: var(--tone-person-rose); --card-tone: var(--tone-person-rose)">
       <div class="timeline-when">
@@ -205,7 +205,7 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
     --gap: 1rem;
     --track-y: 2.6rem;
     position: relative;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
     gap: var(--gap);
     padding-top: calc(var(--track-y) + 1.2rem);
   }
