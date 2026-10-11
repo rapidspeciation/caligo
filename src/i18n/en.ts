@@ -218,15 +218,12 @@ export const en = {
       "explore": {
         "barcode": {
           "prompt": "Which species is this butterfly?",
-          "button": "Try another butterfly",
           "note": "16 of about 650 bases shown (COI gene)",
-          "scanning": "Comparing with each barcode in the library…",
           "match": "All 16 bases match <i>{name}</i>. A cross marks each base where another species differs."
         },
         "resequencing": {
           "prompt": "Where do the two populations differ?",
           "legend": ["same in all", "mixed in both", "differs"],
-          "scanning": "Reading site {i} of {n}, one butterfly at a time…",
           "summary": "1 of {n} sites tells the populations apart: {a} above, {b} below. The others are shared or mixed."
         },
         "reference": {

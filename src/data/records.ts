@@ -475,12 +475,6 @@ const MEDIA_MAP = byId(MEDIA);
 export const getSource = (id: string): Source | undefined => SOURCE_MAP.get(id);
 export const getMedia = (id: string): Media | undefined => MEDIA_MAP.get(id);
 
-export const PUBLIC_STATUS_LABELS: Readonly<Record<PublicStatus, Bilingual>> = {
-  'published-evidence': { en: 'Published evidence', es: 'Evidencia publicada' },
-  'database-snapshot': { en: 'Database snapshot', es: 'Consulta de base de datos' },
-  'proposed-caligo-work': { en: 'Proposed pilot project', es: 'Proyecto piloto propuesto' },
-};
-
 /* ═══════════════════════════════════════════════════════════════════════
    MEDIA CANDIDATE MODULES  (MediaCandidateViewer.astro data source)
    ═══════════════════════════════════════════════════════════════════════ */

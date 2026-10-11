@@ -1,6 +1,6 @@
 /**
  * consumers should import from './initiative'; this module remains the raw store.
- * Footer.astro and JoinCTA.astro import LINKS directly — do not rename exports here.
+ * Footer.astro imports LINKS directly — do not rename exports here.
  */
 import type { Locale } from '../i18n/config';
 

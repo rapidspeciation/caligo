@@ -215,15 +215,12 @@ export const es: Dict = {
       "explore": {
         "barcode": {
           "prompt": "¿De qué especie es esta mariposa?",
-          "button": "Prueba con otra mariposa",
           "note": "Se muestran 16 de unas 650 bases (gen COI)",
-          "scanning": "Comparando con cada código de la biblioteca…",
           "match": "Las 16 bases coinciden con <i>{name}</i>. Una cruz marca cada base en la que otra especie difiere."
         },
         "resequencing": {
           "prompt": "¿Dónde difieren las dos poblaciones?",
           "legend": ["igual en todas", "mezclado en ambas", "distinto"],
-          "scanning": "Leyendo el sitio {i} de {n}, mariposa por mariposa…",
           "summary": "1 de {n} sitios distingue a las poblaciones: {a} arriba, {b} abajo. Los demás son iguales o están mezclados."
         },
         "reference": {

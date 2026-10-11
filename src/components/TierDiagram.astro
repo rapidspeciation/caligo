@@ -32,10 +32,8 @@ const explore = tiers.explore;
 const id = `tier-diagram-${kind}`;
 const r1 = (v: number) => Math.round(v * 10) / 10;
 
-/* ---------- Butterfly glyph: one per species in the barcode library ---------- */
+/* ---------- Butterfly glyph ---------- */
 const { forewing: WING_F, hindwing: WING_H } = BUTTERFLY;
-const SPECIES_KEYS = ['hecale', 'ismenius', 'clysonimus', 'cydno'] as const;
-const FLY_KEYS = kind === 'barcode' ? SPECIES_KEYS : (['cydno'] as const);
 
 /* ---------- Tier 1: DNA barcode ---------- */
 type Base = 'A' | 'C' | 'G' | 'T';
@@ -45,9 +43,6 @@ const LIBRARY = [
   { name: 'H. clysonimus', seq: 'TATTAAGAGCCTCAGT' },
   { name: 'H. cydno', seq: 'TATTAGGAGCTTCAAT' },
 ] as const;
-/* The unknown specimens, in the order "Try another butterfly" visits them:
-   each is one of the library's species (its row index). */
-const SPECIMENS = [3, 1, 0, 2];
 const N_BASES = LIBRARY[0].seq.length;
 const BAR_X0 = 96;
 const BAR_PITCH = 9.6;
@@ -60,7 +55,8 @@ const ROW_Y0 = 106;
 const ROW_PITCH = 30;
 const ROW_H = 18;
 const rowY = (r: number) => ROW_Y0 + r * ROW_PITCH;
-const FIRST = SPECIMENS[0];
+/* The specimen in the figure is the library's last species. */
+const FIRST = LIBRARY.length - 1;
 const QUERY = LIBRARY[FIRST].seq;
 
 /* ---------- Tier 2: population resequencing ---------- */
@@ -94,16 +90,12 @@ const rowReads = (row: (typeof ROWS_TOP)[number]) => {
   return [0, 2, 4].map((k) => [edges[k], edges[k + 1]] as const);
 };
 const readsAll = [
-  ...ROWS_TOP.map((row, n) => ({ row, n, pop: 1 as const, from: POP1 })),
-  ...ROWS_BOTTOM.map((row, n) => ({ row, n, pop: 2 as const, from: POP2 })),
-].flatMap(({ row, n, pop, from }) =>
-  rowReads(row).map(([x1, x2], k) => {
-    const mid = (x1 + x2) / 2;
-    // Interleave the two populations so both stream in together.
-    const seq = (n * 3 + k) * 2 + (pop === 2 ? 1 : 0);
+  ...ROWS_TOP.map((row, n) => ({ row, n, pop: 1 as const })),
+  ...ROWS_BOTTOM.map((row, n) => ({ row, n, pop: 2 as const })),
+].flatMap(({ row, n, pop }) =>
+  rowReads(row).map(([x1, x2]) => {
     return {
       x1, x2, y: row.y,
-      dx: from.cx - mid, dy: from.cy - row.y, delay: 1.0 + seq * 0.07,
       cells: SITES.map((s, i) => ({ i, base: (pop === 1 ? s.top : s.bottom)[n] as Base })).filter(({ i }) => siteX(i) > x1 && siteX(i) < x2),
     };
   }),
@@ -164,13 +156,8 @@ const asmOverlaps = ASM_STARTS.slice(1).map((start, k) => ({
   k,
 }));
 
-/* What the client script needs, per kind. */
-const exploreData =
-  kind === 'barcode'
-    ? { copy: explore.barcode, rows: LIBRARY.map((row) => ({ name: row.name, seq: row.seq })), specimens: SPECIMENS, pitch: ROW_PITCH }
-    : kind === 'resequencing'
-      ? { copy: explore.resequencing, sites: SITES, pitch: SITE_PITCH, final: DEFAULT_SITE }
-      : { copy: { ...explore.reference, count: tiers.diagrams.reference.count } };
+/* What the client script needs: only tier 3 plays. */
+const exploreData = kind === 'reference' ? { copy: { ...explore.reference, count: tiers.diagrams.reference.count } } : undefined;
 const prompt = explore[kind].prompt;
 /* The sentence under the two still figures. */
 const baseHtml = (b: string) => `<b class="readout-base readout-base--${b}">${b}</b>`;
@@ -187,11 +174,10 @@ const caption =
 
 <figure
   id={id}
-  class={`tier-diagram tier-diagram--${kind}${kind === 'barcode' ? ' is-identified' : ''}`}
+  class={`tier-diagram tier-diagram--${kind}`}
   data-tier-diagram
   data-kind={kind}
-  data-specimen={kind === 'barcode' ? '0' : undefined}
-  data-explore={JSON.stringify(exploreData)}
+  data-explore={exploreData && JSON.stringify(exploreData)}
 >
   <svg viewBox="0 0 360 236" role="img" aria-labelledby={`${id}-title ${id}-desc`}>
     <title id={`${id}-title`}>{copy.title}</title>
@@ -203,7 +189,7 @@ const caption =
         <path d={WING_H} class="dg-fly-wing" />
         <path d={WING_F} class="dg-fly-wing" />
       </g>
-      {FLY_KEYS.map((key) => (
+      {(['cydno'] as const).map((key) => (
         <g id={`${id}-fly-${key}`} class="dg-fly">
           {[undefined, 'scale(-1 1)'].map((flip) => (
             <g transform={flip}>
@@ -234,9 +220,7 @@ const caption =
     {kind === 'barcode' && (
       <g class="bc">
         <g transform="translate(40 52) scale(1.3)">
-          <g class="dg-flap bc-fly" data-fly>
-            {SPECIES_KEYS.map((key, i) => <use href={`#${id}-fly-${key}`} class="bc-sp" data-sp={SPECIMENS.indexOf(i)} />)}
-          </g>
+          <use href={`#${id}-fly-cydno`} />
         </g>
         <path d="M68 52 H82" class="dg-arrow bc-arrow" />
         <path d="M78 48 L82 52 L78 56" class="dg-arrow bc-arrow-head" />
@@ -244,14 +228,13 @@ const caption =
         {/* The specimen's short standard fragment: each base, then its bar. */}
         <g class="bc-query" data-query>
           {[...QUERY].map((b, i) => (
-            <text x={r1(barX(i) + BAR_W / 2)} y="31" class={`bc-letter dg-base-text--${b}`} style={`--i:${i}`} data-letter>{b}</text>
+            <text x={r1(barX(i) + BAR_W / 2)} y="31" class={`bc-letter dg-base-text--${b}`}>{b}</text>
           ))}
           {[...QUERY].map((b, i) => (
-            <rect x={barX(i)} y="38" width={BAR_W} height="28" rx="1.5" class={`bc-bar dg-base--${b}`} style={`--i:${i}`} data-bar />
+            <rect x={barX(i)} y="38" width={BAR_W} height="28" rx="1.5" class={`bc-bar dg-base--${b}`} />
           ))}
           <rect x={FRAME_X} y="33" width={FRAME_W} height="38" rx="6" class="dg-frame bc-qframe" />
         </g>
-        <text x={NAME_X + 2} y="59" class="bc-unknown">?</text>
         <text x={NAME_X} y="57" class="bc-answer dg-species" data-answer>{LIBRARY[FIRST].name}</text>
         <text x={FRAME_X} y="89" class="dg-note">{explore.barcode.note}</text>
 
@@ -262,7 +245,7 @@ const caption =
           <path d="M24 144 C24 150 52 150 52 144 M24 158 C24 164 52 164 52 158" />
         </g>
         {LIBRARY.map((row, r) => (
-          <g class={`bc-row${r === FIRST ? ' is-match' : ''}`} data-row={r} style={`--d:${(2.4 + r * 0.12).toFixed(2)}s`}>
+          <g class={`bc-row${r === FIRST ? ' is-match' : ''}`}>
             {[...row.seq].map((b, i) => (
               <rect x={barX(i)} y={rowY(r)} width={BAR_W} height={ROW_H} rx="1.5" class={`dg-base--${b as Base}`} />
             ))}
@@ -294,7 +277,7 @@ const caption =
         ))}
         <path d={`M84 ${REF_Y} H352`} class="dg-ref rs-ref" pathLength="1" />
         {readsAll.map((read) => (
-          <g class="rs-read" style={`--dx:${read.dx}px;--dy:${read.dy}px;--d:${read.delay.toFixed(2)}s`}>
+          <g class="rs-read">
             <path d={`M${read.x1} ${read.y} H${read.x2}`} class="dg-read" />
             {read.cells.map(({ i, base }) => (
               <g class="rs-cell is-on" data-i={i} data-y={read.y}>
@@ -539,9 +522,7 @@ const caption =
 
   /* ---- Tier 1 ---- */
   .bc-letter { font-family: var(--font-mono); font-size: 10.5px; font-weight: 700; text-anchor: middle; }
-  .bc-unknown { font-family: var(--font-display); font-size: 22px; font-weight: 600; fill: var(--text-faint); }
   .bc-answer { fill: var(--accent); font-weight: 650; }
-  .is-identified .bc-unknown, .tier-diagram:not(.is-identified) .bc-answer { opacity: 0; }
   .bc-db ellipse, .bc-db path { fill: none; stroke: var(--text-faint); stroke-width: 2; }
   .bc-row.is-match .bc-name { fill: var(--accent); font-weight: 650; }
   /* A cross under a base that differs from the specimen's. */
@@ -550,19 +531,8 @@ const caption =
   .bc-scan, .bc-check { opacity: 0; }
   .bc-scan.is-on, .bc-check.is-on { opacity: 1; }
   .bc-check { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-  /* Each specimen is a different butterfly, drawn with its own wing pattern. */
-  .bc-sp { display: none; }
-  .tier-diagram[data-specimen='0'] .bc-sp[data-sp='0'],
-  .tier-diagram[data-specimen='1'] .bc-sp[data-sp='1'],
-  .tier-diagram[data-specimen='2'] .bc-sp[data-sp='2'],
-  .tier-diagram[data-specimen='3'] .bc-sp[data-sp='3'] { display: inline; }
-  .is-live .bc-scan { transition: transform 300ms var(--ease-settle), opacity 200ms linear; }
-  .is-live .bc-miss { transition: opacity 180ms linear; }
-  .is-live .bc-unknown { transition: opacity 180ms linear; }
   .bc-answer.is-pop, .bc-check.is-on { transform-box: fill-box; transform-origin: left center; }
   .bc-answer.is-pop { animation: dg-pop 0.45s var(--ease-settle); }
-  .is-reread .bc-bar { animation: dg-grow 0.3s calc(var(--i) * 22ms) var(--ease-settle) both; }
-  .is-reread .bc-letter { animation: dg-pop 0.3s calc(var(--i) * 22ms) var(--ease-settle) both; }
 
   /* ---- Tier 2 ---- */
   /* Same species, two races: a white band above, a yellow band below. */
@@ -580,8 +550,6 @@ const caption =
   .rs-cell text { font-family: var(--font-mono); font-size: 9.5px; font-weight: 700; text-anchor: middle; fill: var(--stage); opacity: 0; }
   .rs-cell.is-on { transform: scale(1); }
   .rs-cell.is-on text { opacity: 1; }
-  .is-live .rs-col { transition: transform 260ms var(--ease-settle), opacity 200ms linear; }
-  .is-live .rs-cell { transition: transform 200ms var(--ease-settle); }
   .rs-symbol.is-pop { transform-box: fill-box; transform-origin: center; animation: dg-pop 0.45s var(--ease-settle); }
 
   /* The key under tiers 2 and 3: what each mark means, or which step is playing. */
@@ -641,46 +609,8 @@ const caption =
   .rf.is-pop .rf-chr { animation: rf-pop 0.42s calc(var(--i) * 14ms) var(--ease-settle) both; }
   .rf.is-pop .rf-count { transform-origin: left center; animation: dg-pop 0.45s 0.15s var(--ease-settle) both; }
 
-  /* ================= Intro animation (armed by JS, paused until in view) ================= */
-  :is(.bc-arrow, .bc-arrow-head, .bc-letter, .bc-bar, .bc-qframe, .bc-row, .rs-ref, .rs-read) {
-    transform-box: fill-box;
-    transform-origin: center;
-  }
-  .bc-bar { transform-origin: top; }
-
-  /* Tier 1: fragment → letters → bars → library; the script then compares. */
-  .is-armed .bc-arrow { stroke-dasharray: 16; animation: dg-draw16 0.4s 0.25s ease-out; }
-  .is-armed .bc-arrow-head { animation: dg-fade 0.2s 0.55s ease-out; }
-  .is-armed .bc-letter { animation: dg-pop 0.3s calc(0.5s + var(--i) * 0.05s) var(--ease-settle); }
-  .is-armed .bc-bar { animation: dg-grow 0.35s calc(1.5s + var(--i) * 0.04s) var(--ease-settle); }
-  .is-armed .bc-qframe { animation: dg-fade 0.4s 2.2s ease-out; }
-  .is-armed .bc-row { animation: dg-fade 0.4s var(--d) ease-out; }
-
-  /* Tier 2: reference drawn → reads stream in and align; the script then
-     moves the column from site to site. */
-  .is-armed .rs-ref { stroke-dasharray: 1; animation: dg-draw1 0.8s 0.2s ease-out; }
-  .is-armed .rs-read { animation: rs-align 0.9s var(--d) var(--ease-glide); }
-
-  /* After the shorthands above, which would otherwise reset these. */
-  .is-armed :is(.bc-arrow, .bc-arrow-head, .bc-letter, .bc-bar, .bc-qframe, .bc-row, .rs-ref, .rs-read) {
-    animation-fill-mode: both;
-    animation-play-state: paused;
-  }
-  .is-armed.is-playing :is(.bc-arrow, .bc-arrow-head, .bc-letter, .bc-bar, .bc-qframe, .bc-row, .rs-ref, .rs-read) {
-    animation-play-state: running;
-  }
-
-  @keyframes dg-fade { from { opacity: 0; } to { opacity: 1; } }
   @keyframes dg-pop { from { opacity: 0; transform: scale(0.4); } 70% { opacity: 1; transform: scale(1.12); } to { opacity: 1; transform: scale(1); } }
-  @keyframes dg-grow { from { opacity: 0; transform: scaleY(0); } to { opacity: 1; transform: scaleY(1); } }
-  @keyframes dg-draw16 { from { stroke-dashoffset: 16; } to { stroke-dashoffset: 0; } }
-  @keyframes dg-draw1 { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
   @keyframes dg-flap { 0%, 100% { transform: scaleX(1); } 22% { transform: scaleX(0.3); } 48% { transform: scaleX(1.04); } 70% { transform: scaleX(0.55); } }
-  @keyframes rs-align {
-    from { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.25); }
-    25% { opacity: 1; }
-    to { opacity: 1; transform: translate(0, 0) scale(1); }
-  }
   @keyframes rf-fly {
     from { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.3); }
     30% { opacity: 1; }
@@ -689,6 +619,6 @@ const caption =
   @keyframes rf-pop { 0%, 100% { transform: scaleY(1); } 45% { transform: scale(1.12, 1.07); } }
 
   @media (prefers-reduced-motion: reduce) {
-    .is-live :is(.bc-scan, .bc-miss, .bc-unknown, .rs-col, .rs-cell, .rf-asm, .rf-lr, .rf-overlap, .rf-joined) { transition: none; }
+    .is-live :is(.rf-asm, .rf-lr, .rf-overlap, .rf-joined) { transition: none; }
   }
 </style>

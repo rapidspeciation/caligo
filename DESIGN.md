@@ -163,3 +163,16 @@ The four explainers:
 - Tier 2, resequencing. Prompt: "Where do the two populations differ?" Control: a five-stop slider (or a tap or drag along the reads). Each row of reads is one butterfly. Sites come in three kinds, marked on the slider track and above the column: `=` the same letter in all six, `≈` both letters in both populations (no help), `≠` one letter above and another below. The result gives counts ("T in 3 of 3 above, C in 3 of 3 below"). The idea: only sites where the letters split by population tell populations apart.
 - Tier 3, reference genome. Prompt: "How many reads until the gaps close?" Control: a reads slider over a small seeded coverage simulation. Gaps are hatched outlines; the figure counts the pieces. The result uses the site's vocabulary: a "draft genome" with gaps, then a "chromosome-scale reference" of 21 chromosomes. The slider starts where pieces only merge from then on, and the build fails unless the count falls at every step and ends at 21.
 - Science question 1, chromosome fissions (`FissionExplainer`). It spans the prose column: karyotype on the left, two questions and the result on the right, stacked when narrow. The slider runs from no fissions to 39, and its ends are labelled with the two real anchors: 21 (most *Heliconius*) and 60 (the sapho-group maximum). The toggle compares "Along the whole chromosome (butterflies and moths)" with "One centromere (most animals)". With one centromere, pieces left without it are drawn as tilted dashed outlines and counted as lost; the result labels this as simplified. Here the "your turn" ring goes to the unchosen toggle answer, because the slider has just moved by itself.
+
+## Card behaviour contract, October 2026
+
+`.ink-card` is only the look. What a card *does* is declared in markup and implemented once, in `src/styles/global.css` ("Card behaviour") and `src/layouts/Base.astro`:
+
+- `data-card="link"`: the card goes somewhere. Either the card is the `<a>`, or one link inside carries `.card-link` and covers the whole card.
+- `data-card="toggle"`: the card opens and closes a `<details>` (itself, or the one inside). Clicks on text, on the card's own controls and on any nested card are left alone.
+- `--card-tone`: colour of the outline and shadow while the card is raised.
+- `.card-media`: a photo frame inside the card; its image leans in while the card is raised (`--card-zoom` sets how far). The frame must clip its image.
+
+Every such card lifts on hover, sinks when pressed, takes the hover look on touch screens when it passes mid-screen (`.is-near`), shows a focus ring and holds still under reduced motion. A card without `data-card` does none of this, so a card that lifts is always a card that does something.
+
+Do not re-implement lift, press, cover links, photo zoom or the touch behaviour inside a component. Add `data-card` and, if needed, style only what is specific to that card while it is raised.

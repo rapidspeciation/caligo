@@ -343,12 +343,6 @@ export const EVENTS: InitiativeEvent[] = [
 
 /* ---------- Language policy (doc 01 §H10) ---------- */
 /** DOC L69; PRES L81 — English and Spanish official; Portuguese informal in meetings. */
-export const LANGUAGE_POLICY: Bilingual = {
-  en: 'Official communications are in English and Spanish. Portuguese is also used in meetings, with informal translation among participants who understand both.',
-  es: 'Las comunicaciones oficiales se hacen en inglés y español. El portugués también se usa en las reuniones, con traducción informal entre quienes entienden ambos.',
-};
-
-
 /* ---------- Derived aggregates — principle 4: never hardcoded ---------- */
 /**
  * Derive facility and country counts from the FACILITIES data array at call time.
