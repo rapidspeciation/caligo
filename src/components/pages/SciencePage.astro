@@ -584,14 +584,14 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   }
   .question-chevron :global(svg) { width: 1rem; height: 1rem; transform: rotate(90deg); }
   .question[open] .question-chevron { transform: rotate(180deg); color: var(--accent-strong); border-color: var(--accent); }
-  /* Raised and still closed: the arrow fills with the card's colour and
-     dips, to say the whole card opens. */
+  /* Raised: the arrow fills with the card's colour and nudges the way it
+     points, to say the whole card opens or closes. */
   .question-chevron :global(svg) { transition: transform var(--dur-quick) var(--ease-glide); }
-  .question:global(.is-near):not([open]) .question-chevron { background: var(--card-tone); border-color: var(--card-tone); color: #231e1b; }
-  .question:global(.is-near):not([open]) .question-chevron :global(svg) { transform: rotate(90deg) translateX(2px); }
+  .question:global(.is-near) .question-chevron { background: var(--card-tone); border-color: var(--card-tone); color: #231e1b; }
+  .question:global(.is-near) .question-chevron :global(svg) { transform: rotate(90deg) translateX(2px); }
   @media (hover: hover) {
-    .question:hover:not([open]) .question-chevron { background: var(--card-tone); border-color: var(--card-tone); color: #231e1b; }
-    .question:hover:not([open]) .question-chevron :global(svg) { transform: rotate(90deg) translateX(2px); }
+    .question:hover .question-chevron { background: var(--card-tone); border-color: var(--card-tone); color: #231e1b; }
+    .question:hover .question-chevron :global(svg) { transform: rotate(90deg) translateX(2px); }
   }
   .question-body { padding: 0 0 var(--space-l); }
   /* The photo stays in view while the answer is read. */

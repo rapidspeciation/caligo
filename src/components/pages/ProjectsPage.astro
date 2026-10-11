@@ -333,13 +333,15 @@ const callClosed = isCallClosed();
   .pilot-more { --disclosure-pad-x: 0; }
   .pilot-more > :global(.disclosure-summary) { font-weight: 600; }
   .pilot-more:not([open]) > :global(.disclosure-summary) { border-bottom-color: transparent; }
-  /* Raised and still closed: the row that opens takes the accent and its
-     arrow dips, to say the whole card opens. */
-  .pilot:global(.is-near) .pilot-more:not([open]) > :global(.disclosure-summary) { color: var(--accent-strong); }
+  /* Raised: the row that opens or closes takes the accent and its arrow
+     nudges the way it points, to say the whole card does it. */
+  .pilot:global(.is-near) .pilot-more > :global(.disclosure-summary) { color: var(--accent-strong); }
   .pilot:global(.is-near) .pilot-more:not([open]) :global(.disclosure-summary-inner)::after { transform: rotate(45deg) translate(1px, 1px); }
+  .pilot:global(.is-near) .pilot-more[open] :global(.disclosure-summary-inner)::after { transform: rotate(-135deg) translate(1px, 1px); }
   @media (hover: hover) {
-    .pilot:hover .pilot-more:not([open]) > :global(.disclosure-summary) { color: var(--accent-strong); }
+    .pilot:hover .pilot-more > :global(.disclosure-summary) { color: var(--accent-strong); }
     .pilot:hover .pilot-more:not([open]) :global(.disclosure-summary-inner)::after { transform: rotate(45deg) translate(1px, 1px); }
+    .pilot:hover .pilot-more[open] :global(.disclosure-summary-inner)::after { transform: rotate(-135deg) translate(1px, 1px); }
   }
   .pilot-more-body {
     display: grid;
