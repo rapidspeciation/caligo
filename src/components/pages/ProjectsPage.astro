@@ -197,6 +197,9 @@ const callClosed = isCallClosed();
     function toggleCard(event) {
       var card = event.target.closest && event.target.closest('[data-pilot]');
       if (!card || event.target.closest('a, button, summary, input, figure')) return;
+      // Text inside the card is for reading and selecting, not for toggling.
+      var text = event.target.closest('p, h1, h2, h3, h4, li, dt, dd, figcaption, output, table');
+      if (text && text !== card && card.contains(text)) return;
       if (String(window.getSelection && window.getSelection()).length) return;
       var summary = card.querySelector('[data-pilot-more] > summary');
       if (summary) summary.click();
@@ -350,6 +353,16 @@ const callClosed = isCallClosed();
   .pilot:has(.pilot-more:not([open])):active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink-shadow); }
   .pilot:has(.pilot-more[open]) { transform: none; box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--ink-shadow); }
   .pilot :global(.pilot-more > summary) { cursor: pointer; }
+  /* The photograph leans in a little when its card is hovered, or on touch
+     when it passes mid-screen, as the leadership portraits do. */
+  .pilot-media :global(img) { transition: transform var(--dur-base) var(--ease-glide); }
+  @media (hover: hover) and (pointer: fine) {
+    .pilot:hover .pilot-media :global(img) { transform: scale(1.05); }
+  }
+  .pilot:global(.is-near) .pilot-media :global(img) { transform: scale(1.05); }
+  @media (prefers-reduced-motion: reduce) {
+    .pilot-media :global(img) { transform: none !important; transition: none; }
+  }
   .pilot-more { --disclosure-pad-x: 0; }
   .pilot-more > :global(.disclosure-summary) { font-weight: 600; }
   .pilot-more:not([open]) > :global(.disclosure-summary) { border-bottom-color: transparent; }

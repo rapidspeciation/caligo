@@ -210,7 +210,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
           <details id={anchor} class="question disclosure ink-card ink-press" data-question>
             <summary class="question-summary">
               {thumb && (
-                <img class="question-thumb" src={`${base}${thumb.path}`} alt="" width={thumb.width} height={thumb.height} loading="lazy" decoding="async" />
+                <span class="question-thumb"><img src={`${base}${thumb.path}`} alt="" width={thumb.width} height={thumb.height} loading="lazy" decoding="async" /></span>
               )}
               <span class="question-summary-text">
                 <span class="question-label content-label">{i + 1} · {t.home.researchLabels[i]}</span>
@@ -278,12 +278,15 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
         var target = id && document.getElementById(id);
         if (target && target.matches('[data-question]')) target.open = true;
       }
-      /* An open question closes from anywhere on its card that is not a
-         control of its own (link, button, figure, the diagram) or text
-         being selected, the same way it opened. */
+      /* An open question closes from the empty parts of its card. Text is
+         left alone so it can be selected, and so are the card's own
+         controls (links, buttons, the figure, the diagram). */
       function closeCard(event) {
         var card = event.target.closest && event.target.closest('[data-question][open]');
         if (!card || event.target.closest('a, button, summary, input, label, figure, svg, [data-fission]')) return;
+        // Text inside the card is for reading and selecting, not for toggling.
+        var text = event.target.closest('p, h1, h2, h3, h4, li, dt, dd, figcaption, output, table');
+        if (text && text !== card && card.contains(text)) return;
         if (String(window.getSelection && window.getSelection()).length) return;
         var summary = card.querySelector(':scope > summary');
         if (summary) summary.click();
@@ -563,11 +566,25 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   .question-summary::-webkit-details-marker { display: none; }
   .question-summary::marker { content: ''; }
   .question-thumb {
+    display: block;
     width: clamp(4.5rem, 9vw, 7rem);
     aspect-ratio: 4 / 3;
-    object-fit: cover;
+    overflow: hidden;
     border-radius: var(--radius-xs);
     border: 1px solid var(--hairline);
+  }
+  .question-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  /* Photographs lean in a little when their card is hovered, or on touch
+     when it passes mid-screen, as the leadership portraits do. */
+  .question-thumb img, .publication-image-wrap img { transition: transform var(--dur-base) var(--ease-glide); }
+  @media (hover: hover) and (pointer: fine) {
+    .question:not([open]):hover .question-thumb img { transform: scale(1.07); }
+    .publication-card:hover .publication-image-wrap img { transform: scale(1.03); }
+  }
+  .question:global(.is-near):not([open]) .question-thumb img { transform: scale(1.07); }
+  .publication-card:global(.is-near) .publication-image-wrap img { transform: scale(1.03); }
+  @media (prefers-reduced-motion: reduce) {
+    .question-thumb img, .publication-image-wrap img { transform: none !important; transition: none; }
   }
   /* Once open, the large photo beside the answer takes over. */
   .question[open] .question-thumb { display: none; }
