@@ -278,8 +278,19 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
         var target = id && document.getElementById(id);
         if (target && target.matches('[data-question]')) target.open = true;
       }
+      /* An open question closes from anywhere on its card that is not a
+         control of its own (link, button, figure, the diagram) or text
+         being selected, the same way it opened. */
+      function closeCard(event) {
+        var card = event.target.closest && event.target.closest('[data-question][open]');
+        if (!card || event.target.closest('a, button, summary, input, label, figure, svg, [data-fission]')) return;
+        if (String(window.getSelection && window.getSelection()).length) return;
+        var summary = card.querySelector(':scope > summary');
+        if (summary) summary.click();
+      }
       if (!window.__caligoQuestionHash) {
         window.__caligoQuestionHash = true;
+        document.addEventListener('click', closeCard);
         document.addEventListener('astro:page-load', openTarget);
         window.addEventListener('hashchange', openTarget);
       }
@@ -537,6 +548,9 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   .question:not([open]):active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink-shadow); }
   .question[open], .question[open]:hover { transform: none; box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--ink-shadow); }
   .question > :global(summary) { border: 0; }
+  .question[open] { cursor: pointer; }
+  .question[open] :is(a, button, figure, label, :global(.fission)) { cursor: auto; }
+  .question[open] :is(a, button, label) { cursor: pointer; }
   .question-summary {
     list-style: none;
     display: grid;

@@ -391,6 +391,19 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
         };
         document.addEventListener('astro:page-load', window.caligoNearCards);
       })();
+      /* A row opened with the mouse or a finger does not need the keyboard
+         focus ring that browsers draw on <summary>; keyboard users keep it. */
+      (function () {
+        if (window.caligoSummaryFocus) return;
+        window.caligoSummaryFocus = true;
+        document.addEventListener('pointerdown', function (e) {
+          var s = e.target.closest && e.target.closest('summary');
+          if (s) s.setAttribute('data-pointer-focus', '');
+        });
+        document.addEventListener('keydown', function () {
+          document.querySelectorAll('summary[data-pointer-focus]').forEach(function (s) { s.removeAttribute('data-pointer-focus'); });
+        });
+      })();
     </script>
     <script is:inline>
       /* Funding-call countdown and site-wide banner. Dates compare in the

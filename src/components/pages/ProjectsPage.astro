@@ -196,7 +196,7 @@ const callClosed = isCallClosed();
        closes it, through the summary so keyboard and animation agree. */
     function toggleCard(event) {
       var card = event.target.closest && event.target.closest('[data-pilot]');
-      if (!card || event.target.closest('a, button, summary, input, [data-pilot-more] .disclosure-body')) return;
+      if (!card || event.target.closest('a, button, summary, input, figure')) return;
       if (String(window.getSelection && window.getSelection()).length) return;
       var summary = card.querySelector('[data-pilot-more] > summary');
       if (summary) summary.click();
@@ -348,7 +348,7 @@ const callClosed = isCallClosed();
      it is a page of text and stays still. */
   .pilot { cursor: pointer; }
   .pilot:has(.pilot-more:not([open])):active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink-shadow); }
-  .pilot:has(.pilot-more[open]) { cursor: auto; transform: none; box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--ink-shadow); }
+  .pilot:has(.pilot-more[open]) { transform: none; box-shadow: var(--ink-drop) var(--ink-drop) 0 var(--ink-shadow); }
   .pilot :global(.pilot-more > summary) { cursor: pointer; }
   .pilot-more { --disclosure-pad-x: 0; }
   .pilot-more > :global(.disclosure-summary) { font-weight: 600; }

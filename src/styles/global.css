@@ -933,3 +933,6 @@ a:active [data-icon='arrow-right'] { transform: translateX(3px); }
   animation-duration: 260ms;
   animation-timing-function: var(--ease-glide);
 }
+
+/* See Base.astro: a summary opened by pointer keeps no focus ring. */
+summary[data-pointer-focus]:focus-visible { outline: none; box-shadow: none; }
