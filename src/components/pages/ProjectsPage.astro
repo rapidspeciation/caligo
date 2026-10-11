@@ -238,7 +238,7 @@ const callClosed = isCallClosed();
     padding: 0;
     margin: var(--space-m) 0 var(--space-xl);
     display: grid;
-    gap: var(--space-l);
+    gap: var(--space-m);
     min-width: 0;
   }
 
@@ -248,7 +248,7 @@ const callClosed = isCallClosed();
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-m);
-    padding: clamp(1rem, 2.2vw, 1.75rem);
+    padding: clamp(0.9rem, 1.6vw, 1.25rem);
     scroll-margin-top: var(--scroll-margin-top);
   }
   .pilot-media :global(.mcv-stage) {
@@ -260,14 +260,16 @@ const callClosed = isCallClosed();
   /* Desktop: 5 media / 7 text grid */
   @media (min-width: 68rem) {
     .pilot {
-      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-      column-gap: var(--space-xl);
+      /* A compact row: a small photograph beside the question, so two or
+         three projects fit on a screen and the list can be scanned. */
+      grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
+      column-gap: var(--space-l);
       row-gap: 0;
       align-items: start;
     }
-    .pilot-media :global(.mcv-stage) { max-height: 24rem; }
+    .pilot-media :global(.mcv-stage) { max-height: 13rem; }
 
-    .pilot-more { grid-column: 1 / -1; margin-top: var(--space-m); }
+    .pilot-more { grid-column: 1 / -1; margin-top: var(--space-s); }
     .pilot-more-body {
       grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
       column-gap: var(--space-xl);
@@ -297,12 +299,12 @@ const callClosed = isCallClosed();
   .pilot-text {
     min-width: 0;
     display: grid;
-    gap: var(--space-s);
+    gap: var(--space-xs);
     align-content: start;
   }
 
   .pilot-heading {
-    max-width: 26ch;
+    max-width: 40ch;
   }
 
   .pilot-taxon {
