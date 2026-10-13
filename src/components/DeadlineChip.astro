@@ -12,15 +12,17 @@ import type { Locale } from '../i18n';
 interface Props {
   readonly locale: Locale;
   readonly class?: string;
+  /** A call other than the current one (a closed call on the timeline). */
+  readonly deadline?: string;
 }
-const { locale, class: className } = Astro.props;
+const { locale, class: className, deadline = PILOT_DEADLINE } = Astro.props;
 const chip = PILOT_INTRO[locale].chip;
-const closed = isCallClosed();
+const closed = deadline === PILOT_DEADLINE ? isCallClosed() : true;
 ---
 
 <span
   class:list={['chip', 'deadline-chip', className]}
-  data-deadline={PILOT_DEADLINE}
+  data-deadline={deadline}
   data-state={closed ? 'closed' : 'open'}
   data-days={chip.days}
   data-tomorrow={chip.tomorrow}

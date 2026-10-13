@@ -1,9 +1,25 @@
-// Source: Nicole's message supplied by Franz on 18 September 2026.
-// Dedicated Colombia funding-call form supplied by Nicole.
+// Source: the Ecuador call flyer supplied by Franz on 13 October 2026. Its
+// QR code leads to the same form the Colombia call used.
 export const PILOT_APPLICATION_URL: string = 'https://docs.google.com/forms/d/e/1FAIpQLScCX2XIzecHAMZ8lr4lZE1vYkubZawt4zXKywHD9qnJNLIfaw/viewform';
 
 // Last day applications are accepted (inclusive, visitor's local date).
-export const PILOT_DEADLINE = '2026-09-30';
+export const PILOT_DEADLINE = '2026-10-31';
+
+// Calls that have closed, kept on the timeline. Source for Colombia:
+// Nicole's message supplied by Franz on 18 September 2026.
+export const PAST_CALLS = [
+  {
+    id: 'colombia',
+    deadline: '2026-09-30',
+    country: 'Colombia',
+    name: { en: 'Sequencing support for Lepidoptera from Colombia', es: 'Apoyo para secuenciar lepidópteros de Colombia' },
+    date: { en: '30 September 2026', es: '30 de septiembre de 2026' },
+    summary: {
+      en: 'Our first call supported local pilot projects to sequence Lepidoptera species from Colombia.',
+      es: 'Nuestra primera convocatoria apoyó proyectos piloto locales para secuenciar especies de lepidópteros de Colombia.',
+    },
+  },
+];
 
 export const PILOT_INTRO = {
   en: {
@@ -27,17 +43,19 @@ export const PILOT_INTRO = {
     funding: 'Funding opportunities',
     browse: 'Explore the proposed pilot projects',
     projects: 'Proposed pilot projects',
-    call: 'Sequencing support for Lepidoptera from Colombia',
+    call: 'Sequencing support for Lepidoptera from Ecuador',
+    country: 'Ecuador',
     deadline: 'Application deadline',
-    date: '30 September 2026',
-    description: 'Our first call supports local pilot projects to sequence Lepidoptera species from Colombia.',
-    descriptionClosed: 'Our first call supported local pilot projects to sequence Lepidoptera species from Colombia.',
-    coverage: 'All sequencing expenses are covered. Applicants must bring their biological samples to the Universidad Nacional de Colombia in Bogotá.',
+    date: '31 October 2026',
+    description: 'This call funds local research teams to sequence Lepidoptera species native to Ecuador.',
+    descriptionClosed: 'This call funded local research teams to sequence Lepidoptera species native to Ecuador.',
+    coverage: 'All sequencing expenses are covered. Samples are processed at the Universidad Regional Amazónica Ikiam in Tena and must be delivered before 20 November 2026.',
+    earlier: 'Earlier call: Colombia, closed on 30 September 2026.',
     eligibility: 'Who can apply and which species qualify?',
     conditions: [
       'Projects must be proposed and led exclusively by local researchers affiliated with academic institutions in Latin America.',
       'Species must not already be in a proposed Caligo pilot project.',
-      'Species must be native or endemic to the region.',
+      'Species must be native or endemic to Ecuador.',
       'Species must not already have a published or in-progress reference genome.',
       'Applicants must provide evidence of available, high-quality biological samples or a short-term plan to obtain them.',
       'Samples must have valid collection permits and, where required in the country concerned, Access and Benefit-Sharing (ABS) permits.',
@@ -48,14 +66,14 @@ export const PILOT_INTRO = {
     share: 'Please share this opportunity with your collaborators.',
     closedNote: 'Register with the network to hear about future calls.',
     chip: {
-      open: 'Open until 30 September',
+      open: 'Open until 31 October',
       days: 'Closes in {n} days',
       tomorrow: 'Closes tomorrow',
       today: 'Closes today',
       closed: 'Applications closed',
       closedAgo: 'Closed {ago}',
     },
-    banner: 'Colombia sequencing call',
+    banner: 'Ecuador sequencing call',
     bannerAction: 'Apply',
     dismiss: 'Dismiss announcement',
   },
@@ -80,17 +98,19 @@ export const PILOT_INTRO = {
     funding: 'Oportunidades de financiamiento',
     browse: 'Explora los proyectos piloto propuestos',
     projects: 'Proyectos piloto propuestos',
-    call: 'Apoyo para secuenciar lepidópteros de Colombia',
+    call: 'Apoyo para secuenciar lepidópteros de Ecuador',
+    country: 'Ecuador',
     deadline: 'Fecha límite de postulación',
-    date: '30 de septiembre de 2026',
-    description: 'Nuestra primera convocatoria apoya proyectos piloto locales para secuenciar especies de lepidópteros de Colombia.',
-    descriptionClosed: 'Nuestra primera convocatoria apoyó proyectos piloto locales para secuenciar especies de lepidópteros de Colombia.',
-    coverage: 'Se cubren todos los gastos de secuenciación. Quienes postulen deberán llevar las muestras biológicas a la Universidad Nacional de Colombia en Bogotá.',
+    date: '31 de octubre de 2026',
+    description: 'Esta convocatoria financia a equipos de investigación locales para secuenciar especies de lepidópteros nativas de Ecuador.',
+    descriptionClosed: 'Esta convocatoria financió a equipos de investigación locales para secuenciar especies de lepidópteros nativas de Ecuador.',
+    coverage: 'Se cubren todos los gastos de secuenciación. Las muestras se procesan en la Universidad Regional Amazónica Ikiam, en Tena, y deben entregarse antes del 20 de noviembre de 2026.',
+    earlier: 'Convocatoria anterior: Colombia, cerró el 30 de septiembre de 2026.',
     eligibility: '¿Quiénes pueden postular y qué especies son elegibles?',
     conditions: [
       'Los proyectos deben ser propuestos y liderados exclusivamente por investigadores locales afiliados a instituciones académicas de América Latina.',
       'Las especies no deben formar parte de un proyecto piloto propuesto de Caligo.',
-      'Las especies deben ser nativas o endémicas de la región.',
+      'Las especies deben ser nativas o endémicas de Ecuador.',
       'Las especies no deben tener ya un genoma de referencia publicado o en proceso de generación.',
       'Se debe presentar evidencia de disponibilidad de muestras biológicas de calidad o un plan para obtenerlas a corto plazo.',
       'Las muestras deben contar con permisos de recolección vigentes y, cuando el país lo requiera, permisos de acceso y distribución de beneficios (ABS).',
@@ -101,14 +121,14 @@ export const PILOT_INTRO = {
     share: 'Comparte esta oportunidad con tus colaboradores.',
     closedNote: 'Inscríbete en la red para enterarte de próximas convocatorias.',
     chip: {
-      open: 'Abierta hasta el 30 de septiembre',
+      open: 'Abierta hasta el 31 de octubre',
       days: 'Cierra en {n} días',
       tomorrow: 'Cierra mañana',
       today: 'Cierra hoy',
       closed: 'Convocatoria cerrada',
       closedAgo: 'Cerró {ago}',
     },
-    banner: 'Convocatoria de secuenciación en Colombia',
+    banner: 'Convocatoria de secuenciación en Ecuador',
     bannerAction: 'Postula',
     dismiss: 'Cerrar anuncio',
   },

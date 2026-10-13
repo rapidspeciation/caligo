@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro';
 import PageHeader from '../PageHeader.astro';
 import Icon from '../Icon.astro';
 import DeadlineChip from '../DeadlineChip.astro';
-import { PILOT_INTRO, PILOT_APPLICATION_URL, isCallClosed } from '../../data/pilot-call';
+import { PILOT_INTRO, PILOT_APPLICATION_URL, PILOT_DEADLINE, isCallClosed } from '../../data/pilot-call';
 import { LINKS } from '../../data/content';
 import { getDict } from '../../i18n';
 import { localePath, type Locale } from '../../i18n';
@@ -23,7 +23,7 @@ const closed = isCallClosed();
           <p class="content-body" data-when-call="open" hidden={closed}>{intro.description}</p>
           <p class="content-body" data-when-call="open" hidden={closed}>{intro.coverage}</p>
           <p class="content-body" data-when-call="closed" hidden={!closed}>{intro.descriptionClosed}</p>
-          <p class="funding-deadline content-body"><span class="funding-deadline-label">{intro.deadline}</span><strong class="funding-date"><time datetime="2026-09-30">{intro.date}</time></strong></p>
+          <p class="funding-deadline content-body"><span class="funding-deadline-label">{intro.deadline}</span><strong class="funding-date"><time datetime={PILOT_DEADLINE}>{intro.date}</time></strong></p>
           <DeadlineChip locale={locale} />
           <div class="funding-open" data-when-call="open" hidden={closed}>
             {PILOT_APPLICATION_URL ? (
@@ -42,6 +42,7 @@ const closed = isCallClosed();
           <h3 class="content-heading">{intro.eligibility}</h3>
           <ul class="content-body">{intro.conditions.map((condition) => <li>{condition}</li>)}</ul>
           <a class="text-link" href={localePath(locale, '/projects') + '#proposed-projects'}>{intro.check}<Icon name="arrow-right" /></a>
+          <p class="content-meta funding-earlier">{intro.earlier}</p>
         </div>
       </div>
     </div>
@@ -49,6 +50,7 @@ const closed = isCallClosed();
 
 </Base>
 <style>
+  .funding-earlier { margin-top: var(--space-m); color: var(--text-muted); }
   .funding-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-xl); margin-top: var(--space-m); }
   .funding-summary { display: grid; align-content: start; justify-items: start; gap: var(--space-s); }
   .funding-summary { padding: clamp(1.25rem, 2.6vw, 2rem); }

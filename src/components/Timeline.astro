@@ -1,7 +1,7 @@
 ---
 import { EVENTS, pick, italicizeSpecies } from '../data/initiative';
 import { localePath, type Locale } from '../i18n';
-import { PILOT_INTRO, PILOT_DEADLINE, isCallClosed } from '../data/pilot-call';
+import { PILOT_INTRO, PILOT_DEADLINE, PAST_CALLS, isCallClosed } from '../data/pilot-call';
 import Icon from './Icon.astro';
 import DeadlineChip from './DeadlineChip.astro';
 import WhenChip from './WhenChip.astro';
@@ -22,9 +22,11 @@ const callClosed = isCallClosed();
 // or how soon, in the visitor's own calendar.
 type Entry =
   | { kind: 'call'; sort: string }
+  | { kind: 'past-call'; sort: string; call: (typeof PAST_CALLS)[number] }
   | { kind: 'event'; sort: string; event: (typeof EVENTS)[number] };
 const entries: Entry[] = [
   ...(eventsOnly ? [] : [{ kind: 'call' as const, sort: PILOT_DEADLINE }]),
+  ...(eventsOnly ? [] : PAST_CALLS.map((call) => ({ kind: 'past-call' as const, sort: call.deadline, call }))),
   ...EVENTS.map((event) => ({ kind: 'event' as const, sort: event.start, event })),
 ].sort((a, b) => a.sort.localeCompare(b.sort));
 const todayLabel = locale === 'es' ? 'Hoy' : 'Today';
@@ -44,16 +46,27 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
 
 <ol class:list={['timeline-list', { 'timeline-list--compact': compact }]} role="list" data-timeline data-locale={locale} style={`--cols: ${entries.length}`}>
   {entries.map((entry) => entry.kind === 'call' ? (
-    <li class="timeline-item ink-card" data-card="link" id="event-colombia-funding" data-end={PILOT_DEADLINE}>
+    <li class="timeline-item ink-card" data-card="link" id="event-funding" data-end={PILOT_DEADLINE}>
       <div class="timeline-when">
         <DeadlineChip locale={locale} class="timeline-chip" />
         <time class="timeline-dates mono" datetime={PILOT_DEADLINE}>{funding.date}</time>
       </div>
       <h3 class="timeline-name">{funding.call}</h3>
-      <p class="timeline-location mono">Colombia</p>
+      <p class="timeline-location mono">{funding.country}</p>
       {/* Present tense while the call is open, past once it has closed. */}
       <p class="timeline-summary" data-when-call="open" hidden={callClosed}>{funding.description}</p>
       <p class="timeline-summary" data-when-call="closed" hidden={!callClosed}>{funding.descriptionClosed}</p>
+      <a class="text-link timeline-link card-link" href={localePath(locale, '/funding')}>{funding.funding}<Icon name="arrow-right" /></a>
+    </li>
+  ) : entry.kind === 'past-call' ? (
+    <li class="timeline-item ink-card" data-card="link" id={`event-${entry.call.id}-funding`} data-end={entry.call.deadline}>
+      <div class="timeline-when">
+        <DeadlineChip locale={locale} class="timeline-chip" deadline={entry.call.deadline} />
+        <time class="timeline-dates mono" datetime={entry.call.deadline}>{pick(entry.call.date, locale)}</time>
+      </div>
+      <h3 class="timeline-name">{pick(entry.call.name, locale)}</h3>
+      <p class="timeline-location mono">{entry.call.country}</p>
+      <p class="timeline-summary">{pick(entry.call.summary, locale)}</p>
       <a class="text-link timeline-link card-link" href={localePath(locale, '/funding')}>{funding.funding}<Icon name="arrow-right" /></a>
     </li>
   ) : (
