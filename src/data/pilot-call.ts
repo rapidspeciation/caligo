@@ -18,6 +18,10 @@ export const PAST_CALLS = [
       en: 'Our first call supported local pilot projects to sequence Lepidoptera species from Colombia.',
       es: 'Nuestra primera convocatoria apoyó proyectos piloto locales para secuenciar especies de lepidópteros de Colombia.',
     },
+    coverage: {
+      en: 'All sequencing expenses were covered, with samples to be delivered to the Universidad Nacional de Colombia in Bogotá.',
+      es: 'Se cubrieron todos los gastos de secuenciación; las muestras debían entregarse en la Universidad Nacional de Colombia, en Bogotá.',
+    },
   },
 ];
 
@@ -50,7 +54,7 @@ export const PILOT_INTRO = {
     description: 'This call funds local research teams to sequence Lepidoptera species native to Ecuador.',
     descriptionClosed: 'This call funded local research teams to sequence Lepidoptera species native to Ecuador.',
     coverage: 'All sequencing expenses are covered. Samples are processed at the Universidad Regional Amazónica Ikiam in Tena and must be delivered before 20 November 2026.',
-    earlier: 'Earlier call: Colombia, closed on 30 September 2026.',
+    past: 'Past calls',
     eligibility: 'Who can apply and which species qualify?',
     conditions: [
       'Projects must be proposed and led exclusively by local researchers affiliated with academic institutions in Latin America.',
@@ -105,7 +109,7 @@ export const PILOT_INTRO = {
     description: 'Esta convocatoria financia a equipos de investigación locales para secuenciar especies de lepidópteros nativas de Ecuador.',
     descriptionClosed: 'Esta convocatoria financió a equipos de investigación locales para secuenciar especies de lepidópteros nativas de Ecuador.',
     coverage: 'Se cubren todos los gastos de secuenciación. Las muestras se procesan en la Universidad Regional Amazónica Ikiam, en Tena, y deben entregarse antes del 20 de noviembre de 2026.',
-    earlier: 'Convocatoria anterior: Colombia, cerró el 30 de septiembre de 2026.',
+    past: 'Convocatorias anteriores',
     eligibility: '¿Quiénes pueden postular y qué especies son elegibles?',
     conditions: [
       'Los proyectos deben ser propuestos y liderados exclusivamente por investigadores locales afiliados a instituciones académicas de América Latina.',

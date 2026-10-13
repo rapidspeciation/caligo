@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro';
 import PageHeader from '../PageHeader.astro';
 import Icon from '../Icon.astro';
 import DeadlineChip from '../DeadlineChip.astro';
-import { PILOT_INTRO, PILOT_APPLICATION_URL, PILOT_DEADLINE, isCallClosed } from '../../data/pilot-call';
+import { PILOT_INTRO, PILOT_APPLICATION_URL, PILOT_DEADLINE, PAST_CALLS, isCallClosed } from '../../data/pilot-call';
 import { LINKS } from '../../data/content';
 import { getDict } from '../../i18n';
 import { localePath, type Locale } from '../../i18n';
@@ -42,15 +42,38 @@ const closed = isCallClosed();
           <h3 class="content-heading">{intro.eligibility}</h3>
           <ul class="content-body">{intro.conditions.map((condition) => <li>{condition}</li>)}</ul>
           <a class="text-link" href={localePath(locale, '/projects') + '#proposed-projects'}>{intro.check}<Icon name="arrow-right" /></a>
-          <p class="content-meta funding-earlier">{intro.earlier}</p>
         </div>
       </div>
     </div>
   </section>
 
+  <section class="section" aria-labelledby="past-calls-title">
+    <div class="container-wide">
+      <h2 id="past-calls-title" class="content-heading">{intro.past}</h2>
+      <ul class="past-calls" role="list">
+        {PAST_CALLS.map((call) => (
+          <li class="past-call ink-card ink-card--flat">
+            <div class="past-call-when">
+              <DeadlineChip locale={locale} deadline={call.deadline} />
+              <time class="past-call-date mono" datetime={call.deadline}>{call.date[locale]}</time>
+            </div>
+            <h3>{call.name[locale]}</h3>
+            <p class="content-body">{call.summary[locale]}</p>
+            <p class="content-body">{call.coverage[locale]}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
 </Base>
 <style>
-  .funding-earlier { margin-top: var(--space-m); color: var(--text-muted); }
+  .past-calls { list-style: none; padding: 0; display: grid; gap: var(--space-m); margin-top: var(--space-m); max-width: 44rem; }
+  .past-call { display: grid; gap: var(--space-2xs); padding: var(--space-m); }
+  .past-call-when { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.7rem; margin-bottom: 0.35rem; }
+  .past-call-date { font-size: var(--step--2); color: var(--text-muted); }
+  .past-call h3 { margin: 0; font-family: var(--font-body); font-size: var(--step-0); font-weight: 650; }
+  .past-call p { margin: 0; }
   .funding-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-xl); margin-top: var(--space-m); }
   .funding-summary { display: grid; align-content: start; justify-items: start; gap: var(--space-s); }
   .funding-summary { padding: clamp(1.25rem, 2.6vw, 2rem); }
