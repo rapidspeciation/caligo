@@ -419,6 +419,33 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
           if (summary) summary.click();
         });
       })();
+      /* data-card="link": text in the card can be selected. A plain click
+         on text goes to the card's link; a click that ends a selection
+         does not. The link itself is not draggable, so a drag selects
+         instead of picking the link up. */
+      (function () {
+        if (window.caligoCardLink) return;
+        window.caligoCardLink = true;
+        function linkOf(card) { return card.matches('a') ? card : card.querySelector('.card-link'); }
+        document.addEventListener('click', function (event) {
+          var target = event.target;
+          var card = target.closest && target.closest('[data-card="link"]');
+          if (!card) return;
+          var selection = window.getSelection && window.getSelection();
+          if (selection && String(selection).length && card.contains(selection.anchorNode)) { event.preventDefault(); event.stopPropagation(); return; }
+          if (target.closest('a, button, summary, input, label')) return;
+          var link = linkOf(card);
+          if (link) link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window, ctrlKey: event.ctrlKey, metaKey: event.metaKey, shiftKey: event.shiftKey }));
+        }, true);
+        function undrag() {
+          document.querySelectorAll('[data-card="link"]').forEach(function (card) {
+            var link = linkOf(card);
+            if (link) link.setAttribute('draggable', 'false');
+          });
+        }
+        document.addEventListener('astro:page-load', undrag);
+        undrag();
+      })();
       /* A row opened with the mouse or a finger does not need the keyboard
          focus ring that browsers draw on <summary>; keyboard users keep it. */
       (function () {

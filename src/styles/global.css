@@ -499,6 +499,9 @@ kbd,
 a.card-link::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
 .card-link:focus-visible { outline: none; }
 [data-card]:is(:focus-visible, :has(.card-link:focus-visible)) { outline: 2px solid var(--accent); outline-offset: 3px; }
+/* Text sits above the covering link so it can be selected; a plain click
+   on it is passed to the link by the script in Base. */
+[data-card='link'] :where(p, h2, h3, h4, li, dt, dd, time):not(:has(.card-link)) { position: relative; z-index: 1; }
 /* Zero specificity, so a control that positions itself keeps its own rule. */
 :where([data-card]) :where(a:not(.card-link), button, summary, input, label) { position: relative; z-index: 1; }
 /* A link that covers its card stays put: a transform would shrink the

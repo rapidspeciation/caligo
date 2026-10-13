@@ -29,14 +29,14 @@ const tones: Record<MetricKind, string> = { participants: 'ink-card--sun', facil
   <ul class="metric-cards" role="list">
     {metrics.map((metric) => (
       <li class="metric-card">
-        <a class:list={['metric-card__link', 'ink-card', metric.kind && tones[metric.kind]]} data-card="link" href={metric.href}>
-          <span class="metric-card__label">{metric.label}</span>
+        <div class:list={['metric-card__link', 'ink-card', metric.kind && tones[metric.kind]]} data-card="link">
+          <a class="metric-card__label card-link" href={metric.href}>{metric.label}</a>
           {metric.kind && <CardIcon name={icons[metric.kind]} class="metric-icon" />}
           <strong class="metric-card__value">
             {metric.value}
           </strong>
           {(metric.note ?? metric.asOf) && <span class="metric-card__note" set:html={italicizeSpecies(metric.note ?? metric.asOf ?? '')} />}
-        </a>
+        </div>
       </li>
     ))}
   </ul>
@@ -88,7 +88,10 @@ const tones: Record<MetricKind, string> = { participants: 'ink-card--sun', facil
     line-height: 1.35;
     text-transform: uppercase;
     color: var(--text-strong);
+    text-decoration: none;
   }
+  /* Above the covering link, so the number and note can be selected. */
+  .metric-card__value, .metric-card__note { position: relative; z-index: 1; }
   .metric-card :global(.metric-icon) { grid-area: icon; align-self: start; width: 1.6rem; height: 1.6rem; }
   .metric-card__value {
     grid-area: value;

@@ -169,6 +169,7 @@ The four explainers:
 `.ink-card` is only the look. What a card *does* is declared in markup and implemented once, in `src/styles/global.css` ("Card behaviour") and `src/layouts/Base.astro`:
 
 - `data-card="link"`: the card goes somewhere. Either the card is the `<a>`, or one link inside carries `.card-link` and covers the whole card.
+- Text inside a link card can be selected: it sits above the covering link, and the script in `Base.astro` passes a plain click on it to the link.
 - `data-card="toggle"`: the card opens and closes a `<details>` (itself, or the one inside). A click anywhere on the card counts, text included, except inside the part that opens (closing would hide what was clicked), on the card's own controls and on any nested card. Dragging to select text never toggles.
 - `--card-tone`: colour of the outline and shadow, at rest and raised. Never set by hand: `global.css` assigns green, blue, coral, yellow by the card's position among its siblings, a nested card inherits its parent's, and pastel cards keep an ink outline. To force a colour on one card, add `data-tone="leaf"`, `"sky"`, `"rose"` or `"sun"`; do not write the colour in a `style` attribute (the build check rejects it).
 - `.card-media`: a photo frame inside the card; its image leans in while the card is raised (`--card-zoom` sets how far). The frame must clip its image.
