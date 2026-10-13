@@ -420,22 +420,26 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
         });
       })();
       /* data-card="link": text in the card can be selected. A plain click
-         on text goes to the card's link; a click that ends a selection
-         does not. The link itself is not draggable, so a drag selects
+         on text goes to the card's link; a click that ends a drag
+         selection does not. The link itself is not draggable, so a drag selects
          instead of picking the link up. */
       (function () {
         if (window.caligoCardLink) return;
         window.caligoCardLink = true;
         function linkOf(card) { return card.matches('a') ? card : card.querySelector('.card-link'); }
+        /* A click that ends a drag selected text; it is not a click. */
+        var downX = 0, downY = 0;
+        document.addEventListener('pointerdown', function (event) { downX = event.clientX; downY = event.clientY; }, true);
         document.addEventListener('click', function (event) {
           var target = event.target;
           var card = target.closest && target.closest('[data-card="link"]');
           if (!card) return;
-          var selection = window.getSelection && window.getSelection();
-          if (selection && String(selection).length && card.contains(selection.anchorNode)) { event.preventDefault(); event.stopPropagation(); return; }
+          if (!event.isTrusted) return; // the click this script passes on
+          var dragged = Math.abs(event.clientX - downX) > 4 || Math.abs(event.clientY - downY) > 4;
+          if (dragged && String(window.getSelection && window.getSelection()).length) { event.preventDefault(); event.stopPropagation(); return; }
           if (target.closest('a, button, summary, input, label')) return;
           var link = linkOf(card);
-          if (link) link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window, ctrlKey: event.ctrlKey, metaKey: event.metaKey, shiftKey: event.shiftKey }));
+          if (link) link.click();
         }, true);
         function undrag() {
           document.querySelectorAll('[data-card="link"]').forEach(function (card) {
