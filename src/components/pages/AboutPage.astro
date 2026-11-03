@@ -30,9 +30,9 @@ const MAKER = {
   workLabel: { en: 'Tools for Ithomiini research', es: 'Herramientas para la investigación de Ithomiini' },
   work: [
     { name: 'Wings Atlas', href: 'https://rapidspeciation.github.io/ithomiini_maps/', what: { en: 'Interactive map of more than 30,000 Ithomiini butterfly records', es: 'Mapa interactivo de más de 30.000 registros de mariposas Ithomiini' } },
-    { name: 'Wings Gallery', href: 'https://rapidspeciation.github.io/Shiny_Ikiam_Wings_Gallery/', what: { en: 'Wing photos of the Ikiam specimens, and an AI identifier that recognises some 12,000 Neotropical butterfly and moth species, down to subspecies', es: 'Fotos de alas de los especímenes de Ikiam y un identificador con IA que reconoce unas 12.000 especies de mariposas y polillas neotropicales, incluso a nivel de subespecie' } },
-    { name: 'AI Photo Processor', href: 'https://fr4nzz.github.io/rename_photos_AI/', what: { en: 'Renames specimen photos by reading the handwritten code on each envelope, inside the browser', es: 'Renombra fotos de especímenes leyendo el código escrito a mano en cada sobre, sin salir del navegador' } },
-    { name: 'Database Manager', href: 'https://rapidspeciation.github.io/Shiny_Ikiam_Database_Manager/', what: { en: 'Phone and desktop app for the project’s field, monitoring and insectary records', es: 'App para celular y computadora con los datos de campo, monitoreo e insectario del proyecto' } },
+    { name: 'Wings Gallery', href: 'https://rapidspeciation.github.io/Shiny_Ikiam_Wings_Gallery/', what: { en: 'Wing photos of Ikiam specimens, with an AI that identifies species and subspecies', es: 'Fotos de alas de especímenes de Ikiam, con una IA que identifica especie y subespecie' } },
+    { name: 'AI Photo Processor', href: 'https://fr4nzz.github.io/rename_photos_AI/', what: { en: 'Renames specimen photos by reading the handwritten code on each envelope', es: 'Renombra fotos de especímenes leyendo el código escrito a mano en cada sobre' } },
+    { name: 'Database Manager', href: 'https://rapidspeciation.github.io/Shiny_Ikiam_Database_Manager/', what: { en: 'Field, monitoring and insectary records, from a phone or a computer', es: 'Datos de campo, monitoreo e insectario, desde el celular o la computadora' } },
   ],
 };
 const facilityIntro = locale === 'en'
@@ -116,6 +116,7 @@ const facilityIntro = locale === 'en'
           <a class="btn btn--ghost" href={MAKER.github} target="_blank" rel="noopener noreferrer external">GitHub<Icon name="external" /></a>
         </div>
       </div>
+      <div class="maker-tools">
       <h3 id="about-maker-work" class="subsection-heading content-heading">{pick(MAKER.workLabel, locale)}</h3>
       <ul class="maker-work" role="list" aria-labelledby="about-maker-work">
         {MAKER.work.map((w) => (
@@ -125,6 +126,7 @@ const facilityIntro = locale === 'en'
           </li>
         ))}
       </ul>
+      </div>
     </div>
   </section>
 </Base>
@@ -133,8 +135,12 @@ const facilityIntro = locale === 'en'
   .maker-copy { max-width: var(--measure); }
   .maker-offer { margin-top: var(--space-m); font-weight: 600; color: var(--text-strong); }
   .maker-contact { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-s); margin-top: var(--space-s); }
-  .maker .subsection-heading { margin: var(--space-xl) 0 var(--space-m); }
-  .maker-work { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: var(--space-m); margin: 0; padding: 0; list-style: none; }
+  .maker { display: grid; gap: var(--space-xl); }
+  .maker .subsection-heading { margin: 0 0 var(--space-m); }
+  @media (min-width: 60rem) {
+    .maker { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+  }
+  .maker-work { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: var(--space-s); margin: 0; padding: 0; list-style: none; }
   .maker-work li { display: grid; align-content: start; gap: var(--space-2xs); padding: var(--space-m); }
   .maker-work-name { margin: 0; font-size: var(--step-0); }
   .maker-work-name a { display: inline-flex; align-items: center; gap: 0.35em; color: var(--text-strong); text-decoration: none; }
