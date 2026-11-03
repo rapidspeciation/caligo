@@ -83,6 +83,11 @@ const facilityIntro = locale === 'en'
           {pick(page.network.relationships.end, locale)}
         </p>
       </div>
+
+      <div class="network-block network-block--prose" aria-labelledby="about-website">
+        <h3 id="about-website" class="subsection-heading content-heading">{t.about.websiteHeading}</h3>
+        <p class="prose-para content-body">{t.about.websiteBody}</p>
+      </div>
     </div>
   </section>
 </Base>

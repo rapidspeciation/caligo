@@ -313,6 +313,8 @@ export const en = {
     }
   },
   "about": {
+    "websiteHeading": "This website",
+    "websiteBody": "Designed and maintained by Franz Chandi.",
     "metaTitle": "About | Caligo",
     "metaDescription": "Caligo’s 1,000-genome goal, sequencing facilities and principles for research led from Latin America.",
     "title": "About Caligo",
@@ -409,7 +411,6 @@ export const en = {
     "homeLink": "Back to the home page"
   },
   "footer": {
-    "maintainer": "Website designed and maintained by Franz Chandi",
     "tagline": "A Latin American network building reference genomes for the butterflies and moths of the Neotropics.",
     "rights": "Caligo",
     "navHeading": "Explore",

@@ -310,6 +310,8 @@ export const es: Dict = {
     }
   },
   "about": {
+    "websiteHeading": "Este sitio web",
+    "websiteBody": "Diseñado y mantenido por Franz Chandi.",
     "metaTitle": "Acerca de | Caligo",
     "metaDescription": "La meta de 1.000 genomas de Caligo, sus centros de secuenciación y principios para investigar desde América Latina.",
     "title": "Acerca de Caligo",
@@ -406,7 +408,6 @@ export const es: Dict = {
     "homeLink": "Volver al inicio"
   },
   "footer": {
-    "maintainer": "Sitio web diseñado y mantenido por Franz Chandi",
     "tagline": "Una red latinoamericana que construye genomas de referencia para las mariposas y polillas del Neotrópico.",
     "rights": "Caligo",
     "navHeading": "Explora",
