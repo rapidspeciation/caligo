@@ -30,8 +30,8 @@ const MAKER = {
   github: 'https://github.com/Fr4nzz',
   workLabel: { en: 'Tools built for Ithomiini research', es: 'Herramientas para la investigación de Ithomiini' },
   work: [
-    { name: 'Wings Atlas', href: 'https://rapidspeciation.github.io/ithomiini_maps/', what: { en: 'Interactive map of more than 30,000 Ithomiini butterfly records', es: 'Mapa interactivo de más de 30 000 registros de mariposas Ithomiini' } },
-    { name: 'Wings Gallery', href: 'https://rapidspeciation.github.io/Shiny_Ikiam_Wings_Gallery/', what: { en: 'Wing photographs of the specimens in the Ikiam collection and insectary', es: 'Fotos de alas de los especímenes de la colección y el insectario de Ikiam' } },
+    { name: 'Wings Atlas', href: 'https://rapidspeciation.github.io/ithomiini_maps/', what: { en: 'Interactive map of more than 30,000 Ithomiini butterfly records', es: 'Mapa interactivo de más de 30\u00a0000 registros de mariposas Ithomiini' } },
+    { name: 'Wings Gallery', href: 'https://rapidspeciation.github.io/Shiny_Ikiam_Wings_Gallery/', what: { en: 'Wing photos of the Ikiam specimens, plus an AI identifier: upload a photo and get the species and subspecies, among some 12,000 Neotropical butterflies and moths', es: 'Fotos de alas de los especímenes de Ikiam y un identificador con IA: sube una foto y obtén la especie y subespecie, entre unas 12\u00a0000 mariposas y polillas neotropicales' } },
     { name: 'AI Photo Processor', href: 'https://fr4nzz.github.io/rename_photos_AI/', what: { en: 'Renames specimen photos by reading the handwritten code on each envelope, inside the browser', es: 'Renombra fotos de especímenes leyendo el código escrito a mano en cada sobre, sin salir del navegador' } },
     { name: 'Database Manager', href: 'https://rapidspeciation.github.io/Shiny_Ikiam_Database_Manager/', what: { en: 'Phone and desktop app for the project’s field, monitoring and insectary records', es: 'App para celular y computadora con los datos de campo, monitoreo e insectario del proyecto' } },
   ],
@@ -140,7 +140,7 @@ const facilityIntro = locale === 'en'
   .maker-contact strong { flex-basis: 100%; color: var(--text-strong); }
   .maker-work-label { margin: 0 0 var(--space-xs); font-size: var(--step--1); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); }
   .maker-work { list-style: none; margin: 0; padding: 0; }
-  .maker-work li { display: grid; gap: 0.2rem; }
+  .maker-work li { display: grid; gap: 0.2rem; align-content: start; }
   .maker-work-name { display: inline-flex; align-items: center; gap: 0.35em; width: fit-content; font-weight: 600; color: var(--text-strong); text-decoration: none; }
   .maker-work-name:hover { color: var(--accent-strong); }
   .maker-work-name :global(svg) { flex: none; width: 1em; height: 1em; }
