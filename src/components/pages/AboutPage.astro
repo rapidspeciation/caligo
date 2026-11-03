@@ -21,23 +21,19 @@ const MAKER = {
   heading: { en: 'Who builds this site', es: 'Quién hace este sitio' },
   body: [
     {
-      en: 'Franz Chandi designs and maintains this website. He is an Ecuadorian biologist from Yachay Tech and a master’s student in Tropical Ecology and Conservation at USFQ. As a research assistant to Joana Meier at Ikiam and an intern at the Wellcome Sanger Institute, he worked on the genomics of Ithomiini butterflies, and he is a co-author of the PNAS study on Mechanitis and Melinaea shown on the Science page.',
-      es: 'Franz Chandi diseña y mantiene este sitio web. Es biólogo ecuatoriano de Yachay Tech y estudiante de la Maestría en Ecología Tropical y Conservación de la USFQ. Como asistente de investigación de Joana Meier en Ikiam y pasante en el Wellcome Sanger Institute, trabajó en la genómica de mariposas Ithomiini, y es coautor del estudio de PNAS sobre Mechanitis y Melinaea que aparece en la página de Ciencia.',
-    },
-    {
-      en: 'He builds the software that research needs: for his thesis he trains AI models that identify insects in light-trap photographs from Tiputini, and he makes web tools that turn biodiversity data into something people can explore.',
-      es: 'Construye el software que la investigación necesita: para su tesis entrena modelos de IA que identifican insectos en fotos de trampas de luz de Tiputini, y crea herramientas web que convierten datos de biodiversidad en algo que cualquiera puede explorar.',
+      en: 'Franz Chandi designs and maintains this website. He is an Ecuadorian biologist who works on butterfly genomics and builds software for biodiversity research, from web tools to AI models that identify insects in photographs.',
+      es: 'Franz Chandi diseña y mantiene este sitio web. Es biólogo ecuatoriano, trabaja en genómica de mariposas y desarrolla software para la investigación en biodiversidad, desde herramientas web hasta modelos de IA que identifican insectos en fotos.',
     },
   ],
   offer: { en: 'Need a website or a data tool for your lab or project?', es: '¿Necesitas un sitio web o una herramienta de datos para tu laboratorio o proyecto?' },
   email: 'franz.chandi@gmail.com',
   github: 'https://github.com/Fr4nzz',
-  workLabel: { en: 'Other projects', es: 'Otros proyectos' },
+  workLabel: { en: 'Tools built for Ithomiini research', es: 'Herramientas para la investigación de Ithomiini' },
   work: [
     { name: 'Wings Atlas', href: 'https://rapidspeciation.github.io/ithomiini_maps/', what: { en: 'Interactive map of more than 30,000 Ithomiini butterfly records', es: 'Mapa interactivo de más de 30 000 registros de mariposas Ithomiini' } },
+    { name: 'Wings Gallery', href: 'https://rapidspeciation.github.io/Shiny_Ikiam_Wings_Gallery/', what: { en: 'Wing photographs of the specimens in the Ikiam collection and insectary', es: 'Fotos de alas de los especímenes de la colección y el insectario de Ikiam' } },
     { name: 'AI Photo Processor', href: 'https://fr4nzz.github.io/rename_photos_AI/', what: { en: 'Renames specimen photos by reading the handwritten code on each envelope, inside the browser', es: 'Renombra fotos de especímenes leyendo el código escrito a mano en cada sobre, sin salir del navegador' } },
-    { name: 'Tandayapa Soundscape', href: 'https://fr4nzz.github.io/tandayapa-soundscape/', what: { en: 'Acoustic study of an Ecuadorian cloud forest, with an app to verify detections', es: 'Estudio acústico de un bosque nublado ecuatoriano, con una app para verificar detecciones' } },
-    { name: 'Fundación José Gregorio Hernández 3M', href: 'https://josegregoriohernandez3m.org/', what: { en: 'Website for a foundation in Archidona, Ecuador', es: 'Sitio web de una fundación en Archidona, Ecuador' } },
+    { name: 'Database Manager', href: 'https://rapidspeciation.github.io/Shiny_Ikiam_Database_Manager/', what: { en: 'Phone and desktop app for the project’s field, monitoring and insectary records', es: 'App para celular y computadora con los datos de campo, monitoreo e insectario del proyecto' } },
   ],
 };
 const facilityIntro = locale === 'en'
@@ -121,7 +117,9 @@ const facilityIntro = locale === 'en'
           <a class="text-link" href={MAKER.github} target="_blank" rel="noopener noreferrer external">GitHub<Icon name="external" /></a>
         </p>
       </div>
-      <ul class="maker-work rule-list" role="list" aria-label={pick(MAKER.workLabel, locale)}>
+      <div>
+      <p class="maker-work-label">{pick(MAKER.workLabel, locale)}</p>
+      <ul class="maker-work rule-list" role="list">
         {MAKER.work.map((w) => (
           <li>
             <a class="maker-work-name" href={w.href} target="_blank" rel="noopener noreferrer external">{w.name}<Icon name="external" /></a>
@@ -129,6 +127,7 @@ const facilityIntro = locale === 'en'
           </li>
         ))}
       </ul>
+      </div>
     </div>
   </section>
 </Base>
@@ -139,6 +138,7 @@ const facilityIntro = locale === 'en'
   .maker-copy .prose-para + .prose-para { margin-top: var(--space-s); }
   .maker-contact { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2xs) var(--space-m); margin-top: var(--space-m); }
   .maker-contact strong { flex-basis: 100%; color: var(--text-strong); }
+  .maker-work-label { margin: 0 0 var(--space-xs); font-size: var(--step--1); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); }
   .maker-work { list-style: none; margin: 0; padding: 0; }
   .maker-work li { display: grid; gap: 0.2rem; }
   .maker-work-name { display: inline-flex; align-items: center; gap: 0.35em; width: fit-content; font-weight: 600; color: var(--text-strong); text-decoration: none; }
