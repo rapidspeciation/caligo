@@ -1,9 +1,8 @@
 ---
 import Icon from './Icon.astro';
 import { getDict, type Locale } from '../i18n';
-interface Props { locale: Locale }
-const { locale } = Astro.props;
-const email = getDict(locale).participate.contact.email;
+interface Props { locale: Locale; email?: string }
+const { locale, email = getDict(locale).participate.contact.email } = Astro.props;
 const es = locale === 'es';
 ---
 <div class="email-contact" data-copy-email data-email={email} data-success={es ? 'Correo copiado al portapapeles.' : 'Email copied to clipboard.'} data-failure={es ? 'No se pudo copiar. Selecciona el correo y cópialo manualmente.' : 'Could not copy. Select the email and copy it manually.'}>
