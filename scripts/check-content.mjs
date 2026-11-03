@@ -152,10 +152,12 @@ const banned = [
   { pattern: /discord\.gg\//i, why: 'a Discord invite written into the copy (the last one expired; the link comes from configuration)' },
 ];
 
-// 5. Personal emails: only the approved public contact address is allowed.
+// 5. Personal emails: only the approved public addresses are allowed (the
+// network's, and the site maintainer's on About, which he asked to publish).
 const ALLOWED_EMAIL = 'genomica.neotropical@gmail.com';
+const ALLOWED = [ALLOWED_EMAIL, 'franz.chandi@gmail.com'];
 const emails = [...allText.matchAll(/[\w.+-]+@[\w.-]+\.\w+/g)].map((m) => m[0]);
-const strayEmails = emails.filter((e) => e.toLowerCase() !== ALLOWED_EMAIL);
+const strayEmails = emails.filter((e) => !ALLOWED.includes(e.toLowerCase()));
 if (strayEmails.length) fail(`unexpected email address(es) present: ${[...new Set(strayEmails)].join(', ')}`);
 else pass(`only the approved contact email appears (${ALLOWED_EMAIL})`);
 

@@ -5,7 +5,7 @@ import PrincipleGrid from '../PrincipleGrid.astro';
 import Icon from '../Icon.astro';
 import FacilityTable from '../FacilityTable.astro';
 import { ABOUT_FEEDBACK, ABOUT_LINKS } from '../../data/about-feedback';
-import { facilityStats, pick } from '../../data/initiative';
+import { facilityStats, pick, italicizeSpecies } from '../../data/initiative';
 import { getDict, localePath, type Locale } from '../../i18n';
 
 interface Props {
@@ -16,6 +16,30 @@ const { locale } = Astro.props;
 const t = getDict(locale);
 const page = ABOUT_FEEDBACK;
 const facilityTotals = facilityStats();
+/* Who builds and maintains the site, and what else he has built. */
+const MAKER = {
+  heading: { en: 'Who builds this site', es: 'Quién hace este sitio' },
+  body: [
+    {
+      en: 'Franz Chandi designs and maintains this website. He is an Ecuadorian biologist from Yachay Tech and a master’s student in Tropical Ecology and Conservation at USFQ. As a research assistant to Joana Meier at Ikiam and an intern at the Wellcome Sanger Institute, he worked on the genomics of Ithomiini butterflies, and he is a co-author of the PNAS study on Mechanitis and Melinaea shown on the Science page.',
+      es: 'Franz Chandi diseña y mantiene este sitio web. Es biólogo ecuatoriano de Yachay Tech y estudiante de la Maestría en Ecología Tropical y Conservación de la USFQ. Como asistente de investigación de Joana Meier en Ikiam y pasante en el Wellcome Sanger Institute, trabajó en la genómica de mariposas Ithomiini, y es coautor del estudio de PNAS sobre Mechanitis y Melinaea que aparece en la página de Ciencia.',
+    },
+    {
+      en: 'He builds the software that research needs: for his thesis he trains AI models that identify insects in light-trap photographs from Tiputini, and he makes web tools that turn biodiversity data into something people can explore.',
+      es: 'Construye el software que la investigación necesita: para su tesis entrena modelos de IA que identifican insectos en fotos de trampas de luz de Tiputini, y crea herramientas web que convierten datos de biodiversidad en algo que cualquiera puede explorar.',
+    },
+  ],
+  offer: { en: 'Need a website or a data tool for your lab or project?', es: '¿Necesitas un sitio web o una herramienta de datos para tu laboratorio o proyecto?' },
+  email: 'franz.chandi@gmail.com',
+  github: 'https://github.com/Fr4nzz',
+  workLabel: { en: 'Other projects', es: 'Otros proyectos' },
+  work: [
+    { name: 'Wings Atlas', href: 'https://rapidspeciation.github.io/ithomiini_maps/', what: { en: 'Interactive map of more than 30,000 Ithomiini butterfly records', es: 'Mapa interactivo de más de 30 000 registros de mariposas Ithomiini' } },
+    { name: 'AI Photo Processor', href: 'https://fr4nzz.github.io/rename_photos_AI/', what: { en: 'Renames specimen photos by reading the handwritten code on each envelope, inside the browser', es: 'Renombra fotos de especímenes leyendo el código escrito a mano en cada sobre, sin salir del navegador' } },
+    { name: 'Tandayapa Soundscape', href: 'https://fr4nzz.github.io/tandayapa-soundscape/', what: { en: 'Acoustic study of an Ecuadorian cloud forest, with an app to verify detections', es: 'Estudio acústico de un bosque nublado ecuatoriano, con una app para verificar detecciones' } },
+    { name: 'Fundación José Gregorio Hernández 3M', href: 'https://josegregoriohernandez3m.org/', what: { en: 'Website for a foundation in Archidona, Ecuador', es: 'Sitio web de una fundación en Archidona, Ecuador' } },
+  ],
+};
 const facilityIntro = locale === 'en'
   ? `${facilityTotals.facilities} partner facilities in ${facilityTotals.countries} countries provide access to short-read and long-read sequencing, with local expertise for preparing and analysing genomic data.`
   : `${facilityTotals.facilities} centros asociados en ${facilityTotals.countries} países ofrecen acceso a secuenciación de lecturas cortas y largas, junto con experiencia local para preparar y analizar datos genómicos.`;
@@ -83,16 +107,45 @@ const facilityIntro = locale === 'en'
           {pick(page.network.relationships.end, locale)}
         </p>
       </div>
+    </div>
+  </section>
 
-      <div class="network-block network-block--prose" aria-labelledby="about-website">
-        <h3 id="about-website" class="subsection-heading content-heading">{t.about.websiteHeading}</h3>
-        <p class="prose-para content-body">{t.about.websiteBody}</p>
+  <section class="section section--panel" aria-labelledby="about-maker">
+    <div class="container-wide maker">
+      <div class="maker-copy">
+        <h2 id="about-maker" class="section-heading content-heading">{pick(MAKER.heading, locale)}</h2>
+        {MAKER.body.map((para) => <p class="prose-para content-body" set:html={italicizeSpecies(pick(para, locale))} />)}
+        <p class="maker-contact content-body">
+          <strong>{pick(MAKER.offer, locale)}</strong>
+          <a class="text-link" href={`mailto:${MAKER.email}`}>{MAKER.email}<Icon name="arrow-right" /></a>
+          <a class="text-link" href={MAKER.github} target="_blank" rel="noopener noreferrer external">GitHub<Icon name="external" /></a>
+        </p>
       </div>
+      <ul class="maker-work rule-list" role="list" aria-label={pick(MAKER.workLabel, locale)}>
+        {MAKER.work.map((w) => (
+          <li>
+            <a class="maker-work-name" href={w.href} target="_blank" rel="noopener noreferrer external">{w.name}<Icon name="external" /></a>
+            <span class="maker-work-what">{pick(w.what, locale)}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 </Base>
 
 <style>
+  .maker { display: grid; gap: var(--space-l); align-items: start; }
+  .maker-copy { max-width: var(--measure); }
+  .maker-copy .prose-para + .prose-para { margin-top: var(--space-s); }
+  .maker-contact { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2xs) var(--space-m); margin-top: var(--space-m); }
+  .maker-contact strong { flex-basis: 100%; color: var(--text-strong); }
+  .maker-work { list-style: none; margin: 0; padding: 0; }
+  .maker-work li { display: grid; gap: 0.2rem; }
+  .maker-work-name { display: inline-flex; align-items: center; gap: 0.35em; width: fit-content; font-weight: 600; color: var(--text-strong); text-decoration: none; }
+  .maker-work-name:hover { color: var(--accent-strong); }
+  .maker-work-name :global(svg) { flex: none; width: 1em; height: 1em; }
+  .maker-work-what { color: var(--text-muted); font-size: var(--step--1); line-height: 1.45; }
+  @media (min-width: 60rem) { .maker { grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); column-gap: clamp(2rem, 5vw, 5rem); } }
   .section-heading {
     margin-bottom: var(--space-m);
   }

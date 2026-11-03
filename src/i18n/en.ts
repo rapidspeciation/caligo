@@ -313,8 +313,6 @@ export const en = {
     }
   },
   "about": {
-    "websiteHeading": "This website",
-    "websiteBody": "Designed and maintained by Franz Chandi.",
     "metaTitle": "About | Caligo",
     "metaDescription": "Caligo’s 1,000-genome goal, sequencing facilities and principles for research led from Latin America.",
     "title": "About Caligo",

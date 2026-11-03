@@ -426,6 +426,8 @@ const SCIENTIFIC_NAMES = [
   'H. pardalinus',
   'H. melpomene',
   'Heliconius',
+  'Mechanitis',
+  'Melinaea',
   'Panacea',
   'Parides',
   'sapho',

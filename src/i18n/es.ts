@@ -310,8 +310,6 @@ export const es: Dict = {
     }
   },
   "about": {
-    "websiteHeading": "Este sitio web",
-    "websiteBody": "Diseñado y mantenido por Franz Chandi.",
     "metaTitle": "Acerca de | Caligo",
     "metaDescription": "La meta de 1.000 genomas de Caligo, sus centros de secuenciación y principios para investigar desde América Latina.",
     "title": "Acerca de Caligo",
