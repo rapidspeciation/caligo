@@ -406,6 +406,7 @@ export const es: Dict = {
     "homeLink": "Volver al inicio"
   },
   "footer": {
+    "maintainer": "Sitio web diseñado y mantenido por Franz Chandi",
     "tagline": "Una red latinoamericana que construye genomas de referencia para las mariposas y polillas del Neotrópico.",
     "rights": "Caligo",
     "navHeading": "Explora",

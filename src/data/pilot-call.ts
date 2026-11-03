@@ -1,9 +1,10 @@
 // Source: the Ecuador call flyer supplied by Franz on 13 October 2026. Its
-// QR code leads to the same form the Colombia call used.
+// QR code leads to the same form the Colombia call used. Deadline extended to
+// 15 November 2026 (Nicol's message supplied by Franz on 3 November 2026).
 export const PILOT_APPLICATION_URL: string = 'https://docs.google.com/forms/d/e/1FAIpQLScCX2XIzecHAMZ8lr4lZE1vYkubZawt4zXKywHD9qnJNLIfaw/viewform';
 
 // Last day applications are accepted (inclusive, visitor's local date).
-export const PILOT_DEADLINE = '2026-10-31';
+export const PILOT_DEADLINE = '2026-11-15';
 
 // Calls that have closed, kept on the timeline. Source for Colombia:
 // Nicole's message supplied by Franz on 18 September 2026.
@@ -50,7 +51,8 @@ export const PILOT_INTRO = {
     call: 'Sequencing support for Lepidoptera from Ecuador',
     country: 'Ecuador',
     deadline: 'Application deadline',
-    date: '31 October 2026',
+    date: '15 November 2026',
+    extended: 'Extended from 31 October.',
     description: 'This call funds local research teams to sequence Lepidoptera species native to Ecuador.',
     descriptionClosed: 'This call funded local research teams to sequence Lepidoptera species native to Ecuador.',
     coverage: 'All sequencing expenses are covered. Samples are processed at the Universidad Regional Amazónica Ikiam in Tena and must be delivered before 20 November 2026.',
@@ -70,7 +72,7 @@ export const PILOT_INTRO = {
     share: 'Please share this opportunity with your collaborators.',
     closedNote: 'Register with the network to hear about future calls.',
     chip: {
-      open: 'Open until 31 October',
+      open: 'Open until 15 November',
       days: 'Closes in {n} days',
       tomorrow: 'Closes tomorrow',
       today: 'Closes today',
@@ -105,7 +107,8 @@ export const PILOT_INTRO = {
     call: 'Apoyo para secuenciar lepidópteros de Ecuador',
     country: 'Ecuador',
     deadline: 'Fecha límite de postulación',
-    date: '31 de octubre de 2026',
+    date: '15 de noviembre de 2026',
+    extended: 'Ampliada desde el 31 de octubre.',
     description: 'Esta convocatoria financia a equipos de investigación locales para secuenciar especies de lepidópteros nativas de Ecuador.',
     descriptionClosed: 'Esta convocatoria financió a equipos de investigación locales para secuenciar especies de lepidópteros nativas de Ecuador.',
     coverage: 'Se cubren todos los gastos de secuenciación. Las muestras se procesan en la Universidad Regional Amazónica Ikiam, en Tena, y deben entregarse antes del 20 de noviembre de 2026.',
@@ -125,7 +128,7 @@ export const PILOT_INTRO = {
     share: 'Comparte esta oportunidad con tus colaboradores.',
     closedNote: 'Inscríbete en la red para enterarte de próximas convocatorias.',
     chip: {
-      open: 'Abierta hasta el 31 de octubre',
+      open: 'Abierta hasta el 15 de noviembre',
       days: 'Cierra en {n} días',
       tomorrow: 'Cierra mañana',
       today: 'Cierra hoy',

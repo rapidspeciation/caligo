@@ -409,6 +409,7 @@ export const en = {
     "homeLink": "Back to the home page"
   },
   "footer": {
+    "maintainer": "Website designed and maintained by Franz Chandi",
     "tagline": "A Latin American network building reference genomes for the butterflies and moths of the Neotropics.",
     "rights": "Caligo",
     "navHeading": "Explore",
