@@ -121,9 +121,6 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
       </div>
       <div class="analysis-copy">
         {feedback.analysis.body.map((para) => <p class="prose-para content-body">{para}</p>)}
-        <a class="text-link" href={localePath(locale, '/projects')}>
-          {feedback.analysis.projectsLink}<Icon name="arrow-right" />
-        </a>
       </div>
       </div>
       <div class="analysis-events">
@@ -372,12 +369,10 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   .analysis-section {
     border-block: 1px solid var(--hairline);
   }
+  /* The meetings follow the paragraph they illustrate, a step closer. */
+  .analysis-layout { row-gap: var(--space-m); }
   .analysis-copy {
     max-width: var(--measure);
-  }
-  .analysis-copy .text-link {
-    margin-top: var(--space-m);
-    width: fit-content;
   }
   .analysis-heading-group .section-heading { max-width: 16ch; margin-bottom: 0; }
   .analysis-main { display: grid; gap: var(--space-m); }
@@ -533,7 +528,9 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     }
     .publication-card figcaption { display: flex; flex-direction: column; align-self: stretch; }
     .publication-credit { margin-top: auto; padding-top: var(--space-xs); }
-    .publication-title h3 { font-size: var(--step-0); line-height: 1.3; }
+    /* A touch under body size, so a long sourced title does not run to
+       five lines beside its three-line neighbours. */
+    .publication-title h3 { font-size: 1rem; line-height: 1.28; }
     .publication-index { margin-top: 0.1em; }
     .publication-caption { font-size: var(--step--1); }
   }
