@@ -343,9 +343,10 @@ kbd,
 }
 
 /* A call that has closed reads the same wherever it appears (home
-   timeline, funding archive): dashed status chip, date in the body face
-   and this subdued title. */
-.closed-call-title { color: var(--text-muted); font-weight: 600; }
+   timeline, funding archive): the dashed status chip and the date carry
+   the past state, so the title keeps the strong text colour and stays
+   at least as clear as the paragraph under it. */
+.closed-call-title { color: var(--text-strong); font-weight: 600; }
 
 /* ============================ Buttons ============================
    Two kinds. The primary (plain `.btn`, or `.btn--primary` to say so) is
