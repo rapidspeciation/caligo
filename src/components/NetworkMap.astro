@@ -10,6 +10,7 @@
  */
 import { FACILITIES, EVENTS, pick } from '../data/initiative';
 import { MAP_COUNTRIES, MAP_VIEWBOX, projectLonLat } from '../data/network-map';
+import { MEMBER_COUNTRIES } from '../data/members';
 import { localePath, type Locale } from '../i18n';
 import Icon from './Icon.astro';
 
@@ -23,18 +24,20 @@ const copy = {
   en: {
     heading: 'A network across Latin America',
     intro: 'Eight partner facilities in six countries can sequence Caligo samples close to where they are collected.',
+    members: 'Countries with members',
     facilities: 'Sequencing facilities',
     events: 'Meetings',
-    mapLabel: 'Map of Latin America showing Caligo’s eight partner sequencing facilities and two network events.',
+    mapLabel: 'Map of Latin America showing Caligo’s eight partner sequencing facilities, two network events and the countries where members work.',
     details: 'Platforms and websites',
     source: 'Map: Natural Earth',
   },
   es: {
     heading: 'Una red a lo largo de América Latina',
     intro: 'Ocho centros asociados en seis países pueden secuenciar muestras de Caligo cerca de donde se recolectan.',
+    members: 'Países con miembros',
     facilities: 'Centros de secuenciación',
     events: 'Encuentros',
-    mapLabel: 'Mapa de América Latina con los ocho centros de secuenciación asociados de Caligo y dos eventos de la red.',
+    mapLabel: 'Mapa de América Latina con los ocho centros de secuenciación asociados de Caligo, dos eventos de la red y los países donde trabajan sus miembros.',
     details: 'Plataformas y sitios web',
     source: 'Mapa: Natural Earth',
   },
@@ -93,6 +96,9 @@ for (const site of sites) {
 const bogota = cityLabels.get('Bogotá');
 if (bogota) bogota.y -= 2;
 
+const memberDots = MEMBER_COUNTRIES.filter((m) => m.lonLat).map((m) => ({ name: pick(m, locale), ...projectLonLat(m.lonLat![0], m.lonLat![1]) }));
+const memberNames = MEMBER_COUNTRIES.map((m) => pick(m, locale)).sort((a, b) => a.localeCompare(b, locale));
+
 const events = EVENTS.map((event) => ({ event, ...projectLonLat(event.lonLat[0], event.lonLat[1]) }));
 /* The Bogotá workshop shares its city with two facilities; set it below them. */
 const eventMarks = events.map((e) => {
@@ -135,6 +141,9 @@ const eventMarks = events.map((e) => {
       ))}
     </ul>
 
+    <h3 class="nm-list-title content-label">{copy.members} · {MEMBER_COUNTRIES.length}</h3>
+    <ul class="nm-members" role="list">{memberNames.map((n) => <li>{n}</li>)}</ul>
+
     <a class="text-link nm-more" href={`${localePath(locale, '/about')}#about-facilities`}>
       {copy.details}<Icon name="arrow-right" />
     </a>
@@ -169,6 +178,11 @@ const eventMarks = events.map((e) => {
           </g>
         ))}
       </g>
+      <g class="nm-members-dots" aria-hidden="true">
+        {memberDots.map((m) => (
+          <circle class="nm-member" cx={m.x.toFixed(1)} cy={m.y.toFixed(1)} r="6"><title>{m.name}</title></circle>
+        ))}
+      </g>
       <g class="nm-sites" aria-hidden="true">
         {sites.map((s) => (
           <g class="nm-site" data-site={s.n} transform={`translate(${s.x.toFixed(1)} ${s.y.toFixed(1)})`}>
@@ -182,6 +196,7 @@ const eventMarks = events.map((e) => {
     <figcaption class="nm-caption">
       <span class="nm-key"><span class="nm-key-dot" aria-hidden="true"></span>{copy.facilities}</span>
       <span class="nm-key"><span class="nm-diamond" aria-hidden="true"></span>{copy.events}</span>
+      <span class="nm-key"><span class="nm-key-member" aria-hidden="true"></span>{copy.members}</span>
       <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener noreferrer external">{copy.source}</a>
     </figcaption>
   </figure>
@@ -384,6 +399,12 @@ const eventMarks = events.map((e) => {
     background: var(--accent);
   }
   .nm-caption a { margin-left: auto; color: var(--text-faint); }
+  .nm-members { list-style: none; margin: 0; padding: var(--space-2xs) 0 0; border-top: 1px solid var(--hairline); color: var(--text-muted); font-size: var(--step--1); line-height: 1.6; }
+  .nm-members li { display: inline-block; white-space: nowrap; }
+  .nm-members li:not(:last-child)::after { content: ' ·'; margin-right: 0.35em; }
+  .nm-member { fill: var(--tone-person-sky); stroke: var(--bg); stroke-width: 2.5; }
+  .network-map.has-active .nm-member { opacity: 0.35; }
+  .nm-key-member { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--tone-person-sky); }
 
   @media (max-width: 60rem) {
     .nm-lists .nm-list-title:first-child { margin-top: 0; }
