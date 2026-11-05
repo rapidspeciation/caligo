@@ -13,6 +13,8 @@ const { person, locale } = Astro.props;
 const ties = pick(person.regionalTies, locale).split(' / ');
 const regionalTiesLabel = locale === 'en' ? 'Regional ties' : 'Vínculos regionales';
 const bioLabel = locale === 'en' ? 'Read biography' : 'Leer biografía';
+/* On a phone the row also holds institution, countries and profile link. */
+const moreLabel = locale === 'en' ? 'More about' : 'Más sobre';
 /* The arrow travels with the last word of the profile link. */
 const sourceLabel = pick(person.source.label, locale);
 const sourceCut = sourceLabel.lastIndexOf(' ');
@@ -42,7 +44,7 @@ const base = import.meta.env.BASE_URL;
   </div>
 
   <div class="person-foot">
-    <div class="person-place">
+    <div class="person-place person-wide">
       <p class="person-affil">{person.affiliation}</p>
       <p class="person-region">
         <span class="sr-only">{regionalTiesLabel}: </span>
@@ -50,7 +52,7 @@ const base = import.meta.env.BASE_URL;
       </p>
     </div>
     <a
-      class="person-source card-link"
+      class="person-source person-wide card-link"
       href={person.source.href}
       target="_blank"
       rel="noopener noreferrer external"
@@ -58,12 +60,35 @@ const base = import.meta.env.BASE_URL;
       {sourceHead}<span class="arrow-tail">{sourceTail}<span class="person-source-arrow" aria-hidden="true">↗</span></span>
     </a>
     <!-- The biography waits behind its own row, so eight people fit in
-         about one screen; each row names its person for screen readers. -->
+         about one screen; each row names its person for screen readers.
+         On a phone the row also holds institution, countries and profile
+         link (a second copy, shown only there), so the card is portrait,
+         name and focus. -->
     <details class="disclosure person-more">
       <summary class="disclosure-summary">
-        <span class="disclosure-summary-inner"><span>{bioLabel}<span class="sr-only">: {person.name}</span></span></span>
+        <span class="disclosure-summary-inner">
+          <span class="person-wide">{bioLabel}<span class="sr-only">: {person.name}</span></span>
+          <span class="person-narrow">{moreLabel} {person.name}</span>
+        </span>
       </summary>
       <div class="disclosure-body">
+        <div class="person-narrow person-narrow-place">
+          <div class="person-place">
+            <p class="person-affil">{person.affiliation}</p>
+            <p class="person-region">
+              <span class="sr-only">{regionalTiesLabel}: </span>
+              {ties.map((tie) => <span class="chip chip--sm person-tie">{tie}</span>)}
+            </p>
+          </div>
+          <a
+            class="person-source"
+            href={person.source.href}
+            target="_blank"
+            rel="noopener noreferrer external"
+          >
+            {sourceHead}<span class="arrow-tail">{sourceTail}<span class="person-source-arrow" aria-hidden="true">↗</span></span>
+          </a>
+        </div>
         <p class="person-bio" set:html={italicizeSpecies(pick(person.bio, locale))} />
       </div>
     </details>
@@ -230,7 +255,21 @@ const base = import.meta.env.BASE_URL;
     .person-name { font-size: var(--step-0); }
     .person-role { font-size: var(--step--1); line-height: 1.45; }
   }
+  /* Wide screens show institution, countries and profile link on the
+     card; a phone keeps them in the row below (see markup). */
+  .person-narrow { display: none; }
   @media (max-width: 30rem) {
     .person-card { grid-template-columns: 4rem minmax(0, 1fr); padding: var(--space-s); }
+    .person-wide { display: none; }
+    .person-narrow { display: inline; }
+    .person-narrow-place {
+      display: grid;
+      gap: var(--space-xs);
+      margin-bottom: var(--space-s);
+      padding-bottom: var(--space-s);
+      border-bottom: 1px solid var(--hairline);
+    }
+    .person-foot { grid-template-rows: auto; gap: 0; margin-top: var(--space-xs); padding-top: 0; }
+    .person-more { margin-top: 0; }
   }
 </style>
