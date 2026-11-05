@@ -248,7 +248,6 @@ export const es: Dict = {
     },
     "questions": [
       {
-        "heading": "¿Cómo pueden los cromosomas de las mariposas dividirse y fusionarse sin dejar de funcionar?",
         "teaser": "La mayoría de Heliconius tiene 21 cromosomas; cinco especies del grupo sapho llegan a 60.",
         "answer": [
           "El número de cromosomas se mantiene estable durante millones de años en muchos linajes animales. En algunas mariposas y polillas ocurre algo distinto. La mayoría de las especies de Heliconius tiene 21 cromosomas en el juego haploide, pero cinco especies del grupo sapho llegan a 60 después de fisiones repetidas.",
@@ -257,7 +256,6 @@ export const es: Dict = {
         ]
       },
       {
-        "heading": "¿Siguen conectadas las poblaciones de una mariposa amenazada una década después?",
         "teaser": "En 2016, la mayoría de las poblaciones restantes aún intercambiaba migrantes.",
         "answer": [
           "Parides ascanius está restringida a restingas costeras y humedales del sureste de Brasil. La UICN la evaluó como Vulnerable a nivel global en 2018. La evaluación nacional de Brasil la clasificó En Peligro en 2021.",
@@ -266,7 +264,6 @@ export const es: Dict = {
         ]
       },
       {
-        "heading": "¿Cómo se desplazan las plagas y evoluciona la resistencia en los paisajes sojeros?",
         "teaser": "Polillas de especies muy parecidas pueden diferir en cómo se desplazan y resisten el control.",
         "answer": [
           "En los cultivos de soja de Brasil conviven varias especies cercanas de polillas que pueden ser difíciles de distinguir durante el monitoreo. Identificarlas bien es importante porque su movimiento y su resistencia pueden diferir.",
@@ -275,7 +272,6 @@ export const es: Dict = {
         ]
       },
       {
-        "heading": "Miles de Panacea prola vuelan hacia el noreste. ¿De dónde vienen?",
         "teaser": "De 2.509 Panacea prola contadas en Perú, solo 19 no volaban hacia el noreste.",
         "answer": [
           "En 2020, Gallice y sus colegas registraron 2.509 individuos de Panacea prola durante cincuenta observaciones de una hora en el sureste de Perú. Solo 19 volaron en otra dirección. Los autores presentaron el hallazgo como la primera evidencia de una migración de insectos en la Amazonía.",

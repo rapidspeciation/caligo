@@ -58,7 +58,11 @@ export interface Source {
 export interface Pilot {
   readonly id: string;
   readonly slug: string;
+  /** The project's title, on Pilot projects and as its Science question. */
   readonly heading: Bilingual;
+  /** Only where the Science question asks something the title does not
+      (Heliconius: how vs why); the owner decides whether to merge them. */
+  readonly questionHeading?: Bilingual;
   readonly hook: Bilingual;
   readonly taxon: string;
   readonly publishedContext: Bilingual;
@@ -246,6 +250,10 @@ export const PILOTS: readonly Pilot[] = [
       en: 'Why did Heliconius chromosomes split and fuse?',
       es: '¿Por qué se dividieron y fusionaron los cromosomas de Heliconius?',
     },
+    questionHeading: {
+      en: 'How can butterfly chromosomes split and fuse, yet still work?',
+      es: '¿Cómo pueden los cromosomas de las mariposas dividirse y fusionarse sin dejar de funcionar?',
+    },
     hook: {
       en: 'Most Heliconius have 21 chromosomes in each haploid set. Five species in the sapho group have up to 60.',
       es: 'La mayoría de las especies de Heliconius tiene 21 cromosomas en cada juego haploide. Cinco especies del grupo sapho llegan a 60.',
@@ -289,7 +297,7 @@ export const PILOTS: readonly Pilot[] = [
     slug: 'parides-ascanius',
     heading: {
       en: 'Are a threatened coastal butterfly’s populations still connected?',
-      es: '¿Pueden seguir conectadas las poblaciones de una mariposa costera amenazada?',
+      es: '¿Siguen conectadas las poblaciones de una mariposa costera amenazada?',
     },
     hook: {
       en: 'Parides ascanius is restricted to coastal restinga and wetlands in south-eastern Brazil, where urbanisation and drainage have reduced its habitat.',
@@ -333,8 +341,8 @@ export const PILOTS: readonly Pilot[] = [
     id: 'pilot-soybean',
     slug: 'soybean-lepidoptera',
     heading: {
-      en: 'Pest movement and resistance across soybean landscapes',
-      es: 'Movimiento y resistencia de plagas en los paisajes sojeros',
+      en: 'How do crop pests move and evolve resistance across soybean landscapes?',
+      es: '¿Cómo se desplazan las plagas y evoluciona la resistencia en los paisajes sojeros?',
     },
     hook: {
       en: 'Several similar-looking moth species occur in Brazilian soybean fields. Monitoring their movement or insecticide resistance begins with knowing which species was collected.',
