@@ -191,7 +191,7 @@ export const publicationExamples: readonly PublicationExample[] = [
     figure: {
       src: 'media/figures-published/rosser-2024-fig1e-hybrid-origin.png',
       width: 900,
-      height: 792,
+      height: 764,
       alt: {
         en: 'An evolutionary tree showing Heliconius elevatus arising mainly from H. pardalinus, with a smaller genomic contribution from H. melpomene.',
         es: 'Un árbol evolutivo que muestra el origen de Heliconius elevatus principalmente desde H. pardalinus, con una contribución genómica menor de H. melpomene.',
