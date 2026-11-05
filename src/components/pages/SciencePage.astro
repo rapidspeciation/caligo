@@ -152,6 +152,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
             <figure>
               <a
                 class="publication-image-wrap card-media"
+                style={`--fig-ar: ${publication.figure.width} / ${publication.figure.height}`}
                 href={`${base}${publication.figure.src}`}
                 aria-label={`${feedback.publications.figureLabel}: ${publication.title}`}
                 data-lightbox
@@ -443,7 +444,10 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     grid-area: figure;
     position: relative;
     display: block;
-    aspect-ratio: 4 / 3;
+    /* Each frame takes its figure's own shape, so a tall figure is not
+       shrunk into a wide box; very tall ones are capped. */
+    aspect-ratio: var(--fig-ar, 4 / 3);
+    max-height: 32rem;
     overflow: hidden;
     border: 1px solid var(--hairline);
     border-radius: var(--radius-xs);
