@@ -103,7 +103,8 @@ const memberId = (m: { en: string }) => `m-${m.en.toLowerCase().replace(/[^a-z]+
 const memberDots = MEMBER_COUNTRY_LIST.filter((m) => m.lonLat).map((m) => ({ id: memberId(m), name: pick(m, locale), ...projectLonLat(m.lonLat![0], m.lonLat![1]) }));
 const memberRows = MEMBER_COUNTRY_LIST
   .map((m) => ({ id: memberId(m), name: pick(m, locale), onMap: Boolean(m.lonLat) }))
-  .sort((a, b) => a.name.localeCompare(b.name, locale));
+  /* Countries on the map first, then the hollow-marked ones outside it. */
+  .sort((a, b) => Number(b.onMap) - Number(a.onMap) || a.name.localeCompare(b.name, locale));
 const hasOutside = memberRows.some((m) => !m.onMap);
 
 const events = EVENTS.map((event) => ({ event, ...projectLonLat(event.lonLat[0], event.lonLat[1]) }));
@@ -268,7 +269,7 @@ const eventMarks = events.map((e) => {
        the legend in the viewport. The lists take the rest of the width. */
     .network-map {
       --nm-top: 5rem;
-      --nm-legend: 3.5rem;
+      --nm-legend: 7rem;
       --nm-map-w: min(58%, max(22rem, calc((100svh - var(--nm-top) - var(--nm-legend) - var(--space-s)) * 850 / 895)));
       grid-template-columns: minmax(0, 1fr) var(--nm-map-w);
       grid-template-rows: auto 1fr;
@@ -367,6 +368,15 @@ const eventMarks = events.map((e) => {
       grid-template-rows: repeat(var(--nm-rows-3), auto);
     }
   }
+  /* Beside the map the list column is narrow until wide screens: two columns,
+     so names such as "Estados Unidos" do not wrap. */
+  @media (min-width: 60rem) and (max-width: 75rem) {
+    .nm-members {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(var(--nm-rows-2), auto);
+    }
+  }
+  .nm-item--outside.is-active { background: none; }
   .nm-item--member { padding-block: 0.4rem; gap: 0.8rem; }
   .nm-item--member .nm-item-name { font-weight: 500; color: var(--text); }
   .nm-mark {
@@ -489,7 +499,7 @@ const eventMarks = events.map((e) => {
   }
   .nm-caption a { margin-left: auto; color: var(--text-faint); }
   .nm-member { fill: var(--tone-person-sky); stroke: var(--bg); stroke-width: 2.5; transition: r var(--transition); }
-  .nm-mhalo { fill: var(--tone-person-sky); opacity: 0; transition: opacity var(--transition); }
+  .nm-mhalo { fill: var(--tone-person-sky); opacity: 0; pointer-events: all; transition: opacity var(--transition); }
   .nm-mdot { transition: opacity var(--transition); }
   .network-map.has-active .nm-mdot:not(.is-active) { opacity: 0.35; }
   .nm-mdot.is-active .nm-mhalo { opacity: 0.35; }

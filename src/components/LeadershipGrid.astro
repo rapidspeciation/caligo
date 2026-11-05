@@ -26,7 +26,11 @@ const { locale } = Astro.props;
   @media (min-width: 40rem) {
     .leadership-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
-  @media (min-width: 72rem) {
+  @media (min-width: 64rem) {
+    .leadership-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  /* Four to a row only once each card keeps a readable text column. */
+  @media (min-width: 82rem) {
     .leadership-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   }
   /* While a biography is open, each card takes its own height, so the
