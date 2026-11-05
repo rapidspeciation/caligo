@@ -105,7 +105,7 @@ const facilityIntro = locale === 'en'
     </div>
   </section>
 
-  <section class="section" aria-labelledby="about-maker">
+  <section class="section section--colophon" aria-labelledby="about-maker">
     <div class="container-wide maker">
       <div class="maker-copy">
         <h2 id="about-maker" class="section-heading content-heading">{pick(MAKER.heading, locale)}</h2>
@@ -139,6 +139,9 @@ const facilityIntro = locale === 'en'
      headings, flat tool cards (outline kept, no raised shadow) and tighter
      spacing, so the sections about Caligo stay ahead of it. */
   .maker { display: grid; gap: var(--space-l); padding-top: var(--space-l); border-top: 1px solid var(--hairline); }
+  /* The network section above already ends on its own bottom padding, so
+     the colophon starts at its hairline: one rhythm unit on each side. */
+  .section--colophon { padding-top: 0; }
   .maker .section-heading { font-size: var(--step-1); margin-bottom: var(--space-s); }
   /* Both column headings at one size, so they share a top line and a baseline. */
   .maker .subsection-heading { margin: 0 0 var(--space-s); font-size: var(--step-1); }
