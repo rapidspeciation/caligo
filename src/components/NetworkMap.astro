@@ -269,7 +269,8 @@ const eventMarks = events.map((e) => {
        the legend in the viewport. The lists take the rest of the width. */
     .network-map {
       --nm-top: 5rem;
-      --nm-legend: 7rem;
+      /* Legend plus a little air below the attribution on short laptops. */
+      --nm-legend: 8rem;
       --nm-map-w: min(58%, max(22rem, calc((100svh - var(--nm-top) - var(--nm-legend) - var(--space-s)) * 850 / 895)));
       grid-template-columns: minmax(0, 1fr) var(--nm-map-w);
       grid-template-rows: auto 1fr;
@@ -369,8 +370,8 @@ const eventMarks = events.map((e) => {
     }
   }
   /* Beside the map the list column is narrow until wide screens: two columns,
-     so names such as "Estados Unidos" do not wrap. */
-  @media (min-width: 60rem) and (max-width: 75rem) {
+     so names such as "Estados Unidos" or "Guayana Francesa" do not wrap. */
+  @media (min-width: 60rem) and (max-width: 82rem) {
     .nm-members {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       grid-template-rows: repeat(var(--nm-rows-2), auto);
