@@ -38,19 +38,19 @@ const base = import.meta.env.BASE_URL;
 
   <div class="person-foot">
     <div class="person-place">
-      <p class="person-affil mono">{person.affiliation}</p>
+      <p class="person-affil">{person.affiliation}</p>
       <p class="person-region">
         <span class="sr-only">{regionalTiesLabel}: </span>
         {ties.map((tie) => <span class="chip chip--sm person-tie">{tie}</span>)}
       </p>
     </div>
     <a
-      class="person-source card-link mono"
+      class="person-source card-link"
       href={person.source.href}
       target="_blank"
       rel="noopener noreferrer external"
     >
-      {pick(person.source.label, locale)} <span class="person-source-arrow" aria-hidden="true">↗</span>
+      {pick(person.source.label, locale)}<span class="person-source-arrow" aria-hidden="true">↗</span>
     </a>
   </div>
 </article>
@@ -82,15 +82,14 @@ const base = import.meta.env.BASE_URL;
     margin-top: var(--space-s);
     padding-top: var(--space-s);
     border-top: 1px solid var(--hairline);
-    /* Place on the left, profile link pinned bottom right on every card:
-       a long link wraps inside its column instead of dropping to a new row. */
+    /* Institution, regional ties, then the profile link on a line of its
+       own, so the link reads as one phrase instead of wrapping in a corner. */
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, max-content);
-    align-items: end;
-    gap: var(--space-xs) var(--space-m);
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: var(--space-xs);
   }
   .person-place { display: grid; gap: 0.2rem; min-width: 0; }
-  .person-source { text-align: right; max-width: 14rem; }
   /* Portraits come from different sources (studio, field, lab). One crop
      anchored on the upper third and a light shared grade make them read
      as a single set without altering anyone's likeness. */
@@ -151,9 +150,9 @@ const base = import.meta.env.BASE_URL;
   .person-affil {
     margin: 0;
     font-size: var(--step--1);
+    font-weight: 560;
     color: var(--text);
-    letter-spacing: 0.01em;
-    line-height: 1.45;
+    line-height: 1.4;
   }
   .person-region {
     margin: 0.2rem 0 0;
@@ -168,13 +167,18 @@ const base = import.meta.env.BASE_URL;
     transition: background var(--transition), border-color var(--transition);
   }
   .person-source {
-    color: var(--accent);
-    font-size: var(--step--2);
-    letter-spacing: 0.02em;
+    justify-self: start;
+    color: var(--link);
+    font-size: var(--step--1);
+    font-weight: 560;
+    line-height: 1.4;
     text-decoration: underline;
-    text-decoration-color: color-mix(in oklab, var(--accent) 35%, transparent);
+    text-decoration-color: color-mix(in oklab, var(--link) 40%, transparent);
     text-underline-offset: 0.18em;
   }
+  /* On the dark card the brighter rust (8:1) keeps the link legible. */
+  :global([data-mode='dark']) .person-source { color: var(--accent-strong); }
+  .person-source-arrow { margin-left: 0.3em; }
   .person-source-arrow { display: inline-block; transition: transform var(--dur-quick) var(--ease-glide); }
   /* Raised (see global.css, "Card behaviour"): the portrait drops its warm
      grade, the country chips fill in and the arrow leaves. */
@@ -187,7 +191,26 @@ const base = import.meta.env.BASE_URL;
     .person-card:hover .person-photo { filter: none; }
     .person-card:hover .person-media::after { opacity: 0; }
     .person-card:hover .person-tie { background: color-mix(in oklab, var(--card-tone) 34%, transparent); border-color: var(--card-tone); }
-    .person-card:hover .person-source { color: var(--accent-strong); text-decoration-color: currentColor; }
+    .person-card:hover .person-source { color: var(--link-hover); text-decoration-color: currentColor; }
     .person-card:hover .person-source-arrow { transform: translate(2px, -2px); }
+  }
+
+  /* Phones: a small portrait beside the name and role, then the biography
+     and the footer across the full card width. */
+  @media (max-width: 30rem) {
+    .person-card {
+      grid-row: auto;
+      grid-template-rows: none;
+      grid-template-areas: none;
+      grid-template-columns: 4rem minmax(0, 1fr);
+      column-gap: var(--space-s);
+      row-gap: 0.3rem;
+    }
+    .person-media { grid-column: 1; grid-row: 1 / span 2; }
+    .person-content { display: contents; }
+    .person-name { grid-column: 2; grid-row: 1; align-self: end; margin: 0; }
+    .person-role { grid-column: 2; grid-row: 2; align-self: start; }
+    .person-bio { grid-column: 1 / -1; grid-row: 3; margin-top: var(--space-2xs); }
+    .person-foot { grid-column: 1 / -1; grid-row: 4; }
   }
 </style>
