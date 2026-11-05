@@ -303,7 +303,9 @@ export const PROJECTS: Project[] = [
 export type Facility = {
   institution: string;
   country: Bilingual;
-  platforms: string; // platform names kept literal in both languages
+  /** Instrument names stay literal in both languages; a list with a note
+      in words is bilingual. */
+  platforms: string | Bilingual;
   websites: { label: string; href: string }[];
   /** City of the institution's main campus, used to place it on the network map. */
   city: Bilingual;
@@ -333,7 +335,10 @@ export const FACILITIES: Facility[] = [
     city: { en: 'Panama City', es: 'Ciudad de Panamá' },
     lonLat: [-79.54, 8.95],
     country: { en: 'Panama', es: 'Panamá' },
-    platforms: 'NextSeq 2000, MinION, PromethION (Hi-C expertise planned)',
+    platforms: {
+      en: 'NextSeq 2000, MinION, PromethION (Hi-C expertise planned)',
+      es: 'NextSeq 2000, MinION, PromethION (experiencia en Hi-C prevista)',
+    },
     websites: [{ label: 'stri.si.edu', href: 'https://stri.si.edu/' }],
   },
   {

@@ -24,6 +24,14 @@ function splitPlatforms(text: string): string[] {
   return out;
 }
 
+// "PromethION (Hi-C expertise planned)": the instrument becomes the tag and
+// the note in brackets follows it as plain text, so a long note wraps as
+// words instead of stretching the tag.
+function splitNote(platform: string): { name: string; note?: string } {
+  const m = platform.match(/^(.*?)\s*\((.+)\)$/);
+  return m ? { name: m[1], note: m[2] } : { name: platform };
+}
+
 
 const labels = {
   caption:     { en: 'Partner facilities', es: 'Centros asociados' },
@@ -52,7 +60,9 @@ const labels = {
           <td class="cell-country">{pick(facility.country, locale)}</td>
           <td class="cell-platforms">
             <ul class="platform-list" role="list">
-              {splitPlatforms(facility.platforms).map((platform) => <li class="chip chip--sm chip--mono platform">{platform}</li>)}
+              {splitPlatforms(typeof facility.platforms === 'string' ? facility.platforms : pick(facility.platforms, locale)).map(splitNote).map(({ name, note }) => (
+                <li class="platform-item"><span class="chip chip--sm chip--mono platform">{name}</span>{note && <span class="platform-note">({note})</span>}</li>
+              ))}
             </ul>
           </td>
           <td class="cell-website">
@@ -132,7 +142,9 @@ const labels = {
     list-style: none;
   }
   /* Instrument tags read at the table's own size and wrap like words. */
+  .platform-item { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; }
   .platform { font-size: var(--step--1); white-space: normal; }
+  .platform-note { font-size: var(--step--1); color: var(--text-muted); }
   .cell-website {
     display: grid;
     gap: 0.35rem;
