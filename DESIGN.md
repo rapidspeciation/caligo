@@ -47,7 +47,7 @@
 - Color: Caligo’s warm neutral palette with a burnt-orange accent; hero copy uses fixed ivory on a matte near-black field
 - Brand emblem: the extracted mark is transparent on light surfaces; dark mode supplies the logo’s original ivory matte so its negative-space wing markings keep the same colour in both modes
 - Social previews: use the dedicated 1200 x 630 text-free share card, with the complete emblem centred inside a square crop-safe area; never rely on a favicon, touch icon, or full logo lockup as a platform fallback
-- Typography: Space Grotesk for display, Inter for prose and UI, JetBrains Mono for labels and provenance. Shared editorial roles in `global.css` define one cross-page hierarchy: heading (`--step-2`), lead and body (`--step-0`), metadata (`--step--1`), and uppercase labels (`--step--2`). Page components own layout and emphasis, not independent type scales. Home editorial sections remain an intentional restrained local exception so ordinary laptop viewports do not feel browser-zoomed.
+- Typography: Space Grotesk for display, Inter for prose and UI, JetBrains Mono for spaced uppercase labels, DNA bases, instrument chips and numbered indexes; dates, places, photo credits and citations are prose and use Inter. Shared editorial roles in `global.css` define one cross-page hierarchy: heading (`--step-2`), lead and body (`--step-0`), metadata (`--step--1`), and uppercase labels (`--step--2`). Page components own layout and emphasis, not independent type scales. Home editorial sections remain an intentional restrained local exception so ordinary laptop viewports do not feel browser-zoomed.
 - Spacing/layout rhythm: wide specimen-plate compositions followed by restrained content sections
 - Shape/radius/elevation: hairlines, small radii, and minimal elevation
 - Motion: user-controlled only when sequence matters; final-state comparison diagrams remain static; no generic entrance animation
@@ -177,3 +177,10 @@ The four explainers:
 Every such card lifts on hover, sinks when pressed, takes the hover look on touch screens when it passes mid-screen (`.is-near`), shows a focus ring and holds still under reduced motion. A card without `data-card` does none of this, so a card that lifts is always a card that does something.
 
 Do not re-implement lift, press, cover links, photo zoom or the touch behaviour inside a component. Add `data-card` and, if needed, style only what is specific to that card while it is raised.
+
+## Actions and colour, November 2026
+
+- One light-theme rust, `#A44A14` (`--c-burnt-600`), for links, labels, the nav Join, the funding banner and every primary button: 5.5:1 on cream, 5.8:1 on paper, 5.9:1 under white text.
+- One primary button (`.btn`, or `.btn--primary`): rust with white text in light, `#E38249` with dark text in dark, on cream, on pastel cards and over the hero. Its colours are captured on the root (`--btn-primary-bg/fg`), so a pastel card's ink `--accent` never repaints it. The secondary (`.btn--ghost`) is outlined with no fill and no shadow. Card outlines and offsets are unchanged.
+- Labels that end in an arrow and may wrap use `ArrowText` with `.text-link--wrap`, so the arrow stays with the last word.
+- Home leadership shows portrait, name, focus, institution, countries and profile link; each biography sits behind its own "Leer biografía" row.
