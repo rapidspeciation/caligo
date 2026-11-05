@@ -340,13 +340,13 @@ const eventMarks = events.map((e) => {
   /* On the dark page a faint land fill disappears: lift the land and its
      borders so the continent stands clear of the background. */
   :global([data-mode='dark']) .nm-country {
-    fill: color-mix(in oklab, var(--text-muted) 24%, var(--bg));
-    stroke: color-mix(in oklab, var(--text-muted) 62%, transparent);
-    stroke-width: 0.9;
+    fill: color-mix(in oklab, var(--text-muted) 32%, var(--bg));
+    stroke: color-mix(in oklab, var(--text-muted) 80%, transparent);
+    stroke-width: 1;
   }
   :global([data-mode='dark']) .nm-country--active {
-    fill: color-mix(in oklab, var(--accent) 23%, var(--bg));
-    stroke: color-mix(in oklab, var(--accent) 70%, transparent);
+    fill: color-mix(in oklab, var(--accent) 30%, var(--bg));
+    stroke: color-mix(in oklab, var(--accent) 85%, transparent);
   }
   /* On a phone the place names would be a few pixels tall: the numbered
      list beside the map carries them instead. */
@@ -402,7 +402,8 @@ const eventMarks = events.map((e) => {
     align-items: center;
     gap: 0.4rem 1.2rem;
     font-size: var(--step--2);
-    color: var(--text-faint);
+    /* The legend is read, not decoration: normal secondary text colour. */
+    color: var(--text-muted);
   }
   .nm-key { display: inline-flex; align-items: center; gap: 0.45rem; }
   .nm-key .nm-diamond { margin-inline: 0.1rem; width: 0.55rem; height: 0.55rem; }
