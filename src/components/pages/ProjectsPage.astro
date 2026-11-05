@@ -265,8 +265,7 @@ const callClosed = isCallClosed();
 
   /* Desktop: a compact row. The photograph and its credit fill the left
      column; question, proposal, leads and the background row fill the
-     right, so the two columns end at about the same height and the next
-     project starts sooner. */
+     right, so the next project starts sooner. */
   @media (min-width: 68rem) {
     .pilot {
       grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
@@ -278,7 +277,9 @@ const callClosed = isCallClosed();
     }
     .pilot-media { grid-area: media; }
     .pilot-text { grid-area: text; }
-    .pilot-more { grid-area: more; align-self: end; margin-top: var(--space-xs); }
+    /* The background row follows the leads on every card; when the photo
+       runs taller, the spare room falls below it, not above. */
+    .pilot-more { grid-area: more; align-self: start; margin-top: var(--space-xs); }
     .pilot-more-body {
       grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
       column-gap: var(--space-l);
