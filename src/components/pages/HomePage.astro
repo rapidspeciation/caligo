@@ -8,7 +8,6 @@ import LeadershipGrid from '../LeadershipGrid.astro';
 import { ABOUT_FEEDBACK } from '../../data/about-feedback';
 import { pick } from '../../data/initiative';
 import Icon from '../Icon.astro';
-import ArrowText from '../ArrowText.astro';
 import CommunityStats from '../CommunityStats.astro';
 import Timeline from '../Timeline.astro';
 import NetworkMap from '../NetworkMap.astro';
@@ -63,10 +62,10 @@ const desktopSrcset = [
             </a>
             <div class="hero-more">
               <a class="hero-text-link" href={localePath(locale, '/science')}>
-                <ArrowText text={h.hero.scienceAction} />
+                <span class="hero-text-label">{h.hero.scienceAction}</span><Icon name="arrow-right" />
               </a>
               <a class="hero-text-link" href={localePath(locale, '/projects')}>
-                <ArrowText text={h.hero.projectsAction} />
+                <span class="hero-text-label">{h.hero.projectsAction}</span><Icon name="arrow-right" />
               </a>
             </div>
           </div>
@@ -284,8 +283,13 @@ const desktopSrcset = [
     gap: 0.45rem;
     margin-top: 1rem;
   }
+  /* Text in one column, the arrow in its own fixed column beside the first
+     line, so a label that wraps on a phone stays a tidy block. */
   .hero-text-link {
-    display: block;
+    display: grid;
+    grid-template-columns: minmax(0, auto) 1em;
+    column-gap: 0.4em;
+    align-items: start;
     /* Uses the full text panel and sits a touch below body size so the
        longer question fits one line at desktop widths. */
     max-width: 100%;
@@ -295,13 +299,23 @@ const desktopSrcset = [
     color: #D8D1C5;
     font-weight: 420;
     line-height: 1.35;
+    text-decoration: none;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+  }
+  .hero-text-label {
     text-decoration: underline;
     text-decoration-color: color-mix(in oklab, #D8D1C5 45%, transparent);
     text-underline-offset: 0.3em;
-    text-shadow: 0 1px 8px rgba(0,0,0,0.5);
   }
-  .hero-text-link:hover { color: #FFFFFF; text-decoration-color: currentColor; }
-  .hero-text-link :global(svg) { width: 1em; height: 1em; }
+  .hero-text-link:hover { color: #FFFFFF; }
+  .hero-text-link:hover .hero-text-label { text-decoration-color: currentColor; }
+  .hero-text-link :global(svg) { width: 1em; height: 1em; margin-top: 0.18em; }
+  /* Phones, where the question wraps: both arrows share one column at the
+     right of the text, so the two links read as a matched pair. */
+  @media (max-width: 40rem) {
+    .hero-more { grid-template-columns: minmax(0, 1fr) 1em; column-gap: 0.4em; justify-items: stretch; }
+    .hero-text-link { grid-column: 1 / -1; grid-template-columns: subgrid; }
+  }
   .hero-attribution {
     position: absolute;
     z-index: 3;
