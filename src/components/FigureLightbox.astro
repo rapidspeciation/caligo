@@ -6,8 +6,10 @@
  * While open: the page behind cannot scroll (the root stops scrolling and
  * takes the scrollbar's width as padding, so nothing shifts), the backdrop
  * covers the whole window, and the figure with its caption fits the
- * window. It closes with Escape, the close button or a click outside the
- * figure; focus stays inside (native modal) and returns to the link that
+ * window. "View full size" (or a click on the figure) shows it at its own
+ * pixels in a panel that scrolls and can be dragged; a link opens the
+ * original file. It closes with Escape, the close button or a click outside
+ * the figure; focus stays inside (native modal) and returns to the link that
  * opened it.
  */
 import Icon from './Icon.astro';
@@ -21,11 +23,24 @@ const t = getDict(locale);
 ---
 
 <dialog class="lightbox" data-lightbox-dialog aria-label={t.common.close}>
-  <button type="button" class="lightbox-close" data-lightbox-close aria-label={t.common.close}>
-    <Icon name="close" />
-  </button>
+  <div class="lightbox-head" data-lightbox-head>
+    <div class="lightbox-actions">
+      <button type="button" class="lightbox-zoom" data-lightbox-zoom hidden>
+        <span class="lightbox-zoom-in"><Icon name="zoom-in" />{t.lightbox.fullSize}</span>
+        <span class="lightbox-zoom-out"><Icon name="zoom-out" />{t.lightbox.fitToScreen}</span>
+      </button>
+      <a class="lightbox-original" data-lightbox-original href="#" target="_blank" rel="noopener">
+        {t.lightbox.openOriginal}<Icon name="external" />
+      </a>
+    </div>
+    <button type="button" class="lightbox-close" data-lightbox-close aria-label={t.common.close} autofocus>
+      <Icon name="close" />
+    </button>
+  </div>
   <figure class="lightbox-figure">
-    <img data-lightbox-img alt="" />
+    <div class="lightbox-view" data-lightbox-view>
+      <img data-lightbox-img alt="" />
+    </div>
     <figcaption class="lightbox-caption" data-lightbox-caption></figcaption>
   </figure>
 </dialog>
@@ -38,15 +53,55 @@ const t = getDict(locale);
       dialog.dataset.ready = '1';
       var root = document.documentElement;
       var img = dialog.querySelector('[data-lightbox-img]');
+      var view = dialog.querySelector('[data-lightbox-view]');
+      var head = dialog.querySelector('[data-lightbox-head]');
       var caption = dialog.querySelector('[data-lightbox-caption]');
+      var zoom = dialog.querySelector('[data-lightbox-zoom]');
+      var original = dialog.querySelector('[data-lightbox-original]');
       var trigger = null;
 
-      /* The caption's height decides how tall the image may be. */
+      /* The head row and the caption decide how tall the image may be. */
       function measure() {
+        dialog.style.setProperty('--lightbox-head-h', head.offsetHeight + 'px');
         dialog.style.setProperty('--lightbox-caption-h', (caption.hidden ? 0 : caption.offsetHeight) + 'px');
       }
-      /* Twice: the image's width sets the caption's line count. */
-      function fit() { measure(); measure(); }
+      /* Offer full size only when the fitted figure is smaller than the file. */
+      function offerZoom() {
+        if (dialog.classList.contains('is-zoomed')) { zoom.hidden = false; return; }
+        if (!img.naturalWidth) { zoom.hidden = true; return; }
+        zoom.hidden = img.naturalWidth <= img.clientWidth + 2 && img.naturalHeight <= img.clientHeight + 2;
+      }
+      /* Until it settles: the image's width sets the caption's line count,
+         which sets the image's height and so its width. */
+      function fit() {
+        var last = '';
+        for (var i = 0; i < 6; i++) {
+          measure();
+          if (i === 1) offerZoom();
+          var now = img.clientWidth + 'x' + img.clientHeight + ':' + head.offsetHeight + ':' + caption.offsetHeight;
+          if (now === last) break;
+          last = now;
+        }
+        offerZoom();
+      }
+      /* Full size: the figure at its own pixels in a panel that scrolls,
+         and can be dragged with the mouse. `at` keeps a clicked point
+         under the pointer. */
+      function setZoom(on, at) {
+        var rect = img.getBoundingClientRect();
+        dialog.classList.toggle('is-zoomed', on);
+        view.tabIndex = on ? 0 : -1;
+        fit();
+        if (!on) { view.scrollLeft = 0; view.scrollTop = 0; return; }
+        if (at && rect.width) {
+          var box = view.getBoundingClientRect();
+          view.scrollLeft = (at.x - rect.left) / rect.width * img.naturalWidth - (at.x - box.left);
+          view.scrollTop = (at.y - rect.top) / rect.height * img.naturalHeight - (at.y - box.top);
+        } else {
+          view.scrollLeft = 0;
+          view.scrollTop = 0;
+        }
+      }
       function lock() {
         var gutter = window.innerWidth - root.clientWidth;
         root.style.setProperty('--lightbox-gutter', Math.max(0, gutter) + 'px');
@@ -63,8 +118,12 @@ const t = getDict(locale);
           event.preventDefault();
           trigger = link;
           var thumb = link.querySelector('img');
+          dialog.classList.remove('is-zoomed');
+          view.tabIndex = -1;
+          zoom.hidden = true;
           img.src = link.getAttribute('href');
           img.alt = thumb ? thumb.alt : '';
+          original.href = link.getAttribute('href');
           caption.textContent = link.getAttribute('data-caption') || '';
           caption.hidden = !caption.textContent;
           dialog.setAttribute('aria-label', link.getAttribute('aria-label') || img.alt || '');
@@ -75,13 +134,45 @@ const t = getDict(locale);
       });
 
       dialog.querySelector('[data-lightbox-close]').addEventListener('click', function () { dialog.close(); });
+      zoom.addEventListener('click', function () { setZoom(!dialog.classList.contains('is-zoomed')); });
+
+      /* Mouse drag pans the full-size figure; touch scrolls natively. */
+      var drag = null;
+      var dragged = false;
+      view.addEventListener('pointerdown', function (event) {
+        dragged = false;
+        if (event.pointerType !== 'mouse' || event.button !== 0 || !dialog.classList.contains('is-zoomed')) return;
+        drag = { x: event.clientX, y: event.clientY, left: view.scrollLeft, top: view.scrollTop };
+        view.setPointerCapture(event.pointerId);
+        event.preventDefault();
+      });
+      view.addEventListener('pointermove', function (event) {
+        if (!drag) return;
+        var dx = event.clientX - drag.x;
+        var dy = event.clientY - drag.y;
+        if (Math.abs(dx) + Math.abs(dy) > 4) { dragged = true; view.classList.add('is-dragging'); }
+        view.scrollLeft = drag.left - dx;
+        view.scrollTop = drag.top - dy;
+      });
+      function endDrag() { drag = null; view.classList.remove('is-dragging'); }
+      view.addEventListener('pointerup', endDrag);
+      view.addEventListener('pointercancel', endDrag);
+      /* A click on the figure switches between fitted and full size. */
+      img.addEventListener('click', function (event) {
+        if (dragged) { dragged = false; return; }
+        if (zoom.hidden) return;
+        var on = !dialog.classList.contains('is-zoomed');
+        setZoom(on, on ? { x: event.clientX, y: event.clientY } : null);
+      });
+
       /* A click on the backdrop or the panel's margin closes; a click on
-         the image, the caption or the button does not. */
+         the image, the caption or the controls does not. */
       dialog.addEventListener('click', function (event) {
         if (event.target === dialog || event.target.classList.contains('lightbox-figure')) dialog.close();
       });
       dialog.addEventListener('close', function () {
         unlock();
+        dialog.classList.remove('is-zoomed');
         if (trigger && document.contains(trigger)) trigger.focus({ preventScroll: true });
         trigger = null;
       });
@@ -126,10 +217,16 @@ const t = getDict(locale);
   .lightbox {
     --lightbox-margin: clamp(0.5rem, 2vw, 1.5rem);
     --lightbox-pad: clamp(0.5rem, 1.5vw, var(--space-m));
-    /* A strip above the figure holds the close button, so it never
-       covers any part of the figure. */
-    --lightbox-bar: 2.25rem;
-    --lightbox-bar-gap: var(--space-2xs);
+    --lightbox-gap: var(--space-xs);
+    --lightbox-btn: 2.25rem;
+    /* Room left for the image once margins, padding, the head row, the
+       caption and the gaps between them are taken. */
+    --lightbox-avail-w: calc(100vw - 2 * var(--lightbox-margin) - 2 * var(--lightbox-pad) - 2px);
+    --lightbox-avail-h: max(10rem, calc(
+      100dvh - 2 * var(--lightbox-margin) - 2 * var(--lightbox-pad) - 2px
+      - var(--lightbox-head-h, 2.25rem) - var(--space-2xs)
+      - var(--lightbox-caption-h, 0px) - var(--lightbox-gap)
+    ));
     width: fit-content;
     /* Never narrower than a readable caption, even before the image loads. */
     min-width: min(100vw - 2 * var(--lightbox-margin), 30rem);
@@ -137,13 +234,17 @@ const t = getDict(locale);
     max-height: calc(100dvh - 2 * var(--lightbox-margin));
     margin: auto;
     padding: var(--lightbox-pad);
-    padding-top: calc(var(--lightbox-pad) + var(--lightbox-bar) + var(--lightbox-bar-gap));
     overflow: hidden;
     overscroll-behavior: contain;
     border: 1px solid var(--hairline-strong);
     border-radius: var(--radius);
     background: var(--bg-panel);
     color: var(--text);
+  }
+  /* Full size takes the whole window; the figure scrolls inside it. */
+  .lightbox.is-zoomed {
+    width: calc(100vw - 2 * var(--lightbox-margin));
+    height: calc(100dvh - 2 * var(--lightbox-margin));
   }
   .lightbox[open] { animation: lightbox-in 200ms ease-out; }
   /* Covers the whole window, scrollbar strip included. */
@@ -154,29 +255,99 @@ const t = getDict(locale);
     backdrop-filter: blur(3px);
   }
   .lightbox[open]::backdrop { animation: lightbox-fade 200ms ease-out; }
+
+  /* The head row holds the actions and the close button above the
+     figure, so nothing ever covers it. */
+  .lightbox-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-2xs);
+    /* Wraps to the figure's width instead of widening the panel. */
+    contain: inline-size;
+  }
+  .lightbox-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2xs) var(--space-s);
+    min-width: 0;
+  }
+  .lightbox-zoom,
+  .lightbox-original {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    min-height: var(--lightbox-btn);
+    font-size: var(--step--1);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .lightbox-zoom {
+    padding: 0.3rem 0.85rem 0.3rem 0.7rem;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 999px;
+    background: var(--bg-panel);
+    color: var(--text-strong);
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .lightbox-zoom[hidden] { display: none; }
+  .lightbox-zoom-out,
+  .lightbox.is-zoomed .lightbox-zoom-in { display: none; }
+  .lightbox-zoom-in,
+  .lightbox.is-zoomed .lightbox-zoom-out { display: inline-flex; align-items: center; gap: 0.4em; }
+  .lightbox-original {
+    color: var(--link);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+  .lightbox-zoom :global(svg),
+  .lightbox-original :global(svg) { flex: none; width: 1em; height: 1em; }
+
   .lightbox-figure {
     display: grid;
     justify-items: center;
-    gap: var(--space-xs);
+    gap: var(--lightbox-gap);
     margin: 0;
+  }
+  .lightbox-view {
+    display: block;
+    max-width: var(--lightbox-avail-w);
+    border-radius: calc(var(--radius) - 2px);
+    background: #fff;
+    overflow: hidden;
   }
   .lightbox-figure img {
     display: block;
     width: auto;
     height: auto;
     /* In window units, not %, so the panel can shrink to the image. */
-    max-width: calc(100vw - 2 * var(--lightbox-margin) - 2 * var(--lightbox-pad) - 2px);
-    /* Window, minus the dialog's margin and padding, the close strip,
-       the gap and the caption. */
-    max-height: max(10rem, calc(
-      100dvh - 2 * var(--lightbox-margin) - 2 * var(--lightbox-pad) - 2px
-      - var(--lightbox-bar) - var(--lightbox-bar-gap)
-      - var(--lightbox-caption-h, 0px) - var(--space-xs)
-    ));
+    max-width: var(--lightbox-avail-w);
+    max-height: var(--lightbox-avail-h);
     object-fit: contain;
-    border-radius: calc(var(--radius) - 2px);
     background: #fff;
   }
+  .lightbox-figure img { cursor: zoom-in; }
+  .lightbox:has(.lightbox-zoom[hidden]) .lightbox-figure img { cursor: auto; }
+  .lightbox.is-zoomed .lightbox-figure { justify-items: stretch; }
+  .lightbox.is-zoomed .lightbox-view {
+    width: var(--lightbox-avail-w);
+    height: var(--lightbox-avail-h);
+    overflow: auto;
+    overscroll-behavior: contain;
+    cursor: grab;
+  }
+  .lightbox.is-zoomed .lightbox-view.is-dragging { cursor: grabbing; }
+  .lightbox.is-zoomed .lightbox-figure img {
+    max-width: none;
+    max-height: none;
+    margin: auto;
+    cursor: inherit;
+  }
+  .lightbox-view:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   /* The caption wraps to the image's width instead of widening the panel. */
   .lightbox-caption {
     contain: inline-size;
@@ -187,14 +358,12 @@ const t = getDict(locale);
     line-height: 1.45;
   }
   .lightbox-close {
-    position: absolute;
-    top: var(--lightbox-pad);
-    right: var(--lightbox-pad);
-    z-index: 1;
+    position: relative;
+    flex: none;
     display: grid;
     place-items: center;
-    width: var(--lightbox-bar);
-    height: var(--lightbox-bar);
+    width: var(--lightbox-btn);
+    height: var(--lightbox-btn);
     padding: 0;
     border: 1px solid var(--hairline-strong);
     border-radius: 50%;
@@ -202,10 +371,16 @@ const t = getDict(locale);
     color: var(--text-strong);
     cursor: pointer;
   }
-  /* A 44 px touch target around the visible button. */
+  /* A 44 px touch target around the visible buttons. */
   .lightbox-close::before { content: ''; position: absolute; inset: -0.25rem; }
-  .lightbox-close:hover { border-color: var(--accent); color: var(--accent-strong); }
-  .lightbox-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .lightbox-zoom { position: relative; }
+  .lightbox-zoom::before { content: ''; position: absolute; inset: -0.25rem 0; }
+  .lightbox-close:hover,
+  .lightbox-zoom:hover { border-color: var(--accent); color: var(--accent-strong); }
+  .lightbox-original:hover { color: var(--link-hover); }
+  .lightbox-close:focus-visible,
+  .lightbox-zoom:focus-visible,
+  .lightbox-original:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .lightbox-close :global(svg) { width: 1.1rem; height: 1.1rem; }
   @keyframes lightbox-in {
     from { opacity: 0; transform: scale(0.97); }

@@ -19,6 +19,11 @@ export const es: Dict = {
     "backTo": "Volver a",
     "status": "Estado"
   },
+  "lightbox": {
+    "fullSize": "Ver a tamaño completo",
+    "fitToScreen": "Ajustar a la pantalla",
+    "openOriginal": "Abrir imagen original"
+  },
   "status": {
     "proposedCaligoWork": "Proyecto piloto propuesto",
     "proposedPilot": "Proyecto piloto propuesto"

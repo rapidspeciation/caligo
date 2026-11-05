@@ -22,6 +22,11 @@ export const en = {
     "backTo": "Back to",
     "status": "Status"
   },
+  "lightbox": {
+    "fullSize": "View full size",
+    "fitToScreen": "Fit to screen",
+    "openOriginal": "Open original image"
+  },
   "status": {
     "proposedCaligoWork": "Proposed pilot project",
     "proposedPilot": "Proposed pilot project"
