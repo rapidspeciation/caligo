@@ -277,7 +277,10 @@ const desktopSrcset = [
   }
   .hero-text-link {
     display: block;
-    max-width: 36ch;
+    /* Uses the full text panel and sits a touch below body size so the
+       longer question fits one line at desktop widths. */
+    max-width: 100%;
+    font-size: 0.9em;
     /* A warm grey a step below the button's white: still a clear,
        underlined link (over 7:1 on the darkened photo). */
     color: #D8D1C5;
@@ -494,6 +497,31 @@ const desktopSrcset = [
   .close-copy h2 { max-width: 25ch; }
   @media (max-width: 60rem) { .hero-title { font-size: clamp(2rem, 5vw, 3rem); max-width: 24ch; } .hero-copy { padding-block: 1.25rem; } .hero-overlay { padding-bottom: .5rem; } }
   @media (max-width: 48rem) { .intro-layout { grid-template-columns: 1fr; gap: 2rem; } }
+  /* Phone home: the leadership list and the activity timeline are the
+     longest stacks on the page. Same content, tighter cards. */
+  @media (max-width: 30rem) {
+    #leadership :global(.person-card) {
+      grid-template-columns: 3.25rem minmax(0, 1fr);
+      column-gap: 0.75rem;
+      margin-bottom: var(--space-xs);
+      padding: 0.75rem 0.85rem;
+    }
+    #leadership :global(.person-name) { font-size: var(--step-0); margin-bottom: 0; }
+    #leadership :global(.person-role) { font-size: var(--step--1); }
+    #leadership :global(.person-content) { gap: 0.2rem; }
+    #leadership :global(.person-foot) { margin-top: 0.5rem; }
+    #leadership :global(.person-more > .disclosure-summary) { padding-block: 0.55rem; }
+  }
+  @media (max-width: 40rem) {
+    #activity :global(.timeline-list--compact) { --gap: 0.7rem; }
+    #activity :global(.timeline-item) { gap: 0.2rem; padding: 0.85rem 0.95rem 0.95rem; }
+    #activity :global(.timeline-when) { gap: 0.3rem 0.55rem; margin-bottom: 0.15rem; }
+    #activity :global(.timeline-summary) { margin-top: 0.15rem; }
+    #activity :global(.timeline-link) { padding-top: 0.35rem; }
+    /* The open call is the one thing here to act on now. */
+    #activity :global(#event-funding:has([data-when-call='open']:not([hidden])) .timeline-name) { font-size: var(--step-1); }
+    #activity :global(#event-funding .timeline-link [data-when-call='open']) { font-weight: 700; }
+  }
   @media (min-width: 40rem) and (max-width: 60rem) {
     .hero-tagline { max-width: 65ch; }
     .hero-actions { justify-items: start; }
