@@ -336,8 +336,8 @@ export const FACILITIES: Facility[] = [
     lonLat: [-79.54, 8.95],
     country: { en: 'Panama', es: 'Panamá' },
     platforms: {
-      en: 'NextSeq 2000, MinION, PromethION (Hi-C expertise planned)',
-      es: 'NextSeq 2000, MinION, PromethION (experiencia en Hi-C prevista)',
+      en: 'NextSeq 2000, Nanopore MinION, Nanopore PromethION (Hi-C expertise planned)',
+      es: 'NextSeq 2000, Nanopore MinION, Nanopore PromethION (experiencia en Hi-C prevista)',
     },
     websites: [{ label: 'stri.si.edu', href: 'https://stri.si.edu/' }],
   },
@@ -346,7 +346,7 @@ export const FACILITIES: Facility[] = [
     city: { en: 'Goiânia', es: 'Goiânia' },
     lonLat: [-49.26, -16.6],
     country: { en: 'Brazil', es: 'Brasil' },
-    platforms: 'NextSeq 2000, MiSeq, MinION, PromethION',
+    platforms: 'NextSeq 2000, MiSeq, Nanopore MinION, Nanopore PromethION',
     websites: [{ label: 'ufg.br', href: 'https://ufg.br/' }],
   },
   {
@@ -354,7 +354,7 @@ export const FACILITIES: Facility[] = [
     city: { en: 'Tena', es: 'Tena' },
     lonLat: [-77.86, -0.95],
     country: { en: 'Ecuador', es: 'Ecuador' },
-    platforms: 'PromethION, Hi-C',
+    platforms: 'Nanopore PromethION, Hi-C',
     websites: [{ label: 'ikiam.edu.ec', href: 'https://www.ikiam.edu.ec/' }],
   },
   {
@@ -362,7 +362,7 @@ export const FACILITIES: Facility[] = [
     city: { en: 'Valdivia', es: 'Valdivia' },
     lonLat: [-73.25, -39.81],
     country: { en: 'Chile', es: 'Chile' },
-    platforms: 'NextSeq 2000, MinION',
+    platforms: 'NextSeq 2000, Nanopore MinION',
     websites: [{ label: 'uach.cl', href: 'https://www.uach.cl/' }],
   },
   {
@@ -370,7 +370,7 @@ export const FACILITIES: Facility[] = [
     city: { en: 'Belém', es: 'Belém' },
     lonLat: [-48.45, -1.47],
     country: { en: 'Brazil', es: 'Brasil' },
-    platforms: 'NextSeq 2000, MinION',
+    platforms: 'NextSeq 2000, Nanopore MinION',
     websites: [{ label: 'ufpa.br', href: 'https://ufpa.br/' }],
   },
   {
