@@ -71,6 +71,7 @@ const wayIcons: readonly CardIconName[] = [
         <h2 id="ways-heading">{p.audiences.heading}</h2>
         <p class="content-body">{p.audiences.intro}</p>
         <p class="content-body ways-closing">{p.audiences.closing}</p>
+        <a class="text-link text-link--wrap ways-link" href="#contact"><ArrowText text={p.audiences.proposalLink} /></a>
       </div>
       <ul class="rule-list rule-list--icons ways-list" role="list">
         {p.audiences.items.map((item, i) => (
@@ -79,7 +80,6 @@ const wayIcons: readonly CardIconName[] = [
             <div class="way">
               <h3>{item.title}</h3>
               <p class="content-body">{item.body}</p>
-              {i === 1 && <a class="text-link text-link--wrap" href="#contact"><ArrowText text={p.audiences.proposalLink} /></a>}
             </div>
           </li>
         ))}
@@ -205,12 +205,12 @@ const wayIcons: readonly CardIconName[] = [
   .ways-head > * + * { margin-top: var(--space-m); }
   /* Breaks only where the column ends, not after two short words. */
   .ways-head h2 { font-size: var(--step-2); text-wrap: pretty; }
-  .ways-closing { color: var(--text-muted); }
+  /* Secondary to the intro, but not washed out (as the page lead). */
+  .ways-closing { color: color-mix(in oklab, var(--text) 45%, var(--text-muted)); }
   .ways-layout > .ways-list { margin-top: 0; }
   /* Structure, icons and titles come from `.rule-list--icons` (global.css). */
   .way { display: grid; align-content: start; gap: var(--space-xs); }
   .way p { margin: 0; }
-  .way .text-link { font-size: var(--step--1); margin-top: var(--space-2xs); }
 
   /* ---- Outcomes and languages ---- */
   .pair {
