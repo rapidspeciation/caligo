@@ -17,6 +17,7 @@ export const es: Dict = {
     "language": "Idioma",
     "chooseLanguage": "Elegir idioma",
     "backTo": "Volver a",
+    "meetings": "Encuentros",
     "status": "Estado"
   },
   "lightbox": {

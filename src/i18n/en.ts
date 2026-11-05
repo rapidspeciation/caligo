@@ -20,6 +20,7 @@ export const en = {
     "language": "Language",
     "chooseLanguage": "Choose language",
     "backTo": "Back to",
+    "meetings": "Meetings",
     "status": "Status"
   },
   "lightbox": {

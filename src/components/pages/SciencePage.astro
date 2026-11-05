@@ -126,7 +126,10 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
         </a>
       </div>
       </div>
-      <Timeline locale={locale} eventsOnly compact />
+      <div class="analysis-events">
+        <h3 class="analysis-events-label content-label">{t.common.meetings}</h3>
+        <Timeline locale={locale} eventsOnly compact />
+      </div>
     </div>
   </section>
 
@@ -378,6 +381,8 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   }
   .analysis-heading-group .section-heading { max-width: 16ch; margin-bottom: 0; }
   .analysis-main { display: grid; gap: var(--space-m); }
+  /* The same small label the map's meeting list carries. */
+  .analysis-events-label { margin-bottom: var(--space-s); }
   @media (min-width: 60rem) {
     /* Heading beside its text; the two events run beneath on one track. */
     .analysis-main {

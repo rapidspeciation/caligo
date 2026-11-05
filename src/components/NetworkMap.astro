@@ -11,7 +11,7 @@
 import { FACILITIES, EVENTS, pick } from '../data/initiative';
 import { MAP_COUNTRIES, MAP_VIEWBOX, projectLonLat } from '../data/network-map';
 import { MEMBER_COUNTRY_LIST } from '../data/members';
-import { localePath, type Locale } from '../i18n';
+import { getDict, localePath, type Locale } from '../i18n';
 import Icon from './Icon.astro';
 
 interface Props {
@@ -26,7 +26,7 @@ const copy = {
     intro: 'Eight partner facilities in six countries can sequence Caligo samples close to where they are collected.',
     members: 'Countries with members',
     facilities: 'Sequencing facilities',
-    events: 'Meetings',
+    events: getDict('en').common.meetings,
     mapLabel: 'Map of Latin America showing Caligo’s eight partner sequencing facilities, two network events and the countries where members work.',
     outside: 'Outside the map',
     details: 'Platforms and websites',
@@ -37,7 +37,7 @@ const copy = {
     intro: 'Ocho centros asociados en seis países pueden secuenciar muestras de Caligo cerca de donde se recolectan.',
     members: 'Países con miembros',
     facilities: 'Centros de secuenciación',
-    events: 'Encuentros',
+    events: getDict('es').common.meetings,
     mapLabel: 'Mapa de América Latina con los ocho centros de secuenciación asociados de Caligo, dos eventos de la red y los países donde trabajan sus miembros.',
     outside: 'Fuera del mapa',
     details: 'Plataformas y sitios web',
