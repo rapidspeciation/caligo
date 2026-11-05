@@ -301,7 +301,7 @@ export const es: Dict = {
     "metaDescription": "Cuatro proyectos piloto propuestos; cada uno parte de un hallazgo publicado sobre mariposas o polillas neotropicales.",
     "title": "Proyectos piloto propuestos",
     "pilotProposal": {
-      "leadsLabel": "Quienes lideran el proyecto piloto",
+      "leadsLabel": "Quiénes lo lideran",
       "resourcesLabel": "Material y capacidad disponibles",
       "backgroundLabel": "Antecedentes publicados y recursos"
     }
