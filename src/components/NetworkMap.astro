@@ -28,6 +28,7 @@ const copy = {
     facilities: 'Sequencing facilities',
     events: 'Meetings',
     mapLabel: 'Map of Latin America showing Caligo’s eight partner sequencing facilities, two network events and the countries where members work.',
+    outside: 'Outside the map',
     details: 'Platforms and websites',
     source: 'Map: Natural Earth',
   },
@@ -38,6 +39,7 @@ const copy = {
     facilities: 'Centros de secuenciación',
     events: 'Encuentros',
     mapLabel: 'Mapa de América Latina con los ocho centros de secuenciación asociados de Caligo, dos eventos de la red y los países donde trabajan sus miembros.',
+    outside: 'Fuera del mapa',
     details: 'Plataformas y sitios web',
     source: 'Mapa: Natural Earth',
   },
@@ -96,8 +98,13 @@ for (const site of sites) {
 const bogota = cityLabels.get('Bogotá');
 if (bogota) bogota.y -= 2;
 
-const memberDots = MEMBER_COUNTRY_LIST.filter((m) => m.lonLat).map((m) => ({ name: pick(m, locale), ...projectLonLat(m.lonLat![0], m.lonLat![1]) }));
-const memberNames = MEMBER_COUNTRY_LIST.map((m) => pick(m, locale)).sort((a, b) => a.localeCompare(b, locale));
+/* Each member country pairs a list row with its dot by a shared id. */
+const memberId = (m: { en: string }) => `m-${m.en.toLowerCase().replace(/[^a-z]+/g, '-')}`;
+const memberDots = MEMBER_COUNTRY_LIST.filter((m) => m.lonLat).map((m) => ({ id: memberId(m), name: pick(m, locale), ...projectLonLat(m.lonLat![0], m.lonLat![1]) }));
+const memberRows = MEMBER_COUNTRY_LIST
+  .map((m) => ({ id: memberId(m), name: pick(m, locale), onMap: Boolean(m.lonLat) }))
+  .sort((a, b) => a.name.localeCompare(b.name, locale));
+const hasOutside = memberRows.some((m) => !m.onMap);
 
 const events = EVENTS.map((event) => ({ event, ...projectLonLat(event.lonLat[0], event.lonLat[1]) }));
 /* The Bogotá workshop shares its city with two facilities; set it below them. */
@@ -128,6 +135,19 @@ const eventMarks = events.map((e) => {
       ))}
     </ol>
 
+    <h3 class="nm-list-title content-label">{copy.members} · {MEMBER_COUNTRY_LIST.length}</h3>
+    <ul class="nm-list nm-members" role="list" style={`--nm-rows-2: ${Math.ceil(memberRows.length / 2)}; --nm-rows-3: ${Math.ceil(memberRows.length / 3)}`}>
+      {memberRows.map((m) => (
+        <li class:list={['nm-item', 'nm-item--member', { 'nm-item--outside': !m.onMap }]} data-site={m.id}>
+          <span class="nm-mark" aria-hidden="true"></span>
+          <span class="nm-item-name">{m.name}</span>
+        </li>
+      ))}
+    </ul>
+    {hasOutside && (
+      <p class="nm-members-note"><span class="nm-mark nm-mark--outside" aria-hidden="true"></span>{copy.outside}</p>
+    )}
+
     <h3 class="nm-list-title content-label">{copy.events}</h3>
     <ul class="nm-list nm-list--events" role="list">
       {events.map(({ event }) => (
@@ -140,9 +160,6 @@ const eventMarks = events.map((e) => {
         </li>
       ))}
     </ul>
-
-    <h3 class="nm-list-title content-label">{copy.members} · {MEMBER_COUNTRY_LIST.length}</h3>
-    <ul class="nm-members" role="list">{memberNames.map((n) => <li>{n}</li>)}</ul>
 
     <a class="text-link nm-more" href={`${localePath(locale, '/about')}#about-facilities`}>
       {copy.details}<Icon name="arrow-right" />
@@ -180,7 +197,11 @@ const eventMarks = events.map((e) => {
       </g>
       <g class="nm-members-dots" aria-hidden="true">
         {memberDots.map((m) => (
-          <circle class="nm-member" cx={m.x.toFixed(1)} cy={m.y.toFixed(1)} r="6"><title>{m.name}</title></circle>
+          <g class="nm-mdot" data-site={m.id} transform={`translate(${m.x.toFixed(1)} ${m.y.toFixed(1)})`}>
+            <circle class="nm-mhalo" r="15" />
+            <circle class="nm-member" r="6" />
+            <title>{m.name}</title>
+          </g>
         ))}
       </g>
       <g class="nm-sites" aria-hidden="true">
@@ -195,8 +216,8 @@ const eventMarks = events.map((e) => {
     </svg>
     <figcaption class="nm-caption">
       <span class="nm-key"><span class="nm-key-dot" aria-hidden="true"></span>{copy.facilities}</span>
-      <span class="nm-key"><span class="nm-diamond" aria-hidden="true"></span>{copy.events}</span>
       <span class="nm-key"><span class="nm-key-member" aria-hidden="true"></span>{copy.members}</span>
+      <span class="nm-key"><span class="nm-diamond" aria-hidden="true"></span>{copy.events}</span>
       <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener noreferrer external">{copy.source}</a>
     </figcaption>
   </figure>
@@ -209,12 +230,15 @@ const eventMarks = events.map((e) => {
         if (root.dataset.bound) return;
         root.dataset.bound = '1';
         function set(id, on) {
-          root.querySelectorAll('[data-site="' + id + '"]').forEach(function (el) {
+          var marks = root.querySelectorAll('[data-site="' + id + '"]');
+          marks.forEach(function (el) {
             el.classList.toggle('is-active', on);
           });
-          root.classList.toggle('has-active', on);
+          // A country outside the map's frame has no mark to pick out, so
+          // the map stays as it is.
+          root.classList.toggle('has-active', on && marks.length > 1);
         }
-        root.querySelectorAll('.nm-item, .nm-site, .nm-event').forEach(function (el) {
+        root.querySelectorAll('.nm-item, .nm-site, .nm-event, .nm-mdot').forEach(function (el) {
           var id = el.getAttribute('data-site');
           ['mouseenter', 'focus'].forEach(function (t) { el.addEventListener(t, function () { set(id, true); }); });
           ['mouseleave', 'blur'].forEach(function (t) { el.addEventListener(t, function () { set(id, false); }); });
@@ -238,14 +262,25 @@ const eventMarks = events.map((e) => {
   .nm-figure { grid-area: map; }
   .nm-lists { grid-area: lists; }
   @media (min-width: 60rem) {
+    /* The lists run longer than one screen, so the map and its legend stay
+       in view beside them: the figure sticks under the header, and its
+       column is as wide as a map (850 x 895) whose height leaves room for
+       the legend in the viewport. The lists take the rest of the width. */
     .network-map {
-      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      --nm-top: 5rem;
+      --nm-legend: 3.5rem;
+      --nm-map-w: min(58%, max(22rem, calc((100svh - var(--nm-top) - var(--nm-legend) - var(--space-s)) * 850 / 895)));
+      grid-template-columns: minmax(0, 1fr) var(--nm-map-w);
       grid-template-rows: auto 1fr;
       grid-template-areas: 'head map' 'lists map';
       column-gap: clamp(var(--space-l), 5vw, var(--space-2xl));
       row-gap: 0;
     }
-    .nm-figure { align-self: center; }
+    .nm-figure {
+      position: sticky;
+      top: var(--nm-top);
+      align-self: start;
+    }
   }
 
   .nm-heading {
@@ -318,11 +353,50 @@ const eventMarks = events.map((e) => {
     background: var(--highlight);
     transform: rotate(45deg);
   }
+  /* Member countries: the same rows as the lists above, in short columns
+     read top to bottom, each with the blue dot it has on the map. */
+  .nm-members {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(var(--nm-rows-2), auto);
+    grid-auto-flow: column;
+    column-gap: var(--space-m);
+  }
+  @media (min-width: 30rem) {
+    .nm-members {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: repeat(var(--nm-rows-3), auto);
+    }
+  }
+  .nm-item--member { padding-block: 0.4rem; gap: 0.8rem; }
+  .nm-item--member .nm-item-name { font-weight: 500; color: var(--text); }
+  .nm-mark {
+    flex: none;
+    width: 0.7rem;
+    height: 0.7rem;
+    margin-inline: 0.425rem;
+    border-radius: 50%;
+    background: var(--tone-person-sky);
+  }
+  /* A country beyond the map's frame has no dot there: a hollow mark. */
+  .nm-item--outside .nm-mark,
+  .nm-mark--outside {
+    background: transparent;
+    box-shadow: inset 0 0 0 2px var(--tone-person-sky);
+  }
+  .nm-members-note {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: var(--space-xs) 0 0;
+    font-size: var(--step--2);
+    color: var(--text-muted);
+  }
   .nm-more { margin-top: var(--space-m); }
 
   /* ---- Map ---- */
   .nm-figure { margin: 0; min-width: 0; }
   .nm-svg {
+    display: block;
     width: 100%;
     height: auto;
     overflow: visible;
@@ -414,11 +488,12 @@ const eventMarks = events.map((e) => {
     background: var(--accent);
   }
   .nm-caption a { margin-left: auto; color: var(--text-faint); }
-  .nm-members { list-style: none; margin: 0; padding: var(--space-2xs) 0 0; border-top: 1px solid var(--hairline); color: var(--text-muted); font-size: var(--step--1); line-height: 1.6; }
-  .nm-members li { display: inline-block; white-space: nowrap; }
-  .nm-members li:not(:last-child)::after { content: ' ·'; margin-right: 0.35em; }
-  .nm-member { fill: var(--tone-person-sky); stroke: var(--bg); stroke-width: 2.5; }
-  .network-map.has-active .nm-member { opacity: 0.35; }
+  .nm-member { fill: var(--tone-person-sky); stroke: var(--bg); stroke-width: 2.5; transition: r var(--transition); }
+  .nm-mhalo { fill: var(--tone-person-sky); opacity: 0; transition: opacity var(--transition); }
+  .nm-mdot { transition: opacity var(--transition); }
+  .network-map.has-active .nm-mdot:not(.is-active) { opacity: 0.35; }
+  .nm-mdot.is-active .nm-mhalo { opacity: 0.35; }
+  .nm-mdot.is-active .nm-member { r: 8; }
   .nm-key-member { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--tone-person-sky); }
 
   @media (max-width: 60rem) {
