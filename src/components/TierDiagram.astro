@@ -603,7 +603,10 @@ const caption =
     overflow: visible;
     margin-bottom: 0.5rem;
   }
-  .tier-explore { margin-top: auto; }
+  /* Every diagram has the same height, so starting each panel right under
+     its diagram puts the three prompts on one line across the cards; any
+     spare height falls below the result instead. */
+  .tier-explore { margin-top: 0; }
 
   /* ---- Shared marks ---- */
   /* Butterflies keep their own colours in both themes: a black Heliconius

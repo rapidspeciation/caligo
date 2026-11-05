@@ -84,7 +84,7 @@ const labels = {
     text-align: left;
     padding: var(--space-s) var(--space-m);
     font-family: var(--font-mono);
-    font-size: var(--step--2);
+    font-size: var(--step--1);
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -96,9 +96,9 @@ const labels = {
     padding: var(--space-s) var(--space-m);
     text-align: left;
     font-family: var(--font-mono);
-    font-size: var(--step--2);
+    font-size: var(--step--1);
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--text-faint);
     border-bottom: 1px solid var(--hairline-strong);
@@ -131,6 +131,8 @@ const labels = {
     padding: 0;
     list-style: none;
   }
+  /* Instrument tags read at the table's own size and wrap like words. */
+  .platform { font-size: var(--step--1); white-space: normal; }
   .cell-website {
     display: grid;
     gap: 0.35rem;
@@ -151,7 +153,6 @@ const labels = {
     .cell-institution { padding-bottom: 0.3rem; }
     .cell-country { color: var(--text-muted); white-space: normal; }
     .cell-platforms { padding-block: 0.3rem; }
-    .platform { white-space: normal; }
     .facility-table td.cell-website { display: grid; padding-top: 0.4rem; }
   }
   .col-institution { width: 32%; }
