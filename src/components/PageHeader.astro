@@ -12,7 +12,7 @@ const { eyebrow, title, intro } = Astro.props;
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h1>{title}</h1>
     {intro && <p class="lead">{intro}</p>}
-    <hr class="rule--vein page-header-rule" />
+    <hr class="rule page-header-rule" />
   </div>
 </header>
 
@@ -28,7 +28,9 @@ const { eyebrow, title, intro } = Astro.props;
   .page-header .lead {
     margin-top: var(--space-s);
     max-width: var(--measure);
-    color: var(--text-muted);
+    /* Secondary to the title by size, but not washed out: about halfway
+       to the body colour (at least 7:1 on the page background). */
+    color: color-mix(in oklab, var(--text) 45%, var(--text-muted));
   }
   .page-header-rule {
     margin-top: var(--space-m);

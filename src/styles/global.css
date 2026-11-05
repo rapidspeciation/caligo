@@ -236,23 +236,11 @@ kbd,
   margin-top: var(--space-m);
 }
 
-/* Hairline divider drawn as a wing-venation tick rule */
+/* Hairline divider, solid across the full width like the section borders */
 .rule {
   height: 1px;
   border: 0;
   background: var(--hairline);
-}
-.rule--vein {
-  position: relative;
-  height: 1px;
-  border: 0;
-  background: linear-gradient(
-    90deg,
-    var(--hairline-strong),
-    var(--hairline) 22%,
-    var(--hairline) 78%,
-    transparent
-  );
 }
 
 /* ============================ Identity: mono eyebrow / labels ============================ */
