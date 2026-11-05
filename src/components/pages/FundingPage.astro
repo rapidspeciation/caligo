@@ -23,7 +23,7 @@ const closed = isCallClosed();
           <p class="content-body" data-when-call="open" hidden={closed}>{intro.description}</p>
           <p class="content-body" data-when-call="open" hidden={closed}>{intro.coverage}</p>
           <p class="content-body" data-when-call="closed" hidden={!closed}>{intro.descriptionClosed}</p>
-          <p class="funding-deadline content-body"><span class="funding-deadline-label">{intro.deadline}</span><strong class="funding-date"><time datetime={PILOT_DEADLINE}>{intro.date}</time></strong><span class="funding-extended" data-when-call="open" hidden={closed}>{intro.extended}</span></p>
+          <p class="funding-deadline content-body"><span class="funding-deadline-label">{intro.deadline}</span><strong class="funding-date"><time datetime={PILOT_DEADLINE}>{intro.date}</time></strong></p>
           <DeadlineChip locale={locale} />
           <div class="funding-open" data-when-call="open" hidden={closed}>
             {PILOT_APPLICATION_URL ? (
@@ -68,7 +68,6 @@ const closed = isCallClosed();
 
 </Base>
 <style>
-  .funding-extended { display: block; font-size: var(--step--1); color: var(--text-muted); }
   .past-calls { list-style: none; padding: 0; display: grid; gap: var(--space-m); margin-top: var(--space-m); max-width: 44rem; }
   .past-call { display: grid; gap: var(--space-2xs); padding: var(--space-m); }
   .past-call-when { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.7rem; margin-bottom: 0.35rem; }
