@@ -126,6 +126,10 @@ const t = getDict(locale);
   .lightbox {
     --lightbox-margin: clamp(0.5rem, 2vw, 1.5rem);
     --lightbox-pad: clamp(0.5rem, 1.5vw, var(--space-m));
+    /* A strip above the figure holds the close button, so it never
+       covers any part of the figure. */
+    --lightbox-bar: 2.25rem;
+    --lightbox-bar-gap: var(--space-2xs);
     width: fit-content;
     /* Never narrower than a readable caption, even before the image loads. */
     min-width: min(100vw - 2 * var(--lightbox-margin), 30rem);
@@ -133,6 +137,7 @@ const t = getDict(locale);
     max-height: calc(100dvh - 2 * var(--lightbox-margin));
     margin: auto;
     padding: var(--lightbox-pad);
+    padding-top: calc(var(--lightbox-pad) + var(--lightbox-bar) + var(--lightbox-bar-gap));
     overflow: hidden;
     overscroll-behavior: contain;
     border: 1px solid var(--hairline-strong);
@@ -161,9 +166,11 @@ const t = getDict(locale);
     height: auto;
     /* In window units, not %, so the panel can shrink to the image. */
     max-width: calc(100vw - 2 * var(--lightbox-margin) - 2 * var(--lightbox-pad) - 2px);
-    /* Window, minus the dialog's margin and padding, the gap and the caption. */
+    /* Window, minus the dialog's margin and padding, the close strip,
+       the gap and the caption. */
     max-height: max(10rem, calc(
       100dvh - 2 * var(--lightbox-margin) - 2 * var(--lightbox-pad) - 2px
+      - var(--lightbox-bar) - var(--lightbox-bar-gap)
       - var(--lightbox-caption-h, 0px) - var(--space-xs)
     ));
     object-fit: contain;
@@ -175,20 +182,19 @@ const t = getDict(locale);
     contain: inline-size;
     justify-self: stretch;
     max-width: var(--measure);
-    padding-right: 2.75rem;
     color: var(--text-muted);
     font-size: var(--step--1);
     line-height: 1.45;
   }
   .lightbox-close {
     position: absolute;
-    top: calc(var(--lightbox-pad) + 0.4rem);
-    right: calc(var(--lightbox-pad) + 0.4rem);
+    top: var(--lightbox-pad);
+    right: var(--lightbox-pad);
     z-index: 1;
     display: grid;
     place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
+    width: var(--lightbox-bar);
+    height: var(--lightbox-bar);
     padding: 0;
     border: 1px solid var(--hairline-strong);
     border-radius: 50%;
@@ -196,9 +202,11 @@ const t = getDict(locale);
     color: var(--text-strong);
     cursor: pointer;
   }
+  /* A 44 px touch target around the visible button. */
+  .lightbox-close::before { content: ''; position: absolute; inset: -0.25rem; }
   .lightbox-close:hover { border-color: var(--accent); color: var(--accent-strong); }
   .lightbox-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .lightbox-close :global(svg) { width: 1.2rem; height: 1.2rem; }
+  .lightbox-close :global(svg) { width: 1.1rem; height: 1.1rem; }
   @keyframes lightbox-in {
     from { opacity: 0; transform: scale(0.97); }
     to { opacity: 1; transform: none; }
