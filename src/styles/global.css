@@ -445,12 +445,25 @@ kbd,
 @media (pointer: coarse) {
   .btn { min-height: 44px; }
 }
-.ink-card--sun  { --card-fill: var(--pastel-sun);  --ink-line: var(--tone-sun);  --card-tone: var(--tone-sun); }
-.ink-card--leaf { --card-fill: var(--pastel-leaf); --ink-line: var(--tone-leaf); --card-tone: var(--tone-leaf); }
-.ink-card--sky  { --card-fill: var(--pastel-sky);  --ink-line: var(--tone-sky);  --card-tone: var(--tone-sky); }
-.ink-card--rose { --card-fill: var(--pastel-rose); --ink-line: var(--tone-rose); --card-tone: var(--tone-rose); }
+/* Filled (pastel) cards in a row take their fill by position, the way the
+   outlines do: sun, leaf, sky, rose. Use `.ink-card--fill`; a filled card
+   that is the only child of a list item counts its item's place. Name a
+   pastel (--sun/--leaf/--sky/--rose) only for a lone card that stands for
+   something, such as the rose funding call. */
+.ink-card--sun,
+.ink-card--fill:nth-child(4n + 1 of .ink-card--fill),
+li:nth-child(4n + 1) > .ink-card--fill:only-child { --card-fill: var(--pastel-sun);  --ink-line: var(--tone-sun);  --card-tone: var(--tone-sun); }
+.ink-card--leaf,
+.ink-card--fill:nth-child(4n + 2 of .ink-card--fill),
+li:nth-child(4n + 2) > .ink-card--fill:only-child { --card-fill: var(--pastel-leaf); --ink-line: var(--tone-leaf); --card-tone: var(--tone-leaf); }
+.ink-card--sky,
+.ink-card--fill:nth-child(4n + 3 of .ink-card--fill),
+li:nth-child(4n + 3) > .ink-card--fill:only-child { --card-fill: var(--pastel-sky);  --ink-line: var(--tone-sky);  --card-tone: var(--tone-sky); }
+.ink-card--rose,
+.ink-card--fill:nth-child(4n + 4 of .ink-card--fill),
+li:nth-child(4n + 4) > .ink-card--fill:only-child { --card-fill: var(--pastel-rose); --ink-line: var(--tone-rose); --card-tone: var(--tone-rose); }
 /* On a pastel fill every text role reads in ink, in both modes. */
-.ink-card--sun, .ink-card--leaf, .ink-card--sky, .ink-card--rose {
+.ink-card--sun, .ink-card--leaf, .ink-card--sky, .ink-card--rose, .ink-card--fill {
   --text: var(--on-pastel);
   --text-strong: var(--on-pastel);
   --text-muted: color-mix(in oklab, var(--on-pastel) 80%, var(--card-fill));
@@ -467,10 +480,10 @@ kbd,
    from the root, above), outlined and shadowed in the card's ink. A
    secondary (ghost) button keeps an ink outline and no fill, so the card's
    one main action stands out. */
-.ink-card--sun .btn, .ink-card--leaf .btn, .ink-card--sky .btn, .ink-card--rose .btn {
+:is(.ink-card--sun, .ink-card--leaf, .ink-card--sky, .ink-card--rose, .ink-card--fill) .btn {
   --btn-shadow: var(--ink-line);
 }
-:is(.ink-card--sun, .ink-card--leaf, .ink-card--sky, .ink-card--rose) .btn--ghost {
+:is(.ink-card--sun, .ink-card--leaf, .ink-card--sky, .ink-card--rose, .ink-card--fill) .btn--ghost {
   --btn-bg: transparent;
   --btn-fg: var(--on-pastel);
 }

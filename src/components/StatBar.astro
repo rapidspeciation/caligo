@@ -21,15 +21,13 @@ interface Props {
 
 const { metrics, variant = 'bar' } = Astro.props;
 const icons: Record<MetricKind, CardIconName> = { participants: 'people', facilities: 'facility', countries: 'globe', pilots: 'project' };
-// One pastel per kind of thing, the same four the rest of the site uses.
-const tones: Record<MetricKind, string> = { participants: 'ink-card--sun', facilities: 'ink-card--leaf', countries: 'ink-card--sky', pilots: 'ink-card--rose' };
 ---
 
 {metrics.length >= 2 && variant === 'community-cards' && (
   <ul class="metric-cards" role="list">
     {metrics.map((metric) => (
       <li class="metric-card">
-        <div class:list={['metric-card__link', 'ink-card', metric.kind && tones[metric.kind]]} data-card="link">
+        <div class="metric-card__link ink-card ink-card--fill" data-card="link">
           <a class="metric-card__label card-link" href={metric.href}>{metric.label}</a>
           {metric.kind && <CardIcon name={icons[metric.kind]} class="metric-icon" />}
           <strong class="metric-card__value">
