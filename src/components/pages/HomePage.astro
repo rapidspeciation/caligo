@@ -74,7 +74,7 @@ const desktopSrcset = [
       </div>
     </div>
 
-    <p class="hero-attribution mono">
+    <p class="hero-attribution">
       {heroMedia.credit[locale]}
       {' · '}
       <a target="_blank" href={heroMedia.sourceItemPage} rel="external noopener">{t.mediaViewer.sourceLinkLabel}</a>
@@ -471,7 +471,7 @@ const desktopSrcset = [
   .hero-actions .btn { border-width: 1px; box-shadow: none; }
   .hero-actions .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.35); }
   .hero-actions .btn:active { transform: none; box-shadow: none; }
-  .hero-attribution { font-family: var(--font-body); max-width: 48ch; }
+  .hero-attribution { max-width: 48ch; }
   .intro-layout { display: grid; grid-template-columns: 1fr; }
   .intro-copy > * + * { margin-top: var(--space-m); }
   .intro-copy h2 { max-width: 25ch; }

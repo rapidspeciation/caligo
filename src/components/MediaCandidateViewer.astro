@@ -207,7 +207,7 @@ const clientCandidates = sorted.map((c) => ({
           )}
         </div>}
         <p class="mcv-caption-text" data-mcv-caption set:html={italicizeSpecies(initial.caption[locale])} />
-        <p class="mcv-credit mono">
+        <p class="mcv-credit">
           <span data-mcv-credit>{initial.credit[locale]}</span>
           <span data-mcv-source-wrap>
             {initial.sourceItemPage && (
@@ -454,11 +454,11 @@ const clientCandidates = sorted.map((c) => ({
     max-width: var(--measure);
     line-height: 1.55;
   }
+  /* Credits are a compact caption in the body face, not code. */
   .mcv-credit {
     margin: 0;
     font-size: var(--step--2);
     line-height: 1.5;
-    letter-spacing: 0.04em;
     color: var(--text-faint);
     max-width: var(--measure);
   }

@@ -49,10 +49,10 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
     <li class="timeline-item ink-card" data-card="link" id="event-funding" data-end={PILOT_DEADLINE}>
       <div class="timeline-when">
         <DeadlineChip locale={locale} class="timeline-chip" />
-        <time class="timeline-dates mono" datetime={PILOT_DEADLINE}>{funding.date}</time>
+        <time class="timeline-dates" datetime={PILOT_DEADLINE}>{funding.date}</time>
       </div>
       <h3 class="timeline-name">{funding.call}</h3>
-      <p class="timeline-location mono">{funding.country}</p>
+      <p class="timeline-location">{funding.country}</p>
       {/* Present tense while the call is open, past once it has closed. */}
       <p class="timeline-summary" data-when-call="open" hidden={callClosed}>{funding.description}</p>
       <p class="timeline-summary" data-when-call="closed" hidden={!callClosed}>{funding.descriptionClosed}</p>
@@ -62,10 +62,10 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
     <li class="timeline-item ink-card" data-card="link" id={`event-${entry.call.id}-funding`} data-end={entry.call.deadline}>
       <div class="timeline-when">
         <DeadlineChip locale={locale} class="timeline-chip" deadline={entry.call.deadline} />
-        <time class="timeline-dates mono" datetime={entry.call.deadline}>{pick(entry.call.date, locale)}</time>
+        <time class="timeline-dates" datetime={entry.call.deadline}>{pick(entry.call.date, locale)}</time>
       </div>
       <h3 class="timeline-name">{pick(entry.call.name, locale)}</h3>
-      <p class="timeline-location mono">{entry.call.country}</p>
+      <p class="timeline-location">{entry.call.country}</p>
       <p class="timeline-summary">{pick(entry.call.summary, locale)}</p>
       <a class="text-link timeline-link card-link" href={localePath(locale, '/funding')}>{funding.funding}<Icon name="arrow-right" /></a>
     </li>
@@ -73,10 +73,10 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
     <li class="timeline-item ink-card" data-card="link" id={`event-${entry.event.id}`} data-end={entry.event.end ?? entry.event.start}>
       <div class="timeline-when">
         <WhenChip locale={locale} start={entry.event.start} end={entry.event.end} class="timeline-chip" />
-        <time class="timeline-dates mono" datetime={entry.event.start}>{pick(entry.event.dates, locale)}</time>
+        <time class="timeline-dates" datetime={entry.event.start}>{pick(entry.event.dates, locale)}</time>
       </div>
       <h3 class="timeline-name">{pick(entry.event.name, locale)}</h3>
-      <p class="timeline-location mono">{pick(entry.event.location, locale)}</p>
+      <p class="timeline-location">{pick(entry.event.location, locale)}</p>
       <p class="timeline-summary" set:html={italicizeSpecies(pick(entry.event.summary, locale))} />
       {eventLinks[entry.event.id] && (
         <a
@@ -159,10 +159,11 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
   /* A long status ("Closed 5 weeks ago") wraps inside its card rather
      than running into the gap where the Today line stands. */
   .timeline-when :global(.timeline-chip) { max-width: 100%; white-space: normal; }
+  /* Dates and places are prose, so they use the body face. */
   .timeline-dates {
-    font-size: var(--step--2);
+    font-size: var(--step--1);
+    font-weight: 500;
     color: var(--text-muted);
-    letter-spacing: 0.02em;
   }
   .timeline-name {
     margin: 0;
@@ -176,9 +177,8 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
   }
   .timeline-location {
     margin: 0;
-    font-size: var(--step--2);
+    font-size: var(--step--1);
     color: var(--text-faint);
-    letter-spacing: 0.04em;
   }
   .timeline-summary {
     margin: 0.3rem 0 0;
