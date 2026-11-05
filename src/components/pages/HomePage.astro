@@ -57,11 +57,14 @@ const desktopSrcset = [
           <h1 id="hero-title" class="hero-title">{h.hero.title}{' '}<em>{h.hero.focus}</em></h1>
           <p class="hero-tagline">{h.hero.body}</p>
           <div class="hero-actions">
-            <a class="btn hero-btn-primary" href={localePath(locale, '/science')}>
+            <a class="btn hero-btn-primary" href={`${localePath(locale, '/participate')}#join`}>
+              {t.join.ctaSecondary}<Icon name="arrow-right" />
+            </a>
+            <a class="hero-text-link" href={localePath(locale, '/science')}>
               {h.hero.scienceAction}<Icon name="arrow-right" />
             </a>
-            <a class="btn hero-btn-ghost" href={localePath(locale, '/projects')}>
-              {h.hero.projectsAction}
+            <a class="hero-text-link" href={localePath(locale, '/projects')}>
+              {h.hero.projectsAction}<Icon name="arrow-right" />
             </a>
           </div>
         </div>
@@ -92,9 +95,11 @@ const desktopSrcset = [
   <section id="why-lepidoptera" class="section" aria-labelledby="h2b-title">
     <div class="container-wide intro-layout">
       <div class="intro-copy">
-        <h2 id="h2b-title">{h.intro.title}</h2>
+        <div class="intro-head">
+          <h2 id="h2b-title">{h.intro.title}</h2>
+          <a class="text-link intro-link" href={localePath(locale, '/about')}>{t.cta.readVision}<Icon name="arrow-right" /></a>
+        </div>
         {h.intro.body.map((para) => <p class="lead">{para}</p>)}
-        <a class="text-link intro-link" href={localePath(locale, '/about')}>{t.cta.readVision}<Icon name="arrow-right" /></a>
       </div>
     </div>
   </section>
@@ -139,7 +144,7 @@ const desktopSrcset = [
 
   <!-- ====================== H5 — Recent and upcoming activity ====================== -->
   <section id="activity" class="section section--panel" aria-labelledby="activity-title">
-    <div class="container-wide activity-layout">
+    <div class="container-wide">
       <div class="activity-intro">
         <h2 id="activity-title">{h.activity.heading}</h2>
         <p class="lead">{h.activity.intro}</p>
@@ -159,8 +164,8 @@ const desktopSrcset = [
           <a class="btn btn--primary" href={LINKS.joinForm} target="_blank" rel="noopener noreferrer">
             {t.join.cta}<Icon name="external" />
           </a>
-          <DiscordButton locale={locale} />
-          <CopyEmail locale={locale} />
+          <DiscordButton locale={locale} class="btn--ghost" />
+          <CopyEmail locale={locale} class="btn--ghost" />
         </div>
       </div>
     </div>
@@ -259,22 +264,29 @@ const desktopSrcset = [
     flex-wrap: wrap;
     gap: var(--space-s);
   }
+  /* Joining is the hero's one filled action: a rust pill fixed in both
+     modes, since the hero keeps its own colours. Reading on is a pair of
+     quiet text links beneath it. */
   .hero-btn-primary {
-    background: #F6F7F3;
-    color: #262524;
-    border-color: transparent;
+    --btn-bg: var(--c-burnt-600);
+    --btn-fg: #ffffff;
+    --btn-line: var(--c-burnt-600);
+    --btn-shadow: #000;
   }
-  .hero-btn-primary:hover { background: #FFFFFF; color: #1a1a1a; }
-  .hero-btn-ghost {
-    background: transparent;
+  .hero-text-link {
+    display: block;
+    max-width: 36ch;
     color: #F6F7F3;
-    border: 1px solid color-mix(in oklab, #F6F7F3 45%, transparent);
+    font-weight: 560;
+    line-height: 1.35;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklab, #F6F7F3 40%, transparent);
+    text-underline-offset: 0.3em;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.5);
   }
-  .hero-btn-ghost:hover {
-    background: color-mix(in oklab, #F6F7F3 12%, transparent);
-    border-color: #F6F7F3;
-    color: #F6F7F3;
-  }
+  .hero-text-link:hover { color: #FFFFFF; text-decoration-color: currentColor; }
+  /* The arrow follows the last word, even when the label wraps. */
+  .hero-text-link :global(svg) { display: inline-block; width: 1em; height: 1em; margin-left: 0.4em; vertical-align: -0.14em; }
   .hero-attribution {
     position: absolute;
     z-index: 3;
@@ -418,23 +430,10 @@ const desktopSrcset = [
   .network-section { border-top: 1px solid var(--hairline); }
 
   /* ---- H5 Current activity ---- */
-  .activity-layout {
-    display: grid;
-    grid-template-columns: minmax(15rem, 0.72fr) minmax(0, 1.6fr);
-    gap: clamp(var(--space-l), 5vw, var(--space-2xl));
-    align-items: start;
-  }
+  /* Intro above, the timeline across the whole container, so the four
+     cards get room for their dates and summaries. */
   .activity-intro > * + * {
     margin-top: var(--space-m);
-  }
-  .activity-intro .section-eyebrow + h2 {
-    margin-top: var(--space-s);
-  }
-  @media (max-width: 48rem) {
-    .activity-layout {
-      grid-template-columns: 1fr;
-      gap: var(--space-l);
-    }
   }
 
   /* ---- H6 Participate + brand close ---- */
@@ -465,10 +464,13 @@ const desktopSrcset = [
   .hero-actions { gap: .75rem; }
   /* The hero keeps its own quiet buttons: no ink outline or hard shadow
      over the photograph. */
-  .hero-actions .btn { border-radius: 3px; border-width: 1px; box-shadow: none; }
-  .hero-actions .btn:hover { transform: translateY(-1px); box-shadow: none; }
+  /* The hero keeps its own quiet button: a pill without the hard shadow
+     over the photograph. It still lifts under the pointer. */
+  .hero-actions { flex-direction: column; align-items: flex-start; }
+  .hero-actions .btn { border-width: 1px; box-shadow: none; }
+  .hero-actions .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.35); }
   .hero-actions .btn:active { transform: none; box-shadow: none; }
-  .hero-btn-ghost { border-color: transparent; padding-inline: 0; text-decoration: underline; text-underline-offset: .4em; }
+  .hero-actions .hero-text-link + .hero-text-link { margin-top: -0.25rem; }
   .hero-attribution { font-family: var(--font-body); max-width: 48ch; }
   .intro-layout { display: grid; grid-template-columns: 1fr; }
   .intro-copy > * + * { margin-top: var(--space-m); }
@@ -478,18 +480,17 @@ const desktopSrcset = [
        below, so both vertical rules line up. */
     .intro-copy { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 0; position: relative; }
     .intro-copy::after { content: ''; position: absolute; inset-block: 0; left: 50%; width: 1px; background: var(--hairline); }
-    .intro-copy h2, .intro-copy .intro-link { padding-right: var(--space-m); }
-    .intro-copy .lead { padding-left: var(--space-m); }
-    .intro-copy h2, .intro-copy .intro-link { grid-column: 1; }
-    .intro-copy .lead { grid-column: 2; }
+    /* Heading and its link stay together at the top of the left column. */
+    .intro-head { grid-column: 1; grid-row: 1 / span 2; align-self: start; padding-right: var(--space-m); }
+    .intro-copy .lead { grid-column: 2; padding-left: var(--space-m); }
     .intro-copy .lead:first-of-type { grid-row: 1; margin-top: 0; }
     .intro-copy .lead:last-of-type { grid-row: 2; }
-    .intro-copy .intro-link { grid-row: 2; align-self: start; }
   }
-  .intro-link { margin-top: var(--space-m); }
+  .intro-head h2 { max-width: 25ch; }
+  .intro-link { margin-top: var(--space-s); }
   .section--close { border-top: 1px solid var(--hairline); background: var(--bg); }
   .close-copy h2 { max-width: 25ch; }
-  @media (max-width: 60rem) { .hero-title { font-size: clamp(2rem, 5vw, 3rem); max-width: 24ch; } .hero-copy { padding-block: 1.25rem; } .hero-overlay { padding-bottom: .5rem; } .hero-btn-ghost { padding-inline: 1rem; } }
+  @media (max-width: 60rem) { .hero-title { font-size: clamp(2rem, 5vw, 3rem); max-width: 24ch; } .hero-copy { padding-block: 1.25rem; } .hero-overlay { padding-bottom: .5rem; } }
   @media (max-width: 48rem) { .intro-layout { grid-template-columns: 1fr; gap: 2rem; } }
   @media (min-width: 40rem) and (max-width: 60rem) {
     .hero-tagline { max-width: 65ch; }

@@ -156,6 +156,9 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
     gap: 0.4rem 0.7rem;
     margin-bottom: 0.35rem;
   }
+  /* A long status ("Closed 5 weeks ago") wraps inside its card rather
+     than running into the gap where the Today line stands. */
+  .timeline-when :global(.timeline-chip) { max-width: 100%; white-space: normal; }
   .timeline-dates {
     font-size: var(--step--2);
     color: var(--text-muted);
@@ -269,7 +272,7 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
     border-left: 2px solid var(--tone-sun);
   }
   .timeline-list--compact .timeline-today-label { position: absolute; top: 0; z-index: 1; }
-  @media (max-width: 64rem) {
+  @media (max-width: 60rem) {
     /* Stacked: no track; the pin becomes a labelled rule between entries. */
     .timeline-list--compact { display: flex; flex-direction: column; padding-top: 0; }
     .timeline-list--compact .timeline-item::before,
