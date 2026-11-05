@@ -161,7 +161,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
                 <img
                   src={`${base}${publication.figure.src}`}
                   srcset={srcsetFor(publication.figure.src, publication.figure.width, base)}
-                  sizes="(min-width: 60rem) 26rem, 100vw"
+                  sizes="(min-width: 40rem) 11rem, 6rem"
                   alt={publication.figure.alt[locale]}
                   width={publication.figure.width}
                   height={publication.figure.height}
@@ -171,7 +171,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
               </a>
               <figcaption>
                 <p class="publication-caption" set:html={italicizeSpecies(publication.figure.caption[locale])} />
-                <p class="publication-credit mono">
+                <p class="publication-credit">
                   <a target="_blank" href={publication.url} rel="external noopener">{publication.citation}</a>
                   {' · '}
                   <a target="_blank" href={publication.figure.licenceUrl} rel="license external noopener">
@@ -385,78 +385,81 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     max-width: var(--measure);
     margin-bottom: var(--space-l);
   }
+  /* Published papers read as a compact list of citations, each with a
+     small preview of its figure, so the pilot questions below stay the
+     main cards on the page. The preview still opens the full figure. */
   .publication-grid {
     display: grid;
-    gap: var(--space-m);
-  }
-  /* Published evidence is an ink card like the rest, on a plain fill so the
-     figure stays the loudest thing; its number chip takes the card's tone. */
-  .publication-card { --ink-line: var(--card-tone); }
-  /* The figure zooms on its own click and leans in only slightly. */
-  .publication-card { --card-zoom: 1.03; }
-  .publication-card:hover .publication-title h3,
-  .publication-title:focus-visible h3 { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.18em; }
-  .publication-card {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    padding: var(--space-m);
-  }
-  .publication-index {
-    margin-bottom: var(--space-s);
-    font-size: var(--step--1);
-  }
-  .publication-title {
-    display: flex;
     gap: var(--space-s);
+    max-width: 62rem;
+  }
+  .publication-card { --ink-line: var(--card-tone); --card-zoom: 1.04; }
+  .publication-card:hover .publication-title h3,
+  .publication-title:focus-visible h3 { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 0.18em; }
+  .publication-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'index title' 'figure figure';
+    column-gap: var(--space-s);
+    row-gap: var(--space-xs);
+    align-items: start;
+    min-width: 0;
+    padding: var(--space-s) var(--space-m);
+  }
+  .publication-index { grid-area: index; font-size: var(--step--2); }
+  .publication-title {
+    grid-area: title;
+    display: flex;
+    gap: var(--space-xs);
     align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: var(--space-m);
     color: var(--text-strong);
     text-decoration: none;
   }
   .publication-title h3 {
-    font-size: clamp(1.15rem, 1rem + 0.5vw, 1.45rem);
-    line-height: 1.25;
+    font-size: var(--step-0);
+    line-height: 1.3;
   }
   .publication-title :global(svg) {
     flex: 0 0 auto;
+    width: 1rem;
+    height: 1rem;
     margin-top: 0.15em;
   }
   .publication-card figure {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
+    grid-area: figure;
+    display: grid;
+    grid-template-columns: 6rem minmax(0, 1fr);
+    gap: var(--space-s);
+    align-items: start;
     margin: 0;
   }
   .publication-image-wrap {
     position: relative;
-    display: grid;
-    place-items: center;
+    display: block;
     aspect-ratio: 4 / 3;
-    min-height: 0;
     overflow: hidden;
     border: 1px solid var(--hairline);
-    border-radius: calc(var(--radius) - 2px);
+    border-radius: var(--radius-xs);
     background: #fff;
+    cursor: zoom-in;
   }
-  .publication-image-wrap { cursor: zoom-in; }
   .publication-zoom {
     position: absolute;
-    right: 0.5rem;
-    bottom: 0.5rem;
+    right: 0.25rem;
+    bottom: 0.25rem;
     z-index: 1;
     display: grid;
     place-items: center;
-    width: 2rem;
-    height: 2rem;
+    width: 1.5rem;
+    height: 1.5rem;
     border-radius: 50%;
     background: rgba(12, 11, 10, 0.7);
     color: #F6F7F3;
     opacity: 0.85;
     transition: opacity var(--transition), transform var(--transition);
   }
-  .publication-zoom :global(svg) { width: 1.05rem; height: 1.05rem; }
+  .publication-zoom :global(svg) { width: 0.85rem; height: 0.85rem; }
   .publication-image-wrap:hover .publication-zoom,
   .publication-image-wrap:focus-visible .publication-zoom { opacity: 1; transform: scale(1.06); }
   .publication-image-wrap img {
@@ -466,16 +469,14 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     height: 100%;
     object-fit: contain;
   }
-  .publication-card figcaption {
-    margin-top: var(--space-s);
-  }
   .publication-caption {
+    margin: 0;
     color: var(--text);
     font-size: var(--step--1);
     line-height: 1.5;
   }
   .publication-credit {
-    margin-top: var(--space-xs);
+    margin-top: 0.3rem;
     color: var(--text-faint);
     font-size: var(--step--2);
     line-height: 1.5;
@@ -483,15 +484,16 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   .publication-credit a {
     color: var(--text-muted);
   }
-  @media (min-width: 48rem) {
-    .publication-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* Wider: the preview takes its own column beside the citation. */
+  @media (min-width: 40rem) {
+    .publication-card {
+      grid-template-columns: 11rem auto minmax(0, 1fr);
+      grid-template-areas: 'figure index title' 'figure . caption';
+      padding: var(--space-s);
     }
-  }
-  @media (min-width: 76rem) {
-    .publication-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+    .publication-card figure { display: contents; }
+    .publication-image-wrap { grid-area: figure; }
+    .publication-card figcaption { grid-area: caption; }
   }
 
   .questions-section {

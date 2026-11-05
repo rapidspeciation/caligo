@@ -179,6 +179,7 @@ export const en = {
       "tierLabel": "Tier",
       "replay": "Replay",
       "play": "Play the animation",
+      "playShort": "Play",
       "explore": {
         "barcode": {
           "prompt": "Which species is this butterfly?",

@@ -357,11 +357,11 @@ const caption =
       : <p class="explorable-result" set:html={caption} />}
     {kind === 'reference' ? (
       <button type="button" class="explorable-replay" data-replay aria-label={tiers.replay} title={tiers.replay}>
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v5h5" /></svg><span class="explorable-replay-label">{tiers.replay}</span>
       </button>
     ) : (
       <button type="button" class="explorable-replay explorable-play" data-play hidden aria-label={tiers.play} title={tiers.play}>
-        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8.5 5.5v13l10-6.5z" /></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8.5 5.5v13l10-6.5z" /></svg><span class="explorable-replay-label">{tiers.playShort}</span>
       </button>
     )}
   </div>
@@ -721,8 +721,7 @@ const caption =
   .tier-step:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 0.4rem; }
   .explorable-play svg { fill: currentColor; stroke-width: 1.6; }
   /* The replay arrow turns on hover; a play triangle should not. */
-  .explorable-play:hover { transform: scale(1.08); }
-  .explorable-play:active { transform: scale(0.96); }
+  .explorable-play:hover svg { transform: none; }
   .tier-steps .tier-key-item { transition: color 200ms linear; }
   .tier-steps .tier-key-item b {
     display: inline-grid;
