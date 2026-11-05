@@ -8,6 +8,7 @@
  *
  * What actually matters to a reader:
  *   • the header offers primary navigation and the compact footer retains Join
+ *     (or, on a page that closes on its own join block, the page links to it)
  *     without duplicating the entire navigation;
  *   • every nav destination resolves to a page that was really built;
  *   • both locales offer the same routes.
@@ -95,9 +96,16 @@ for (const { path, label } of pages) {
     pass(`${label}: ${headerRoutes.length} primary-nav destinations`);
   }
 
+  // The footer keeps Join, except on a page whose own content already
+  // closes on a join block (Home's "Súmate"); that page must then link to
+  // Join from its main content instead.
   const joinRoute = headerRoutes.find(r => r.includes('/participate/'));
-  if (!joinRoute || !footerRoutes.includes(joinRoute)) fail(`${label}: footer needs the Join destination`);
-  else pass(`${label}: compact footer retains Join`);
+  const mainMatch = html.match(/<main[^>]*>([\s\S]*?)<\/main>/);
+  const mainRoutes = mainMatch ? routes(mainMatch[1]) : [];
+  if (!joinRoute) fail(`${label}: primary nav has no Join destination`);
+  else if (footerRoutes.includes(joinRoute)) pass(`${label}: compact footer retains Join`);
+  else if (mainRoutes.includes(joinRoute)) pass(`${label}: page content links to Join, so the footer omits it`);
+  else fail(`${label}: footer or page content needs the Join destination`);
 
   const unbuilt = headerRoutes.filter((r) => !existsSync(builtFile(r)));
   if (unbuilt.length) {

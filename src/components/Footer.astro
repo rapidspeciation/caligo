@@ -4,10 +4,14 @@ import Icon from './Icon.astro';
 
 interface Props {
   locale: Locale;
-  /** Current page path; the join button is left out on the join page itself. */
+  /** Current page path; the join button is left out where the page itself
+      ends with a join block. */
   page?: string;
 }
 const { locale, page } = Astro.props;
+/* Participate is the join page, and Home closes on "Súmate" with the form. */
+const PAGES_ENDING_WITH_JOIN = ['/participate', '/'];
+const showJoin = !PAGES_ENDING_WITH_JOIN.includes(page ?? '');
 const t = getDict(locale);
 const base = import.meta.env.BASE_URL;
 
@@ -32,7 +36,7 @@ const base = import.meta.env.BASE_URL;
       </div>
     </div>
 
-    {page !== '/participate' && (
+    {showJoin && (
       <a class="btn btn--primary footer-join" href={`${localePath(locale, '/participate')}#join`}>
         {t.join.ctaSecondary}<Icon name="arrow-right" />
       </a>

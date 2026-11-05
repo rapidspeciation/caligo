@@ -294,8 +294,6 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     <div class="container-wide prose-column">
       <h2 id="ethics-heading" class="section-heading content-heading">{feedback.ethics.heading}</h2>
       {feedback.ethics.body.map((para) => <p class="prose-para content-body">{para}</p>)}
-      {/* The page closes on one next step. */}
-      <a class="text-link" href={`${localePath(locale, '/participate')}#join`}>{t.join.ctaSecondary}<Icon name="arrow-right" /></a>
     </div>
   </section>
 
