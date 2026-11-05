@@ -62,7 +62,7 @@ const labels = {
           <td class="cell-platforms">
             <ul class="platform-list" role="list">
               {splitPlatforms(typeof facility.platforms === 'string' ? facility.platforms : pick(facility.platforms, locale)).map(splitNote).map(({ name, note }) => (
-                <li class="platform-item"><span class="chip chip--sm chip--mono platform">{name}</span>{note && <span class="chip chip--sm chip--done platform platform-note">{note}</span>}</li>
+                <li class="platform-item"><span class="chip chip--sm chip--mono platform">{name}</span>{note && <span class="chip chip--sm chip--mono chip--done platform platform-note">{note}</span>}</li>
               ))}
             </ul>
           </td>
@@ -157,7 +157,6 @@ const labels = {
     --chip-fill: transparent;
     --ink-inner: color-mix(in oklab, var(--text) 45%, transparent);
     color: var(--text);
-    font-weight: 500;
   }
   .cell-website {
     display: grid;
