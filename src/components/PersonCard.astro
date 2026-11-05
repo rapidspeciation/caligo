@@ -12,6 +12,12 @@ interface Props {
 const { person, locale } = Astro.props;
 const ties = pick(person.regionalTies, locale).split(' / ');
 const regionalTiesLabel = locale === 'en' ? 'Regional ties' : 'Vínculos regionales';
+const bioLabel = locale === 'en' ? 'Read biography' : 'Leer biografía';
+/* The arrow travels with the last word of the profile link. */
+const sourceLabel = pick(person.source.label, locale);
+const sourceCut = sourceLabel.lastIndexOf(' ');
+const sourceHead = sourceLabel.slice(0, sourceCut + 1);
+const sourceTail = sourceLabel.slice(sourceCut + 1);
 const base = import.meta.env.BASE_URL;
 ---
 
@@ -33,7 +39,6 @@ const base = import.meta.env.BASE_URL;
   <div class="person-content">
     <strong class="person-name">{person.name}</strong>
     <p class="person-role">{pick(person.role, locale)}</p>
-    <p class="person-bio" set:html={italicizeSpecies(pick(person.bio, locale))} />
   </div>
 
   <div class="person-foot">
@@ -50,27 +55,38 @@ const base = import.meta.env.BASE_URL;
       target="_blank"
       rel="noopener noreferrer external"
     >
-      {pick(person.source.label, locale)}<span class="person-source-arrow" aria-hidden="true">↗</span>
+      {sourceHead}<span class="arrow-tail">{sourceTail}<span class="person-source-arrow" aria-hidden="true">↗</span></span>
     </a>
+    <!-- The biography waits behind its own row, so eight people fit in
+         about one screen; each row names its person for screen readers. -->
+    <details class="disclosure person-more">
+      <summary class="disclosure-summary">
+        <span class="disclosure-summary-inner"><span>{bioLabel}<span class="sr-only">: {person.name}</span></span></span>
+      </summary>
+      <div class="disclosure-body">
+        <p class="person-bio" set:html={italicizeSpecies(pick(person.bio, locale))} />
+      </div>
+    </details>
   </div>
 </article>
 
 <style>
-  /* A portrait beside the text keeps eight leaders to a compact
-     directory on the home page without hiding any biography. */
+  /* A small portrait beside name and focus, then institution, countries,
+     profile link and the biography row across the card. Eight leaders
+     make a compact directory; each biography opens on request. */
   .person-card {
     /* People are not data: an ink outline without the hard shadow. */
     border-width: 1.5px;
     display: grid;
-    grid-template-columns: clamp(5.5rem, 8vw, 7.5rem) minmax(0, 1fr);
+    grid-template-columns: 4.5rem minmax(0, 1fr);
     grid-template-areas: 'media content' 'foot foot';
-    /* Share row tracks with the neighbouring card so both footer rules
+    /* Share row tracks with the neighbouring cards so the footer rules
        line up across a row. */
     grid-row: span 2;
     grid-template-rows: subgrid;
     row-gap: 0;
     margin-bottom: var(--space-m);
-    column-gap: var(--space-m);
+    column-gap: var(--space-s);
     padding: var(--space-m);
   }
   .person-media { grid-area: media; }
@@ -86,7 +102,8 @@ const base = import.meta.env.BASE_URL;
        own, so the link reads as one phrase instead of wrapping in a corner. */
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    align-content: start;
+    /* The biography row sits at the foot, level across a row of cards. */
+    grid-template-rows: auto auto 1fr;
     gap: var(--space-xs);
   }
   .person-place { display: grid; gap: 0.2rem; min-width: 0; }
@@ -142,11 +159,22 @@ const base = import.meta.env.BASE_URL;
     line-height: 1.4;
   }
   .person-bio {
-    margin: 0.15rem 0 0;
+    margin: 0;
     font-size: var(--step--1);
     color: var(--text-muted);
     line-height: 1.55;
   }
+  /* The biography row closes the card, like the background row on a pilot
+     project: a plain row, not a box. */
+  .person-more { --disclosure-pad-x: 0; align-self: end; margin-top: calc(-1 * var(--space-2xs)); }
+  .person-more > .disclosure-summary {
+    padding-block: 0.75rem;
+    padding-right: 0.3rem;
+    font-size: var(--step--1);
+    font-weight: 560;
+  }
+  .person-more:not([open]) > .disclosure-summary { border-bottom-color: transparent; padding-bottom: 0; }
+  .person-more > .disclosure-body { padding-block: var(--space-xs) 0; }
   .person-affil {
     margin: 0;
     font-size: var(--step--1);
@@ -195,22 +223,14 @@ const base = import.meta.env.BASE_URL;
     .person-card:hover .person-source-arrow { transform: translate(2px, -2px); }
   }
 
-  /* Phones: a small portrait beside the name and role, then the biography
-     and the footer across the full card width. */
+  /* Four to a row: a little less padding and a smaller focus line, so the
+     text beside the portrait keeps a readable width. */
+  @media (min-width: 72rem) {
+    .person-card { padding: var(--space-s) var(--space-s) var(--space-s); }
+    .person-name { font-size: var(--step-0); }
+    .person-role { font-size: var(--step--1); line-height: 1.45; }
+  }
   @media (max-width: 30rem) {
-    .person-card {
-      grid-row: auto;
-      grid-template-rows: none;
-      grid-template-areas: none;
-      grid-template-columns: 4rem minmax(0, 1fr);
-      column-gap: var(--space-s);
-      row-gap: 0.3rem;
-    }
-    .person-media { grid-column: 1; grid-row: 1 / span 2; }
-    .person-content { display: contents; }
-    .person-name { grid-column: 2; grid-row: 1; align-self: end; margin: 0; }
-    .person-role { grid-column: 2; grid-row: 2; align-self: start; }
-    .person-bio { grid-column: 1 / -1; grid-row: 3; margin-top: var(--space-2xs); }
-    .person-foot { grid-column: 1 / -1; grid-row: 4; }
+    .person-card { grid-template-columns: 4rem minmax(0, 1fr); padding: var(--space-s); }
   }
 </style>
