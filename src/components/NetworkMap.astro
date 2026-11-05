@@ -462,6 +462,14 @@ const eventMarks = events.map((e) => {
     font-weight: 500;
     stroke-width: 5px;
   }
+  /* Short laptop screens (1366 x 768) draw the map at about 60% of its
+     size, so the place names take a larger drawing size to land near 12 px. */
+  @media (min-width: 60rem) and (max-height: 52rem) {
+    .nm-labels text,
+    .nm-event text { font-size: 19px; }
+    :global([data-mode='light']) .nm-labels text,
+    :global([data-mode='light']) .nm-event text { font-size: 20px; }
+  }
   .nm-halo {
     fill: var(--accent);
     opacity: 0.16;
