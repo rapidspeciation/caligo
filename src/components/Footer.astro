@@ -1,6 +1,8 @@
 ---
 import { getDict, localePath, type Locale } from '../i18n';
 import Icon from './Icon.astro';
+import { navItems } from '../config/nav';
+import { LINKS } from '../data/content';
 
 interface Props {
   locale: Locale;
@@ -44,6 +46,16 @@ const base = import.meta.env.BASE_URL;
   </div>
 
   <div class="container-wide footer-base">
+    {/* One quiet row: every page, and the network's address, so a reader
+        at the bottom of a long page can go on without scrolling back up. */}
+    <div class="footer-links">
+      <ul class="footer-pages" role="list">
+        {navItems(t).map((item) => (
+          <li><a href={localePath(locale, item.path)} aria-current={item.path === page ? 'page' : undefined}>{item.label}</a></li>
+        ))}
+      </ul>
+      <a class="footer-email" href={`mailto:${LINKS.contactEmail}`}><Icon name="mail" />{LINKS.contactEmail}</a>
+    </div>
     <p class="muted">© {new Date().getFullYear()} {t.footer.rights}</p>
   </div>
 </footer>
@@ -121,6 +133,33 @@ const base = import.meta.env.BASE_URL;
   }
   .footer-base p {
     max-width: 62ch;
+  }
+  .footer-links {
+    flex: 1 1 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs) var(--space-m);
+  }
+  .footer-pages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem var(--space-m);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .footer-links a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .footer-links a:hover { color: var(--link); text-decoration: underline; text-underline-offset: 0.2em; }
+  .footer-links a[aria-current='page'] { color: var(--link); }
+  .footer-email { display: inline-flex; align-items: center; gap: 0.4em; }
+  .footer-email :global(svg) { flex: none; width: 1em; height: 1em; }
+  @media (pointer: coarse) {
+    .footer-links a { display: inline-flex; align-items: center; min-height: 44px; }
   }
 
   @media (min-width: 46rem) {

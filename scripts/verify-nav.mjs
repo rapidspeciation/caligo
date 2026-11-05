@@ -7,9 +7,10 @@
  * trains you to edit the test rather than think about the change.
  *
  * What actually matters to a reader:
- *   • the header offers primary navigation and the compact footer retains Join
- *     (or, on a page that closes on its own join block, the page links to it)
- *     without duplicating the entire navigation;
+ *   • the header offers primary navigation and the footer retains Join
+ *     (or, on a page that closes on its own join block, the page links to it);
+ *     since November 2026 the footer also repeats the page links as one
+ *     quiet row, so long pages need not scroll back to the header;
  *   • every nav destination resolves to a page that was really built;
  *   • both locales offer the same routes.
  *
