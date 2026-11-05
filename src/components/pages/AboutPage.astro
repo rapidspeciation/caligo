@@ -120,7 +120,7 @@ const facilityIntro = locale === 'en'
         <h3 id="about-maker-work" class="subsection-heading content-heading">{pick(MAKER.workLabel, locale)}</h3>
         <ul class="maker-work" role="list" aria-labelledby="about-maker-work">
           {MAKER.work.map((w) => (
-            <li class="ink-card" data-card="link">
+            <li class="ink-card ink-card--flat" data-card="link">
               <h4 class="maker-work-name"><a class="card-link" href={w.href} target="_blank" rel="noopener noreferrer external">{w.name}<Icon name="external" /></a></h4>
               <p class="maker-work-what">{pick(w.what, locale)}</p>
             </li>
@@ -133,17 +133,21 @@ const facilityIntro = locale === 'en'
 
 <style>
   .maker-copy { max-width: var(--measure); }
-  .maker-offer { margin-top: var(--space-m); font-weight: 600; color: var(--text-strong); }
+  .maker-offer { margin-top: var(--space-s); font-weight: 560; color: var(--text); }
   .maker-contact { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-s); margin-top: var(--space-s); }
-  .maker { display: grid; gap: var(--space-xl); }
+  /* A colophon after the network content: a hairline above, smaller
+     headings, flat tool cards (outline kept, no raised shadow) and tighter
+     spacing, so the sections about Caligo stay ahead of it. */
+  .maker { display: grid; gap: var(--space-l); padding-top: var(--space-l); border-top: 1px solid var(--hairline); }
+  .maker .section-heading { font-size: var(--step-1); margin-bottom: var(--space-s); }
   /* Both column headings at one size, so they share a top line and a baseline. */
-  .maker .subsection-heading { margin: 0 0 var(--space-m); font-size: var(--step-2); }
+  .maker .subsection-heading { margin: 0 0 var(--space-s); font-size: var(--step-1); }
   .maker > .maker-tools { margin-top: 0; }
   @media (min-width: 70rem) {
     .maker { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(2rem, 5vw, 4rem); align-items: start; }
   }
   .maker-work { display: grid; gap: var(--space-s); margin: 0; padding: 0; list-style: none; }
-  .maker-work li { display: grid; align-content: start; gap: var(--space-2xs); padding: var(--space-m); }
+  .maker-work li { display: grid; align-content: start; gap: var(--space-2xs); padding: var(--space-s) var(--space-m); }
   .maker-work-name { margin: 0; font-size: var(--step-0); }
   .maker-work-name a { display: inline-flex; align-items: center; gap: 0.35em; color: var(--text-strong); text-decoration: none; }
   .maker-work-name :global(svg) { flex: none; width: 1em; height: 1em; }
