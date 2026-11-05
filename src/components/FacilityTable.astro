@@ -26,8 +26,8 @@ function splitPlatforms(text: string): string[] {
 }
 
 // "PromethION (Hi-C expertise planned)": the instrument becomes the tag and
-// the note in brackets follows it as plain text, so a long note wraps as
-// words instead of stretching the tag.
+// the note in brackets follows it as a dashed tag (planned, not yet there)
+// that wraps as words instead of stretching.
 function splitNote(platform: string): { name: string; note?: string } {
   const m = platform.match(/^(.*?)\s*\((.+)\)$/);
   return m ? { name: m[1], note: m[2] } : { name: platform };
@@ -62,7 +62,7 @@ const labels = {
           <td class="cell-platforms">
             <ul class="platform-list" role="list">
               {splitPlatforms(typeof facility.platforms === 'string' ? facility.platforms : pick(facility.platforms, locale)).map(splitNote).map(({ name, note }) => (
-                <li class="platform-item"><span class="chip chip--sm chip--mono platform">{name}</span>{note && <span class="platform-note">({note})</span>}</li>
+                <li class="platform-item"><span class="chip chip--sm chip--mono platform">{name}</span>{note && <span class="chip chip--sm chip--done platform platform-note">{note}</span>}</li>
               ))}
             </ul>
           </td>
@@ -153,7 +153,12 @@ const labels = {
     --ink-inner: var(--surface-border);
     border-width: 1px;
   }
-  .platform-note { color: var(--text-muted); }
+  .platform-note {
+    --chip-fill: transparent;
+    --ink-inner: color-mix(in oklab, var(--text) 45%, transparent);
+    color: var(--text);
+    font-weight: 500;
+  }
   .cell-website {
     display: grid;
     gap: 0.35rem;

@@ -585,7 +585,9 @@ a.card-link:is(:hover, :active) { transform: none; }
 .chip--leaf { --chip-fill: var(--pastel-leaf); color: var(--on-pastel); --ink-line: var(--tone-leaf); }
 .chip--sky  { --chip-fill: var(--pastel-sky);  color: var(--on-pastel); --ink-line: var(--tone-sky); }
 .chip--rose { --chip-fill: var(--pastel-rose); color: var(--on-pastel); --ink-line: var(--tone-rose); }
-/* Something that has ended: same pill, dashed and unfilled. */
+/* Something that has ended or is only planned: same pill, dashed and
+   unfilled. */
+.chip--done { --chip-fill: transparent; border-style: dashed; }
 
 .chip { border-color: var(--ink-inner, var(--ink-line)); }
 
