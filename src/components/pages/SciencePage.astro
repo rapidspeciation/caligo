@@ -489,6 +489,10 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   .publication-credit a {
     color: var(--text-muted);
   }
+  /* Dark mode: the source and reuse notes one step lighter, so they read
+     as clearly as the caption above them. */
+  :global([data-mode='dark']) .publication-credit { color: var(--text-muted); }
+  :global([data-mode='dark']) .publication-credit a { color: var(--text); }
   /* Wider: the figure takes its own column, about two fifths of the card,
      with number, title and caption beside it. */
   @media (min-width: 40rem) {
