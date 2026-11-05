@@ -348,9 +348,11 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     letter-spacing: -0.05em;
     line-height: 0.95;
   }
+  /* No narrow measure: "species at chromosome scale" keeps to one line
+     where it fits and otherwise breaks without leaving a lone word. */
   .goal-heading {
     margin-bottom: var(--space-s);
-    max-width: 20ch;
+    text-wrap: pretty;
   }
   .standards-link {
     margin-top: var(--space-m);

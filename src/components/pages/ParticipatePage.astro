@@ -194,7 +194,8 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
     .ways-head { position: sticky; top: calc(var(--scroll-margin-top) + 1rem); }
   }
   .ways-head > * + * { margin-top: var(--space-m); }
-  .ways-head h2 { max-width: 16ch; font-size: var(--step-2); }
+  /* Breaks only where the column ends, not after two short words. */
+  .ways-head h2 { font-size: var(--step-2); text-wrap: pretty; }
   .ways-closing { color: var(--text-muted); }
   .ways-layout > .ways-list { margin-top: 0; }
   /* Structure and titles come from `.rule-list` (global.css). */
