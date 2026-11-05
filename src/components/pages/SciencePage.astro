@@ -687,11 +687,11 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   /* ---- H3 Three tiers of genomic data ---- */
   .tiers-head > * + * { margin-top: var(--space-s); }
   .tiers-head .section-heading { margin-bottom: 0; }
-  .tiers-section { border-top: 1px solid var(--hairline); }
+  .tiers-section { border-top: 1px solid var(--hairline); padding-block: var(--space-l); }
   .tier-list {
     list-style: none;
     padding: 0;
-    margin: var(--space-l) 0 0;
+    margin: var(--space-m) 0 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: clamp(1rem, 1.6vw, 1.5rem);
@@ -707,7 +707,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     row-gap: 0;
     overflow: hidden;
   }
-  .tier-copy { padding: var(--space-s) var(--space-m) var(--space-m); }
+  .tier-copy { padding: var(--space-xs) var(--space-m) var(--space-s); }
   .tier-label {
     margin: 0;
     font-size: var(--step--2);
@@ -723,9 +723,9 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     color: var(--text-strong);
   }
   .tier-body {
-    margin: 0.5rem 0 0;
+    margin: 0.35rem 0 0;
     font-size: var(--step-0);
-    line-height: 1.55;
+    line-height: 1.5;
     color: var(--text-muted);
   }
   @media (max-width: 60rem) {

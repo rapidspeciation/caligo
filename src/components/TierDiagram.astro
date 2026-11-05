@@ -584,7 +584,7 @@ const caption =
     display: flex;
     flex-direction: column;
     margin: 0;
-    padding: 0.85rem 0.85rem 0.75rem;
+    padding: 0.7rem 0.85rem 0.65rem;
     background: var(--tier-stage, var(--bg-inset));
     border-bottom: 1px solid var(--hairline);
     /* DNA bases: Okabe-Ito hues (tokens.css), tuned per mode. */
@@ -601,12 +601,14 @@ const caption =
     width: 100%;
     height: auto;
     overflow: visible;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.35rem;
   }
   /* Every diagram has the same height, so starting each panel right under
      its diagram puts the three prompts on one line across the cards; any
      spare height falls below the result instead. */
   .tier-explore { margin-top: 0; }
+  /* The controls here are one-line keys, not sliders: no reserved height. */
+  .tier-explore .explorable-control { min-height: 0; }
 
   /* ---- Shared marks ---- */
   /* Butterflies keep their own colours in both themes: a black Heliconius
