@@ -70,7 +70,7 @@
   --c-warm-950: #100c0a; /* warm inset dark */
   --c-burnt-800: #7d3a10;
   --c-burnt-700: #9a4a16;
-  --c-burnt-600: #b45621; /* accessible orange on ivory (WCAG AA) */
+  --c-burnt-600: #a44a14; /* the one light-theme rust: 5.5:1 on cream, 5.9:1 under white text */
   --c-burnt-500: #c2591f; /* logo orange */
   --c-burnt-400: #d76b2c;
   --c-burnt-300: #e38249; /* lightened for dark backgrounds */
@@ -269,12 +269,13 @@
   --text-muted: var(--c-warm-500);
   --text-faint: #6b6258; /* 5.2:1 on the cream --bg */
 
+  /* One rust for links, labels, the nav Join and every primary button. */
   --accent: var(--c-burnt-600);
-  --accent-strong: var(--c-burnt-700);
+  --accent-strong: var(--c-burnt-600);
   --accent-dim: color-mix(in oklab, var(--c-burnt-500) 12%, transparent);
   --accent-contrast: #ffffff;
   --link: var(--c-burnt-600);
-  --link-hover: var(--c-burnt-700);
+  --link-hover: var(--c-burnt-800);
 
   --highlight: var(--c-ochre-600);
   --highlight-strong: var(--c-ochre-700);

@@ -54,7 +54,7 @@ export const PALETTES: Readonly<Record<PaletteId, PaletteMeta>> = {
     descEs: 'Marfil cálido y naranja quemado, del logotipo provisional de Caligo.',
     preview: {
       dark:  ['#171310', '#201A16', '#F2ECE1', '#E38249'],
-      light: ['#FCF6EA', '#FFFDF7', '#2B2A2C', '#B45621'],
+      light: ['#FCF6EA', '#FFFDF7', '#2B2A2C', '#A44A14'],
     },
   },
   canopy: {
