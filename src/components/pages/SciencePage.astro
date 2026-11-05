@@ -99,12 +99,12 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
       <ol class="tier-list" role="list">
         {tiers.items.map((item, i) => (
           <li class="tier-card ink-card">
-            <TierDiagram locale={locale} kind={TIER_KINDS[i]} />
-            <div class="tier-copy">
+            <div class="tier-head">
               <p class="tier-label mono">{tiers.tierLabel} {i + 1}</p>
               <h3 class="tier-title">{item.title}</h3>
-              <p class="tier-body">{item.body}</p>
             </div>
+            <TierDiagram locale={locale} kind={TIER_KINDS[i]} />
+            <p class="tier-body">{item.body}</p>
           </li>
         ))}
       </ol>
@@ -696,18 +696,19 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: clamp(1rem, 1.6vw, 1.5rem);
   }
-  /* Subgrid keeps the diagrams, and the copy under them, level across the
-     three cards; the explore panels share one layout (prompt, control,
+  /* Name, diagram, description. Subgrid keeps the three rows level across
+     the cards; the explore panels share one layout (prompt, control,
      result) so their rows line up too. */
   .tier-card {
     min-width: 0;
     display: grid;
-    grid-row: span 2;
+    grid-row: span 3;
     grid-template-rows: subgrid;
     row-gap: 0;
     overflow: hidden;
   }
-  .tier-copy { padding: var(--space-xs) var(--space-m) var(--space-s); }
+  .tier-head { padding: var(--space-s) var(--space-m) var(--space-xs); }
+  .tier-card :global(.tier-diagram) { border-top: 1px solid var(--hairline); }
   .tier-label {
     margin: 0;
     font-size: var(--step--2);
@@ -723,7 +724,8 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     color: var(--text-strong);
   }
   .tier-body {
-    margin: 0.35rem 0 0;
+    margin: 0;
+    padding: var(--space-xs) var(--space-m) var(--space-s);
     font-size: var(--step-0);
     line-height: 1.5;
     color: var(--text-muted);
