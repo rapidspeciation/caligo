@@ -20,9 +20,8 @@ const closed = isCallClosed();
       <div class="funding-layout">
         <div class="funding-summary ink-card ink-card--rose" data-card="link">
           <h2 id="funding-call-title" class="content-heading">{intro.call}</h2>
-          <p class="content-body" data-when-call="open" hidden={closed}>{intro.description}</p>
-          <p class="content-body" data-when-call="open" hidden={closed}>{intro.coverage}</p>
-          <p class="content-body" data-when-call="closed" hidden={!closed}>{intro.descriptionClosed}</p>
+          {/* Deadline and action first, so a phone shows them on the first
+              screen; the description follows. */}
           <p class="funding-deadline content-body"><span class="funding-deadline-label">{intro.deadline}</span><strong class="funding-date"><time datetime={PILOT_DEADLINE}>{intro.date}</time></strong></p>
           <DeadlineChip locale={locale} />
           <div class="funding-open" data-when-call="open" hidden={closed}>
@@ -36,6 +35,11 @@ const closed = isCallClosed();
           <div class="funding-closed" data-when-call="closed" hidden={!closed}>
             <p class="content-body">{intro.closedNote}</p>
             <a class="btn btn--primary card-link" href={LINKS.joinForm} target="_blank" rel="noopener noreferrer">{join.cta}<Icon name="external" /></a>
+          </div>
+          <div class="funding-about">
+            <p class="content-body" data-when-call="open" hidden={closed}>{intro.description}</p>
+            <p class="content-body" data-when-call="open" hidden={closed}>{intro.coverage}</p>
+            <p class="content-body" data-when-call="closed" hidden={!closed}>{intro.descriptionClosed}</p>
           </div>
         </div>
         <div class="funding-conditions">
@@ -75,7 +79,8 @@ const closed = isCallClosed();
   .past-call h3 { margin: 0; font-family: var(--font-body); font-size: var(--step-0); font-weight: 650; }
   .past-call p { margin: 0; }
   .funding-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-xl); margin-top: var(--space-m); }
-  .funding-summary { display: grid; align-content: start; justify-items: start; gap: var(--space-s); }
+  .funding-summary { display: grid; align-self: start; align-content: start; justify-items: start; gap: var(--space-s); }
+  .funding-about { display: grid; gap: var(--space-s); margin-top: var(--space-xs); padding-top: var(--space-s); border-top: 1px solid var(--hairline); }
   .funding-summary { padding: clamp(1.25rem, 2.6vw, 2rem); }
   .funding-deadline { display: grid; gap: 0.15rem; padding-block: var(--space-xs) 0; }
   .funding-deadline-label { font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: 0.08em; text-transform: uppercase; }
@@ -87,5 +92,8 @@ const closed = isCallClosed();
 
   @media (max-width: 48rem) {
     .funding-layout { grid-template-columns: 1fr; gap: var(--space-l); }
+    /* The call card starts right under the page title on a phone. */
+    #funding-opportunities { padding-top: var(--space-m); }
+    #funding-opportunities .funding-layout { margin-top: 0; }
   }
 </style>
