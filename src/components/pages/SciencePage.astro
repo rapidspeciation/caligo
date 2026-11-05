@@ -392,7 +392,6 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   .publication-grid {
     display: grid;
     gap: var(--space-s);
-    max-width: 62rem;
   }
   .publication-card { --ink-line: var(--card-tone); --card-zoom: 1.04; }
   .publication-card:hover .publication-title h3,
@@ -479,7 +478,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   .publication-credit {
     margin-top: 0.3rem;
     color: var(--text-faint);
-    font-size: var(--step--2);
+    font-size: var(--step--1);
     line-height: 1.5;
   }
   .publication-credit a {
@@ -494,7 +493,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     }
     .publication-card figure { display: contents; }
     .publication-image-wrap { grid-area: figure; }
-    .publication-card figcaption { grid-area: caption; }
+    .publication-card figcaption { grid-area: caption; max-width: var(--measure); }
   }
 
   .questions-section {
@@ -555,6 +554,8 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     overflow: hidden;
     border-radius: var(--radius-xs);
     border: 1px solid var(--hairline);
+    /* A neutral slot while the lazy thumbnail loads, not a white box. */
+    background: var(--bg-inset);
   }
   .question-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
   /* Once open, the large photo beside the answer takes over. */
