@@ -496,6 +496,11 @@
   --tone-person-sky: #8db3d6;
   --tone-person-rose: #e39a84;
   --tone-person-sun: #e3b83c;
+  /* Open deadline chip: deep green carries the deadline, so rust stays the
+     one action colour beside it (12:1 text, 9:1 outline on the page). */
+  --deadline-fill: #22301c;
+  --deadline-line: #9ebf84;
+  --deadline-text: #f6efe2;
 }
 
 [data-mode='light'] {
@@ -521,6 +526,10 @@
   --tone-person-sky: #5f9bd3;
   --tone-person-rose: #e58a6c;
   --tone-person-sun: #e0b020;
+  /* Deep green deadline chip, cream text: 8.3:1; 5.4:1 against the rose card. */
+  --deadline-fill: #24573a;
+  --deadline-line: #24573a;
+  --deadline-text: #fffdf7;
 }
 
 :root {

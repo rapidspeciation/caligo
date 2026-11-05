@@ -35,11 +35,14 @@ const closed = deadline === PILOT_DEADLINE ? isCallClosed() : true;
 </span>
 
 <style>
-  /* Open: the sun pill that asks for attention. Closed: the dashed
-     "done" pill shared with finished events. */
+  /* Open: the deep green pill (deadline), so it never competes with the
+     rust action beside it. Closed: the dashed "done" pill shared with
+     finished events. */
   .deadline-chip[data-state='open'] {
-    --chip-fill: var(--pastel-sun);
-    color: var(--on-pastel);
+    --chip-fill: var(--deadline-fill);
+    --ink-line: var(--deadline-line);
+    --ink-inner: var(--deadline-line);
+    color: var(--deadline-text);
   }
   .deadline-chip[data-state='closed'] {
     --chip-fill: transparent;
