@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import PageHeader from '../PageHeader.astro';
 import Icon from '../Icon.astro';
+import CardIcon, { type CardIconName } from '../CardIcon.astro';
 import ArrowText from '../ArrowText.astro';
 import CopyEmail from '../CopyEmail.astro';
 import DiscordButton from '../DiscordButton.astro';
@@ -15,6 +16,11 @@ const { locale } = Astro.props;
 const t = getDict(locale);
 const p = t.participate;
 const stepLabel = locale === 'es' ? 'Paso' : 'Step';
+// One icon per thing people can bring, in the order of participate.audiences.items:
+// a question, an organism, expertise, infrastructure, training, a partnership.
+const wayIcons: readonly CardIconName[] = [
+  'question', 'taxonomy', 'practical', 'facility', 'training', 'affiliate',
+];
 ---
 
 <Base locale={locale} title={p.metaTitle} description={p.metaDescription} page="/participate">
@@ -66,12 +72,15 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
         <p class="content-body">{p.audiences.intro}</p>
         <p class="content-body ways-closing">{p.audiences.closing}</p>
       </div>
-      <ul class="rule-list ways-list" role="list">
+      <ul class="rule-list rule-list--icons ways-list" role="list">
         {p.audiences.items.map((item, i) => (
-          <li class="way">
-            <h3>{item.title}</h3>
-            <p class="content-body">{item.body}</p>
-            {i === 1 && <a class="text-link text-link--wrap" href="#contact"><ArrowText text={p.audiences.proposalLink} /></a>}
+          <li>
+            <CardIcon name={wayIcons[i]} />
+            <div class="way">
+              <h3>{item.title}</h3>
+              <p class="content-body">{item.body}</p>
+              {i === 1 && <a class="text-link text-link--wrap" href="#contact"><ArrowText text={p.audiences.proposalLink} /></a>}
+            </div>
           </li>
         ))}
       </ul>
@@ -198,7 +207,7 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
   .ways-head h2 { font-size: var(--step-2); text-wrap: pretty; }
   .ways-closing { color: var(--text-muted); }
   .ways-layout > .ways-list { margin-top: 0; }
-  /* Structure and titles come from `.rule-list` (global.css). */
+  /* Structure, icons and titles come from `.rule-list--icons` (global.css). */
   .way { display: grid; align-content: start; gap: var(--space-xs); }
   .way p { margin: 0; }
   .way .text-link { font-size: var(--step--1); margin-top: var(--space-2xs); }

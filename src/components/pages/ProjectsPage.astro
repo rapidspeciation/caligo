@@ -175,7 +175,7 @@ const callClosed = isCallClosed();
   <section class="section section--panel" aria-labelledby="pilot-purpose">
     <div class="container-wide">
       <h2 id="pilot-purpose" class="content-heading">{intro.why}</h2>
-      <ul class="rule-list pilot-reasons" role="list">
+      <ul class="rule-list rule-list--icons pilot-reasons" role="list">
         {intro.reasons.map(([title, body], i) => (
           <li class="content-body">
             <CardIcon name={reasonIcons[i]} />
@@ -233,9 +233,8 @@ const callClosed = isCallClosed();
     line-height: 1.25;
   }
   .funding-callout .btn { margin-top: var(--space-xs); }
-  /* Structure and titles come from `.rule-list` (global.css). */
+  /* Structure, icons and titles come from `.rule-list--icons` (global.css). */
   .pilot-reasons { margin-block: var(--space-m); }
-  .pilot-reasons li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-s); align-items: start; }
   .pilot-reasons p { margin-top: var(--space-xs); }
   .pilots { scroll-margin-top: var(--scroll-margin-top); }
 
