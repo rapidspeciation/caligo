@@ -7,7 +7,7 @@ interface Props {
 const { eyebrow, title, intro } = Astro.props;
 ---
 
-<header class="page-header">
+<header class:list={['page-header', { 'page-header--bare': !intro }]}>
   <div class="container-wide">
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     <h1>{title}</h1>
@@ -32,5 +32,13 @@ const { eyebrow, title, intro } = Astro.props;
   }
   .page-header-rule {
     margin-top: var(--space-m);
+  }
+  /* A title with no lead line (Funding) needs less air around it: the
+     section after it starts closer, and on a phone the title sits higher. */
+  @media (min-width: 48.01rem) {
+    :global(#main) > .page-header--bare + :global(.section) { padding-top: var(--space-l); }
+  }
+  @media (max-width: 48rem) {
+    .page-header--bare { padding-top: var(--space-l); }
   }
 </style>
