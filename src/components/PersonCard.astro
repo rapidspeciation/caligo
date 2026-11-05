@@ -13,8 +13,8 @@ interface Props {
 const { person, locale } = Astro.props;
 const ties = pick(person.regionalTies, locale).split(' / ');
 const regionalTiesLabel = locale === 'en' ? 'Regional ties' : 'Vínculos regionales';
-const bioLabel = locale === 'en' ? 'Read biography' : 'Leer biografía';
-/* On a phone the row also holds institution, countries and profile link. */
+/* One label at every width: on a phone the row also holds institution,
+   countries and profile link, so it is more than the biography. */
 const moreLabel = locale === 'en' ? 'More about' : 'Más sobre';
 /* The external icon travels with the last word of the profile link. */
 const sourceLabel = pick(person.source.label, locale);
@@ -65,8 +65,7 @@ const base = import.meta.env.BASE_URL;
     <details class="disclosure person-more">
       <summary class="disclosure-summary">
         <span class="disclosure-summary-inner">
-          <span class="person-wide">{bioLabel}<span class="sr-only">: {person.name}</span></span>
-          <span class="person-narrow">{moreLabel} {person.name}</span>
+          {moreLabel} {person.name}
         </span>
       </summary>
       <div class="disclosure-body">
@@ -251,7 +250,11 @@ const base = import.meta.env.BASE_URL;
   /* Four to a row: a little less padding and a smaller focus line, so the
      text beside the portrait keeps a readable width. */
   @media (min-width: 82rem) {
-    .person-card { padding: var(--space-s); column-gap: 0.8rem; }
+    /* Two rows of four plus the heading fit a 1366 x 768 screen: less
+       air above and inside the footer, portraits unchanged. */
+    .person-card { padding: 0.75rem var(--space-s); column-gap: 0.8rem; margin-bottom: var(--space-s); }
+    .person-foot { margin-top: var(--space-xs); padding-top: var(--space-xs); gap: 0.5rem; }
+    .person-more > .disclosure-summary { padding-top: 0.5rem; }
     .person-name { font-size: var(--step-0); }
     .person-role { font-size: var(--step--1); line-height: 1.45; }
   }

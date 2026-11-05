@@ -31,7 +31,7 @@ const { locale } = Astro.props;
   }
   /* Four to a row only once each card keeps a readable text column. */
   @media (min-width: 82rem) {
-    .leadership-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .leadership-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: var(--space-s); }
   }
   /* While a biography is open, each card takes its own height, so the
      cards beside it do not stretch around empty space. */

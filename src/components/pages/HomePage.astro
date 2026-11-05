@@ -185,6 +185,12 @@ const desktopSrcset = [
   /* The stat bar and the introduction share one background, so they need
      only the introduction's top gap. The following priority panel changes
      colour, so retain a smaller closing gap before that visible boundary. */
+  /* Heading, intro and both rows of leaders in one laptop screen. */
+  @media (min-width: 82rem) {
+    #leadership { padding-block: var(--space-l); }
+    #leadership .lead { margin-top: var(--space-xs); }
+  }
+
   .stat-bar-section {
     padding-bottom: 0;
   }
