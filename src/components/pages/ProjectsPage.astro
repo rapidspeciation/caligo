@@ -211,6 +211,9 @@ const callClosed = isCallClosed();
 </script>
 
 <style>
+  /* The first pilot follows the introduction at one rhythm step, not two:
+     the funding box is the tallest item here and already ends the row. */
+  .pilot-introduction { padding-top: var(--space-l); padding-bottom: var(--space-l); }
   .intro-copy { max-width: var(--measure); }
   .intro-copy p + p { margin-top: var(--space-s); }
   .pilot-intro-layout {
