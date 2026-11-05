@@ -55,7 +55,7 @@ const callClosed = isCallClosed();
     <PageHeader title={pageTitle} intro={intro.opening} />
   </div>
 
-  <section class="section pilot-introduction" aria-labelledby="pilot-purpose">
+  <section class="section pilot-introduction">
     <div class="container-wide">
       <div class="pilot-intro-layout">
         <div class="intro-copy content-body">
@@ -69,18 +69,6 @@ const callClosed = isCallClosed();
           <a class="btn btn--primary card-link" href={localePath(locale, '/funding')}>{intro.funding}<Icon name="arrow-right" /></a>
         </aside>
       </div>
-      <h2 id="pilot-purpose" class="content-heading">{intro.why}</h2>
-      <ul class="rule-list pilot-reasons" role="list">
-        {intro.reasons.map(([title, body], i) => (
-          <li class="content-body">
-            <CardIcon name={reasonIcons[i]} />
-            <div>
-              <strong class="rule-title">{title}</strong>
-              <p>{body}</p>
-            </div>
-          </li>
-        ))}
-      </ul>
     </div>
   </section>
 
@@ -92,8 +80,9 @@ const callClosed = isCallClosed();
     diagrams sat flush against the viewport edge.
   */}
   <div class="projects-layout container-wide">
-    <h2 id="proposed-projects" class="content-heading projects-heading">{intro.projects}</h2>
-    <ol class="pilots" aria-label={pageTitle}>
+    {/* The page title already names the list, so it carries no heading of
+        its own; the anchor stays for links from Funding. */}
+    <ol id="proposed-projects" class="pilots" aria-label={intro.projects}>
       {
         publishedPilots.map((pilot) => {
           const project = projectById.get(pilotToProjectId[pilot.id]);
@@ -111,7 +100,7 @@ const callClosed = isCallClosed();
               <h2 class="pilot-heading content-heading" set:html={italicizeSpecies(pilot.heading[locale])} />
 
               {pilot.taxon && (
-                <p class="pilot-taxon content-meta mono chip chip--rose">
+                <p class="pilot-taxon content-meta mono chip">
                   <em>{pilot.taxon}</em>
                 </p>
               )}
@@ -178,6 +167,25 @@ const callClosed = isCallClosed();
       }
     </ol>
   </div>
+
+  {/* Why pilots first: the reasons follow the proposals, so the proposals
+      come into view sooner. */}
+  <section class="section section--panel" aria-labelledby="pilot-purpose">
+    <div class="container-wide">
+      <h2 id="pilot-purpose" class="content-heading">{intro.why}</h2>
+      <ul class="rule-list pilot-reasons" role="list">
+        {intro.reasons.map(([title, body], i) => (
+          <li class="content-body">
+            <CardIcon name={reasonIcons[i]} />
+            <div>
+              <strong class="rule-title">{title}</strong>
+              <p>{body}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
 </Base>
 
 <script is:inline>
@@ -207,7 +215,6 @@ const callClosed = isCallClosed();
     display: grid;
     gap: var(--space-l);
     align-items: start;
-    margin-bottom: var(--space-xl);
   }
   @media (min-width: 60rem) {
     .pilot-intro-layout { grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr); gap: clamp(2rem, 5vw, 5rem); }
@@ -228,7 +235,7 @@ const callClosed = isCallClosed();
   .pilot-reasons { margin-block: var(--space-m); }
   .pilot-reasons li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-s); align-items: start; }
   .pilot-reasons p { margin-top: var(--space-xs); }
-  .projects-heading { padding-top: var(--space-l); }
+  .pilots { scroll-margin-top: var(--scroll-margin-top); }
 
   .pilots {
     list-style: none;
@@ -305,8 +312,12 @@ const callClosed = isCallClosed();
     max-width: 40ch;
   }
 
+  /* The taxon pill takes a light wash of its own card's colour. */
   .pilot-taxon {
     width: fit-content;
+    --chip-fill: color-mix(in oklab, var(--card-tone) 20%, var(--card));
+    border-color: var(--card-tone);
+    color: var(--text-strong);
   }
   .pilot-taxon em {
     font-style: italic;
@@ -314,6 +325,8 @@ const callClosed = isCallClosed();
 
   .pilot-hook {
     max-width: var(--measure);
+    font-family: var(--font-body);
+    font-weight: 560;
   }
 
   .pilot-body-text {
