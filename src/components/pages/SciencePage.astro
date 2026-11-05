@@ -293,10 +293,14 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     })();
   </script>
 
-  <section class="section section--tight" aria-labelledby="ethics-heading">
+  <!-- Its own band, ending on the way on: the proposed pilot projects. -->
+  <section class="section section--tight section--panel ethics-section" aria-labelledby="ethics-heading">
     <div class="container-wide prose-column">
       <h2 id="ethics-heading" class="section-heading content-heading">{feedback.ethics.heading}</h2>
       {feedback.ethics.body.map((para) => <p class="prose-para content-body">{para}</p>)}
+      <a class="text-link ethics-link" href={localePath(locale, '/projects')}>
+        {feedback.analysis.projectsLink}<Icon name="arrow-right" />
+      </a>
     </div>
   </section>
 
@@ -315,6 +319,8 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
     max-width: var(--measure);
   }
   .prose-para:last-child { margin-bottom: 0; }
+  /* The paragraph's own bottom margin is the gap to the closing link. */
+  .ethics-section .ethics-link { margin-top: 0; }
 
   /* ---- Reference genome overview ---- */
   .reference-section {
