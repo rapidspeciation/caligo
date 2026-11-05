@@ -21,8 +21,9 @@ const closed = isCallClosed();
       <div class="funding-layout">
         <div class="funding-summary ink-card ink-card--rose" data-card="link">
           <h2 id="funding-call-title" class="content-heading">{intro.call}</h2>
-          {/* Deadline and action first, so a phone shows them on the first
-              screen; the description follows. */}
+          {/* The benefit, the deadline and the action come first, so a phone
+              shows all three on the first screen; the description follows. */}
+          <p class="funding-covered content-body" data-when-call="open" hidden={closed}>{intro.covered}</p>
           <p class="funding-deadline content-body"><span class="funding-deadline-label">{intro.deadline}</span><strong class="funding-date"><time datetime={PILOT_DEADLINE}>{intro.date}</time></strong></p>
           <DeadlineChip locale={locale} />
           <div class="funding-open" data-when-call="open" hidden={closed}>
@@ -31,7 +32,6 @@ const closed = isCallClosed();
             ) : (
               <p class="content-meta">{intro.pending}</p>
             )}
-            <p class="content-meta">{intro.share}</p>
           </div>
           <div class="funding-closed" data-when-call="closed" hidden={!closed}>
             <p class="content-body">{intro.closedNote}</p>
@@ -39,8 +39,9 @@ const closed = isCallClosed();
           </div>
           <div class="funding-about">
             <p class="content-body" data-when-call="open" hidden={closed}>{intro.description}</p>
-            <p class="content-body" data-when-call="open" hidden={closed}>{intro.coverage}</p>
+            <p class="content-body" data-when-call="open" hidden={closed}>{intro.logistics}</p>
             <p class="content-body" data-when-call="closed" hidden={!closed}>{intro.descriptionClosed}</p>
+            <p class="content-meta" data-when-call="open" hidden={closed}>{intro.share}</p>
           </div>
         </div>
         <div class="funding-conditions">
@@ -62,7 +63,7 @@ const closed = isCallClosed();
               <DeadlineChip locale={locale} deadline={call.deadline} />
               <time class="past-call-date" datetime={call.deadline}>{call.date[locale]}</time>
             </div>
-            <h3>{call.name[locale]}</h3>
+            <h3 class="closed-call-title">{call.name[locale]}</h3>
             <p class="content-body">{call.summary[locale]}</p>
             <p class="content-body">{call.coverage[locale]}</p>
           </li>
@@ -77,12 +78,14 @@ const closed = isCallClosed();
   .past-call { display: grid; gap: var(--space-2xs); padding: var(--space-m); }
   .past-call-when { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.7rem; margin-bottom: 0.35rem; }
   .past-call-date { font-size: var(--step--1); font-weight: 500; color: var(--text-muted); }
-  .past-call h3 { margin: 0 0 0.25rem; font-family: var(--font-body); font-size: var(--step-0); font-weight: 650; line-height: 1.25; }
+  .past-call h3 { margin: 0 0 0.25rem; font-family: var(--font-body); font-size: var(--step-0); line-height: 1.3; }
   .past-call p { margin: 0; }
   .funding-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-xl); margin-top: var(--space-m); }
   .funding-summary { display: grid; align-self: start; align-content: start; justify-items: start; gap: var(--space-s); }
   .funding-about { display: grid; gap: var(--space-s); margin-top: var(--space-xs); padding-top: var(--space-s); border-top: 1px solid var(--hairline); }
   .funding-summary { padding: clamp(1.25rem, 2.6vw, 2rem); }
+  .funding-covered { margin: 0; font-weight: 600; color: var(--text-strong); }
+  .funding-covered[hidden] { display: none; }
   .funding-deadline { display: grid; gap: 0.15rem; padding-block: var(--space-xs) 0; }
   .funding-deadline-label { font-family: var(--font-mono); font-size: var(--step--2); letter-spacing: 0.08em; text-transform: uppercase; }
   .funding-date { font-family: var(--font-display); font-size: var(--step-2); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }

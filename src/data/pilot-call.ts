@@ -54,7 +54,8 @@ export const PILOT_INTRO = {
     date: '15 November 2026',
     description: 'This call funds local research teams to sequence Lepidoptera species native to Ecuador.',
     descriptionClosed: 'This call funded local research teams to sequence Lepidoptera species native to Ecuador.',
-    coverage: 'All sequencing expenses are covered. Samples are processed at the Universidad Regional Amazónica Ikiam in Tena and must be delivered before 20 November 2026.',
+    covered: 'All sequencing expenses are covered.',
+    logistics: 'Samples are processed at the Universidad Regional Amazónica Ikiam in Tena and must be delivered before 20 November 2026.',
     past: 'Past calls',
     eligibility: 'Who can apply and which species qualify?',
     conditions: [
@@ -66,7 +67,11 @@ export const PILOT_INTRO = {
       'Samples must have valid collection permits and, where required in the country concerned, Access and Benefit-Sharing (ABS) permits.',
     ],
     check: 'See the proposed pilot projects',
-    apply: 'Complete the application form',
+    /* One label per call link: the apply button, a text link to the open
+       call, and a link to a call that has closed. */
+    apply: 'Apply',
+    seeCall: 'See the call',
+    seePast: 'See past call',
     pending: 'Application form link pending.',
     share: 'Please share this opportunity with your collaborators.',
     closedNote: 'Register with the network to hear about future calls.',
@@ -109,7 +114,8 @@ export const PILOT_INTRO = {
     date: '15 de noviembre de 2026',
     description: 'Esta convocatoria financia a equipos de investigación locales para secuenciar especies de lepidópteros nativas de Ecuador.',
     descriptionClosed: 'Esta convocatoria financió a equipos de investigación locales para secuenciar especies de lepidópteros nativas de Ecuador.',
-    coverage: 'Se cubren todos los gastos de secuenciación. Las muestras se procesan en la Universidad Regional Amazónica Ikiam, en Tena, y deben entregarse antes del 20 de noviembre de 2026.',
+    covered: 'Se cubren todos los gastos de secuenciación.',
+    logistics: 'Las muestras se procesan en la Universidad Regional Amazónica Ikiam, en Tena, y deben entregarse antes del 20 de noviembre de 2026.',
     past: 'Convocatorias anteriores',
     eligibility: '¿Quiénes pueden postular y qué especies son elegibles?',
     conditions: [
@@ -121,7 +127,9 @@ export const PILOT_INTRO = {
       'Las muestras deben contar con permisos de recolección vigentes y, cuando el país lo requiera, permisos de acceso y distribución de beneficios (ABS).',
     ],
     check: 'Consulta los proyectos piloto propuestos',
-    apply: 'Completa el formulario de postulación',
+    apply: 'Postula',
+    seeCall: 'Ver la convocatoria',
+    seePast: 'Ver convocatoria anterior',
     pending: 'Enlace al formulario de postulación pendiente.',
     share: 'Comparte esta oportunidad con tus colaboradores.',
     closedNote: 'Inscríbete en la red para enterarte de próximas convocatorias.',

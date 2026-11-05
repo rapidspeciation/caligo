@@ -342,6 +342,11 @@ kbd,
   color: var(--text-muted);
 }
 
+/* A call that has closed reads the same wherever it appears (home
+   timeline, funding archive): dashed status chip, date in the body face
+   and this subdued title. */
+.closed-call-title { color: var(--text-muted); font-weight: 600; }
+
 /* ============================ Buttons ============================
    Two kinds. The primary (plain `.btn`, or `.btn--primary` to say so) is
    filled with the page's rust: white text in light, the brighter rust with

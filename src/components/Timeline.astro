@@ -56,7 +56,7 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
       {/* Present tense while the call is open, past once it has closed. */}
       <p class="timeline-summary" data-when-call="open" hidden={callClosed}>{funding.description}</p>
       <p class="timeline-summary" data-when-call="closed" hidden={!callClosed}>{funding.descriptionClosed}</p>
-      <a class="text-link timeline-link card-link" href={localePath(locale, '/funding')}>{funding.funding}<Icon name="arrow-right" /></a>
+      <a class="text-link timeline-link card-link" href={localePath(locale, '/funding')}><span data-when-call="open" hidden={callClosed}>{funding.seeCall}</span><span data-when-call="closed" hidden={!callClosed}>{funding.seePast}</span><Icon name="arrow-right" /></a>
     </li>
   ) : entry.kind === 'past-call' ? (
     <li class="timeline-item ink-card" data-card="link" id={`event-${entry.call.id}-funding`} data-end={entry.call.deadline}>
@@ -64,10 +64,10 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
         <DeadlineChip locale={locale} class="timeline-chip" deadline={entry.call.deadline} />
         <time class="timeline-dates" datetime={entry.call.deadline}>{pick(entry.call.date, locale)}</time>
       </div>
-      <h3 class="timeline-name">{pick(entry.call.name, locale)}</h3>
+      <h3 class="timeline-name closed-call-title">{pick(entry.call.name, locale)}</h3>
       <p class="timeline-location">{entry.call.country}</p>
       <p class="timeline-summary">{pick(entry.call.summary, locale)}</p>
-      <a class="text-link timeline-link card-link" href={localePath(locale, '/funding')}>{funding.funding}<Icon name="arrow-right" /></a>
+      <a class="text-link timeline-link card-link" href={`${localePath(locale, '/funding')}#past-calls-title`}>{funding.seePast}<Icon name="arrow-right" /></a>
     </li>
   ) : (
     <li class="timeline-item ink-card" data-card="link" id={`event-${entry.event.id}`} data-end={entry.event.end ?? entry.event.start}>
@@ -175,6 +175,8 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
     line-height: 1.3;
     text-wrap: balance;
   }
+  /* The shared closed-call title (global.css), restated against the scoped rule above. */
+  .timeline-name.closed-call-title { color: var(--text-muted); font-weight: 600; }
   .timeline-location {
     margin: 0;
     font-size: var(--step--1);
