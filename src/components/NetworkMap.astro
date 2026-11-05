@@ -337,10 +337,24 @@ const eventMarks = events.map((e) => {
     fill: color-mix(in oklab, var(--accent) 17%, var(--bg));
     stroke: color-mix(in oklab, var(--accent) 50%, transparent);
   }
+  /* On the dark page a faint land fill disappears: lift the land and its
+     borders so the continent stands clear of the background. */
+  :global([data-mode='dark']) .nm-country {
+    fill: color-mix(in oklab, var(--text-muted) 24%, var(--bg));
+    stroke: color-mix(in oklab, var(--text-muted) 62%, transparent);
+    stroke-width: 0.9;
+  }
+  :global([data-mode='dark']) .nm-country--active {
+    fill: color-mix(in oklab, var(--accent) 23%, var(--bg));
+    stroke: color-mix(in oklab, var(--accent) 70%, transparent);
+  }
   /* On a phone the place names would be a few pixels tall: the numbered
      list beside the map carries them instead. */
   @media (max-width: 40rem) {
     .nm-labels, .nm-event text { display: none; }
+    /* The map is about 40% of its drawn size here, so the numbered
+       facility markers grow to stay legible against the list. */
+    .nm-site > * { transform: scale(1.5); }
   }
   .nm-labels text,
   .nm-event text {
