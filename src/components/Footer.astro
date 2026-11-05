@@ -4,8 +4,10 @@ import Icon from './Icon.astro';
 
 interface Props {
   locale: Locale;
+  /** Current page path; the join button is left out on the join page itself. */
+  page?: string;
 }
-const { locale } = Astro.props;
+const { locale, page } = Astro.props;
 const t = getDict(locale);
 const base = import.meta.env.BASE_URL;
 
@@ -30,9 +32,11 @@ const base = import.meta.env.BASE_URL;
       </div>
     </div>
 
-    <a class="btn btn--primary footer-join" href={`${localePath(locale, '/participate')}#join`}>
-      {t.join.ctaSecondary}<Icon name="arrow-right" />
-    </a>
+    {page !== '/participate' && (
+      <a class="btn btn--primary footer-join" href={`${localePath(locale, '/participate')}#join`}>
+        {t.join.ctaSecondary}<Icon name="arrow-right" />
+      </a>
+    )}
   </div>
 
   <div class="container-wide footer-base">

@@ -1,13 +1,13 @@
 ---
 import Icon from './Icon.astro';
 import { getDict, type Locale } from '../i18n';
-interface Props { locale: Locale; email?: string }
-const { locale, email = getDict(locale).participate.contact.email } = Astro.props;
+interface Props { locale: Locale; email?: string; class?: string }
+const { locale, email = getDict(locale).participate.contact.email, class: className } = Astro.props;
 const es = locale === 'es';
 ---
 <div class="email-contact" data-copy-email data-email={email} data-success={es ? 'Correo copiado al portapapeles.' : 'Email copied to clipboard.'} data-failure={es ? 'No se pudo copiar. Selecciona el correo y cópialo manualmente.' : 'Could not copy. Select the email and copy it manually.'}>
   <span class="email-address">{email}</span>
-  <button class="btn email-copy-button" type="button" hidden aria-label={es ? `Copiar ${email}` : `Copy ${email}`}>
+  <button class:list={['btn', 'email-copy-button', className]} type="button" hidden aria-label={es ? `Copiar ${email}` : `Copy ${email}`}>
     <Icon name="copy" class="copy-idle" /><Icon name="check" class="copy-done" /><span>{email}</span>
   </button>
   <div class="email-toast" data-email-toast role="status" aria-live="polite" aria-atomic="true" hidden>

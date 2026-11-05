@@ -444,11 +444,18 @@ kbd,
   --hairline-strong: color-mix(in oklab, var(--on-pastel) 45%, transparent);
   --ink-inner: var(--ink-line);
 }
+/* Every filled button on a pastel card reads the same: ink fill, paper
+   text, whatever the card's colour. A secondary (ghost) button keeps an
+   outline and no fill, so the card's one main action stands out. */
 .ink-card--sun .btn, .ink-card--leaf .btn, .ink-card--sky .btn, .ink-card--rose .btn {
   --btn-bg: var(--on-pastel);
-  --btn-fg: var(--card-fill);
+  --btn-fg: var(--card);
   --btn-line: var(--on-pastel);
   --btn-shadow: var(--ink-line);
+}
+:is(.ink-card--sun, .ink-card--leaf, .ink-card--sky, .ink-card--rose) .btn--ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--on-pastel);
 }
 /* In light mode the button is ink on an ink outline, so its shadow takes a
    darker shade of the card instead of disappearing into the button. */
