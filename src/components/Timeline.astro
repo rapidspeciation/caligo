@@ -265,11 +265,13 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
     justify-content: center;
     pointer-events: none;
   }
+  /* The line runs from the pin just past the track and stops above the
+     cards, so it never touches a card or its shadow in the narrow gap. */
   .timeline-list--compact .timeline-today::after {
     content: '';
     position: absolute;
     top: 1.5rem;
-    bottom: 0;
+    height: calc(var(--track-y) - 1.5rem + 0.6rem);
     left: -1px;
     border-left: 2px solid var(--tone-sun);
   }
@@ -289,6 +291,7 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
     .timeline-list--compact .timeline-today::after {
       position: static;
       flex: 1;
+      height: auto;
       border-left: 0;
       border-top: 2px solid var(--tone-sun);
     }
