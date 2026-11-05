@@ -452,6 +452,16 @@ const eventMarks = events.map((e) => {
     stroke-width: 4px;
     stroke-linejoin: round;
   }
+  /* On the light basemap the place names take the body colour, a little
+     more size and a wider paper halo, so Tena or Puerto Maldonado read as
+     clearly as the list beside the map. Dark mode keeps its palette. */
+  :global([data-mode='light']) .nm-labels text,
+  :global([data-mode='light']) .nm-event text {
+    fill: var(--text);
+    font-size: 16px;
+    font-weight: 500;
+    stroke-width: 5px;
+  }
   .nm-halo {
     fill: var(--accent);
     opacity: 0.16;
