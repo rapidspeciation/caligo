@@ -10,7 +10,7 @@
  */
 import { FACILITIES, EVENTS, pick } from '../data/initiative';
 import { MAP_COUNTRIES, MAP_VIEWBOX, projectLonLat } from '../data/network-map';
-import { MEMBER_COUNTRIES } from '../data/members';
+import { MEMBER_COUNTRY_LIST } from '../data/members';
 import { localePath, type Locale } from '../i18n';
 import Icon from './Icon.astro';
 
@@ -96,8 +96,8 @@ for (const site of sites) {
 const bogota = cityLabels.get('Bogotá');
 if (bogota) bogota.y -= 2;
 
-const memberDots = MEMBER_COUNTRIES.filter((m) => m.lonLat).map((m) => ({ name: pick(m, locale), ...projectLonLat(m.lonLat![0], m.lonLat![1]) }));
-const memberNames = MEMBER_COUNTRIES.map((m) => pick(m, locale)).sort((a, b) => a.localeCompare(b, locale));
+const memberDots = MEMBER_COUNTRY_LIST.filter((m) => m.lonLat).map((m) => ({ name: pick(m, locale), ...projectLonLat(m.lonLat![0], m.lonLat![1]) }));
+const memberNames = MEMBER_COUNTRY_LIST.map((m) => pick(m, locale)).sort((a, b) => a.localeCompare(b, locale));
 
 const events = EVENTS.map((event) => ({ event, ...projectLonLat(event.lonLat[0], event.lonLat[1]) }));
 /* The Bogotá workshop shares its city with two facilities; set it below them. */
@@ -141,7 +141,7 @@ const eventMarks = events.map((e) => {
       ))}
     </ul>
 
-    <h3 class="nm-list-title content-label">{copy.members} · {MEMBER_COUNTRIES.length}</h3>
+    <h3 class="nm-list-title content-label">{copy.members} · {MEMBER_COUNTRY_LIST.length}</h3>
     <ul class="nm-members" role="list">{memberNames.map((n) => <li>{n}</li>)}</ul>
 
     <a class="text-link nm-more" href={`${localePath(locale, '/about')}#about-facilities`}>

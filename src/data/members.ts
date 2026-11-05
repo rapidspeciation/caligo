@@ -17,7 +17,7 @@ export interface MemberCountry {
   readonly lonLat?: readonly [number, number];
 }
 
-export const MEMBER_COUNTRIES: readonly MemberCountry[] = [
+export const MEMBER_COUNTRY_LIST: readonly MemberCountry[] = [
   { en: 'Argentina', es: 'Argentina', lonLat: [-64.5, -34.0] },
   { en: 'Bolivia', es: 'Bolivia', lonLat: [-64.5, -16.8] },
   { en: 'Brazil', es: 'Brasil', lonLat: [-51.0, -10.5] },
