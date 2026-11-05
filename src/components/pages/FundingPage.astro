@@ -41,7 +41,7 @@ const closed = isCallClosed();
             <p class="content-body" data-when-call="open" hidden={closed}>{intro.description}</p>
             <p class="content-body" data-when-call="open" hidden={closed}>{intro.logistics}</p>
             <p class="content-body" data-when-call="closed" hidden={!closed}>{intro.descriptionClosed}</p>
-            <p class="content-meta" data-when-call="open" hidden={closed}>{intro.share}</p>
+            <p class="content-meta funding-share" data-when-call="open" hidden={closed}>{intro.share}</p>
           </div>
         </div>
         <div class="funding-conditions">
@@ -82,6 +82,8 @@ const closed = isCallClosed();
   .past-call p { margin: 0; }
   .funding-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-xl); margin-top: var(--space-m); }
   .funding-summary { display: grid; align-self: start; align-content: start; justify-items: start; gap: var(--space-s); }
+  /* A closing aside in fine print, not an action. */
+  .funding-share { font-style: italic; }
   .funding-about { display: grid; gap: var(--space-s); margin-top: var(--space-xs); padding-top: var(--space-s); border-top: 1px solid var(--hairline); }
   .funding-summary { padding: clamp(1.25rem, 2.6vw, 2rem); }
   .funding-covered { margin: 0; font-weight: 600; color: var(--text-strong); }
