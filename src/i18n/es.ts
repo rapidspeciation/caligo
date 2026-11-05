@@ -146,7 +146,7 @@ export const es: Dict = {
       "participantsNote": "A septiembre de 2026. La inscripción sigue abierta.",
       "facilitiesNote": "En {n} países, de Panamá a Chile.",
       "countriesNote": "Y {n} más fuera de la región.",
-      "pilotsNote": "Ocho especies de Heliconius ya secuenciadas en Bogotá.",
+      "pilotsNote": "Sobre Heliconius, Parides ascanius, plagas de la soja y Panacea prola.",
       "whenNow": "En curso"
     }
   },

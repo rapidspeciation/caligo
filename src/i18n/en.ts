@@ -149,7 +149,7 @@ export const en = {
       "participantsNote": "As of September 2026. Registration is still open.",
       "facilitiesNote": "In {n} countries, from Panama to Chile.",
       "countriesNote": "Plus {n} outside the region.",
-      "pilotsNote": "Eight Heliconius species already sequenced in Bogotá.",
+      "pilotsNote": "On Heliconius, Parides ascanius, soybean pests and Panacea prola.",
       "whenNow": "Happening now"
     }
   },
