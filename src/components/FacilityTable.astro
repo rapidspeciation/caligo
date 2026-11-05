@@ -90,18 +90,15 @@ const labels = {
     font-variant-numeric: tabular-nums;
     font-size: var(--step--1);
   }
+  /* The h3 above names the table, so the caption is for screen readers
+     only; the column headers carry the green band that tops the box. */
   .facility-caption {
-    caption-side: top;
-    text-align: left;
-    padding: var(--space-s) var(--space-m);
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--on-pastel);
-    background: var(--pastel-leaf);
-    border-bottom: var(--ink-w) solid var(--ink-line);
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
   thead th {
     padding: var(--space-s) var(--space-m);
@@ -109,10 +106,11 @@ const labels = {
     font-family: var(--font-mono);
     font-size: var(--step--1);
     font-weight: 600;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-faint);
-    border-bottom: 1px solid var(--hairline-strong);
+    color: var(--on-pastel);
+    background: var(--pastel-leaf);
+    border-bottom: var(--ink-w) solid var(--ink-line);
     white-space: nowrap;
   }
   tbody tr {
@@ -169,7 +167,6 @@ const labels = {
      sideways to reach the website column. */
   @media (max-width: 40rem) {
     .facility-table-wrapper { overflow: visible; }
-    .facility-caption { display: block; }
     .facility-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
     .facility-table, .facility-table tbody, .facility-table tr, .facility-table td { display: block; width: auto; }
     tbody td { padding: 0.15rem var(--space-m); }
