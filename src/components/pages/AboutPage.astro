@@ -112,7 +112,7 @@ const facilityIntro = locale === 'en'
         <p class="prose-para content-body">{pick(MAKER.body, locale)}</p>
         <p class="maker-offer content-body">{pick(MAKER.offer, locale)}</p>
         <div class="maker-contact">
-          <CopyEmail locale={locale} email={MAKER.email} />
+          <CopyEmail locale={locale} email={MAKER.email} class="btn--ghost" />
           <a class="btn btn--ghost" href={MAKER.github} target="_blank" rel="noopener noreferrer external">GitHub<Icon name="external" /></a>
         </div>
       </div>

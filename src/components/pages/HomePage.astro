@@ -8,6 +8,7 @@ import LeadershipGrid from '../LeadershipGrid.astro';
 import { ABOUT_FEEDBACK } from '../../data/about-feedback';
 import { pick } from '../../data/initiative';
 import Icon from '../Icon.astro';
+import ArrowText from '../ArrowText.astro';
 import CommunityStats from '../CommunityStats.astro';
 import Timeline from '../Timeline.astro';
 import NetworkMap from '../NetworkMap.astro';
@@ -60,12 +61,14 @@ const desktopSrcset = [
             <a class="btn hero-btn-primary" href={`${localePath(locale, '/participate')}#join`}>
               {t.join.ctaSecondary}<Icon name="arrow-right" />
             </a>
-            <a class="hero-text-link" href={localePath(locale, '/science')}>
-              {h.hero.scienceAction}<Icon name="arrow-right" />
-            </a>
-            <a class="hero-text-link" href={localePath(locale, '/projects')}>
-              {h.hero.projectsAction}<Icon name="arrow-right" />
-            </a>
+            <div class="hero-more">
+              <a class="hero-text-link" href={localePath(locale, '/science')}>
+                <ArrowText text={h.hero.scienceAction} />
+              </a>
+              <a class="hero-text-link" href={localePath(locale, '/projects')}>
+                <ArrowText text={h.hero.projectsAction} />
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -264,20 +267,19 @@ const desktopSrcset = [
     flex-wrap: wrap;
     gap: var(--space-s);
   }
-  /* Joining is the hero's one filled action: a rust pill fixed in both
-     modes, since the hero keeps its own colours. Reading on is a pair of
-     quiet text links beneath it. */
-  .hero-btn-primary {
-    --btn-bg: var(--c-burnt-600);
-    --btn-fg: #ffffff;
-    --btn-line: var(--c-burnt-600);
-    --btn-shadow: #000;
+  /* Reading on: two quieter links, a step lighter than the button and set
+     a little apart from it. */
+  .hero-more {
+    display: grid;
+    justify-items: start;
+    gap: 0.45rem;
+    margin-top: 0.55rem;
   }
   .hero-text-link {
     display: block;
     max-width: 36ch;
     color: #F6F7F3;
-    font-weight: 560;
+    font-weight: 420;
     line-height: 1.35;
     text-decoration: underline;
     text-decoration-color: color-mix(in oklab, #F6F7F3 40%, transparent);
@@ -285,8 +287,7 @@ const desktopSrcset = [
     text-shadow: 0 1px 8px rgba(0,0,0,0.5);
   }
   .hero-text-link:hover { color: #FFFFFF; text-decoration-color: currentColor; }
-  /* The arrow follows the last word, even when the label wraps. */
-  .hero-text-link :global(svg) { display: inline-block; width: 1em; height: 1em; margin-left: 0.4em; vertical-align: -0.14em; }
+  .hero-text-link :global(svg) { width: 1em; height: 1em; }
   .hero-attribution {
     position: absolute;
     z-index: 3;
@@ -470,7 +471,6 @@ const desktopSrcset = [
   .hero-actions .btn { border-width: 1px; box-shadow: none; }
   .hero-actions .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.35); }
   .hero-actions .btn:active { transform: none; box-shadow: none; }
-  .hero-actions .hero-text-link + .hero-text-link { margin-top: -0.25rem; }
   .hero-attribution { font-family: var(--font-body); max-width: 48ch; }
   .intro-layout { display: grid; grid-template-columns: 1fr; }
   .intro-copy > * + * { margin-top: var(--space-m); }

@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import PageHeader from '../PageHeader.astro';
 import Icon from '../Icon.astro';
+import ArrowText from '../ArrowText.astro';
 import CopyEmail from '../CopyEmail.astro';
 import DiscordButton from '../DiscordButton.astro';
 import { LINKS } from '../../data/content';
@@ -70,7 +71,7 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
           <li class="way">
             <h3>{item.title}</h3>
             <p class="content-body">{item.body}</p>
-            {i === 1 && <a class="text-link" href="#contact">{p.audiences.proposalLink}<Icon name="arrow-right" /></a>}
+            {i === 1 && <a class="text-link text-link--wrap" href="#contact"><ArrowText text={p.audiences.proposalLink} /></a>}
           </li>
         ))}
       </ul>

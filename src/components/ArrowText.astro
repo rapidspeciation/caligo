@@ -1,0 +1,21 @@
+---
+/**
+ * A link label that ends in an arrow. The last word and the arrow share one
+ * unbreakable span, so when the label wraps the arrow moves down with its
+ * word instead of being left alone on a line or pushed to the far edge.
+ * Pair it with `.text-link--wrap` (global.css) on a `.text-link`.
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  readonly text: string;
+  readonly icon?: 'arrow-right' | 'external';
+}
+
+const { text, icon = 'arrow-right' } = Astro.props;
+const label = text.trimEnd();
+const cut = label.lastIndexOf(' ');
+const head = cut < 0 ? '' : label.slice(0, cut + 1);
+const tail = cut < 0 ? label : label.slice(cut + 1);
+---
+{head}<span class="arrow-tail">{tail}<Icon name={icon} /></span>
