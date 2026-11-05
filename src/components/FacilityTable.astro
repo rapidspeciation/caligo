@@ -1,6 +1,7 @@
 ---
 import { FACILITIES, pick } from '../data/initiative';
 import type { Locale } from '../i18n';
+import ArrowText from './ArrowText.astro';
 
 interface Props {
   readonly locale: Locale;
@@ -68,7 +69,7 @@ const labels = {
           <td class="cell-website">
             {facility.websites.map((website) => (
               <a href={website.href} target="_blank" rel="noopener noreferrer external">
-                {website.label} <span aria-hidden="true">↗</span>
+                <ArrowText text={website.label} icon="external" />
               </a>
             ))}
           </td>
@@ -157,6 +158,7 @@ const labels = {
     display: grid;
     gap: 0.35rem;
   }
+  .cell-website a :global(svg) { width: 1em; height: 1em; }
   .cell-website a {
     color: var(--accent-strong);
     text-underline-offset: 0.16em;

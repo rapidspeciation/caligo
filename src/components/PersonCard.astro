@@ -3,6 +3,7 @@ import { pick, type Person } from '../data/initiative';
 import { italicizeSpecies } from '../data/content';
 import { srcsetFor } from '../data/image-variants';
 import type { Locale } from '../i18n';
+import ArrowText from './ArrowText.astro';
 
 interface Props {
   readonly person: Person;
@@ -15,11 +16,8 @@ const regionalTiesLabel = locale === 'en' ? 'Regional ties' : 'Vínculos regiona
 const bioLabel = locale === 'en' ? 'Read biography' : 'Leer biografía';
 /* On a phone the row also holds institution, countries and profile link. */
 const moreLabel = locale === 'en' ? 'More about' : 'Más sobre';
-/* The arrow travels with the last word of the profile link. */
+/* The external icon travels with the last word of the profile link. */
 const sourceLabel = pick(person.source.label, locale);
-const sourceCut = sourceLabel.lastIndexOf(' ');
-const sourceHead = sourceLabel.slice(0, sourceCut + 1);
-const sourceTail = sourceLabel.slice(sourceCut + 1);
 const base = import.meta.env.BASE_URL;
 ---
 
@@ -57,7 +55,7 @@ const base = import.meta.env.BASE_URL;
       target="_blank"
       rel="noopener noreferrer external"
     >
-      {sourceHead}<span class="arrow-tail">{sourceTail}<span class="person-source-arrow" aria-hidden="true">↗</span></span>
+      <ArrowText text={sourceLabel} icon="external" />
     </a>
     <!-- The biography waits behind its own row, so eight people fit in
          about one screen; each row names its person for screen readers.
@@ -86,7 +84,7 @@ const base = import.meta.env.BASE_URL;
             target="_blank"
             rel="noopener noreferrer external"
           >
-            {sourceHead}<span class="arrow-tail">{sourceTail}<span class="person-source-arrow" aria-hidden="true">↗</span></span>
+            <ArrowText text={sourceLabel} icon="external" />
           </a>
         </div>
         <p class="person-bio" set:html={italicizeSpecies(pick(person.bio, locale))} />
@@ -231,8 +229,8 @@ const base = import.meta.env.BASE_URL;
   }
   /* On the dark card the brighter rust (8:1) keeps the link legible. */
   :global([data-mode='dark']) .person-source { color: var(--accent-strong); }
-  .person-source-arrow { margin-left: 0.3em; }
-  .person-source-arrow { display: inline-block; transition: transform var(--dur-quick) var(--ease-glide); }
+  /* The site's external icon, after the label, at text size. */
+  .person-source :global(svg) { width: 1em; height: 1em; }
   /* Raised (see global.css, "Card behaviour"): the portrait drops its warm
      grade, the country chips fill in and the arrow leaves. */
   .person-photo { transition: transform var(--dur-base) var(--ease-glide), filter var(--dur-base) var(--ease-glide); }
@@ -245,7 +243,7 @@ const base = import.meta.env.BASE_URL;
     .person-card:hover .person-media::after { opacity: 0; }
     .person-card:hover .person-tie { background: color-mix(in oklab, var(--card-tone) 34%, transparent); border-color: var(--card-tone); }
     .person-card:hover .person-source { color: var(--link-hover); text-decoration-color: currentColor; }
-    .person-card:hover .person-source-arrow { transform: translate(2px, -2px); }
+    .person-card:hover .person-source :global(svg) { transform: translate(2px, -2px); }
   }
 
   /* Four to a row: a little less padding and a smaller focus line, so the
