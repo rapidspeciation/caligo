@@ -273,16 +273,18 @@ const desktopSrcset = [
     display: grid;
     justify-items: start;
     gap: 0.45rem;
-    margin-top: 0.55rem;
+    margin-top: 1rem;
   }
   .hero-text-link {
     display: block;
     max-width: 36ch;
-    color: #F6F7F3;
+    /* A warm grey a step below the button's white: still a clear,
+       underlined link (over 7:1 on the darkened photo). */
+    color: #D8D1C5;
     font-weight: 420;
     line-height: 1.35;
     text-decoration: underline;
-    text-decoration-color: color-mix(in oklab, #F6F7F3 40%, transparent);
+    text-decoration-color: color-mix(in oklab, #D8D1C5 45%, transparent);
     text-underline-offset: 0.3em;
     text-shadow: 0 1px 8px rgba(0,0,0,0.5);
   }
