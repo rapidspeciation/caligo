@@ -136,14 +136,22 @@ const labels = {
   .platform-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.3rem;
+    gap: 0.5rem 0.35rem;
     margin: 0;
     padding: 0;
     list-style: none;
   }
   /* Instrument tags read at the table's own size and wrap like words. */
   .platform-item { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; }
-  .platform { font-size: var(--step--1); white-space: normal; }
+  /* Soft tags: a faint hairline and tint instead of an ink outline, so a
+     table full of instruments reads quietly inside its green box. */
+  .platform {
+    font-size: var(--step--1);
+    white-space: normal;
+    --chip-fill: color-mix(in oklab, var(--text) 5%, transparent);
+    --ink-inner: var(--surface-border);
+    border-width: 1px;
+  }
   .platform-note { font-size: var(--step--1); color: var(--text-muted); }
   .cell-website {
     display: grid;
