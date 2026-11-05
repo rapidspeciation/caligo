@@ -640,6 +640,33 @@ a.card-link:is(:hover, :active) { transform: none; }
   .rule-list > li, .rule-list > li:nth-child(even) { padding: var(--space-m) 0; border-left: 0; }
 }
 
+/* ── Check list ──────────────────────────────────────────────────────
+   Conditions and benefits: a check in the accent colour before each item,
+   a hairline under each row. Markup: <ul class="check-list" role="list">
+   <li><Icon name="check" /><span>…</span></li>. */
+.check-list {
+  list-style: none;
+  margin-inline: 0;
+  padding: 0;
+  display: grid;
+  border-top: 1px solid var(--hairline);
+}
+.check-list > li {
+  display: flex;
+  gap: 0.7rem;
+  align-items: baseline;
+  padding-block: var(--space-xs);
+  border-bottom: 1px solid var(--hairline);
+  line-height: 1.5;
+}
+.check-list > li > svg {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  color: var(--accent);
+  transform: translateY(0.15rem);
+}
+
 /* Inline forward link with arrow */
 .text-link {
   display: inline-flex;

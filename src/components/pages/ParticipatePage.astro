@@ -83,7 +83,7 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
       <div class="pair-item">
         <h2 id="benefits-heading" class="pair-heading">{p.benefits.heading}</h2>
         <p class="content-body">{p.benefits.intro}</p>
-        <ul class="benefits-list" role="list">
+        <ul class="check-list" role="list">
           {p.benefits.items.map((item) => (
             <li><Icon name="check" /><span>{item}</span></li>
           ))}
@@ -214,25 +214,6 @@ const stepLabel = locale === 'es' ? 'Paso' : 'Step';
   }
   .pair-item > * + * { margin-top: var(--space-m); }
   .pair-heading { font-size: var(--step-2); }
-  .benefits-list {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    gap: var(--space-s);
-  }
-  .benefits-list li {
-    display: flex;
-    gap: 0.7rem;
-    align-items: baseline;
-    line-height: 1.5;
-  }
-  .benefits-list :global(svg) {
-    flex: none;
-    width: 1rem;
-    height: 1rem;
-    color: var(--accent);
-    transform: translateY(0.15rem);
-  }
   .languages {
     display: flex;
     flex-wrap: wrap;
