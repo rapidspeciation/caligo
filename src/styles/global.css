@@ -639,6 +639,21 @@ a.card-link:is(:hover, :active) { transform: none; }
   .rule-list { grid-template-columns: 1fr; }
   .rule-list > li, .rule-list > li:nth-child(even) { padding: var(--space-m) 0; border-left: 0; }
 }
+/* Numbered rows (About principles, Home "What Caligo is building"): a rust
+   mono 01, 02… before each title. Markup: <li><span class="rule-index mono"
+   aria-hidden="true">01</span><div>…</div></li>. */
+.rule-list--numbered > li {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: var(--space-s);
+  align-content: start;
+}
+.rule-index {
+  padding-top: 0.12em;
+  color: var(--accent-strong);
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+}
 
 /* ── Check list ──────────────────────────────────────────────────────
    Conditions and benefits: a check in the accent colour before each item,

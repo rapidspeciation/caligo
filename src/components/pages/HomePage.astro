@@ -111,11 +111,14 @@ const desktopSrcset = [
   <section id="building" class="section section--panel" aria-labelledby="building-title">
     <div class="container-wide">
       <h2 id="building-title">{h.building.heading}</h2>
-      <ul class="rule-list building-grid" role="list">
-        {h.building.items.map((item) => (
+      <ul class="rule-list rule-list--numbered building-grid" role="list">
+        {h.building.items.map((item, index) => (
           <li class="building-item">
-            <h3>{item.title}</h3>
-            <p>{item.body}</p>
+            <span class="rule-index mono" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+            <div>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </div>
           </li>
         ))}
       </ul>
@@ -436,7 +439,7 @@ const desktopSrcset = [
   .building-grid { margin-top: var(--space-l); }
   .building-item p {
     margin: var(--space-xs) 0 0;
-    color: var(--text-muted);
+    color: var(--text);
   }
 
   .network-section { border-top: 1px solid var(--hairline); }
