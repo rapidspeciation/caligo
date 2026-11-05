@@ -542,6 +542,12 @@ const desktopSrcset = [
     #activity :global(#event-funding:has([data-when-call='open']:not([hidden])) .timeline-name) { font-size: var(--step-1); }
     #activity :global(#event-funding .timeline-link [data-when-call='open']) { font-weight: 700; }
   }
+  /* Phones: a slightly taller band that trims the empty black at the right,
+     so the moth's eye and the wing stripes beside it fill the frame. */
+  @media (max-width: 40rem) {
+    .hero-media-frame { aspect-ratio: auto; height: clamp(13.75rem, 66vw, 16.5rem); }
+    .hero-media-frame :global(.hero-media img) { object-position: 42% 62%; }
+  }
   @media (min-width: 40rem) and (max-width: 60rem) {
     .hero-tagline { max-width: 65ch; }
     .hero-actions { justify-items: start; }
