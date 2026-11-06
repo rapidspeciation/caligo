@@ -847,39 +847,39 @@ export const MODULES: readonly MediaModule[] = [
   },
   {
     // Beside "Why the name Caligo?" on About: a wild owl butterfly showing the
-    // hindwing eyespot the name essay describes. Licence checked on the
-    // Commons file page (CC BY 4.0, iNaturalist licence review passed) on
-    // 5 November 2026; iNaturalist observation 310188294, research grade.
+    // hindwing eyespot the name essay describes. Photo licence (CC BY) checked
+    // through the iNaturalist API on 5 November 2026; observation 38010581,
+    // research grade, not captive.
     id: 'about-name-caligo',
     publish: true,
     candidates: [
       {
         kind: 'documentary',
-        path: 'media/documentary/caligo-brasiliensis-carlos-raposo.jpg',
+        path: 'media/documentary/caligo-prometheus-desertnaturalist.jpg',
         width: 1600,
         height: 1067,
-        creator: 'Carlos Alexandre Mattos Raposo',
+        creator: 'iNaturalist user desertnaturalist',
         licence: CC_BY_4.name,
         licenceUrl: CC_BY_4.url,
-        sourceItemPage: 'https://commons.wikimedia.org/wiki/File:Caligo_brasiliensis_559798582.jpg',
-        taxon: 'Caligo brasiliensis',
+        sourceItemPage: 'https://www.inaturalist.org/observations/38010581',
+        taxon: 'Caligo prometheus prometheus',
         taxonConfidence: 'species',
-        dateTaken: '2025-08-20',
-        location: 'Mongaguá, São Paulo, Brazil',
+        dateTaken: '2020-01-15',
+        location: 'Santa María, Boyacá, Colombia',
         changes: [
-          'downloaded from Wikimedia Commons (original 2048 × 1366); metadata stripped, resized proportionally to 1600 × 1067 and JPEG re-encoded at quality 86; no crop applied',
+          'downloaded from iNaturalist (photo 60347371, original 2048 × 1626); metadata stripped, cropped to 3:2 (2048 × 1366, rows 152 to 1518) to keep the antennae and lower wing edge in frame, resized to 1600 × 1067 and JPEG re-encoded at quality 82',
         ],
         alt: {
-          en: 'A Caligo brasiliensis owl butterfly resting on a tree trunk with its wings closed, showing the large dark eyespot ringed in cream on the underside of its hindwing.',
-          es: 'Una mariposa búho Caligo brasiliensis posada en el tronco de un árbol con las alas cerradas, mostrando el gran ocelo oscuro con borde crema en el reverso del ala posterior.',
+          en: 'A Caligo prometheus owl butterfly resting on a mossy tree trunk with its wings closed, showing the large black eyespot ringed in cream on the underside of its hindwing.',
+          es: 'Una mariposa búho Caligo prometheus posada en un tronco cubierto de musgo con las alas cerradas, mostrando el gran ocelo negro con borde crema en el reverso del ala posterior.',
         },
         caption: {
-          en: 'Caligo brasiliensis, Mongaguá, São Paulo, Brazil.',
-          es: 'Caligo brasiliensis, Mongaguá, São Paulo, Brasil.',
+          en: 'Caligo prometheus prometheus, Santa María, Boyacá, Colombia.',
+          es: 'Caligo prometheus prometheus, Santa María, Boyacá, Colombia.',
         },
         credit: {
-          en: 'Photo: Carlos Alexandre Mattos Raposo / iNaturalist, via Wikimedia Commons.',
-          es: 'Foto: Carlos Alexandre Mattos Raposo / iNaturalist, vía Wikimedia Commons.',
+          en: 'Photo: desertnaturalist / iNaturalist.',
+          es: 'Foto: desertnaturalist / iNaturalist.',
         },
       },
     ],
