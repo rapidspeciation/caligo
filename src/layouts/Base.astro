@@ -408,7 +408,7 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
         document.addEventListener('click', function (event) {
           var target = event.target;
           var card = target.closest && target.closest('[data-card="toggle"]');
-          if (!card || target.closest('a, button, summary, input, label, figure, svg')) return;
+          if (!card || target.closest('a, button, summary, input, label, [data-lightbox], svg')) return;
           var inner = target.closest('.ink-card');
           if (inner && inner !== card) return;
           var opened = target.closest('details > :not(summary)');
