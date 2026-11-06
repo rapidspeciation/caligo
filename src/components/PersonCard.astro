@@ -13,8 +13,8 @@ interface Props {
 const { person, locale } = Astro.props;
 const ties = pick(person.regionalTies, locale).split(' / ');
 const regionalTiesLabel = locale === 'en' ? 'Regional ties' : 'Vínculos regionales';
-/* One label at every width: on a phone the row also holds institution,
-   countries and profile link, so it is more than the biography. */
+/* One label at every width: on a phone the row also holds institution
+   and profile link, so it is more than the biography. */
 const moreLabel = locale === 'en' ? 'More about' : 'Más sobre';
 /* The external icon travels with the last word of the profile link. */
 const sourceLabel = pick(person.source.label, locale);
@@ -42,7 +42,7 @@ const base = import.meta.env.BASE_URL;
   <strong class="person-name">{person.name}</strong>
   <div class="person-content">
     <p class="person-role">{pick(person.role, locale)}</p>
-    <p class="person-region person-wide">
+    <p class="person-region">
       <span class="sr-only">{regionalTiesLabel}: </span>
       {ties.map((tie) => <span class="chip chip--sm person-tie">{tie}</span>)}
     </p>
@@ -60,9 +60,9 @@ const base = import.meta.env.BASE_URL;
     </a>
     <!-- The biography waits behind its own row, so eight people fit in
          about one screen; each row names its person for screen readers.
-         On a phone the row also holds institution, countries and profile
-         link (a second copy, shown only there), so the card is portrait,
-         name and focus. -->
+         On a phone the row also holds institution and profile link (a
+         second copy, shown only there), so the card is portrait, name,
+         focus and countries. -->
     <details class="disclosure person-more">
       <summary class="disclosure-summary">
         <span class="disclosure-summary-inner">
@@ -73,10 +73,6 @@ const base = import.meta.env.BASE_URL;
         <div class="person-narrow person-narrow-place">
           <div class="person-place">
             <p class="person-affil">{person.affiliation}</p>
-            <p class="person-region">
-              <span class="sr-only">{regionalTiesLabel}: </span>
-              {ties.map((tie) => <span class="chip chip--sm person-tie">{tie}</span>)}
-            </p>
           </div>
           <a
             class="person-source"
@@ -257,8 +253,9 @@ const base = import.meta.env.BASE_URL;
     .person-card:hover .person-source :global(svg) { transform: translate(2px, -2px); }
   }
 
-  /* Wide screens show institution, countries and profile link on the
-     card; a phone keeps them in the row below (see markup). */
+  /* Wide screens show institution and profile link on the card; a phone
+     keeps them in the row below (see markup). Countries stay on the card
+     at every width, in the space beside the portrait. */
   .person-narrow { display: none; }
   @media (max-width: 30rem) {
     .person-card { grid-template-columns: 5.5rem minmax(0, 1fr); padding: var(--space-s); }
@@ -273,5 +270,9 @@ const base = import.meta.env.BASE_URL;
     }
     .person-foot { grid-template-rows: auto; gap: 0; margin-top: var(--space-xs); padding-top: 0; }
     .person-more { margin-top: 0; }
+    /* Countries sit under the focus, in the space beside the portrait,
+       without making the card taller. */
+    .person-content { gap: 0.25rem; }
+    .person-content .person-region { row-gap: 0.2rem; }
   }
 </style>

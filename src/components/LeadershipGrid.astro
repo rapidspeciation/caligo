@@ -15,7 +15,7 @@ const t = getDict(locale);
 <!-- The wrapper's width sets both the number of cards to a row and how
      compact each card is, so a card is never cramped at any window size. -->
 <div class="leadership">
-  <div class="leadership-grid">
+  <div class="leadership-grid" data-leadership-grid>
     {LEADERS.map((person) => (
       <PersonCard person={person} locale={locale} />
     ))}
@@ -30,6 +30,84 @@ const t = getDict(locale);
     </article>
   </div>
 </div>
+
+<script>
+  /* Opening a biography grows only its own card (see the styles). Before
+     the first one opens, each card's three rows are measured with every
+     biography closed and held at that size; the open card's foot row is
+     left free. All biographies closed again releases the hold. */
+  function holdLeadership(grid: HTMLElement) {
+    const cards = () => [...grid.children].filter((el): el is HTMLElement => el instanceof HTMLElement && el.offsetParent !== null);
+    let held = false;
+    let width = grid.clientWidth;
+    const fit = () => {
+      for (const card of cards()) {
+        const rows = card.dataset.rows;
+        if (!rows) continue;
+        const open = card.querySelector('details')?.open;
+        card.style.gridTemplateRows = open ? `${rows.split(' ').slice(0, 2).join(' ')} auto` : rows;
+      }
+    };
+    const release = () => {
+      held = false;
+      grid.classList.remove('is-held');
+      for (const card of grid.children) {
+        if (!(card instanceof HTMLElement)) continue;
+        card.style.gridTemplateRows = '';
+        card.style.height = '';
+        delete card.dataset.rows;
+      }
+    };
+    const hold = () => {
+      if (held) return;
+      const open = [...grid.querySelectorAll('details')].filter((d) => d.open);
+      for (const d of open) d.open = false;
+      const sizes = cards().map((card) => {
+        const box = card.getBoundingClientRect();
+        const name = card.querySelector('.person-name')?.getBoundingClientRect();
+        const content = card.querySelector('.person-content')?.getBoundingClientRect();
+        if (!name || !content) return { card, height: box.height };
+        const style = getComputedStyle(card);
+        const inner = box.bottom - parseFloat(style.paddingBottom) - parseFloat(style.borderBottomWidth);
+        return { card, rows: [name.height, content.height, inner - content.bottom].map((r) => `${r}px`).join(' ') };
+      });
+      for (const { card, rows, height } of sizes) {
+        if (rows) card.dataset.rows = rows;
+        else card.style.height = `${height}px`;
+      }
+      held = true;
+      grid.classList.add('is-held');
+      for (const d of open) d.open = true;
+      fit();
+    };
+    // A click on a closed summary runs before it opens, so the closed
+    // sizes are read directly; other ways of opening (find in page) are
+    // caught by the toggle event.
+    grid.addEventListener('click', (event) => {
+      const summary = (event.target as Element).closest('summary');
+      if (summary && !(summary.parentElement as HTMLDetailsElement).open) hold();
+    }, true);
+    grid.addEventListener('toggle', () => {
+      if (grid.querySelector('details[open]')) { hold(); fit(); } else release();
+    }, true);
+    new ResizeObserver(() => {
+      if (grid.clientWidth === width) return;
+      width = grid.clientWidth;
+      if (!held) return;
+      release();
+      if (grid.querySelector('details[open]')) hold();
+    }).observe(grid);
+  }
+  function initLeadership() {
+    document.querySelectorAll<HTMLElement>('[data-leadership-grid]').forEach((grid) => {
+      if (grid.dataset.ready) return;
+      grid.dataset.ready = 'true';
+      holdLeadership(grid);
+    });
+  }
+  initLeadership();
+  document.addEventListener('astro:page-load', initLeadership);
+</script>
 
 <style>
   .leadership { container: leaders / inline-size; }
@@ -53,12 +131,13 @@ const t = getDict(locale);
   @container leaders (width >= 61.5rem) {
     .leadership-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
-  /* A card narrower than about 23rem (all four to a row; three or two to a
-     row on the narrower side of each range; a phone has its own rules) takes tighter padding and the
-     smaller name and focus, so names stay on one line where they can and
-     the text beside the portrait keeps a readable width. */
+  /* A card narrower than about 23rem (all four to a row; three or two to
+     a row on the narrower side of each range; a phone has its own rules)
+     takes tighter padding, a narrower gap beside the portrait and the
+     smaller name and focus, so names stay on one line and the text beside
+     the portrait keeps a readable width. */
   @container leaders ((width >= 37.5rem) and (width < 47.5rem)) or ((width >= 61.5rem) and (width < 72rem)) or (width >= 78.5rem) {
-    .leadership-grid > :global(.person-card) { padding: 0.75rem var(--space-s); }
+    .leadership-grid > :global(.person-card) { padding: 0.75rem 0.875rem; column-gap: 0.75rem; }
     .leadership-grid :global(.person-name) { font-size: var(--step-0); padding-bottom: 0.35rem; }
     .leadership-grid :global(.person-role) { font-size: var(--step--1); line-height: 1.45; }
     .leadership-grid :global(.person-foot) { margin-top: var(--space-xs); padding-top: var(--space-xs); gap: 0.5rem; }
@@ -69,13 +148,18 @@ const t = getDict(locale);
      rows of four plus the heading fit a 1366 x 768 screen. */
   @container leaders (width >= 78.5rem) {
     .leadership-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 1.25rem; margin-top: 0.75rem; }
-    .leadership-grid > :global(.person-card) { margin-bottom: 0.75rem; padding-inline: 0.875rem; column-gap: 0.75rem; }
+    .leadership-grid > :global(.person-card) { margin-bottom: 0.75rem; }
   }
 
-  /* While a biography is open, each card takes its own height, so the
-     cards beside it do not stretch around empty space. */
+  /* While a biography is open, only its card grows. The script below
+     holds every card at the size it had with all biographies closed (rows
+     inside each card included), so neighbours keep their size and the
+     rows stay level; the rows below move down. Without the script each
+     card takes its own height instead, so none stretches around empty
+     space. */
   .leadership-grid:has(details[open]) { align-items: start; }
   .leadership-grid:has(details[open]) > :global(.person-card) { grid-template-rows: auto 1fr auto; }
+  .leadership-grid.is-held { grid-auto-rows: auto; align-items: start; }
 
   /* The join cell: same outline as the people, dashed because it is an
      open place rather than a person. */
@@ -86,6 +170,10 @@ const t = getDict(locale);
     padding: var(--space-m);
     border-width: 1.5px;
     border-style: dashed;
+    /* Rust, the site's "join" accent, so the open place reads clearly
+       beside the coloured outlines of the people. */
+    --card-tone: var(--link);
+    --card-fill: color-mix(in oklab, var(--link) 5%, var(--card));
     flex-direction: column;
     justify-content: center;
     gap: var(--space-s);
@@ -93,7 +181,7 @@ const t = getDict(locale);
   @container leaders (61.5rem <= width < 78.5rem) {
     .leadership-join { display: flex; }
   }
-  .leadership-grid:has(details[open]) > .leadership-join { align-self: stretch; }
+  .leadership-grid:has(details[open]):not(.is-held) > .leadership-join { align-self: stretch; }
   .leadership-join-text {
     margin: 0;
     max-width: 22ch;
