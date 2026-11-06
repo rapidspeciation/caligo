@@ -148,8 +148,11 @@ const isCurrent = (path: string) => path === page;
     object-fit: contain;
     display: block;
   }
+  /* Dark mode: the emblem sits on its original ivory (DESIGN.md), framed as a
+     badge with a hairline so the tile reads as deliberate, not as a gap. */
   :global(html[data-mode='dark']) .brand-mark img {
     background: var(--c-warm-050);
+    border: 1px solid var(--hairline);
   }
 
   .brand-text {

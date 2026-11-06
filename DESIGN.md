@@ -45,7 +45,7 @@
 ## Visual language
 
 - Color: Caligo’s warm neutral palette with a burnt-orange accent; hero copy uses fixed ivory on a matte near-black field
-- Brand emblem: the extracted mark is transparent on light surfaces; dark mode supplies the logo’s original ivory matte so its negative-space wing markings keep the same colour in both modes
+- Brand emblem: the extracted mark is transparent on light surfaces; dark mode supplies the logo’s original ivory matte so its negative-space wing markings keep the same colour in both modes; that ivory tile is a badge, with radius-scale corners (`--radius` in the header, `--radius-lg` in the footer) and a 1 px `--hairline` border
 - Social previews: use the dedicated 1200 x 630 text-free share card, with the complete emblem centred inside a square crop-safe area; never rely on a favicon, touch icon, or full logo lockup as a platform fallback
 - Typography: Space Grotesk for display, Inter for prose and UI, JetBrains Mono for spaced uppercase labels, DNA bases, instrument chips and numbered indexes; dates, places, photo credits and citations are prose and use Inter. Shared editorial roles in `global.css` define one cross-page hierarchy: heading (`--step-2`), lead and body (`--step-0`), metadata (`--step--1`), and uppercase labels (`--step--2`). Page components own layout and emphasis, not independent type scales. Home editorial sections remain an intentional restrained local exception so ordinary laptop viewports do not feel browser-zoomed.
 - Spacing/layout rhythm: wide specimen-plate compositions followed by restrained content sections
@@ -187,6 +187,7 @@ Do not re-implement lift, press, cover links, photo zoom or the touch behaviour 
 - Labels that end in an arrow and may wrap use `ArrowText` with `.text-link--wrap`, so the arrow stays with the last word.
 - Home leadership shows a square portrait (6.5rem on desktop, 4.75rem on a phone, so faces read clearly), name, focus, institution, countries and profile link; each biography sits behind its own "Leer biografía" row. Below 30rem the card shows only portrait, name and focus, and the row ("Más sobre <name>") holds institution, countries, profile link and biography.
 - The "Caligo" wordmark (header and footer) is set in the text rust of each theme (`--link`).
+- The footer closes on the page-link row and the network's email; Home leaves the email out because its "Súmate" section shows it just above (`verify-nav` checks this).
 - Section labels (`.content-label`, mono uppercase) sit halfway between `--text-faint` and `--text-muted` (5 November 2026), a stronger secondary ink that still reads as a label.
 - Deadlines are deep green, not gold: the open "Cierra en N días" chip is `--deadline-fill`/`--deadline-text` (green with cream text in light, a green tint with a leaf outline in dark), so rust is the only emphasis next to it. A closed call keeps the dashed neutral chip and the date in the body face, on the home timeline and in the funding archive alike; those two carry the past state, so `.closed-call-title` stays in the strong text colour.
 - Call links say one thing each: "Postula"/"Apply" on buttons, "Ver la convocatoria"/"See the call" on text links to the open call, "Ver convocatoria anterior"/"See past call" for a closed one.

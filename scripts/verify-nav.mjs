@@ -11,6 +11,8 @@
  *     (or, on a page that closes on its own join block, the page links to it);
  *     since November 2026 the footer also repeats the page links as one
  *     quiet row, so long pages need not scroll back to the header;
+ *   • Home's footer leaves out the email, because its "Súmate" section
+ *     already shows the address just above;
  *   • every nav destination resolves to a page that was really built;
  *   • both locales offer the same routes.
  *
@@ -107,6 +109,15 @@ for (const { path, label } of pages) {
   else if (footerRoutes.includes(joinRoute)) pass(`${label}: compact footer retains Join`);
   else if (mainRoutes.includes(joinRoute)) pass(`${label}: page content links to Join, so the footer omits it`);
   else fail(`${label}: footer or page content needs the Join destination`);
+
+  // Home shows the address in "Súmate"; the footer must not repeat it.
+  if (/class=["'][^"']*footer-email/.test(footerMatch[2])) {
+    fail(`${label}: footer repeats the email that "Súmate" already shows`);
+  } else if (!/data-copy-email/.test(mainMatch ? mainMatch[1] : '')) {
+    fail(`${label}: footer omits the email but the page does not show it`);
+  } else {
+    pass(`${label}: email shown once, in "Súmate", not again in the footer`);
+  }
 
   const unbuilt = headerRoutes.filter((r) => !existsSync(builtFile(r)));
   if (unbuilt.length) {

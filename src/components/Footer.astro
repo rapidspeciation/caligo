@@ -14,6 +14,8 @@ const { locale, page } = Astro.props;
 /* Participate is the join page, and Home closes on "Súmate" with the form. */
 const PAGES_ENDING_WITH_JOIN = ['/participate', '/'];
 const showJoin = !PAGES_ENDING_WITH_JOIN.includes(page ?? '');
+/* Home's "Súmate" section already shows the address just above the footer. */
+const showEmail = page !== '/';
 const t = getDict(locale);
 const base = import.meta.env.BASE_URL;
 
@@ -47,14 +49,17 @@ const base = import.meta.env.BASE_URL;
 
   <div class="container-wide footer-base">
     {/* One quiet row: every page, and the network's address, so a reader
-        at the bottom of a long page can go on without scrolling back up. */}
+        at the bottom of a long page can go on without scrolling back up.
+        Home leaves the address out: its "Súmate" section shows it. */}
     <div class="footer-links">
       <ul class="footer-pages" role="list">
         {navItems(t).map((item) => (
           <li><a href={localePath(locale, item.path)} aria-current={item.path === page ? 'page' : undefined}>{item.label}</a></li>
         ))}
       </ul>
-      <a class="footer-email" href={`mailto:${LINKS.contactEmail}`}><Icon name="mail" />{LINKS.contactEmail}</a>
+      {showEmail && (
+        <a class="footer-email" href={`mailto:${LINKS.contactEmail}`}><Icon name="mail" />{LINKS.contactEmail}</a>
+      )}
     </div>
     <p class="muted">© {new Date().getFullYear()} {t.footer.rights}</p>
   </div>
@@ -90,12 +95,14 @@ const base = import.meta.env.BASE_URL;
     width: clamp(72px, 8vw, 96px);
     height: auto;
     padding: 0.35rem;
-    border-radius: var(--radius);
+    border-radius: var(--radius-lg);
     object-fit: contain;
     flex: 0 0 auto;
   }
+  /* Dark mode: the ivory badge from the header, with the same hairline. */
   :global(html[data-mode='dark']) .footer-emblem {
     background: var(--c-warm-050);
+    border: 1px solid var(--hairline);
   }
   .footer-brand-text {
     display: flex;
