@@ -7,17 +7,20 @@ export const PILOT_APPLICATION_URL: string = 'https://docs.google.com/forms/d/e/
 export const PILOT_DEADLINE = '2026-11-15';
 
 // Calls that have closed, kept on the timeline. Source for Colombia:
-// Nicole's message supplied by Franz on 18 September 2026.
+// Nicole's message supplied by Franz on 18 September 2026; eight projects
+// were selected (Nicol's message supplied by Franz on 6 November 2026).
 export const PAST_CALLS = [
   {
     id: 'colombia',
     deadline: '2026-09-30',
     country: 'Colombia',
+    /** Local pilot projects selected in this call. */
+    selected: 8,
     name: { en: 'Sequencing support for Lepidoptera from Colombia', es: 'Apoyo para secuenciar lepidópteros de Colombia' },
     date: { en: '30 September 2026', es: '30 de septiembre de 2026' },
     summary: {
-      en: 'Our first call supported local pilot projects to sequence Lepidoptera species from Colombia.',
-      es: 'Nuestra primera convocatoria apoyó proyectos piloto locales para secuenciar especies de lepidópteros de Colombia.',
+      en: 'Our first call selected eight local pilot projects to sequence Lepidoptera species from Colombia.',
+      es: 'Nuestra primera convocatoria seleccionó ocho proyectos piloto locales para secuenciar especies de lepidópteros de Colombia.',
     },
     coverage: {
       en: 'All sequencing expenses were covered, with samples to be delivered to the Universidad Nacional de Colombia in Bogotá.',
@@ -25,6 +28,9 @@ export const PAST_CALLS = [
     },
   },
 ];
+
+/** Local pilot projects selected across all closed calls. */
+export const LOCAL_PILOT_COUNT: number = PAST_CALLS.reduce((n, call) => n + call.selected, 0);
 
 export const PILOT_INTRO = {
   en: {

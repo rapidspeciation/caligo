@@ -148,11 +148,11 @@ export const es: Dict = {
       "participants": "integrantes",
       "facilities": "centros de secuenciación",
       "countries": "países de América Latina",
-      "pilots": "proyectos piloto propuestos",
+      "pilots": "proyectos piloto",
       "participantsNote": "A {month}. La inscripción sigue abierta.",
       "facilitiesNote": "En {n} países, de Panamá a Chile.",
       "countriesNote": "Y {n} más fuera de la región.",
-      "pilotsNote": "Sobre Heliconius, Parides ascanius, plagas de la soja y Panacea prola.",
+      "pilotsNote": "{proposed} propuestos por Caligo y {local} locales, elegidos en la convocatoria de Colombia.",
       "whenNow": "En curso"
     }
   },
@@ -337,7 +337,7 @@ export const es: Dict = {
     "contact": {
       "heading": "Inicia una conversación",
       "body": "Escribe a Caligo sobre una especie, una pregunta o cómo te gustaría ayudar.",
-      "email": "genomica.neotropical@gmail.com"
+      "email": "caligo.neotropical@gmail.com"
     },
     "audiences": {
       "heading": "Lo que puedes aportar",

@@ -151,11 +151,11 @@ export const en = {
       "participants": "members",
       "facilities": "sequencing facilities",
       "countries": "Latin American countries",
-      "pilots": "proposed pilot projects",
+      "pilots": "pilot projects",
       "participantsNote": "As of {month}. Registration is still open.",
       "facilitiesNote": "In {n} countries, from Panama to Chile.",
       "countriesNote": "Plus {n} outside the region.",
-      "pilotsNote": "On Heliconius, Parides ascanius, soybean pests and Panacea prola.",
+      "pilotsNote": "{proposed} proposed by Caligo and {local} local projects chosen in the Colombia call.",
       "whenNow": "Happening now"
     }
   },
@@ -340,7 +340,7 @@ export const en = {
     "contact": {
       "heading": "Start a conversation",
       "body": "Write to Caligo about a species, a question or how you would like to help.",
-      "email": "genomica.neotropical@gmail.com"
+      "email": "caligo.neotropical@gmail.com"
     },
     "audiences": {
       "heading": "What you can bring",

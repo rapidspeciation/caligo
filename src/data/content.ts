@@ -401,7 +401,7 @@ export const LINKS = {
   */
   committeeForm:
     'https://docs.google.com/spreadsheets/d/1YaY78DRBeqpfaJzL7bpYRIEecu1msf5usl3Z5piLgCY/edit',
-  contactEmail: 'genomica.neotropical@gmail.com',
+  contactEmail: 'caligo.neotropical@gmail.com',
   projectPsyche: 'https://www.projectpsyche.org/',
 };
 

@@ -154,7 +154,7 @@ const banned = [
 
 // 5. Personal emails: only the approved public addresses are allowed (the
 // network's, and the site maintainer's on About, which he asked to publish).
-const ALLOWED_EMAIL = 'genomica.neotropical@gmail.com';
+const ALLOWED_EMAIL = 'caligo.neotropical@gmail.com';
 const ALLOWED = [ALLOWED_EMAIL, 'franz.chandi@gmail.com'];
 const emails = [...allText.matchAll(/[\w.+-]+@[\w.-]+\.\w+/g)].map((m) => m[0]);
 const strayEmails = emails.filter((e) => !ALLOWED.includes(e.toLowerCase()));
