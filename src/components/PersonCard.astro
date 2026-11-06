@@ -100,7 +100,7 @@ const base = import.meta.env.BASE_URL;
     /* People are not data: an ink outline without the hard shadow. */
     border-width: 1.5px;
     display: grid;
-    grid-template-columns: 6.5rem minmax(0, 1fr);
+    grid-template-columns: 7rem minmax(0, 1fr);
     grid-template-areas: 'media content' 'foot foot';
     /* Share row tracks with the neighbouring cards so the footer rules
        line up across a row. */
@@ -144,9 +144,9 @@ const base = import.meta.env.BASE_URL;
   .person-photo {
     display: block;
     width: 100%;
-    /* Square: the face keeps the frame's full width while the card stays
-       short enough for eight people in about one screen. */
-    aspect-ratio: 1;
+    /* Portrait 4:5, as large as on the original cards (about 112 x 140 px),
+       so faces read clearly; the cards stay compact around it. */
+    aspect-ratio: 4 / 5;
     object-fit: cover;
     object-position: 50% 22%;
     filter: saturate(0.9) contrast(1.03);
@@ -262,7 +262,7 @@ const base = import.meta.env.BASE_URL;
      card; a phone keeps them in the row below (see markup). */
   .person-narrow { display: none; }
   @media (max-width: 30rem) {
-    .person-card { grid-template-columns: 4.75rem minmax(0, 1fr); padding: var(--space-s); }
+    .person-card { grid-template-columns: 5.5rem minmax(0, 1fr); padding: var(--space-s); }
     .person-wide { display: none; }
     .person-narrow { display: inline; }
     .person-narrow-place {
