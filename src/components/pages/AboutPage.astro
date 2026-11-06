@@ -5,6 +5,7 @@ import PrincipleGrid from '../PrincipleGrid.astro';
 import CopyEmail from '../CopyEmail.astro';
 import Icon from '../Icon.astro';
 import FacilityTable from '../FacilityTable.astro';
+import MediaCandidateViewer from '../MediaCandidateViewer.astro';
 import { ABOUT_FEEDBACK, ABOUT_LINKS } from '../../data/about-feedback';
 import { facilityStats, pick } from '../../data/initiative';
 import { getDict, localePath, type Locale } from '../../i18n';
@@ -53,12 +54,17 @@ const facilityIntro = locale === 'en'
           ))}
         </div>
       </div>
-      <div class="about-pair-item">
+      <div class="about-pair-item about-name">
         <h2 id="about-name" class="section-heading content-heading">{pick(page.name.heading, locale)}</h2>
-        <div class="prose-block">
-          {page.name.body.map((paragraph) => (
-            <p class="prose-para content-body">{pick(paragraph, locale)}</p>
-          ))}
+        <!-- The text beside a wild owl butterfly showing the eyespot it
+             describes; side by side once the column is wide enough. -->
+        <div class="name-layout">
+          <div class="prose-block">
+            {page.name.body.map((paragraph) => (
+              <p class="prose-para content-body">{pick(paragraph, locale)}</p>
+            ))}
+          </div>
+          <MediaCandidateViewer moduleId="about-name-caligo" locale={locale} aspectRatio="3 / 2" singleImage class="name-photo" sizes="(min-width: 80rem) 20rem, (min-width: 40rem) 45vw, 100vw" />
         </div>
       </div>
     </div>
@@ -189,6 +195,19 @@ const facilityIntro = locale === 'en'
   .prose-block {
     display: grid;
     gap: var(--space-s);
+  }
+  /* Name essay and photo: stacked in a narrow column, side by side once the
+     column itself is wide enough for both (a container query, so the
+     half-width column on a laptop and the full-width one on a tablet both
+     decide by their own width). */
+  .about-name { container-type: inline-size; }
+  .name-layout {
+    display: grid;
+    gap: var(--space-m);
+    align-items: start;
+  }
+  @container (min-width: 30rem) {
+    .name-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   }
   .prose-para {
     margin: 0;

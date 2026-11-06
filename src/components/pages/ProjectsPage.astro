@@ -100,9 +100,7 @@ const callClosed = isCallClosed();
               <h2 class="pilot-heading content-heading" set:html={italicizeSpecies(pilot.heading[locale])} />
 
               {pilot.taxon && (
-                <p class="pilot-taxon content-meta mono chip">
-                  <em>{pilot.taxon}</em>
-                </p>
+                <p class="pilot-taxon content-meta mono chip" set:html={italicizeSpecies(pilot.taxon)} />
               )}
 
               <!-- One-sentence research question -->

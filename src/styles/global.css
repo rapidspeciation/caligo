@@ -451,6 +451,13 @@ li:nth-child(4n + 3) > .ink-card--fill:only-child { --card-fill: var(--pastel-sk
 .ink-card--rose,
 .ink-card--fill:nth-child(4n + 4 of .ink-card--fill),
 li:nth-child(4n + 4) > .ink-card--fill:only-child { --card-fill: var(--pastel-rose); --ink-line: var(--tone-rose); --card-tone: var(--tone-rose); }
+/* A filled card pinned with data-tone takes that pastel whatever its place
+   (the doubled class outweighs the positional rules above). Used only on
+   Participate, where the Discord card is pinned to sky. */
+.ink-card.ink-card--fill[data-tone='sun']  { --card-fill: var(--pastel-sun);  --ink-line: var(--tone-sun);  --card-tone: var(--tone-sun); }
+.ink-card.ink-card--fill[data-tone='leaf'] { --card-fill: var(--pastel-leaf); --ink-line: var(--tone-leaf); --card-tone: var(--tone-leaf); }
+.ink-card.ink-card--fill[data-tone='sky']  { --card-fill: var(--pastel-sky);  --ink-line: var(--tone-sky);  --card-tone: var(--tone-sky); }
+.ink-card.ink-card--fill[data-tone='rose'] { --card-fill: var(--pastel-rose); --ink-line: var(--tone-rose); --card-tone: var(--tone-rose); }
 /* On a pastel fill every text role reads in ink, in both modes. */
 .ink-card--sun, .ink-card--leaf, .ink-card--sky, .ink-card--rose, .ink-card--fill {
   --text: var(--on-pastel);

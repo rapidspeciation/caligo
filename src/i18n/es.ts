@@ -70,7 +70,7 @@ export const es: Dict = {
     "hero": {
       "kicker": "Genómica liderada desde América Latina",
       "title": "Una riqueza de especies.",
-      "body": "Caligo conecta investigadores, colecciones y centros de secuenciación para cerrar la brecha de datos genéticos de las mariposas y polillas neotropicales.",
+      "body": "Caligo conecta investigadores, colecciones y centros de secuenciación para construir genomas de referencia de las mariposas y polillas neotropicales.",
       "focus": "Mucho por secuenciar.",
       "scienceAction": "¿Qué preguntas puede ayudarnos a responder la genómica?",
       "projectsAction": "Conoce los proyectos piloto"
@@ -149,7 +149,7 @@ export const es: Dict = {
       "facilities": "centros de secuenciación",
       "countries": "países de América Latina",
       "pilots": "proyectos piloto propuestos",
-      "participantsNote": "A septiembre de 2026. La inscripción sigue abierta.",
+      "participantsNote": "A {month}. La inscripción sigue abierta.",
       "facilitiesNote": "En {n} países, de Panamá a Chile.",
       "countriesNote": "Y {n} más fuera de la región.",
       "pilotsNote": "Sobre Heliconius, Parides ascanius, plagas de la soja y Panacea prola.",

@@ -45,13 +45,15 @@ const wayIcons: readonly CardIconName[] = [
             </a>
           </div>
         </li>
-        <li class="route ink-card ink-card--fill" data-card="link" aria-labelledby="discord-heading">
+        <!-- Discord is pinned to sky (the owner dislikes it in green, 5 Nov 2026),
+             so Committees takes leaf; registration keeps its positional sun. -->
+        <li class="route ink-card ink-card--fill" data-tone="sky" data-card="link" aria-labelledby="discord-heading">
           <p class="route-step"><span class="route-num" aria-hidden="true">2</span><span class="sr-only">{stepLabel} 2</span></p>
           <h2 id="discord-heading" class="route-title">{p.discord.heading}</h2>
           <p class="route-body">{p.discord.body}</p>
           <div class="route-action"><DiscordButton locale={locale} class="btn--ghost card-link" showPendingNote /></div>
         </li>
-        <li class="route ink-card ink-card--fill" data-card="link" aria-labelledby="committee-heading">
+        <li class="route ink-card ink-card--fill" data-tone="leaf" data-card="link" aria-labelledby="committee-heading">
           <p class="route-step"><span class="route-num" aria-hidden="true">3</span><span class="sr-only">{stepLabel} 3</span></p>
           <h2 id="committee-heading" class="route-title">{t.committee.heading}</h2>
           <p class="route-body">{t.committee.body}</p>

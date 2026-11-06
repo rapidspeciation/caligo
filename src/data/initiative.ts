@@ -10,6 +10,7 @@
  */
 import type { Locale } from '../i18n/config';
 import { FACILITIES as _FACILITIES } from './content';
+import { MEMBER_COUNTRY_LIST } from './members';
 
 export type Bilingual = Record<Locale, string>;
 
@@ -274,11 +275,24 @@ export const LEADERS: Person[] = [
 /* ---------- Network size (doc 01 §J1) ---------- */
 export type NetworkMetric = { value: number; asOf: string };
 
-/** Membership count supplied in the September 2026 website review. */
-// Membership geography from Nicole’s September 2026 document.
-export const MEMBER_COUNTRIES = { latinAmerica: 17, outsideRegion: 12 } as const;
+/**
+ * Membership size and geography from the registration survey shared by Nicol
+ * Rueda on 3 November 2026 (123 responses; see `./members`). Country counts
+ * are derived from MEMBER_COUNTRY_LIST: a country with `lonLat` lies inside
+ * the map's Latin American frame, one without lies outside the region.
+ */
+export const MEMBER_COUNTRIES = {
+  latinAmerica: MEMBER_COUNTRY_LIST.filter((c) => c.lonLat).length,
+  outsideRegion: MEMBER_COUNTRY_LIST.filter((c) => !c.lonLat).length,
+} as const;
 
-export const PARTICIPANTS: NetworkMetric = { value: 105, asOf: '2026-09' };
+export const PARTICIPANTS: NetworkMetric = { value: 123, asOf: '2026-11' };
+
+/** "November 2026" / "noviembre de 2026", from PARTICIPANTS.asOf. */
+export function membershipMonth(locale: Locale): string {
+  return new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric', timeZone: 'UTC' })
+    .format(new Date(`${PARTICIPANTS.asOf}-01T12:00:00Z`));
+}
 
 /* ---------- Events with dates (doc 01 §L1, §L2) ---------- */
 export type InitiativeEvent = {

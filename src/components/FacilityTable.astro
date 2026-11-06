@@ -10,7 +10,7 @@ interface Props {
 const { locale } = Astro.props;
 
 
-// "NextSeq 2000, MinION, PromethION (Hi-C expertise planned)" becomes one
+// "NextSeq 2000, MinION, PromethION, (Hi-C planned)" becomes one
 // tag per instrument; commas inside parentheses stay with their tag.
 function splitPlatforms(text: string): string[] {
   const out: string[] = [];
@@ -25,9 +25,10 @@ function splitPlatforms(text: string): string[] {
   return out;
 }
 
-// "PromethION (Hi-C expertise planned)": the instrument becomes the tag and
-// the note in brackets follows it as a dashed tag (planned, not yet there)
-// that wraps as words instead of stretching.
+// "PromethION (note)": the instrument becomes the tag and the note in
+// brackets follows it as a dashed tag (planned, not yet there) that wraps as
+// words instead of stretching. A bracketed entry with no instrument, such as
+// "(Hi-C planned)", is a lone dashed tag.
 function splitNote(platform: string): { name: string; note?: string } {
   const m = platform.match(/^(.*?)\s*\((.+)\)$/);
   return m ? { name: m[1], note: m[2] } : { name: platform };
@@ -62,7 +63,7 @@ const labels = {
           <td class="cell-platforms">
             <ul class="platform-list" role="list">
               {splitPlatforms(typeof facility.platforms === 'string' ? facility.platforms : pick(facility.platforms, locale)).map(splitNote).map(({ name, note }) => (
-                <li class="platform-item"><span class="chip chip--sm chip--mono platform">{name}</span>{note && <span class="chip chip--sm chip--mono chip--done platform platform-note">{note}</span>}</li>
+                <li class="platform-item">{name && <span class="chip chip--sm chip--mono platform">{name}</span>}{note && <span class="chip chip--sm chip--mono chip--done platform platform-note">{note}</span>}</li>
               ))}
             </ul>
           </td>

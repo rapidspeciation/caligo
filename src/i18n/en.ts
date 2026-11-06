@@ -73,7 +73,7 @@ export const en = {
     "hero": {
       "kicker": "Latin American-led genomics",
       "title": "Rich in species.",
-      "body": "Caligo connects researchers, collections and sequencing facilities to close the genetic-data gap for Neotropical butterflies and moths.",
+      "body": "Caligo connects researchers, collections and sequencing facilities to build reference genomes for Neotropical butterflies and moths.",
       "focus": "Much left to sequence.",
       "scienceAction": "What questions can genomics help us answer?",
       "projectsAction": "Meet the pilot projects"
@@ -152,7 +152,7 @@ export const en = {
       "facilities": "sequencing facilities",
       "countries": "Latin American countries",
       "pilots": "proposed pilot projects",
-      "participantsNote": "As of September 2026. Registration is still open.",
+      "participantsNote": "As of {month}. Registration is still open.",
       "facilitiesNote": "In {n} countries, from Panama to Chile.",
       "countriesNote": "Plus {n} outside the region.",
       "pilotsNote": "On Heliconius, Parides ascanius, soybean pests and Panacea prola.",

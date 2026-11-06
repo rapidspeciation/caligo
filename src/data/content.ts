@@ -336,8 +336,10 @@ export const FACILITIES: Facility[] = [
     lonLat: [-79.54, 8.95],
     country: { en: 'Panama', es: 'Panamá' },
     platforms: {
-      en: 'NextSeq 2000, Nanopore MinION, Nanopore PromethION (Hi-C expertise planned)',
-      es: 'NextSeq 2000, Nanopore MinION, Nanopore PromethION (experiencia en Hi-C prevista)',
+      // STRI does not run Hi-C yet but plans to offer it (owner, 5 Nov 2026):
+      // a bracketed entry with no instrument becomes a lone dashed chip.
+      en: 'NextSeq 2000, Nanopore MinION, Nanopore PromethION, (Hi-C planned)',
+      es: 'NextSeq 2000, Nanopore MinION, Nanopore PromethION, (Hi-C en planificación)',
     },
     websites: [{ label: 'stri.si.edu', href: 'https://stri.si.edu/' }],
   },
@@ -422,6 +424,7 @@ const SCIENTIFIC_NAMES = [
   'Rachiplusia nu',
   'Caligo martia',
   'Caligo memnon',
+  'Caligo brasiliensis',
   'Greta oto',
   'Heliconius sapho',
   'Heliconius elevatus',

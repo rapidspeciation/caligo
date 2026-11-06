@@ -1,14 +1,9 @@
-import { MEMBER_COUNTRIES, PARTICIPANTS } from './initiative';
+import { MEMBER_COUNTRIES, PARTICIPANTS, membershipMonth } from './initiative';
 
 export type AboutLink = {
   label: string;
   href: string;
 };
-
-const membershipDate = new Date(`${PARTICIPANTS.asOf}-01T12:00:00Z`);
-const membershipMonth = (locale: string) => new Intl.DateTimeFormat(locale, {
-  month: 'long', year: 'numeric', timeZone: 'UTC',
-}).format(membershipDate);
 
 export const ABOUT_FEEDBACK = {
   header: {

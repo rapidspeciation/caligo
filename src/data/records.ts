@@ -60,9 +60,6 @@ export interface Pilot {
   readonly slug: string;
   /** The project's title, on Pilot projects and as its Science question. */
   readonly heading: Bilingual;
-  /** Only where the Science question asks something the title does not
-      (Heliconius: how vs why); the owner decides whether to merge them. */
-  readonly questionHeading?: Bilingual;
   readonly hook: Bilingual;
   readonly taxon: string;
   readonly publishedContext: Bilingual;
@@ -247,12 +244,8 @@ export const PILOTS: readonly Pilot[] = [
     id: 'pilot-heliconius',
     slug: 'heliconius',
     heading: {
-      en: 'Why did Heliconius chromosomes split and fuse?',
-      es: '¿Por qué se dividieron y fusionaron los cromosomas de Heliconius?',
-    },
-    questionHeading: {
-      en: 'How can butterfly chromosomes split and fuse, yet still work?',
-      es: '¿Cómo pueden los cromosomas de las mariposas dividirse y fusionarse sin dejar de funcionar?',
+      en: 'How can Heliconius chromosomes split and fuse yet still work?',
+      es: '¿Cómo pueden los cromosomas de Heliconius dividirse y fusionarse sin dejar de funcionar?',
     },
     hook: {
       en: 'Most Heliconius have 21 chromosomes in each haploid set. Five species in the sapho group have up to 60.',
@@ -348,7 +341,9 @@ export const PILOTS: readonly Pilot[] = [
       en: 'Several similar-looking moth species occur in Brazilian soybean fields. Monitoring their movement or insecticide resistance begins with knowing which species was collected.',
       es: 'En los cultivos de soja de Brasil se encuentran varias especies de polillas difíciles de distinguir a simple vista. Para monitorear su movimiento o resistencia a insecticidas, primero hay que saber qué especie se recolectó.',
     },
-    taxon: '',
+    // Family, not a species: the cited sources concern Chrysodeixis includens
+    // and Rachiplusia nu (Lepidoptera: Noctuidae). Family names stay roman.
+    taxon: 'Noctuidae',
     publishedContext: {
       en: 'In Brazil, closely related species are confused during monitoring. Brazilian studies have also found that susceptibility to insecticidal proteins is changing, so each species needs repeated testing. Genomic data can distinguish the species, compare movement among populations and identify variants associated with resistance. Field trials, agronomy and growers’ observations are still needed to choose a management response.',
       es: 'Estudios realizados en Brasil han mostrado que algunas especies cercanas pueden confundirse durante el monitoreo. También han detectado cambios en la susceptibilidad a proteínas insecticidas, por lo que cada especie necesita pruebas repetidas. Los datos genómicos permiten distinguir las especies, comparar el movimiento entre poblaciones e identificar variantes asociadas con la resistencia. Todavía se necesitan ensayos de campo, conocimientos agronómicos y observaciones de los productores para elegir una respuesta de manejo.',
@@ -846,6 +841,45 @@ export const MODULES: readonly MediaModule[] = [
         credit: {
           en: 'Photograph: Kristy Hoath / Museums Victoria Collections / Wikimedia Commons.',
           es: 'Fotografía: Kristy Hoath / Museums Victoria Collections / Wikimedia Commons.',
+        },
+      },
+    ],
+  },
+  {
+    // Beside "Why the name Caligo?" on About: a wild owl butterfly showing the
+    // hindwing eyespot the name essay describes. Licence checked on the
+    // Commons file page (CC BY 4.0, iNaturalist licence review passed) on
+    // 5 November 2026; iNaturalist observation 310188294, research grade.
+    id: 'about-name-caligo',
+    publish: true,
+    candidates: [
+      {
+        kind: 'documentary',
+        path: 'media/documentary/caligo-brasiliensis-carlos-raposo.jpg',
+        width: 1600,
+        height: 1067,
+        creator: 'Carlos Alexandre Mattos Raposo',
+        licence: CC_BY_4.name,
+        licenceUrl: CC_BY_4.url,
+        sourceItemPage: 'https://commons.wikimedia.org/wiki/File:Caligo_brasiliensis_559798582.jpg',
+        taxon: 'Caligo brasiliensis',
+        taxonConfidence: 'species',
+        dateTaken: '2025-08-20',
+        location: 'Mongaguá, São Paulo, Brazil',
+        changes: [
+          'downloaded from Wikimedia Commons (original 2048 × 1366); metadata stripped, resized proportionally to 1600 × 1067 and JPEG re-encoded at quality 86; no crop applied',
+        ],
+        alt: {
+          en: 'A Caligo brasiliensis owl butterfly resting on a tree trunk with its wings closed, showing the large dark eyespot ringed in cream on the underside of its hindwing.',
+          es: 'Una mariposa búho Caligo brasiliensis posada en el tronco de un árbol con las alas cerradas, mostrando el gran ocelo oscuro con borde crema en el reverso del ala posterior.',
+        },
+        caption: {
+          en: 'Caligo brasiliensis, Mongaguá, São Paulo, Brazil.',
+          es: 'Caligo brasiliensis, Mongaguá, São Paulo, Brasil.',
+        },
+        credit: {
+          en: 'Photo: Carlos Alexandre Mattos Raposo / iNaturalist, via Wikimedia Commons.',
+          es: 'Foto: Carlos Alexandre Mattos Raposo / iNaturalist, vía Wikimedia Commons.',
         },
       },
     ],

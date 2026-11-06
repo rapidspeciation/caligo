@@ -1,6 +1,6 @@
 ---
 import { getDict, localePath, type Locale } from '../i18n';
-import { PARTICIPANTS, MEMBER_COUNTRIES, PROJECTS, facilityStats } from '../data/initiative';
+import { PARTICIPANTS, MEMBER_COUNTRIES, PROJECTS, facilityStats, membershipMonth } from '../data/initiative';
 import StatBar from './StatBar.astro';
 
 interface Props {
@@ -12,7 +12,7 @@ const h = getDict(locale).home;
 const { facilities, countries } = facilityStats();
 
 const metrics = [
-  { kind: 'participants', value: PARTICIPANTS.value, label: h.stats.participants, note: h.stats.participantsNote, href: `${localePath(locale, '/about')}#about-community` },
+  { kind: 'participants', value: PARTICIPANTS.value, label: h.stats.participants, note: h.stats.participantsNote.replace('{month}', membershipMonth(locale)), href: `${localePath(locale, '/about')}#about-community` },
   { kind: 'facilities', value: facilities, label: h.stats.facilities, note: h.stats.facilitiesNote.replace('{n}', String(countries)), href: `${localePath(locale, '/about')}#about-facilities` },
   { kind: 'countries', value: MEMBER_COUNTRIES.latinAmerica, label: h.stats.countries, note: h.stats.countriesNote.replace('{n}', String(MEMBER_COUNTRIES.outsideRegion)), href: `${localePath(locale, '/about')}#about-community` },
   { kind: 'pilots', value: PROJECTS.length, label: h.stats.pilots, note: h.stats.pilotsNote, href: localePath(locale, '/projects') },

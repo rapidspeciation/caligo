@@ -55,6 +55,12 @@ const pilotContinuation: Record<string, { cardIndex: number; slug: string } | un
   'panacea-migration': { cardIndex: 3, slug: 'panacea-prola' },
 };
 
+/* The tallest published figure sets one shared frame shape for the
+   three-column row, so every frame is the same height. */
+const tallestFigure = publicationExamples
+  .map((p) => p.figure)
+  .reduce((a, b) => (b.height / b.width > a.height / a.width ? b : a));
+
 const TIER_KINDS = ['barcode', 'resequencing', 'reference'] as const;
 const tiers = t.science.tiers;
 
@@ -139,7 +145,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
         <p class="content-body">{feedback.publications.intro}</p>
       </div>
 
-      <div class="publication-grid">
+      <div class="publication-grid" style={`--fig-ar-max: ${tallestFigure.width} / ${tallestFigure.height}`}>
         {publicationExamples.map((publication, index) => (
           <article class="publication-card ink-card" data-card="link">
             <div class="publication-index mono chip" aria-hidden="true">
@@ -207,7 +213,7 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
         const continuation = pilotContinuation[anchor];
         /* One title per project: the pilot record (Pilot projects page). */
         const pilot = PILOTS.find((p) => p.slug === continuation?.slug);
-        const heading = pilot ? (pilot.questionHeading ?? pilot.heading)[locale] : '';
+        const heading = pilot ? pilot.heading[locale] : '';
         const media = aside.photo ? getMediaModule(aside.photo) : undefined;
         const thumb = media?.candidates.find((c) => c.kind === 'documentary') ?? media?.candidates[0];
         const sources = questionSourceIds[anchor]
@@ -296,12 +302,21 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
 
   <!-- Its own band, ending on the way on: the proposed pilot projects. -->
   <section class="section section--tight section--panel ethics-section" aria-labelledby="ethics-heading">
-    <div class="container-wide prose-column">
-      <h2 id="ethics-heading" class="section-heading content-heading">{feedback.ethics.heading}</h2>
-      {feedback.ethics.body.map((para) => <p class="prose-para content-body">{para}</p>)}
-      <a class="text-link ethics-link" href={localePath(locale, '/projects')}>
-        {feedback.analysis.projectsLink}<Icon name="arrow-right" />
-      </a>
+    <div class="container-wide ethics-layout">
+      <div class="ethics-copy">
+        <h2 id="ethics-heading" class="section-heading content-heading">{feedback.ethics.heading}</h2>
+        {feedback.ethics.body.map((para) => <p class="prose-para content-body">{para}</p>)}
+        <a class="text-link ethics-link" href={localePath(locale, '/projects')}>
+          {feedback.analysis.projectsLink}<Icon name="arrow-right" />
+        </a>
+      </div>
+      <!-- The same requirements as a list to check off; a note, so outlined only. -->
+      <aside class="ethics-checklist ink-card ink-card--flat" aria-labelledby="ethics-checklist-heading">
+        <h3 id="ethics-checklist-heading" class="content-label">{feedback.ethics.checklistHeading}</h3>
+        <ul class="check-list content-body" role="list">
+          {feedback.ethics.checklist.map((item) => <li><Icon name="check" /><span>{item}</span></li>)}
+        </ul>
+      </aside>
     </div>
   </section>
 
@@ -322,6 +337,22 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   .prose-para:last-child { margin-bottom: 0; }
   /* The paragraph's own bottom margin is the gap to the closing link. */
   .ethics-section .ethics-link { margin-top: 0; }
+  .ethics-layout {
+    display: grid;
+    gap: var(--space-l);
+    align-items: start;
+  }
+  .ethics-copy { max-width: var(--measure); }
+  .ethics-checklist { padding: clamp(1.25rem, 2.6vw, 2rem); }
+  .ethics-checklist .check-list { margin-top: var(--space-s); }
+  /* The last row needs no rule: the card's outline closes it. */
+  .ethics-checklist .check-list > li:last-child { border-bottom: 0; padding-bottom: 0; }
+  @media (min-width: 60rem) {
+    .ethics-layout {
+      grid-template-columns: minmax(0, 1.12fr) minmax(20rem, 0.88fr);
+      gap: clamp(3rem, 7vw, 7rem);
+    }
+  }
 
   /* ---- Reference genome overview ---- */
   .reference-section {
@@ -516,22 +547,36 @@ const sourcesLabel = locale === 'es' ? 'Fuentes' : 'Sources';
   }
   /* Laptop and wider: the three papers side by side, each with its figure
      across the top at about the width it had as a row (some 400 px), so
-     all three fit one screen without shrinking a figure. The source line
-     sits at the foot of every card, level across the row. */
+     all three fit one screen without shrinking a figure. The cards share
+     four rows through subgrid (figure, title, caption, source), so each
+     row lines up across the three cards. Every frame takes the tallest
+     figure's shape (capped at 32rem) and centres its own figure inside the
+     white mat; the source line sits level at the foot of every card. */
   @media (min-width: 80rem) {
     .publication-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--space-m);
+      grid-template-rows: repeat(4, auto);
+      gap: 0 var(--space-m);
     }
     .publication-card {
+      grid-row: span 4;
       grid-template-columns: auto minmax(0, 1fr);
-      grid-template-rows: auto auto 1fr;
-      grid-template-areas: 'figure figure' 'index title' 'caption caption';
+      grid-template-rows: subgrid;
+      grid-template-areas: 'figure figure' 'index title' 'caption caption' 'caption caption';
       row-gap: var(--space-xs);
       padding: var(--space-xs);
     }
-    .publication-card figcaption { display: flex; flex-direction: column; align-self: stretch; }
-    .publication-credit { margin-top: auto; padding-top: var(--space-xs); }
+    .publication-image-wrap {
+      width: 100%;
+      aspect-ratio: var(--fig-ar-max, 4 / 3);
+    }
+    .publication-card figcaption {
+      grid-row: 3 / span 2;
+      display: grid;
+      grid-template-rows: subgrid;
+      row-gap: var(--space-xs);
+    }
+    .publication-credit { align-self: end; margin-top: 0; padding-top: var(--space-xs); }
     /* A touch under body size, so a long sourced title does not run to
        five lines beside its three-line neighbours. */
     .publication-title h3 { font-size: 1rem; line-height: 1.28; }

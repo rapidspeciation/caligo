@@ -49,6 +49,9 @@ interface ScienceFeedbackContent {
   readonly ethics: {
     readonly heading: string;
     readonly body: readonly string[];
+    /** Only the requirements the paragraphs above already name. */
+    readonly checklistHeading: string;
+    readonly checklist: readonly string[];
   };
 }
 
@@ -93,6 +96,16 @@ export const scienceFeedback: Record<Locale, ScienceFeedbackContent> = {
         'Sampling plans need permits, specimen records, agreements on how research results, training and other benefits will be shared, and a plan for managing data.',
         'Requirements differ among countries, and sequencing or exporting samples may require additional permits. Sampling on Indigenous Peoples’ lands requires their consent. Caligo will only support sampling with strong involvement from local researchers.',
       ],
+      checklistHeading: 'What a sampling plan needs',
+      checklist: [
+        'Permits',
+        'Specimen records',
+        'Agreements on sharing results, training and other benefits',
+        'A data management plan',
+        'Any additional permits to sequence or export samples',
+        'Consent of Indigenous Peoples to sample on their lands',
+        'Strong involvement from local researchers',
+      ],
     },
   },
   es: {
@@ -134,6 +147,16 @@ export const scienceFeedback: Record<Locale, ScienceFeedbackContent> = {
       body: [
         'Los planes de muestreo necesitan permisos, registros de los ejemplares, acuerdos sobre cómo compartir los resultados, la formación y otros beneficios, además de un plan para gestionar los datos.',
         'Los requisitos varían entre países, y secuenciar o exportar muestras puede exigir permisos adicionales. El muestreo en tierras de pueblos indígenas requiere su consentimiento. Caligo solo apoyará muestreos con una participación sólida de investigadores locales.',
+      ],
+      checklistHeading: 'Qué necesita un plan de muestreo',
+      checklist: [
+        'Permisos',
+        'Registros de los ejemplares',
+        'Acuerdos para compartir resultados, formación y otros beneficios',
+        'Un plan de gestión de datos',
+        'Permisos adicionales para secuenciar o exportar muestras, si se exigen',
+        'Consentimiento de los pueblos indígenas para muestrear en sus tierras',
+        'Participación sólida de investigadores locales',
       ],
     },
   },
