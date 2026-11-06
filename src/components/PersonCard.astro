@@ -36,19 +36,20 @@ const base = import.meta.env.BASE_URL;
     />
   </figure>
 
+  <!-- Name, then focus and countries beside the portrait. The name is a
+       row of its own, shared with the cards beside it, so when one name
+       wraps every focus line in the row still starts level. -->
+  <strong class="person-name">{person.name}</strong>
   <div class="person-content">
-    <strong class="person-name">{person.name}</strong>
     <p class="person-role">{pick(person.role, locale)}</p>
+    <p class="person-region person-wide">
+      <span class="sr-only">{regionalTiesLabel}: </span>
+      {ties.map((tie) => <span class="chip chip--sm person-tie">{tie}</span>)}
+    </p>
   </div>
 
   <div class="person-foot">
-    <div class="person-place person-wide">
-      <p class="person-affil">{person.affiliation}</p>
-      <p class="person-region">
-        <span class="sr-only">{regionalTiesLabel}: </span>
-        {ties.map((tie) => <span class="chip chip--sm person-tie">{tie}</span>)}
-      </p>
-    </div>
+    <p class="person-affil person-wide">{person.affiliation}</p>
     <a
       class="person-source person-wide card-link"
       href={person.source.href}
@@ -93,25 +94,27 @@ const base = import.meta.env.BASE_URL;
 </article>
 
 <style>
-  /* A portrait large enough to read the face, beside name and focus, then institution, countries,
-     profile link and the biography row across the card. Eight leaders
-     make a compact directory; each biography opens on request. */
+  /* A portrait large enough to read the face, beside name, focus and
+     countries, then institution, profile link and the biography row
+     across the card. Eight leaders make a compact directory; each
+     biography opens on request. */
   .person-card {
     /* People are not data: an ink outline without the hard shadow. */
     border-width: 1.5px;
     display: grid;
     grid-template-columns: 7rem minmax(0, 1fr);
-    grid-template-areas: 'media content' 'foot foot';
-    /* Share row tracks with the neighbouring cards so the footer rules
-       line up across a row. */
-    grid-row: span 2;
+    grid-template-areas: 'media name' 'media content' 'foot foot';
+    /* Share row tracks with the neighbouring cards, so names, focus lines
+       and footer rules line up across a row. */
+    grid-row: span 3;
     grid-template-rows: subgrid;
     row-gap: 0;
     margin-bottom: var(--space-m);
-    column-gap: var(--space-s);
+    column-gap: 0.8rem;
     padding: var(--space-m);
   }
   .person-media { grid-area: media; }
+  .person-name { grid-area: name; }
   .person-content { grid-area: content; }
   /* Institution and profile link run under both columns, so the space
      below the portrait is used instead of left empty. */
@@ -120,8 +123,8 @@ const base = import.meta.env.BASE_URL;
     margin-top: var(--space-s);
     padding-top: var(--space-s);
     border-top: 1px solid var(--hairline);
-    /* Institution, regional ties, then the profile link on a line of its
-       own, so the link reads as one phrase instead of wrapping in a corner. */
+    /* Institution, then the profile link on a line of its own, so the link
+       reads as one phrase instead of wrapping in a corner. */
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     /* The biography row sits at the foot, level across a row of cards. */
@@ -159,16 +162,17 @@ const base = import.meta.env.BASE_URL;
     mix-blend-mode: soft-light;
     pointer-events: none;
   }
+  /* Focus at the top, countries level with the foot of the portrait. */
   .person-content {
     display: flex;
-    flex: 1;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.4rem;
     min-width: 0;
   }
+  .person-content .person-region { margin-top: auto; }
   .person-name {
     display: block;
-    margin-bottom: 0.15rem;
+    padding-bottom: 0.45rem;
     font-family: var(--font-display);
     font-size: var(--step-1);
     font-weight: 560;
@@ -195,8 +199,12 @@ const base = import.meta.env.BASE_URL;
     padding-block: 0.75rem;
     padding-right: 0.3rem;
     font-size: var(--step--1);
-    font-weight: 560;
+    /* Quieter than the institution above it: the row is a way in, not a
+       fact about the person. The chevron follows the text colour. */
+    font-weight: 500;
+    color: var(--text-muted);
   }
+  .person-more[open] > .disclosure-summary { color: var(--text-strong); }
   .person-more:not([open]) > .disclosure-summary { border-bottom-color: transparent; padding-bottom: 0; }
   .person-more > .disclosure-body { padding-block: var(--space-xs) 0; }
   .person-affil {
@@ -218,6 +226,8 @@ const base = import.meta.env.BASE_URL;
     color: var(--text-strong);
     transition: background var(--transition), border-color var(--transition);
   }
+  /* On the dark card a stronger tint keeps the logo colours in the chips. */
+  :global([data-mode='dark']) .person-tie { background: color-mix(in oklab, var(--card-tone) 23%, transparent); }
   .person-source {
     justify-self: start;
     color: var(--link);
@@ -247,17 +257,6 @@ const base = import.meta.env.BASE_URL;
     .person-card:hover .person-source :global(svg) { transform: translate(2px, -2px); }
   }
 
-  /* Four to a row: a little less padding and a smaller focus line, so the
-     text beside the portrait keeps a readable width. */
-  @media (min-width: 82rem) {
-    /* Two rows of four plus the heading fit a 1366 x 768 screen: less
-       air above and inside the footer, portraits unchanged. */
-    .person-card { padding: 0.75rem var(--space-s); column-gap: 0.8rem; margin-bottom: var(--space-s); }
-    .person-foot { margin-top: var(--space-xs); padding-top: var(--space-xs); gap: 0.5rem; }
-    .person-more > .disclosure-summary { padding-top: 0.5rem; }
-    .person-name { font-size: var(--step-0); }
-    .person-role { font-size: var(--step--1); line-height: 1.45; }
-  }
   /* Wide screens show institution, countries and profile link on the
      card; a phone keeps them in the row below (see markup). */
   .person-narrow { display: none; }

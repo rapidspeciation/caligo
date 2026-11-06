@@ -1,6 +1,7 @@
 ---
-import type { Locale } from '../i18n';
+import { getDict, localePath, type Locale } from '../i18n';
 import { LEADERS } from '../data/initiative';
+import ArrowText from './ArrowText.astro';
 import PersonCard from './PersonCard.astro';
 
 interface Props {
@@ -8,33 +9,99 @@ interface Props {
 }
 
 const { locale } = Astro.props;
+const t = getDict(locale);
 ---
 
-<div class="leadership-grid">
-  {LEADERS.map((person) => (
-    <PersonCard person={person} locale={locale} />
-  ))}
+<!-- The wrapper's width sets both the number of cards to a row and how
+     compact each card is, so a card is never cramped at any window size. -->
+<div class="leadership">
+  <div class="leadership-grid">
+    {LEADERS.map((person) => (
+      <PersonCard person={person} locale={locale} />
+    ))}
+    <!-- Three to a row, eight people leave one cell empty; the invitation
+         to join fills it. Hidden at one, two and four to a row, where
+         eight divide evenly. -->
+    <article class="leadership-join ink-card ink-card--flat" data-card="link">
+      <p class="leadership-join-text">{t.home.closing.title}</p>
+      <a class="leadership-join-link card-link text-link text-link--wrap" href={`${localePath(locale, '/participate')}#join`}>
+        <ArrowText text={t.join.ctaSecondary} />
+      </a>
+    </article>
+  </div>
 </div>
 
 <style>
+  .leadership { container: leaders / inline-size; }
+  /* The grid sets its own distance from the intro (the section's usual
+     gap between blocks would add to it). */
+  :global(.section > .container-wide) > .leadership { margin-top: 0; }
   .leadership-grid {
     display: grid;
     grid-template-columns: 1fr;
+    /* Each card spans three rows: name, focus, foot. The focus row takes
+       whatever height the portrait needs beyond the name, so a short name
+       is never followed by a gap. */
+    grid-auto-rows: auto 1fr auto;
     gap: 0 var(--space-m);
     margin-top: var(--space-m);
   }
-  @media (min-width: 40rem) {
+  /* Columns by the width of the section (about 40, 64 and 82rem of window). */
+  @container leaders (width >= 37.5rem) {
     .leadership-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
-  @media (min-width: 64rem) {
+  @container leaders (width >= 61.5rem) {
     .leadership-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
-  /* Four to a row only once each card keeps a readable text column. */
-  @media (min-width: 82rem) {
-    .leadership-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: var(--space-s); }
+  /* A card narrower than about 23rem (all four to a row; three or two to a
+     row on the narrower side of each range; a phone has its own rules) takes tighter padding and the
+     smaller name and focus, so names stay on one line where they can and
+     the text beside the portrait keeps a readable width. */
+  @container leaders ((width >= 37.5rem) and (width < 47.5rem)) or ((width >= 61.5rem) and (width < 72rem)) or (width >= 78.5rem) {
+    .leadership-grid > :global(.person-card) { padding: 0.75rem var(--space-s); }
+    .leadership-grid :global(.person-name) { font-size: var(--step-0); padding-bottom: 0.35rem; }
+    .leadership-grid :global(.person-role) { font-size: var(--step--1); line-height: 1.45; }
+    .leadership-grid :global(.person-foot) { margin-top: var(--space-xs); padding-top: var(--space-xs); gap: 0.5rem; }
+    .leadership-grid :global(.person-more > .disclosure-summary) { padding-top: 0.5rem; }
   }
+
+  /* Four to a row only once each card keeps a readable text column. Two
+     rows of four plus the heading fit a 1366 x 768 screen. */
+  @container leaders (width >= 78.5rem) {
+    .leadership-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 1.25rem; margin-top: 0.75rem; }
+    .leadership-grid > :global(.person-card) { margin-bottom: 0.75rem; padding-inline: 0.875rem; column-gap: 0.75rem; }
+  }
+
   /* While a biography is open, each card takes its own height, so the
      cards beside it do not stretch around empty space. */
   .leadership-grid:has(details[open]) { align-items: start; }
-  .leadership-grid:has(details[open]) > :global(.person-card) { grid-template-rows: auto auto; }
+  .leadership-grid:has(details[open]) > :global(.person-card) { grid-template-rows: auto 1fr auto; }
+
+  /* The join cell: same outline as the people, dashed because it is an
+     open place rather than a person. */
+  .leadership-join {
+    display: none;
+    grid-row: span 3;
+    margin-bottom: var(--space-m);
+    padding: var(--space-m);
+    border-width: 1.5px;
+    border-style: dashed;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-s);
+  }
+  @container leaders (61.5rem <= width < 78.5rem) {
+    .leadership-join { display: flex; }
+  }
+  .leadership-grid:has(details[open]) > .leadership-join { align-self: stretch; }
+  .leadership-join-text {
+    margin: 0;
+    max-width: 22ch;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 560;
+    line-height: 1.25;
+    color: var(--text-strong);
+  }
+  .leadership-join-link { align-self: start; font-weight: 560; }
 </style>
