@@ -6,10 +6,10 @@ Caligo connects regional expertise, biological collections, genomic infrastructu
 
 ## Public website
 
-<https://rapidspeciation.github.io/caligo/>
+<https://caligogenomics.com/>
 
-- English: <https://rapidspeciation.github.io/caligo/en/>
-- Español: <https://rapidspeciation.github.io/caligo/es/>
+- English: <https://caligogenomics.com/en/>
+- Español: <https://caligogenomics.com/es/>
 
 ## Local development
 

@@ -6,12 +6,13 @@ import sitemap from '@astrojs/sitemap';
 //
 // GitHub Pages project site:   https://<owner>.github.io/<repo>/   -> set BASE to '/<repo>/'
 // GitHub Pages user/org site:  https://<owner>.github.io/          -> set BASE to '/'
-// Custom domain (later):       https://caligo.example/             -> set BASE to '/', SITE to the domain.
+// Custom domain (current):     https://caligogenomics.com/         -> BASE '/', SITE the domain.
+// The old project URL https://rapidspeciation.github.io/caligo/ redirects here.
 //
 // Override without editing this file via environment variables, e.g.:
 //   SITE_URL=https://caligo.org BASE_PATH=/ pnpm build
-const SITE = process.env.SITE_URL ?? 'https://rapidspeciation.github.io';
-const BASE = process.env.BASE_PATH ?? '/caligo/';
+const SITE = process.env.SITE_URL ?? 'https://caligogenomics.com';
+const BASE = process.env.BASE_PATH ?? '/';
 
 // Extra hostnames allowed by the local `pnpm dev` / `pnpm preview` servers,
 // e.g. a Tailscale MagicDNS hostname when previewing from another device.

@@ -63,7 +63,7 @@ function routes(html) {
 
 /** dist/ path for a built route, honouring the configured base. */
 function builtFile(route) {
-  const base = process.env.CALIGO_BASE ?? '/caligo/';
+  const base = process.env.CALIGO_BASE ?? '/';
   const rel = route.startsWith(base) ? route.slice(base.length) : route.replace(/^\//, '');
   return resolve(distRoot, rel, 'index.html');
 }

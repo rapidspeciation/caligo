@@ -1,9 +1,9 @@
 name: Deploy to GitHub Pages
 
 # Builds the Astro static site and deploys it to GitHub Pages.
-# The site is a project site served under /<repository>/ (astro.config.mjs
-# sets base: '/caligo/'). When a custom domain is adopted later, override the
-# base and site via the SITE_URL / BASE_PATH env vars documented in the config.
+# The site is served at the custom domain https://caligogenomics.com/
+# (astro.config.mjs: base '/'); the domain is set in the repository's Pages
+# settings and DNS lives in Cloudflare.
 
 on:
   push:

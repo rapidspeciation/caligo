@@ -31,7 +31,7 @@ import { dirname, resolve, join, relative } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = resolve(__dirname, '..');
 const distDir = resolve(root, 'dist');
-const BASE = '/caligo/';
+const BASE = '/';
 
 /*
  * Directories under dist/ we do NOT walk as link SOURCES. These are
