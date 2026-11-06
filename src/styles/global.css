@@ -320,7 +320,10 @@ kbd,
   line-height: 1.5;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-faint);
+  /* Halfway from faint to muted ink: a stronger secondary tone that still
+     reads as a label, in every palette and mode (contrast between the two
+     tokens, both checked by verify-contrast). */
+  color: color-mix(in oklab, var(--text-faint), var(--text-muted) 50%);
 }
 
 .content-meta {
