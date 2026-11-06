@@ -53,7 +53,9 @@ export default defineConfig({
           appear in sitemap / discovery / hreflang.
       */
       filter: (page) =>
-        !/\/(theme-review|capacity)\//.test(page),
+        !/\/(theme-review|capacity)\//.test(page) &&
+        // The root serves the English home; /en/ is its listed address.
+        new URL(page).pathname !== '/',
     }),
   ],
   vite: {

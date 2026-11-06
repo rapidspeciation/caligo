@@ -1,20 +1,9 @@
 ---
-// Root path: send visitors to the default-locale home. Kept as a static page
-// with both a meta refresh and a link so it works without JavaScript.
-import { DEFAULT_LOCALE, localePath } from '../i18n';
-const target = localePath(DEFAULT_LOCALE, '/');
+// Root path: serve the default-locale home here directly, so visiting the
+// bare domain shows the site at once instead of a "Redirecting…" page.
+// Base.astro points this page's canonical at /en/, so search engines treat
+// /en/ as the one address for this content.
+import HomePage from '../components/pages/HomePage.astro';
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="refresh" content={`0; url=${target}`} />
-    <link rel="canonical" href={target} />
-    <title>Caligo | Genomes of Neotropical butterflies and moths</title>
-    <meta name="robots" content="noindex" />
-  </head>
-  <body>
-    <p>Redirecting to <a href={target}>Caligo</a>.</p>
-  </body>
-</html>
+<HomePage locale="en" />
