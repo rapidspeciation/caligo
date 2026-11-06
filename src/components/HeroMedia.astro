@@ -32,6 +32,8 @@
  *    CLS = 0 across an art-directed picture whose mobile crop has a
  *    different aspect ratio (portrait) than the desktop crop (16:9).
  */
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { getMedia } from '../data/records';
 
 interface SrcsetEntry {
@@ -143,6 +145,27 @@ const largestByWidth = (entries: readonly SrcsetEntry[]): SrcsetEntry =>
 
 const desktopSrcsetStr: string =
   photoInputs !== null ? formatSrcset(photoInputs.desktopSrcset) : '';
+
+/*
+  Lighter formats. When every desktop JPEG has an .avif (or .webp) copy
+  beside it in public/, offer that set first; browsers take the first type
+  they support and the JPEGs stay as the fallback. The AVIF hero is about
+  half the JPEG's weight, and it is the largest thing on the home page.
+*/
+const BASE_URL = import.meta.env.BASE_URL;
+const PUBLIC_DIR = resolve(process.cwd(), 'public');
+const withExt = (path: string, ext: string): string => path.replace(/\.(jpe?g|png)$/i, `.${ext}`);
+const hasCopy = (path: string, ext: string): boolean =>
+  withExt(path, ext) !== path && existsSync(resolve(PUBLIC_DIR, withExt(path, ext).slice(BASE_URL.length)));
+const formatSources: readonly { type: string; srcset: string }[] =
+  photoInputs === null
+    ? []
+    : (['avif', 'webp'] as const)
+        .filter((ext) => photoInputs!.desktopSrcset.every((e) => hasCopy(e.path, ext)))
+        .map((ext) => ({
+          type: `image/${ext}`,
+          srcset: photoInputs!.desktopSrcset.map((e) => `${withExt(e.path, ext)} ${e.width}w`).join(', '),
+        }));
 const largestDesktop: SrcsetEntry | null =
   photoInputs !== null ? largestByWidth(photoInputs.desktopSrcset) : null;
 const mobileSrcsetStr: string =
@@ -177,8 +200,18 @@ const altText: string = decorative ? '' : media.alt[locale];
           height={largestMobile.height}
         />
       )}
+      {formatSources.map((f) => (
+        <source
+          type={f.type}
+          srcset={f.srcset}
+          sizes="100vw"
+          width={largestDesktop.width}
+          height={largestDesktop.height}
+        />
+      ))}
       <source
         srcset={desktopSrcsetStr}
+        sizes="100vw"
         width={largestDesktop.width}
         height={largestDesktop.height}
       />
@@ -188,6 +221,7 @@ const altText: string = decorative ? '' : media.alt[locale];
         width={largestDesktop.width}
         height={largestDesktop.height}
         loading="eager"
+        fetchpriority="high"
         decoding="async"
       />
     </picture>

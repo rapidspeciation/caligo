@@ -25,6 +25,7 @@ const FULL: Record<Locale, string> = { en: 'English', es: 'Español' };
           href={switchLocalePath(Astro.url.pathname, code)}
           lang={code}
           hreflang={code}
+          data-lang-choice={code}
         >
           <span aria-hidden="true">{SHORT[code]}</span>
           <span class="sr-only">{FULL[code]}</span>
@@ -71,3 +72,37 @@ const FULL: Record<Locale, string> = { en: 'English', es: 'Español' };
     .lang-item { min-width: 2.5rem; height: 2.4rem; }
   }
 </style>
+
+<script>
+  // Fetch the other-language page in the background once this page has
+  // fully loaded and the browser is idle, so the EN/ES switch is instant
+  // without taking bandwidth from the page's own photo and fonts. A plain
+  // <link rel="prefetch">: Astro's own prefetch module adds two script files
+  // to every page and, measured, delayed the first paint by about 45 ms.
+  const done = new Set<string>();
+  function prefetch(href: string) {
+    if (done.has(href)) return;
+    done.add(href);
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = href;
+    document.head.appendChild(link);
+  }
+  function prefetchOtherLanguage() {
+    const run = () => {
+      document.querySelectorAll<HTMLAnchorElement>('a[data-lang-choice]').forEach((a) => prefetch(a.href));
+    };
+    const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(run, { timeout: 3000 }) : setTimeout(run, 500));
+    if (document.readyState === 'complete') idle();
+    else window.addEventListener('load', idle, { once: true });
+  }
+  document.addEventListener('astro:page-load', prefetchOtherLanguage);
+
+  // Remember an explicit EN/ES choice, so the bare domain opens that
+  // language next time (src/pages/index.astro reads 'caligo-lang').
+  document.addEventListener('click', (event) => {
+    const link = (event.target as Element | null)?.closest?.('[data-lang-choice]');
+    if (!link) return;
+    try { localStorage.setItem('caligo-lang', link.getAttribute('data-lang-choice') ?? ''); } catch { /* storage unavailable */ }
+  });
+</script>

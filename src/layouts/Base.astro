@@ -35,10 +35,7 @@ const t = getDict(locale);
 const lang = LOCALE_LANG[locale];
 
 const altEn = new URL(switchLocalePath(Astro.url.pathname, 'en'), Astro.site).href;
-// The bare root serves the English home (src/pages/index.astro); its
-// canonical is /en/ so the two addresses count as one page.
-const isRoot = Astro.url.pathname.replace(/\/?$/, '/') === import.meta.env.BASE_URL.replace(/\/?$/, '/');
-const canonical = isRoot ? altEn : new URL(Astro.url.pathname, Astro.site).href;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const altEs = new URL(switchLocalePath(Astro.url.pathname, 'es'), Astro.site).href;
 const socialImage = new URL(
   `${import.meta.env.BASE_URL}media/social/caligo-share-v2.png`,

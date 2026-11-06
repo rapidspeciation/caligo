@@ -114,7 +114,7 @@ export const LEADERS: Person[] = [
   {
     name: 'Carmen Barragán',
     photo: {
-      path: 'media/people/carmen-barragan-caligo.png',
+      path: 'media/people/carmen-barragan-caligo.webp',
       width: 166,
       height: 156,
       alt: { en: 'Portrait of Carmen Barragán.', es: 'Retrato de Carmen Barragán.' },

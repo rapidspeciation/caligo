@@ -1,9 +1,64 @@
 ---
-// Root path: serve the default-locale home here directly, so visiting the
-// bare domain shows the site at once instead of a "Redirecting…" page.
-// Base.astro points this page's canonical at /en/, so search engines treat
-// /en/ as the one address for this content.
-import HomePage from '../components/pages/HomePage.astro';
+/*
+  The bare domain. GitHub Pages sends this same file to everyone, so it holds
+  no text in either language: a script picks the language before anything is
+  drawn and opens /es/ or /en/. Order: the visitor's own earlier EN/ES choice
+  (saved by the language switcher), then the browser's languages
+  (Spanish or Portuguese -> Spanish, English -> English), otherwise English.
+
+  No preload hints here on purpose: measured on a slow connection they
+  competed with the language page for bandwidth and were cancelled when it
+  arrived, so the page appeared about 0.25 s later than without them.
+*/
+import { localePath } from '../i18n';
+const en = localePath('en', '/');
+const es = localePath('es', '/');
+const site = Astro.site ?? new URL('https://caligogenomics.com/');
 ---
 
-<HomePage locale="en" />
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline define:vars={{ en, es }}>
+      (function () {
+        var pick = null;
+        try {
+          var saved = localStorage.getItem('caligo-lang');
+          if (saved === 'en' || saved === 'es') pick = saved;
+        } catch (_) {}
+        if (!pick) {
+          var langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+          for (var i = 0; i < langs.length && !pick; i++) {
+            var tag = String(langs[i]).toLowerCase().slice(0, 2);
+            if (tag === 'es' || tag === 'pt') pick = 'es';
+            else if (tag === 'en') pick = 'en';
+          }
+        }
+        location.replace((pick === 'es' ? es : en) + location.search + location.hash);
+      })();
+    </script>
+    <noscript><meta http-equiv="refresh" content={`0; url=${en}`} /></noscript>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Caligo | Genomes of Neotropical butterflies and moths</title>
+    <meta name="robots" content="noindex, follow" />
+    <link rel="alternate" hreflang="en" href={new URL(en, site).href} />
+    <link rel="alternate" hreflang="es" href={new URL(es, site).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL(en, site).href} />
+    <style>
+      html { background: #fcf6ea; color-scheme: light dark; }
+      @media (prefers-color-scheme: dark) { html { background: #171310; } }
+      html[data-mode='light'] { background: #fcf6ea; }
+      html[data-mode='dark'] { background: #171310; }
+      body { margin: 0; }
+    </style>
+    <script is:inline>
+      try { var m = localStorage.getItem('caligo-mode'); if (m === 'light' || m === 'dark') document.documentElement.setAttribute('data-mode', m); } catch (_) {}
+    </script>
+  </head>
+  <body>
+    <noscript>
+      <p><a href={en}>English</a> · <a href={es} lang="es">Español</a></p>
+    </noscript>
+  </body>
+</html>
