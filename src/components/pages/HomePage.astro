@@ -13,7 +13,7 @@ import Timeline from '../Timeline.astro';
 import NetworkMap from '../NetworkMap.astro';
 import HackathonFeature from '../HackathonFeature.astro';
 import FigureLightbox from '../FigureLightbox.astro';
-import { HACKATHON, HACKATHON_REGISTRATION_DEADLINE, isPast } from '../../data/hackathon';
+import { HACKATHON, HACKATHON_END, isPast } from '../../data/hackathon';
 import { getDict, localePath, type Locale } from '../../i18n';
 import { getMedia } from '../../data/records';
 
@@ -25,7 +25,7 @@ const t = getDict(locale);
 const h = t.home;
 const base = import.meta.env.BASE_URL;
 const hack = HACKATHON[locale];
-const hackClosed = isPast(HACKATHON_REGISTRATION_DEADLINE);
+const hackOver = isPast(HACKATHON_END);
 
 const heroMedia = getMedia('hero-caligo-tambopata');
 if (!heroMedia) {
@@ -58,8 +58,8 @@ const desktopSrcset = [
     <div class="hero-overlay">
       <div class="container-wide hero-overlay-inner">
         <div class="hero-copy">
-          <a class="hero-event" href="#hackathon" data-show-until={HACKATHON_REGISTRATION_DEADLINE} hidden={hackClosed}>
-            <Icon name="calendar" /><span>{hack.heroPill} · <span class="hero-event-date">{hack.heroDates}</span></span><Icon name="arrow-right" />
+          <a class="hero-event" href="#hackathon" data-show-until={HACKATHON_END} hidden={hackOver}>
+            <Icon name="calendar" /><span>{hack.heroPill} <span class="hero-event-date">· {hack.heroDates}</span></span><Icon name="arrow-right" />
           </a>
           <p class="hero-eyebrow mono">{h.hero.kicker}</p>
           <h1 id="hero-title" class="hero-title">{h.hero.title}{' '}<em>{h.hero.focus}</em></h1>

@@ -85,6 +85,8 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
           href={hackPast ? hackPoster : `${localePath(locale, '/')}#hackathon`}
           data-href-after={HACKATHON_END}
           data-href-later={hackPoster}
+          target={hackPast ? '_blank' : undefined}
+          rel={hackPast ? 'noopener' : undefined}
         >
           <span data-show-until={HACKATHON_REGISTRATION_DEADLINE} hidden={hackClosed}>{HACKATHON[locale].timelineLink}</span>
           <span data-show-after={HACKATHON_REGISTRATION_DEADLINE} hidden={!hackClosed}>

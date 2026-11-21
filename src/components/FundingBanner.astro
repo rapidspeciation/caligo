@@ -39,7 +39,7 @@ const {
 <div class="funding-banner" data-funding-banner={deadline} data-banner-id={id} hidden>
   <div class="container-wide funding-banner-inner">
     <a class="funding-banner-link" href={href}>
-      <span class="funding-banner-name">{name}{when && <> · <span class="funding-banner-when">{when}</span></>}</span>
+      <span class="funding-banner-name">{name}{when && <> <span class="funding-banner-when">· {when}</span></>}</span>
       <DeadlineChip locale={locale} class="funding-banner-chip" deadline={deadline} strings={strings} />
       <span class="funding-banner-action">{action}<Icon name="arrow-right" /></span>
     </a>
@@ -114,7 +114,7 @@ const {
   /* A 44 px touch target around the small cross. */
   .funding-banner-close { position: relative; }
   @media (pointer: coarse) {
-    .funding-banner-close::before { content: ''; position: absolute; inset: -0.45rem; }
+    .funding-banner-close::before { content: ''; position: absolute; inset: -0.5rem; }
   }
   @media (max-width: 36rem) {
     .funding-banner-inner { justify-content: space-between; }

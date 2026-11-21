@@ -56,6 +56,8 @@ type HackathonCopy = {
   flyerOpen: string;
   heroPill: string;
   heroDates: string;
+  bannerName: string;
+  bannerDates: string;
   bannerAction: string;
   timelineLink: string;
   timelineLinkClosed: string;
@@ -76,7 +78,7 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
   en: {
     eyebrow: 'Next event',
     title: 'Genome Assembly & Curation Hackathon',
-    dates: 'Mon 5 – Fri 9 April 2027',
+    dates: 'Mon. 5 – Fri. 9 April 2027',
     place: 'UNICAMP, Campinas, Brazil',
     mode: 'In person or online',
     points: [
@@ -87,7 +89,7 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
     register: 'Register now',
     deadlineLabel: 'Registration deadline',
     deadline: '20 December 2026',
-    closedNote: 'Registration has closed. See you in Campinas or online.',
+    closedNote: 'See you in Campinas or online.',
     congress: 'Right after the {link} congress in Campinas (30 March – 3 April 2027).',
     congressLink: 'Biology of Butterflies & ELEN',
     flyerAlt: 'Poster of the Genome Assembly & Curation Hackathon, 5–9 April 2027 at UNICAMP, Campinas, Brazil, with the registration link, a QR code and the 20 December 2026 deadline.',
@@ -95,6 +97,8 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
     flyerOpen: 'Enlarge the poster',
     heroPill: 'Genome assembly hackathon',
     heroDates: '5–9 April 2027',
+    bannerName: 'Genome assembly hackathon',
+    bannerDates: '5–9 April 2027',
     bannerAction: 'Register',
     timelineLink: 'Details and registration',
     timelineLinkClosed: 'Event details',
@@ -106,7 +110,7 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
       tomorrow: 'Closes tomorrow',
       today: 'Closes today',
       closed: 'Registration closed',
-      closedAgo: 'Closed {ago}',
+      closedAgo: 'Registration closed',
     },
     bannerChip: {
       open: 'Register by 20 December',
@@ -120,18 +124,18 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
   es: {
     eyebrow: 'Próximo evento',
     title: 'Hackatón de Ensamblaje y Curación de Genomas',
-    dates: 'Lun 5 – Vie 9 de abril de 2027',
+    dates: 'Lun. 5 – Vie. 9 de abril de 2027',
     place: 'UNICAMP, Campinas, Brasil',
     mode: 'Presencial o virtual',
     points: [
       { label: 'Objetivo:', text: 'Aprender y trabajar juntos para ensamblar y analizar genomas de referencia.' },
       { label: '¿Quiénes pueden participar?', text: 'Investigadores con y sin experiencia previa en ensamblaje y curación de genomas.' },
-      { label: '¡Únete!', text: 'Ayúdanos a generar nuestros primeros genomas como comunidad.' },
+      { label: '¡Únete a nosotros!', text: 'Ayúdanos a generar nuestros primeros genomas como comunidad.' },
     ],
     register: 'Regístrate ahora',
     deadlineLabel: 'Fecha límite de inscripción',
     deadline: '20 de diciembre de 2026',
-    closedNote: 'Las inscripciones están cerradas. Nos vemos en Campinas o de forma virtual.',
+    closedNote: 'Nos vemos en Campinas o de forma virtual.',
     congress: 'Justo después del congreso {link} en Campinas (30 de marzo – 3 de abril de 2027).',
     congressLink: 'Biology of Butterflies y ELEN',
     flyerAlt: 'Afiche del Hackatón de Ensamblaje y Curación de Genomas, del 5 al 9 de abril de 2027 en la UNICAMP, Campinas, Brasil, con el enlace de inscripción, un código QR y la fecha límite del 20 de diciembre de 2026.',
@@ -139,6 +143,8 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
     flyerOpen: 'Ampliar el afiche',
     heroPill: 'Hackatón de ensamblaje de genomas',
     heroDates: '5–9 de abril de 2027',
+    bannerName: 'Hackatón de ensamblaje',
+    bannerDates: '5–9 abr 2027',
     bannerAction: 'Inscríbete',
     timelineLink: 'Detalles e inscripción',
     timelineLinkClosed: 'Detalles del evento',
@@ -150,7 +156,7 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
       tomorrow: 'Cierra mañana',
       today: 'Cierra hoy',
       closed: 'Inscripción cerrada',
-      closedAgo: 'Cerró {ago}',
+      closedAgo: 'Inscripción cerrada',
     },
     bannerChip: {
       open: 'Inscripción hasta el 20 de diciembre',
