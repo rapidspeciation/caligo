@@ -59,7 +59,7 @@ const desktopSrcset = [
       <div class="container-wide hero-overlay-inner">
         <div class="hero-copy">
           <a class="hero-event" href="#hackathon" data-show-until={HACKATHON_REGISTRATION_DEADLINE} hidden={hackClosed}>
-            <Icon name="calendar" /><span>{hack.heroPill}</span><Icon name="arrow-right" />
+            <Icon name="calendar" /><span>{hack.heroPill} · <span class="hero-event-date">{hack.heroDates}</span></span><Icon name="arrow-right" />
           </a>
           <p class="hero-eyebrow mono">{h.hero.kicker}</p>
           <h1 id="hero-title" class="hero-title">{h.hero.title}{' '}<em>{h.hero.focus}</em></h1>
@@ -256,8 +256,9 @@ const desktopSrcset = [
     margin-left: auto;
     color: #F6F7F3;
   }
-  /* Pointer to the hackathon feature just below the hero: a pill in the
-     hero's own ivory, so it reads over the photograph's dark field. */
+  /* Pointer to the hackathon feature just below the hero: the deep green
+     of the deadline chips with ivory text, so it stands out on the
+     photograph's dark field without competing with the rust button. */
   .hero-event {
     display: inline-flex;
     align-items: center;
@@ -265,9 +266,9 @@ const desktopSrcset = [
     max-width: 100%;
     margin-bottom: var(--space-s);
     padding: 0.4rem 0.85rem;
-    border: 1px solid color-mix(in oklab, #F6F7F3 55%, transparent);
+    border: 1px solid #9ebf84;
     border-radius: 999px;
-    background: color-mix(in oklab, #14110f 55%, transparent);
+    background: #24573a;
     color: #F6F7F3;
     font-size: var(--step--1);
     font-weight: 560;
@@ -278,7 +279,8 @@ const desktopSrcset = [
   .hero-event[hidden] { display: none; }
   .hero-event :global(svg) { flex: none; width: 1rem; height: 1rem; }
   .hero-event :global(svg:last-child) { transition: transform var(--transition); }
-  .hero-event:hover { background: color-mix(in oklab, #14110f 35%, transparent); border-color: #F6F7F3; }
+  .hero-event:hover { background: #2d6a47; border-color: #F6F7F3; }
+  .hero-event-date { white-space: nowrap; }
   .hero-event:hover :global(svg:last-child) { transform: translateX(2px); }
   .hero-event:active { transform: translateY(1px); }
   .hero-event:focus-visible { outline: 2px solid #F6F7F3; outline-offset: 3px; }

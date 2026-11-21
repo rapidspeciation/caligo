@@ -31,7 +31,9 @@ const c = HACKATHON[locale];
 const base = import.meta.env.BASE_URL;
 const closed = isPast(HACKATHON_REGISTRATION_DEADLINE);
 const over = isPast(HACKATHON_END);
-const srcset = HACKATHON_FLYER.srcset.map((s) => `${base}${s.path} ${s.width}w`).join(', ');
+const [congressHead, congressTail] = c.congress.split('{link}');
+// From 720 px up: at card size (25rem) a 480 px file made the poster soft.
+const srcset = HACKATHON_FLYER.srcset.filter((s) => s.width >= 720).map((s) => `${base}${s.path} ${s.width}w`).join(', ');
 ---
 
 <section
@@ -44,10 +46,7 @@ const srcset = HACKATHON_FLYER.srcset.map((s) => `${base}${s.path} ${s.width}w`)
   <div class="container-wide">
     <article class="hackathon-card ink-card" data-tone="leaf">
       <div class="hackathon-copy">
-        <p class="hackathon-eyebrow content-label">
-          <span data-show-until={HACKATHON_REGISTRATION_DEADLINE} hidden={closed}>{c.eyebrow}</span>
-          <span data-show-after={HACKATHON_REGISTRATION_DEADLINE} hidden={!closed}>{c.eyebrowClosed}</span>
-        </p>
+        <p class="hackathon-eyebrow content-label">{c.eyebrow}</p>
         <h2 id="hackathon-title" class="hackathon-title">{c.title}</h2>
 
         <ul class="hackathon-facts" role="list">
@@ -64,19 +63,22 @@ const srcset = HACKATHON_FLYER.srcset.map((s) => `${base}${s.path} ${s.width}w`)
 
         <div class="hackathon-action" data-show-until={HACKATHON_REGISTRATION_DEADLINE} hidden={closed}>
           <a class="btn btn--primary" href={HACKATHON_REGISTRATION_URL} target="_blank" rel="external noopener">
-            <span><ArrowText text={c.register} icon="external" /></span>
+            <span><ArrowText text={c.register} icon="external" /></span><span class="sr-only"> {c.newTab}</span>
           </a>
           <div class="hackathon-deadline">
             <span class="hackathon-deadline-label">{c.deadlineLabel}</span>
             <strong><time datetime={HACKATHON_REGISTRATION_DEADLINE}>{c.deadline}</time></strong>
           </div>
-          <DeadlineChip locale={locale} deadline={HACKATHON_REGISTRATION_DEADLINE} strings={c.chip} />
         </div>
-        <p class="content-body hackathon-closed" data-show-after={HACKATHON_REGISTRATION_DEADLINE} hidden={!closed}>{c.closedNote}</p>
+        {/* Stays in both states: the countdown while open, the dashed
+            "registration closed" pill afterwards (as on Funding). */}
+        <div class="hackathon-status">
+          <DeadlineChip locale={locale} deadline={HACKATHON_REGISTRATION_DEADLINE} strings={c.chip} />
+          <p class="content-body hackathon-closed" data-show-after={HACKATHON_REGISTRATION_DEADLINE} hidden={!closed}>{c.closedNote}</p>
+        </div>
 
         <p class="content-meta hackathon-congress">
-          {c.congress}{' '}
-          <a class="text-link" href={HACKATHON_CONGRESS_URL} target="_blank" rel="external noopener">{c.congressLink}<Icon name="external" /></a>
+          {congressHead}<a class="text-link" href={HACKATHON_CONGRESS_URL} target="_blank" rel="external noopener">{c.congressLink}<Icon name="external" /><span class="sr-only"> {c.newTab}</span></a>{congressTail}
         </p>
       </div>
 
@@ -90,7 +92,7 @@ const srcset = HACKATHON_FLYER.srcset.map((s) => `${base}${s.path} ${s.width}w`)
         <img
           src={`${base}${HACKATHON_FLYER.srcset[1].path}`}
           srcset={srcset}
-          sizes="(min-width: 60rem) 22rem, (min-width: 40rem) 50vw, 90vw"
+          sizes="(min-width: 52rem) 25rem, 24rem"
           alt={c.flyerAlt}
           width={HACKATHON_FLYER.width}
           height={HACKATHON_FLYER.height}
@@ -102,14 +104,17 @@ const srcset = HACKATHON_FLYER.srcset.map((s) => `${base}${s.path} ${s.width}w`)
     </article>
   </div>
 </section>
+{/* Settle the dated states before first paint (the banner's call runs
+    before this section exists). */}
+<script is:inline>window.caligoDeadlines && window.caligoDeadlines();</script>
 
 <style>
   .hackathon-section[hidden] { display: none; }
-  .hackathon-section { padding-block: var(--space-l); }
+  .hackathon-section { padding-block: var(--space-l); scroll-margin-top: 4rem; }
 
   .hackathon-card {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(14rem, 22rem);
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 25rem);
     gap: var(--space-l);
     align-items: center;
     padding: var(--space-l);
@@ -117,7 +122,6 @@ const srcset = HACKATHON_FLYER.srcset.map((s) => `${base}${s.path} ${s.width}w`)
 
   .hackathon-copy { display: grid; gap: var(--space-s); min-width: 0; }
   .hackathon-eyebrow { color: var(--accent-strong); }
-  .hackathon-eyebrow [hidden] { display: none; }
   .hackathon-title {
     margin: 0;
     font-size: var(--step-3);
@@ -132,14 +136,18 @@ const srcset = HACKATHON_FLYER.srcset.map((s) => `${base}${s.path} ${s.width}w`)
     flex-wrap: wrap;
     gap: var(--space-2xs) var(--space-m);
     margin: 0;
-    padding: 0;
+    padding: var(--space-xs) var(--space-s);
     list-style: none;
+    background: var(--bg);
+    border: 1px solid var(--hairline-strong, var(--hairline));
+    border-radius: var(--radius);
     font-size: var(--step-0);
     font-weight: 560;
     color: var(--text-strong);
   }
   .hackathon-facts li { display: inline-flex; align-items: center; gap: 0.45rem; }
-  .hackathon-facts :global(svg) { width: 1.15rem; height: 1.15rem; flex: none; color: var(--card-tone); }
+  .hackathon-facts :global(svg) { width: 1.15rem; height: 1.15rem; flex: none; color: var(--deadline-fill); }
+  :global([data-mode='dark']) .hackathon-facts :global(svg) { color: var(--card-tone); }
 
   .hackathon-points { margin-block: var(--space-2xs); }
   .hackathon-points strong { color: var(--text-strong); font-weight: 600; }
@@ -153,9 +161,11 @@ const srcset = HACKATHON_FLYER.srcset.map((s) => `${base}${s.path} ${s.width}w`)
   .hackathon-action[hidden], .hackathon-closed[hidden] { display: none; }
   .hackathon-deadline { display: grid; line-height: 1.3; font-size: var(--step--1); color: var(--text-muted); }
   .hackathon-deadline strong { color: var(--text-strong); font-size: var(--step-0); font-weight: 600; }
+  .hackathon-status { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs) var(--space-s); }
   .hackathon-closed { margin: 0; }
   .hackathon-congress { margin: 0; color: var(--text-muted); }
-  .hackathon-congress .text-link { white-space: nowrap; }
+  .hackathon-congress .text-link { display: inline; }
+  .hackathon-congress .text-link :global(svg) { display: inline-block; vertical-align: -0.1em; margin-left: 0.2em; width: 0.9em; height: 0.9em; }
 
   /* The poster: readable at card size, full size in the lightbox. */
   .hackathon-flyer {
@@ -195,6 +205,8 @@ const srcset = HACKATHON_FLYER.srcset.map((s) => `${base}${s.path} ${s.width}w`)
     .hackathon-flyer, .hackathon-flyer img { transition: none; }
     .hackathon-flyer:hover img { transform: none; }
   }
+
+  @media (max-width: 64rem) { .hackathon-card { align-items: start; } }
 
   /* Phones and narrow tablets: facts and action first, the poster below. */
   @media (max-width: 52rem) {

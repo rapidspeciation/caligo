@@ -17,6 +17,8 @@ interface Props {
   readonly id?: string;
   readonly deadline?: string;
   readonly name?: string;
+  /** Shown after the name on one unbreakable line (e.g. the event dates). */
+  readonly when?: string;
   readonly action?: string;
   readonly href?: string;
   readonly strings?: (typeof PILOT_INTRO)[Locale]['chip'];
@@ -27,6 +29,7 @@ const {
   id = 'funding',
   deadline = PILOT_DEADLINE,
   name = copy.banner,
+  when,
   action = copy.bannerAction,
   href = localePath(locale, '/funding'),
   strings,
@@ -36,7 +39,7 @@ const {
 <div class="funding-banner" data-funding-banner={deadline} data-banner-id={id} hidden>
   <div class="container-wide funding-banner-inner">
     <a class="funding-banner-link" href={href}>
-      <span class="funding-banner-name">{name}</span>
+      <span class="funding-banner-name">{name}{when && <> · <span class="funding-banner-when">{when}</span></>}</span>
       <DeadlineChip locale={locale} class="funding-banner-chip" deadline={deadline} strings={strings} />
       <span class="funding-banner-action">{action}<Icon name="arrow-right" /></span>
     </a>
@@ -72,6 +75,7 @@ const {
     text-decoration: none;
   }
   .funding-banner-name { font-weight: 560; }
+  .funding-banner-when { white-space: nowrap; }
   .funding-banner :global(.funding-banner-chip) { padding-block: 0.1rem; font-size: var(--step--2); }
   .funding-banner-action {
     display: inline-flex;
@@ -107,6 +111,11 @@ const {
   }
   .funding-banner-close:hover { color: var(--text-strong); background: color-mix(in oklab, currentColor 8%, transparent); }
   .funding-banner-close :global(svg) { width: 1rem; height: 1rem; }
+  /* A 44 px touch target around the small cross. */
+  .funding-banner-close { position: relative; }
+  @media (pointer: coarse) {
+    .funding-banner-close::before { content: ''; position: absolute; inset: -0.45rem; }
+  }
   @media (max-width: 36rem) {
     .funding-banner-inner { justify-content: space-between; }
     .funding-banner-link { justify-content: flex-start; }

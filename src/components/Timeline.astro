@@ -3,7 +3,7 @@ import { EVENTS, pick, italicizeSpecies } from '../data/initiative';
 import { localePath, type Locale } from '../i18n';
 import { PILOT_INTRO, PILOT_DEADLINE, PAST_CALLS, isCallClosed } from '../data/pilot-call';
 import Icon from './Icon.astro';
-import { HACKATHON } from '../data/hackathon';
+import { HACKATHON, HACKATHON_ID, HACKATHON_END, HACKATHON_FLYER, HACKATHON_REGISTRATION_DEADLINE, isPast } from '../data/hackathon';
 import DeadlineChip from './DeadlineChip.astro';
 import WhenChip from './WhenChip.astro';
 
@@ -30,16 +30,15 @@ const entries: Entry[] = [
   ...(eventsOnly ? [] : PAST_CALLS.map((call) => ({ kind: 'past-call' as const, sort: call.deadline, call }))),
   ...EVENTS.map((event) => ({ kind: 'event' as const, sort: event.start, event })),
 ].sort((a, b) => a.sort.localeCompare(b.sort));
+const hackClosed = isPast(HACKATHON_REGISTRATION_DEADLINE);
+const hackPast = isPast(HACKATHON_END);
+const hackPoster = `${import.meta.env.BASE_URL}${HACKATHON_FLYER.full}`;
 const todayLabel = locale === 'es' ? 'Hoy' : 'Today';
 /* Every card leads somewhere, so the whole card is the link. */
 const eventLinks: Record<string, { href: string; label: string; external?: boolean }> = {
   'bogota-2026': {
     href: `${localePath(locale, '/projects')}#heliconius`,
     label: locale === 'es' ? 'Proyecto piloto de Heliconius' : 'The Heliconius pilot project',
-  },
-  'campinas-2027': {
-    href: `${localePath(locale, '/')}#hackathon`,
-    label: HACKATHON[locale].timelineLink,
   },
 };
 ---
@@ -78,7 +77,23 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
       <h3 class="timeline-name">{pick(entry.event.name, locale)}</h3>
       <p class="timeline-location">{pick(entry.event.location, locale)}</p>
       <p class="timeline-summary" set:html={italicizeSpecies(pick(entry.event.summary, locale))} />
-      {eventLinks[entry.event.id] && (
+      {entry.event.id === HACKATHON_ID ? (
+        /* The hackathon's link follows its dates: registration, then the
+           event details, and the poster once the home feature has gone. */
+        <a
+          class="text-link timeline-link card-link"
+          href={hackPast ? hackPoster : `${localePath(locale, '/')}#hackathon`}
+          data-href-after={HACKATHON_END}
+          data-href-later={hackPoster}
+        >
+          <span data-show-until={HACKATHON_REGISTRATION_DEADLINE} hidden={hackClosed}>{HACKATHON[locale].timelineLink}</span>
+          <span data-show-after={HACKATHON_REGISTRATION_DEADLINE} hidden={!hackClosed}>
+            <span data-show-until={HACKATHON_END} hidden={hackPast}>{HACKATHON[locale].timelineLinkClosed}</span>
+            <span data-show-after={HACKATHON_END} hidden={!hackPast}>{HACKATHON[locale].timelineLinkPast}</span>
+          </span>
+          <Icon name="arrow-right" />
+        </a>
+      ) : eventLinks[entry.event.id] && (
         <a
           class="text-link timeline-link card-link"
           href={eventLinks[entry.event.id].href}

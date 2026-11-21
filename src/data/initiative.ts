@@ -350,8 +350,8 @@ export const EVENTS: InitiativeEvent[] = [
     start: '2027-04-05',
     end: '2027-04-09',
     summary: {
-      en: 'In person or online: participants with and without assembly experience learn and work together to assemble and analyse reference genomes.',
-      es: 'Presencial o virtual: participantes con y sin experiencia en ensamblaje aprenden y trabajan juntos para ensamblar y analizar genomas de referencia.',
+      en: 'In person or online: researchers with and without experience in genome assembly and curation learn and work together to assemble and analyse reference genomes.',
+      es: 'Presencial o virtual: investigadores con y sin experiencia previa en ensamblaje y curación de genomas aprenden y trabajan juntos para ensamblar y analizar genomas de referencia.',
     },
   },
 ];

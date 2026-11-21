@@ -40,7 +40,6 @@ export function isPast(iso: string, now: Date = new Date()): boolean {
 
 type HackathonCopy = {
   eyebrow: string;
-  eyebrowClosed: string;
   title: string;
   dates: string;
   place: string;
@@ -56,9 +55,13 @@ type HackathonCopy = {
   flyerCaption: string;
   flyerOpen: string;
   heroPill: string;
-  banner: string;
+  heroDates: string;
   bannerAction: string;
   timelineLink: string;
+  timelineLinkClosed: string;
+  timelineLinkPast: string;
+  newTab: string;
+  bannerChip: HackathonCopy['chip'];
   chip: {
     open: string;
     days: string;
@@ -71,71 +74,91 @@ type HackathonCopy = {
 
 export const HACKATHON: Record<Locale, HackathonCopy> = {
   en: {
-    eyebrow: 'Next event · Registration open',
-    eyebrowClosed: 'Next event',
+    eyebrow: 'Next event',
     title: 'Genome Assembly & Curation Hackathon',
     dates: 'Mon 5 – Fri 9 April 2027',
     place: 'UNICAMP, Campinas, Brazil',
     mode: 'In person or online',
     points: [
-      { label: 'Aim', text: 'Learn and work together to assemble and analyse reference genomes.' },
-      { label: 'Who can take part', text: 'Researchers with and without experience in genome assembly and curation.' },
-      { label: 'Join us', text: 'Help us generate our first genomes as a community.' },
+      { label: 'Aim:', text: 'Learn and work together to assemble and analyse reference genomes.' },
+      { label: 'Who can participate?', text: 'Researchers with and without experience in genome assembly and curation.' },
+      { label: 'Join us!', text: 'Help us generate our first genomes as a community.' },
     ],
     register: 'Register now',
     deadlineLabel: 'Registration deadline',
     deadline: '20 December 2026',
     closedNote: 'Registration has closed. See you in Campinas or online.',
-    congress: 'The week after the Biology of Butterflies & ELEN congress in Campinas (30 March – 3 April).',
-    congressLink: 'Congress website',
+    congress: 'Right after the {link} congress in Campinas (30 March – 3 April 2027).',
+    congressLink: 'Biology of Butterflies & ELEN',
     flyerAlt: 'Poster of the Genome Assembly & Curation Hackathon, 5–9 April 2027 at UNICAMP, Campinas, Brazil, with the registration link, a QR code and the 20 December 2026 deadline.',
     flyerCaption: 'Hackathon poster (English and Spanish).',
     flyerOpen: 'Enlarge the poster',
-    heroPill: 'Genome assembly hackathon · 5–9 April 2027',
-    banner: 'Genome Assembly & Curation Hackathon · 5–9 April 2027',
+    heroPill: 'Genome assembly hackathon',
+    heroDates: '5–9 April 2027',
     bannerAction: 'Register',
     timelineLink: 'Details and registration',
+    timelineLinkClosed: 'Event details',
+    timelineLinkPast: 'Event poster',
+    newTab: '(opens in a new tab)',
     chip: {
-      open: 'Open until 20 December',
+      open: 'Closes on 20 December',
       days: 'Closes in {n} days',
       tomorrow: 'Closes tomorrow',
       today: 'Closes today',
       closed: 'Registration closed',
       closedAgo: 'Closed {ago}',
     },
+    bannerChip: {
+      open: 'Register by 20 December',
+      days: 'Registration: {n} days left',
+      tomorrow: 'Registration closes tomorrow',
+      today: 'Registration closes today',
+      closed: 'Registration closed',
+      closedAgo: 'Registration closed',
+    },
   },
   es: {
-    eyebrow: 'Próximo evento · Inscripciones abiertas',
-    eyebrowClosed: 'Próximo evento',
+    eyebrow: 'Próximo evento',
     title: 'Hackatón de Ensamblaje y Curación de Genomas',
     dates: 'Lun 5 – Vie 9 de abril de 2027',
     place: 'UNICAMP, Campinas, Brasil',
     mode: 'Presencial o virtual',
     points: [
-      { label: 'Objetivo', text: 'Aprender y trabajar juntos para ensamblar y analizar genomas de referencia.' },
+      { label: 'Objetivo:', text: 'Aprender y trabajar juntos para ensamblar y analizar genomas de referencia.' },
       { label: '¿Quiénes pueden participar?', text: 'Investigadores con y sin experiencia previa en ensamblaje y curación de genomas.' },
       { label: '¡Únete!', text: 'Ayúdanos a generar nuestros primeros genomas como comunidad.' },
     ],
     register: 'Regístrate ahora',
     deadlineLabel: 'Fecha límite de inscripción',
     deadline: '20 de diciembre de 2026',
-    closedNote: 'Las inscripciones están cerradas. Nos vemos en Campinas o en línea.',
-    congress: 'La semana siguiente al congreso Biology of Butterflies y ELEN en Campinas (30 de marzo – 3 de abril).',
-    congressLink: 'Sitio del congreso',
+    closedNote: 'Las inscripciones están cerradas. Nos vemos en Campinas o de forma virtual.',
+    congress: 'Justo después del congreso {link} en Campinas (30 de marzo – 3 de abril de 2027).',
+    congressLink: 'Biology of Butterflies y ELEN',
     flyerAlt: 'Afiche del Hackatón de Ensamblaje y Curación de Genomas, del 5 al 9 de abril de 2027 en la UNICAMP, Campinas, Brasil, con el enlace de inscripción, un código QR y la fecha límite del 20 de diciembre de 2026.',
     flyerCaption: 'Afiche del hackatón (inglés y español).',
     flyerOpen: 'Ampliar el afiche',
-    heroPill: 'Hackatón de ensamblaje de genomas · 5–9 de abril de 2027',
-    banner: 'Hackatón de Ensamblaje y Curación de Genomas · 5–9 de abril de 2027',
+    heroPill: 'Hackatón de ensamblaje de genomas',
+    heroDates: '5–9 de abril de 2027',
     bannerAction: 'Inscríbete',
     timelineLink: 'Detalles e inscripción',
+    timelineLinkClosed: 'Detalles del evento',
+    timelineLinkPast: 'Afiche del evento',
+    newTab: '(se abre en otra pestaña)',
     chip: {
-      open: 'Abiertas hasta el 20 de diciembre',
-      days: 'Cierran en {n} días',
-      tomorrow: 'Cierran mañana',
-      today: 'Cierran hoy',
-      closed: 'Inscripciones cerradas',
-      closedAgo: 'Cerraron {ago}',
+      open: 'Cierra el 20 de diciembre',
+      days: 'Cierra en {n} días',
+      tomorrow: 'Cierra mañana',
+      today: 'Cierra hoy',
+      closed: 'Inscripción cerrada',
+      closedAgo: 'Cerró {ago}',
+    },
+    bannerChip: {
+      open: 'Inscripción hasta el 20 de diciembre',
+      days: 'Inscripción: quedan {n} días',
+      tomorrow: 'Inscripción: cierra mañana',
+      today: 'Inscripción: cierra hoy',
+      closed: 'Inscripción cerrada',
+      closedAgo: 'Inscripción cerrada',
     },
   },
 };
