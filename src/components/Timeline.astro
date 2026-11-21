@@ -3,6 +3,7 @@ import { EVENTS, pick, italicizeSpecies } from '../data/initiative';
 import { localePath, type Locale } from '../i18n';
 import { PILOT_INTRO, PILOT_DEADLINE, PAST_CALLS, isCallClosed } from '../data/pilot-call';
 import Icon from './Icon.astro';
+import { HACKATHON } from '../data/hackathon';
 import DeadlineChip from './DeadlineChip.astro';
 import WhenChip from './WhenChip.astro';
 
@@ -37,9 +38,8 @@ const eventLinks: Record<string, { href: string; label: string; external?: boole
     label: locale === 'es' ? 'Proyecto piloto de Heliconius' : 'The Heliconius pilot project',
   },
   'campinas-2027': {
-    href: 'https://www.even3.com.br/bob-elen-2027/',
-    label: locale === 'es' ? 'Sitio del congreso' : 'Congress website',
-    external: true,
+    href: `${localePath(locale, '/')}#hackathon`,
+    label: HACKATHON[locale].timelineLink,
   },
 };
 ---

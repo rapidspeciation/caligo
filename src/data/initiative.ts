@@ -332,25 +332,26 @@ export const EVENTS: InitiativeEvent[] = [
     },
   },
   {
+    // Joana Meier's flyer, 21 November 2026 (see ./hackathon.ts).
     id: 'campinas-2027',
     name: {
-      en: 'Campinas hackathon',
-      es: 'Hackatón en Campinas',
+      en: 'Genome Assembly & Curation Hackathon',
+      es: 'Hackatón de Ensamblaje y Curación de Genomas',
     },
     dates: {
-      en: '30 March – 3 April 2027',
-      es: 'Del 30 de marzo al 3 de abril de 2027',
+      en: '5–9 April 2027',
+      es: 'Del 5 al 9 de abril de 2027',
     },
     location: {
-      en: 'Campinas, Brazil',
-      es: 'Campinas, Brasil',
+      en: 'UNICAMP, Campinas, Brazil',
+      es: 'UNICAMP, Campinas, Brasil',
     },
     lonLat: [-47.06, -22.91],
-    start: '2027-03-30',
-    end: '2027-04-03',
+    start: '2027-04-05',
+    end: '2027-04-09',
     summary: {
-      en: 'Hackathon at the Biology of Butterflies and ELEN (Neotropical Lepidoptera meeting) congress: participants assemble reference genomes and analyse the data together.',
-      es: 'Hackatón durante el congreso Biology of Butterflies y Encuentro de Lepidópteros Neotropicales (ELEN): los participantes ensamblan genomas de referencia y analizan los datos en conjunto.',
+      en: 'In person or online: participants with and without assembly experience learn and work together to assemble and analyse reference genomes.',
+      es: 'Presencial o virtual: participantes con y sin experiencia en ensamblaje aprenden y trabajan juntos para ensamblar y analizar genomas de referencia.',
     },
   },
 ];

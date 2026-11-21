@@ -6,7 +6,8 @@
  * ago the call closed ("Closed 9 days ago").
  */
 import Icon from './Icon.astro';
-import { PILOT_DEADLINE, PILOT_INTRO, isCallClosed } from '../data/pilot-call';
+import { PILOT_DEADLINE, PILOT_INTRO } from '../data/pilot-call';
+import { isPast } from '../data/hackathon';
 import type { Locale } from '../i18n';
 
 interface Props {
@@ -14,15 +15,18 @@ interface Props {
   readonly class?: string;
   /** A call other than the current one (a closed call on the timeline). */
   readonly deadline?: string;
+  /** Wording for a deadline other than a funding call (e.g. a registration). */
+  readonly strings?: (typeof PILOT_INTRO)[Locale]['chip'];
 }
-const { locale, class: className, deadline = PILOT_DEADLINE } = Astro.props;
-const chip = PILOT_INTRO[locale].chip;
-const closed = deadline === PILOT_DEADLINE ? isCallClosed() : true;
+const { locale, class: className, deadline = PILOT_DEADLINE, strings } = Astro.props;
+const chip = strings ?? PILOT_INTRO[locale].chip;
+const closed = isPast(deadline);
 ---
 
 <span
   class:list={['chip', 'deadline-chip', className]}
   data-deadline={deadline}
+  data-deadline-kind={strings ? 'other' : undefined}
   data-state={closed ? 'closed' : 'open'}
   data-days={chip.days}
   data-tomorrow={chip.tomorrow}

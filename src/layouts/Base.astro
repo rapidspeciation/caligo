@@ -11,7 +11,8 @@ import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FundingBanner from '../components/FundingBanner.astro';
-import { getDict, LOCALE_LANG, switchLocalePath, type Locale } from '../i18n';
+import { HACKATHON, HACKATHON_REGISTRATION_DEADLINE } from '../data/hackathon';
+import { getDict, LOCALE_LANG, localePath, switchLocalePath, type Locale } from '../i18n';
 import {
   ALLOWED_PALETTES,
   MODES,
@@ -501,7 +502,7 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
             var label = chip.querySelector('[data-deadline-text]');
             if (label) label.textContent = text;
           });
-          var chip = document.querySelector('[data-deadline]');
+          var chip = document.querySelector('[data-deadline]:not([data-deadline-kind])');
           if (chip) {
             var callClosed = daysLeft(chip.getAttribute('data-deadline')) < 0;
             document.querySelectorAll('[data-when-call]').forEach(function (el) {
@@ -518,21 +519,30 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
             if (text && label) label.textContent = text.charAt(0).toUpperCase() + text.slice(1);
             chip.setAttribute('data-state', state);
           });
-          var bar = document.querySelector('[data-funding-banner]');
-          if (!bar) return;
-          var key = 'caligo-banner-dismissed';
-          var deadline = bar.getAttribute('data-funding-banner');
-          var dismissed = null;
-          try { dismissed = localStorage.getItem(key); } catch (_) {}
-          bar.hidden = daysLeft(deadline) < 0 || dismissed === deadline;
-          var close = bar.querySelector('[data-funding-banner-close]');
-          if (close && !close.dataset.bound) {
-            close.dataset.bound = '1';
-            close.addEventListener('click', function () {
-              bar.hidden = true;
-              try { localStorage.setItem(key, deadline); } catch (_) {}
-            });
-          }
+          /* Any element can follow its own date: shown until a day has
+             passed (data-show-until), or only after it (data-show-after). */
+          document.querySelectorAll('[data-show-until]').forEach(function (el) {
+            el.hidden = daysLeft(el.getAttribute('data-show-until')) < 0;
+          });
+          document.querySelectorAll('[data-show-after]').forEach(function (el) {
+            el.hidden = daysLeft(el.getAttribute('data-show-after')) >= 0;
+          });
+          /* Announcement banners: each remembers its own dismissal. */
+          document.querySelectorAll('[data-funding-banner]').forEach(function (bar) {
+            var key = 'caligo-banner-dismissed' + (bar.dataset.bannerId && bar.dataset.bannerId !== 'funding' ? '-' + bar.dataset.bannerId : '');
+            var deadline = bar.getAttribute('data-funding-banner');
+            var dismissed = null;
+            try { dismissed = localStorage.getItem(key); } catch (_) {}
+            bar.hidden = daysLeft(deadline) < 0 || dismissed === deadline;
+            var close = bar.querySelector('[data-funding-banner-close]');
+            if (close && !close.dataset.bound) {
+              close.dataset.bound = '1';
+              close.addEventListener('click', function () {
+                bar.hidden = true;
+                try { localStorage.setItem(key, deadline); } catch (_) {}
+              });
+            }
+          });
         };
         document.addEventListener('astro:after-swap', window.caligoDeadlines);
         document.addEventListener('astro:page-load', window.caligoDeadlines);
@@ -612,6 +622,19 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
   <body>
     <a class="skip-link" href="#main">{t.common.skipToContent}</a>
     {page !== '/funding' && <FundingBanner locale={locale} />}
+    {/* The hackathon's registration, on every page except Home, which
+        features it right under the hero. */}
+    {page !== '/' && (
+      <FundingBanner
+        locale={locale}
+        id="hackathon-2027"
+        deadline={HACKATHON_REGISTRATION_DEADLINE}
+        name={HACKATHON[locale].banner}
+        action={HACKATHON[locale].bannerAction}
+        href={`${localePath(locale, '/')}#hackathon`}
+        strings={HACKATHON[locale].chip}
+      />
+    )}
     <Header locale={locale} page={page} />
     <main id="main">
       <slot />

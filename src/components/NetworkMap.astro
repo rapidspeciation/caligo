@@ -192,7 +192,7 @@ const eventMarks = events.map((e) => {
         {eventMarks.map((e) => (
           <g class="nm-event" data-site={`e-${e.event.id}`} transform={`translate(${e.x.toFixed(1)} ${e.y.toFixed(1)})`}>
             <rect x="-6.5" y="-6.5" width="13" height="13" transform="rotate(45)" />
-            {e.label && <text x="14" y="4.5">{pick(e.event.location, locale).split(',')[0]}</text>}
+            {e.label && <text x="14" y="4.5">{pick(e.event.location, locale).split(',').slice(-2)[0].trim()}</text>}
           </g>
         ))}
       </g>

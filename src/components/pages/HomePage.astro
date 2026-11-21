@@ -11,6 +11,9 @@ import Icon from '../Icon.astro';
 import CommunityStats from '../CommunityStats.astro';
 import Timeline from '../Timeline.astro';
 import NetworkMap from '../NetworkMap.astro';
+import HackathonFeature from '../HackathonFeature.astro';
+import FigureLightbox from '../FigureLightbox.astro';
+import { HACKATHON, HACKATHON_REGISTRATION_DEADLINE, isPast } from '../../data/hackathon';
 import { getDict, localePath, type Locale } from '../../i18n';
 import { getMedia } from '../../data/records';
 
@@ -21,6 +24,8 @@ const { locale } = Astro.props;
 const t = getDict(locale);
 const h = t.home;
 const base = import.meta.env.BASE_URL;
+const hack = HACKATHON[locale];
+const hackClosed = isPast(HACKATHON_REGISTRATION_DEADLINE);
 
 const heroMedia = getMedia('hero-caligo-tambopata');
 if (!heroMedia) {
@@ -53,6 +58,9 @@ const desktopSrcset = [
     <div class="hero-overlay">
       <div class="container-wide hero-overlay-inner">
         <div class="hero-copy">
+          <a class="hero-event" href="#hackathon" data-show-until={HACKATHON_REGISTRATION_DEADLINE} hidden={hackClosed}>
+            <Icon name="calendar" /><span>{hack.heroPill}</span><Icon name="arrow-right" />
+          </a>
           <p class="hero-eyebrow mono">{h.hero.kicker}</p>
           <h1 id="hero-title" class="hero-title">{h.hero.title}{' '}<em>{h.hero.focus}</em></h1>
           <p class="hero-tagline">{h.hero.body}</p>
@@ -81,6 +89,9 @@ const desktopSrcset = [
       <a target="_blank" href={heroMedia.licenceUrl} rel="license external noopener">{heroMedia.licence}</a>
     </p>
   </section>
+
+  <!-- ============ Next event: the hackathon, while it is ahead ============ -->
+  <HackathonFeature locale={locale} />
 
   <!-- ==================== STAT BAR — network metrics ==================== -->
   <section class="section section--tight stat-bar-section">
@@ -175,6 +186,7 @@ const desktopSrcset = [
       </div>
     </div>
   </section>
+  <FigureLightbox locale={locale} />
 </Base>
 
 <style>
@@ -244,6 +256,32 @@ const desktopSrcset = [
     margin-left: auto;
     color: #F6F7F3;
   }
+  /* Pointer to the hackathon feature just below the hero: a pill in the
+     hero's own ivory, so it reads over the photograph's dark field. */
+  .hero-event {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 100%;
+    margin-bottom: var(--space-s);
+    padding: 0.4rem 0.85rem;
+    border: 1px solid color-mix(in oklab, #F6F7F3 55%, transparent);
+    border-radius: 999px;
+    background: color-mix(in oklab, #14110f 55%, transparent);
+    color: #F6F7F3;
+    font-size: var(--step--1);
+    font-weight: 560;
+    line-height: 1.3;
+    text-decoration: none;
+    transition: background var(--transition), border-color var(--transition), transform var(--transition);
+  }
+  .hero-event[hidden] { display: none; }
+  .hero-event :global(svg) { flex: none; width: 1rem; height: 1rem; }
+  .hero-event :global(svg:last-child) { transition: transform var(--transition); }
+  .hero-event:hover { background: color-mix(in oklab, #14110f 35%, transparent); border-color: #F6F7F3; }
+  .hero-event:hover :global(svg:last-child) { transform: translateX(2px); }
+  .hero-event:active { transform: translateY(1px); }
+  .hero-event:focus-visible { outline: 2px solid #F6F7F3; outline-offset: 3px; }
   .hero-eyebrow {
     margin: 0;
     font-size: var(--step--2);

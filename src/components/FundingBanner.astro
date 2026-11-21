@@ -1,8 +1,10 @@
 ---
 /**
- * Slim site-wide announcement for the open funding call. Rendered hidden;
- * `caligoDeadlines()` reveals it before first paint while the call is open
- * and the visitor has not dismissed it, and keeps it hidden afterwards.
+ * Slim site-wide announcement with a deadline: the open funding call, or
+ * another dated announcement passed in through props (the hackathon's
+ * registration). Rendered hidden; `caligoDeadlines()` reveals it before
+ * first paint while the deadline has not passed and the visitor has not
+ * dismissed this announcement, and keeps it hidden afterwards.
  */
 import Icon from './Icon.astro';
 import DeadlineChip from './DeadlineChip.astro';
@@ -11,17 +13,32 @@ import { localePath, type Locale } from '../i18n';
 
 interface Props {
   readonly locale: Locale;
+  /** Defaults: the current funding call. */
+  readonly id?: string;
+  readonly deadline?: string;
+  readonly name?: string;
+  readonly action?: string;
+  readonly href?: string;
+  readonly strings?: (typeof PILOT_INTRO)[Locale]['chip'];
 }
 const { locale } = Astro.props;
 const copy = PILOT_INTRO[locale];
+const {
+  id = 'funding',
+  deadline = PILOT_DEADLINE,
+  name = copy.banner,
+  action = copy.bannerAction,
+  href = localePath(locale, '/funding'),
+  strings,
+} = Astro.props;
 ---
 
-<div class="funding-banner" data-funding-banner={PILOT_DEADLINE} hidden>
+<div class="funding-banner" data-funding-banner={deadline} data-banner-id={id} hidden>
   <div class="container-wide funding-banner-inner">
-    <a class="funding-banner-link" href={localePath(locale, '/funding')}>
-      <span class="funding-banner-name">{copy.banner}</span>
-      <DeadlineChip locale={locale} class="funding-banner-chip" />
-      <span class="funding-banner-action">{copy.bannerAction}<Icon name="arrow-right" /></span>
+    <a class="funding-banner-link" href={href}>
+      <span class="funding-banner-name">{name}</span>
+      <DeadlineChip locale={locale} class="funding-banner-chip" deadline={deadline} strings={strings} />
+      <span class="funding-banner-action">{action}<Icon name="arrow-right" /></span>
     </a>
     <button type="button" class="funding-banner-close" data-funding-banner-close aria-label={copy.dismiss}>
       <Icon name="close" />
