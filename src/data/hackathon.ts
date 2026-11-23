@@ -7,7 +7,8 @@
  *    participants from Latin America & the Caribbean, LEMA logo);
  *  - Nicol's Google Doc of 23 November 2026, the full text for the
  *    hackathon page: description, participation and selection, key dates,
- *    cost, language and the provisional schedule. The Spanish here is our
+ *    cost, language and the provisional schedule. Left out on purpose: the
+ *    doc's line that grant applications are pending (kept internal). The Spanish here is our
  *    translation of that English text.
  * The congress dates (30 March – 3 April 2027) come from the Biology of
  * Butterflies / ELEN 2027 page (even3.com.br/bob-elen-2027).
@@ -170,8 +171,8 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
         { label: 'Selected participants notified', value: '31 January 2027', iso: '2027-01-31' },
         { label: 'Daily hours', value: '9:00 am to 6:00 pm (Brasília time, UTC−3)' },
       ],
-      costTitle: 'Cost and funding',
-      cost: 'The registration fee is US$50 per participant, which covers lunch and coffee breaks. We are applying for grants to secure additional funding, but nothing has been confirmed yet. We will update this page if support becomes available.',
+      costTitle: 'Cost',
+      cost: 'The registration fee is US$50 per participant, which covers lunch and coffee breaks.',
       languageTitle: 'Language',
       language: 'The hackathon will be taught in English, and several instructors speak Spanish and Portuguese.',
       scheduleTitle: 'Schedule',
@@ -253,8 +254,8 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
         { label: 'Aviso a las personas seleccionadas', value: '31 de enero de 2027', iso: '2027-01-31' },
         { label: 'Horario diario', value: 'De 9:00 a 18:00 (hora de Brasilia, UTC−3)' },
       ],
-      costTitle: 'Costo y financiamiento',
-      cost: 'La inscripción cuesta US$50 por participante e incluye almuerzos y pausas para café. Estamos solicitando subvenciones para obtener financiamiento adicional, pero todavía no hay nada confirmado. Actualizaremos esta página si recibimos apoyo.',
+      costTitle: 'Costo',
+      cost: 'La inscripción cuesta US$50 por participante e incluye almuerzos y pausas para café.',
       languageTitle: 'Idioma',
       language: 'El hackatón se impartirá en inglés; varios instructores hablan español y portugués.',
       scheduleTitle: 'Programa',
