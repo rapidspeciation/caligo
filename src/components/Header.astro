@@ -310,6 +310,11 @@ const isCurrent = (path: string) => path === page;
     min-height: 0;
     overflow: hidden;
   }
+  /* An odd item count (seven since the Hackathon tab) would leave the last
+     one alone in its row: let it span both columns. */
+  .mobile-nav li:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  /* Join keeps its accent colour in the phone menu, as in the desktop row. */
+  .mobile-nav li:last-child a { color: var(--accent-strong); font-weight: 560; }
   .mobile-nav a {
     display: block;
     padding: .75rem;

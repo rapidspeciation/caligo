@@ -91,7 +91,7 @@ type HackathonCopy = {
     participationTitle: string;
     participation: readonly string[];
     datesTitle: string;
-    keyDates: readonly { label: string; value: string; iso: string }[];
+    keyDates: readonly { label: string; value: string; iso?: string }[];
     costTitle: string;
     cost: string;
     languageTitle: string;
@@ -155,21 +155,20 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
       metaTitle: 'Genome Assembly & Curation Hackathon',
       description: 'Five days at UNICAMP, Campinas, Brazil (5–9 April 2027), in person or online, to assemble and curate the first Caligo reference genomes of Lepidoptera. Apply by 20 December 2026.',
       intro: [
-        'The hackathon follows the {link} meeting in São Paulo, Brazil, and takes place at the Universidade Estadual de Campinas (UNICAMP).',
-        'Over five days, we will assemble and curate long-read sequencing data generated using Oxford Nanopore Technologies (ONT) by the Caligo initiative across different countries in Latin America, with the aim of producing our first Lepidoptera reference genomes.',
-        'We invite researchers from Latin America and the Caribbean, regardless of their previous experience in genome assembly, to join us for this hackathon. This will be an opportunity to learn, collaborate and develop new skills while working together to assemble our first reference genomes as a community.',
+        'Right after the {link} meeting in São Paulo, Brazil, we will spend five days at the Universidade Estadual de Campinas (UNICAMP) assembling and curating long-read sequencing data that the Caligo initiative has generated with Oxford Nanopore Technologies (ONT) across Latin America, with the aim of producing our first Lepidoptera reference genomes.',
+        'We invite researchers from Latin America and the Caribbean, whatever their previous experience in genome assembly, to learn, collaborate and develop new skills while we build our first reference genomes as a community.',
       ],
       congressLink: 'Neotropical Lepidoptera / Biology of Butterflies',
-      participationTitle: 'Participation and selection',
+      participationTitle: 'Selection',
       participation: [
-        'Participation can be either in person or online. Places will be prioritised for Caligo members, followed by students from UNICAMP and the wider region.',
+        'Places will be prioritised for Caligo members, followed by students from UNICAMP and the wider region.',
         'The selection process will actively favour applicants from historically excluded groups, underrepresented countries and institutions, and first-generation academics, while aiming for diversity in gender, country of origin and career stage.',
       ],
-      datesTitle: 'Key dates',
+      datesTitle: 'Key dates and hours',
       keyDates: [
         { label: 'Application deadline', value: '20 December 2026', iso: '2026-12-20' },
         { label: 'Selected participants notified', value: '31 January 2027', iso: '2027-01-31' },
-        { label: 'Hackathon', value: 'Monday 5 to Friday 9 April 2027, 9:00 am to 6:00 pm (Brasília time, UTC−3)', iso: '2027-04-05' },
+        { label: 'Daily hours', value: '9:00 am to 6:00 pm (Brasília time, UTC−3)' },
       ],
       costTitle: 'Cost and funding',
       cost: 'The registration fee is US$50 per participant, which covers lunch and coffee breaks. We are applying for grants to secure additional funding, but nothing has been confirmed yet. We will update this page if support becomes available.',
@@ -189,7 +188,7 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
         { day: 'Fri. 9 Apr.', iso: '2027-04-09', morning: 'Team presentations and discussion of findings', afternoon: 'Refine follow-up plan', milestone: '' },
       ],
       applyTitle: 'Apply',
-      applyNote: 'Selected participants will be notified on 31 January 2027.',
+      applyNote: 'No previous experience in genome assembly is needed. Fee: US$50. Selected participants will be notified on 31 January 2027.',
     },
   },
   es: {
@@ -214,7 +213,7 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
     heroPill: 'Hackatón de ensamblaje de genomas',
     heroDates: '5–9 de abril de 2027',
     bannerName: 'Hackatón de ensamblaje',
-    bannerDates: '5–9 abr 2027',
+    bannerDates: '5–9 abr. 2027',
     bannerAction: 'Detalles',
     timelineLink: 'Detalles y postulación',
     timelineLinkClosed: 'Detalles del evento',
@@ -237,28 +236,27 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
     },
     page: {
       metaTitle: 'Hackatón de Ensamblaje y Curación de Genomas',
-      description: 'Cinco días en la UNICAMP, Campinas, Brasil (5–9 de abril de 2027), presencial o virtual, para ensamblar y curar los primeros genomas de referencia de lepidópteros de Caligo. Postula hasta el 20 de diciembre de 2026.',
+      description: 'Cinco días en la UNICAMP, Campinas, Brasil (5–9 de abril de 2027), presencial o virtual, para ensamblar y curar los primeros genomas de referencia de lepidópteros de Caligo. Postúlate hasta el 20 de diciembre de 2026.',
       intro: [
-        'El hackatón se realiza justo después del congreso {link} en São Paulo, Brasil, en la Universidade Estadual de Campinas (UNICAMP).',
-        'Durante cinco días ensamblaremos y curaremos datos de secuenciación de lecturas largas generados con Oxford Nanopore Technologies (ONT) por la iniciativa Caligo en distintos países de América Latina, con el objetivo de producir nuestros primeros genomas de referencia de lepidópteros.',
-        'Invitamos a investigadores de América Latina y el Caribe, tengan o no experiencia previa en ensamblaje de genomas, a sumarse a este hackatón. Será una oportunidad para aprender, colaborar y desarrollar nuevas habilidades mientras ensamblamos juntos nuestros primeros genomas de referencia como comunidad.',
+        'Justo después del congreso {link} en São Paulo, Brasil, pasaremos cinco días en la Universidade Estadual de Campinas (UNICAMP) ensamblando y curando datos de secuenciación de lecturas largas que la iniciativa Caligo ha generado con Oxford Nanopore Technologies (ONT) en distintos países de América Latina, con el objetivo de producir nuestros primeros genomas de referencia de lepidópteros.',
+        'Invitamos a investigadores de América Latina y el Caribe, tengan o no experiencia previa en ensamblaje de genomas, a aprender, colaborar y desarrollar nuevas habilidades mientras construimos en comunidad nuestros primeros genomas de referencia.',
       ],
       congressLink: 'Neotropical Lepidoptera / Biology of Butterflies',
-      participationTitle: 'Participación y selección',
+      participationTitle: 'Selección',
       participation: [
-        'Se puede participar de forma presencial o virtual. Se dará prioridad a miembros de Caligo, seguidos de estudiantes de la UNICAMP y del resto de la región.',
-        'El proceso de selección favorecerá activamente a postulantes de grupos históricamente excluidos, de países e instituciones subrepresentados y a personas de primera generación universitaria, buscando además diversidad de género, país de origen y etapa de la carrera.',
+        'Se dará prioridad a integrantes de Caligo y, después, a estudiantes de la UNICAMP y del resto de la región.',
+        'El proceso de selección favorecerá activamente a postulantes de grupos históricamente excluidos, de países e instituciones subrepresentados y a personas de primera generación universitaria, buscando además diversidad de género, país de origen y etapa de la carrera académica.',
       ],
-      datesTitle: 'Fechas clave',
+      datesTitle: 'Fechas y horario',
       keyDates: [
         { label: 'Cierre de postulaciones', value: '20 de diciembre de 2026', iso: '2026-12-20' },
         { label: 'Aviso a las personas seleccionadas', value: '31 de enero de 2027', iso: '2027-01-31' },
-        { label: 'Hackatón', value: 'Del lunes 5 al viernes 9 de abril de 2027, de 9:00 a 18:00 (hora de Brasilia, UTC−3)', iso: '2027-04-05' },
+        { label: 'Horario diario', value: 'De 9:00 a 18:00 (hora de Brasilia, UTC−3)' },
       ],
       costTitle: 'Costo y financiamiento',
-      cost: 'La inscripción cuesta US$50 por participante e incluye almuerzos y pausas de café. Estamos postulando a fondos para conseguir financiamiento adicional, pero todavía no hay nada confirmado. Actualizaremos esta página si conseguimos apoyo.',
+      cost: 'La inscripción cuesta US$50 por participante e incluye almuerzos y pausas para café. Estamos solicitando subvenciones para obtener financiamiento adicional, pero todavía no hay nada confirmado. Actualizaremos esta página si recibimos apoyo.',
       languageTitle: 'Idioma',
-      language: 'El hackatón se dictará en inglés, y varios instructores hablan español y portugués.',
+      language: 'El hackatón se impartirá en inglés; varios instructores hablan español y portugués.',
       scheduleTitle: 'Programa',
       scheduleNote: 'Este programa es provisional y puede cambiar.',
       noMilestone: 'Sin resultado indicado',
@@ -268,12 +266,12 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
         { day: 'Dom. 4 abr.', iso: '2027-04-04', morning: 'Bienvenida, presentaciones, principios IDEA y de soberanía de datos', afternoon: 'Formación de equipos, práctica con herramientas de línea de comandos y verificación del acceso a los recursos de cómputo', milestone: 'Todos los participantes en equipos y conectados; estrategia de publicación de datos y plan para publicar los genomas y los artículos' },
         { day: 'Lun. 5 abr.', iso: '2027-04-05', morning: 'Control de calidad de lecturas ONT, recorte (trimming), depuración (purging) y estimación del tamaño del genoma', afternoon: 'Revisión de los datos crudos del genoma asignado y estimación de la cobertura', milestone: 'Informe de calidad de los genomas' },
         { day: 'Mar. 6 abr.', iso: '2027-04-06', morning: 'Ensamblaje de genomas con lecturas largas', afternoon: 'Introducción a los ensambladores de lecturas largas, selección de parámetros y flujos de trabajo computacionales', milestone: 'Genomas de prueba ensamblados' },
-        { day: 'Mié. 7 abr.', iso: '2027-04-07', morning: 'Mapas de contacto Hi-C, scaffolding a nivel de cromosoma y curación manual', afternoon: 'Revisión de mapas Hi-C precalculados, detección de errores de ensamblaje y práctica de curación', milestone: 'Scaffolds preliminares a nivel de cromosoma o decisiones de curación documentadas' },
+        { day: 'Mié. 7 abr.', iso: '2027-04-07', morning: 'Mapas de contacto Hi-C, scaffolding a escala cromosómica y curación manual', afternoon: 'Revisión de mapas Hi-C precalculados, detección de errores de ensamblaje y práctica de curación', milestone: 'Scaffolds preliminares a escala cromosómica o decisiones de curación documentadas' },
         { day: 'Jue. 8 abr.', iso: '2027-04-08', morning: 'Completitud del ensamblaje, detección de contaminación, BUSCO y análisis genómico comparativo', afternoon: 'Primeros análisis comparativos entre 50 genomas y comparación de métricas de calidad', milestone: 'Tabla de métricas de calidad de 50 genomas' },
         { day: 'Vie. 9 abr.', iso: '2027-04-09', morning: 'Presentaciones de los equipos y discusión de resultados', afternoon: 'Ajuste del plan de seguimiento', milestone: '' },
       ],
       applyTitle: 'Postúlate',
-      applyNote: 'Avisaremos a las personas seleccionadas el 31 de enero de 2027.',
+      applyNote: 'No hace falta experiencia previa en ensamblaje de genomas. Inscripción: US$50. Avisaremos a las personas seleccionadas el 31 de enero de 2027.',
     },
   },
 };

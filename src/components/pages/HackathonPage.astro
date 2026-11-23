@@ -26,30 +26,34 @@ const closed = isPast(HACKATHON_REGISTRATION_DEADLINE);
   <PageHeader title={c.title} />
   <HackathonFeature locale={locale} variant="page" />
 
-  <section id="details" class="section section--tight hackathon-details" aria-label={p.detailsLabel}>
+  <section id="details" class="section section--panel hackathon-details" aria-label={p.detailsLabel}>
     <div class="container-wide hackathon-details-grid">
-      <div class="hackathon-block">
-        <h2 class="content-heading">{p.participationTitle}</h2>
-        {p.participation.map((t) => <p class="content-body">{t}</p>)}
+      <div class="hackathon-col">
+        <div class="hackathon-block">
+          <h2 class="content-heading">{p.datesTitle}</h2>
+          <dl class="hackathon-dates">
+            {p.keyDates.map((d) => (
+              <div>
+                <dt>{d.label}</dt>
+                <dd>{d.iso ? <time datetime={d.iso}>{d.value}</time> : d.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+        <div class="hackathon-block">
+          <h2 class="content-heading">{p.costTitle}</h2>
+          <p class="content-body">{p.cost}</p>
+        </div>
       </div>
-      <div class="hackathon-block">
-        <h2 class="content-heading">{p.datesTitle}</h2>
-        <dl class="hackathon-dates">
-          {p.keyDates.map((d) => (
-            <div>
-              <dt>{d.label}</dt>
-              <dd><time datetime={d.iso}>{d.value}</time></dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-      <div class="hackathon-block">
-        <h2 class="content-heading">{p.costTitle}</h2>
-        <p class="content-body">{p.cost}</p>
-      </div>
-      <div class="hackathon-block">
-        <h2 class="content-heading">{p.languageTitle}</h2>
-        <p class="content-body">{p.language}</p>
+      <div class="hackathon-col">
+        <div class="hackathon-block">
+          <h2 class="content-heading">{p.participationTitle}</h2>
+          {p.participation.map((t) => <p class="content-body">{t}</p>)}
+        </div>
+        <div class="hackathon-block">
+          <h2 class="content-heading">{p.languageTitle}</h2>
+          <p class="content-body">{p.language}</p>
+        </div>
       </div>
     </div>
   </section>
@@ -96,9 +100,11 @@ const closed = isPast(HACKATHON_REGISTRATION_DEADLINE);
     hidden={closed}
   >
     <div class="container-wide">
-      <div class="hackathon-apply-card ink-card" data-tone="leaf">
-        <h2 id="hackathon-apply-title" class="content-heading">{p.applyTitle}</h2>
-        <p class="content-body">{p.applyNote}</p>
+      <div class="hackathon-apply-card ink-card ink-card--flat" data-tone="leaf">
+        <div class="hackathon-apply-text">
+          <h2 id="hackathon-apply-title" class="content-heading">{p.applyTitle}</h2>
+          <p class="content-body">{p.applyNote}</p>
+        </div>
         <HackathonAction locale={locale} />
       </div>
     </div>
@@ -117,6 +123,8 @@ const closed = isPast(HACKATHON_REGISTRATION_DEADLINE);
   }
   /* margin: 0 beats the global sibling spacing, which pushed every block
      after the first 24 px down and out of line with its neighbour. */
+  .hackathon-col { display: grid; gap: var(--space-l); align-content: start; margin: 0; }
+  .hackathon-col + .hackathon-col { padding-left: var(--space-xl); border-left: 1px solid var(--hairline); }
   .hackathon-block { display: grid; gap: var(--space-xs); align-content: start; margin: 0; }
   .hackathon-block > * { margin: 0; }
   .hackathon-block .content-body { max-width: var(--measure); }
@@ -165,10 +173,16 @@ const closed = isPast(HACKATHON_REGISTRATION_DEADLINE);
   .hackathon-apply[hidden] { display: none; }
   .hackathon-apply-card { display: grid; gap: var(--space-s); padding: var(--space-l); }
   .hackathon-apply-card > * { margin: 0; }
+  .hackathon-apply-text { display: grid; gap: var(--space-2xs); max-width: var(--measure); }
+  .hackathon-apply-text > * { margin: 0; }
+  @media (min-width: 64rem) {
+    .hackathon-apply-card { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--space-l); }
+  }
 
   @media (max-width: 52rem) {
     .hackathon-apply-card { padding: var(--space-m); }
     .hackathon-details-grid { grid-template-columns: 1fr; gap: var(--space-l); }
+    .hackathon-col + .hackathon-col { padding-left: 0; border-left: 0; }
   }
 
   /* Phones: each day becomes a small block, the column names as labels. */
