@@ -40,6 +40,7 @@ export const es: Dict = {
   },
   "nav": {
     "funding": "Financiamiento",
+    "hackathon": "Hackatón",
     "home": "Inicio",
     "science": "Ciencia",
     "proposedPilots": "Proyectos piloto",

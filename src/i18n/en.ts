@@ -43,6 +43,7 @@ export const en = {
   },
   "nav": {
     "funding": "Funding opportunities",
+    "hackathon": "Hackathon",
     "home": "Home",
     "science": "Science",
     "proposedPilots": "Pilot projects",

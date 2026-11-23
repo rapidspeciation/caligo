@@ -155,7 +155,7 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
       metaTitle: 'Genome Assembly & Curation Hackathon',
       description: 'Five days at UNICAMP, Campinas, Brazil (5–9 April 2027), in person or online, to assemble and curate the first Caligo reference genomes of Lepidoptera. Apply by 20 December 2026.',
       intro: [
-        'We will hold a hackathon following the {link} meeting in São Paulo, Brazil, in April 2027. The hackathon will take place from Monday 5 to Friday 9 April 2027 at the Universidade Estadual de Campinas (UNICAMP) in Campinas, Brazil.',
+        'The hackathon follows the {link} meeting in São Paulo, Brazil, and takes place at the Universidade Estadual de Campinas (UNICAMP).',
         'Over five days, we will assemble and curate long-read sequencing data generated using Oxford Nanopore Technologies (ONT) by the Caligo initiative across different countries in Latin America, with the aim of producing our first Lepidoptera reference genomes.',
         'We invite researchers from Latin America and the Caribbean, regardless of their previous experience in genome assembly, to join us for this hackathon. This will be an opportunity to learn, collaborate and develop new skills while working together to assemble our first reference genomes as a community.',
       ],
@@ -239,7 +239,7 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
       metaTitle: 'Hackatón de Ensamblaje y Curación de Genomas',
       description: 'Cinco días en la UNICAMP, Campinas, Brasil (5–9 de abril de 2027), presencial o virtual, para ensamblar y curar los primeros genomas de referencia de lepidópteros de Caligo. Postula hasta el 20 de diciembre de 2026.',
       intro: [
-        'Organizaremos un hackatón justo después del congreso {link} en São Paulo, Brasil, en abril de 2027. El hackatón se realizará del lunes 5 al viernes 9 de abril de 2027 en la Universidade Estadual de Campinas (UNICAMP), en Campinas, Brasil.',
+        'El hackatón se realiza justo después del congreso {link} en São Paulo, Brasil, en la Universidade Estadual de Campinas (UNICAMP).',
         'Durante cinco días ensamblaremos y curaremos datos de secuenciación de lecturas largas generados con Oxford Nanopore Technologies (ONT) por la iniciativa Caligo en distintos países de América Latina, con el objetivo de producir nuestros primeros genomas de referencia de lepidópteros.',
         'Invitamos a investigadores de América Latina y el Caribe, tengan o no experiencia previa en ensamblaje de genomas, a sumarse a este hackatón. Será una oportunidad para aprender, colaborar y desarrollar nuevas habilidades mientras ensamblamos juntos nuestros primeros genomas de referencia como comunidad.',
       ],
