@@ -11,7 +11,7 @@ import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FundingBanner from '../components/FundingBanner.astro';
-import { HACKATHON, HACKATHON_REGISTRATION_DEADLINE } from '../data/hackathon';
+import { HACKATHON, HACKATHON_PAGE, HACKATHON_REGISTRATION_DEADLINE } from '../data/hackathon';
 import { getDict, LOCALE_LANG, localePath, switchLocalePath, type Locale } from '../i18n';
 import {
   ALLOWED_PALETTES,
@@ -527,14 +527,6 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
           document.querySelectorAll('[data-show-after]').forEach(function (el) {
             el.hidden = daysLeft(el.getAttribute('data-show-after')) >= 0;
           });
-          /* Links that lead elsewhere once a day has passed. */
-          document.querySelectorAll('[data-href-after]').forEach(function (el) {
-            if (daysLeft(el.getAttribute('data-href-after')) < 0) {
-              el.setAttribute('href', el.getAttribute('data-href-later'));
-              el.setAttribute('target', '_blank');
-              el.setAttribute('rel', 'noopener');
-            }
-          });
           /* Announcement banners: each remembers its own dismissal. */
           document.querySelectorAll('[data-funding-banner]').forEach(function (bar) {
             var key = 'caligo-banner-dismissed' + (bar.dataset.bannerId && bar.dataset.bannerId !== 'funding' ? '-' + bar.dataset.bannerId : '');
@@ -631,8 +623,8 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
     <a class="skip-link" href="#main">{t.common.skipToContent}</a>
     {page !== '/funding' && <FundingBanner locale={locale} />}
     {/* The hackathon's registration, on every page except Home, which
-        features it right under the hero. */}
-    {page !== '/' && (
+        features it right under the hero, and its own page. */}
+    {page !== '/' && page !== HACKATHON_PAGE && (
       <FundingBanner
         locale={locale}
         id="hackathon-2027"
@@ -640,7 +632,7 @@ const ssrThemeColor = MODE_COLORS[DEFAULT_PALETTE][DEFAULT_MODE];
         name={HACKATHON[locale].bannerName}
         when={HACKATHON[locale].bannerDates}
         action={HACKATHON[locale].bannerAction}
-        href={`${localePath(locale, '/')}#hackathon`}
+        href={localePath(locale, HACKATHON_PAGE)}
         strings={HACKATHON[locale].bannerChip}
       />
     )}

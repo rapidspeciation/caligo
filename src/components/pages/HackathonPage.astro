@@ -1,0 +1,195 @@
+---
+/**
+ * /hackathon: the full page for the Genome Assembly & Curation Hackathon,
+ * from Nicol's text of 23 November 2026. The card with the facts, the
+ * description, the registration action and the poster comes first; then
+ * participation, key dates, cost and language; then the provisional
+ * schedule. The page stays after the event; only its registration action
+ * switches off by date.
+ */
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../PageHeader.astro';
+import HackathonFeature from '../HackathonFeature.astro';
+import HackathonAction from '../HackathonAction.astro';
+import FigureLightbox from '../FigureLightbox.astro';
+import { HACKATHON, HACKATHON_PAGE, HACKATHON_REGISTRATION_DEADLINE, isPast } from '../../data/hackathon';
+import type { Locale } from '../../i18n';
+
+interface Props { locale: Locale; }
+const { locale } = Astro.props;
+const c = HACKATHON[locale];
+const p = c.page;
+const closed = isPast(HACKATHON_REGISTRATION_DEADLINE);
+---
+<Base locale={locale} title={`${p.metaTitle} | Caligo`} description={p.description} page={HACKATHON_PAGE}>
+  {/* No "Next event" eyebrow: the page stays after the event. */}
+  <PageHeader title={c.title} />
+  <HackathonFeature locale={locale} variant="page" />
+
+  <section id="details" class="section section--tight hackathon-details" aria-label={p.detailsLabel}>
+    <div class="container-wide hackathon-details-grid">
+      <div class="hackathon-block">
+        <h2 class="content-heading">{p.participationTitle}</h2>
+        {p.participation.map((t) => <p class="content-body">{t}</p>)}
+      </div>
+      <div class="hackathon-block">
+        <h2 class="content-heading">{p.datesTitle}</h2>
+        <dl class="hackathon-dates">
+          {p.keyDates.map((d) => (
+            <div>
+              <dt>{d.label}</dt>
+              <dd><time datetime={d.iso}>{d.value}</time></dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      <div class="hackathon-block">
+        <h2 class="content-heading">{p.costTitle}</h2>
+        <p class="content-body">{p.cost}</p>
+      </div>
+      <div class="hackathon-block">
+        <h2 class="content-heading">{p.languageTitle}</h2>
+        <p class="content-body">{p.language}</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="schedule" class="section hackathon-schedule" aria-labelledby="hackathon-schedule-title">
+    <div class="container-wide">
+      <h2 id="hackathon-schedule-title" class="content-heading">{p.scheduleTitle}</h2>
+      <p class="content-meta hackathon-schedule-note">{p.scheduleNote}</p>
+      <div class="schedule-wrapper ink-card">
+        <table class="schedule-table">
+          <caption class="sr-only">{p.scheduleTitle}. {p.scheduleNote}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{p.columns.day}</th>
+              <th scope="col">{p.columns.morning}</th>
+              <th scope="col">{p.columns.afternoon}</th>
+              <th scope="col">{p.columns.milestone}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {p.schedule.map((row) => (
+              <tr>
+                <th scope="row"><time datetime={row.iso}>{row.day}</time></th>
+                <td data-label={p.columns.morning}>{row.morning}</td>
+                <td data-label={p.columns.afternoon}>{row.afternoon}</td>
+                {row.milestone
+                  ? <td class="schedule-milestone" data-label={p.columns.milestone}>{row.milestone}</td>
+                  : <td class="schedule-milestone schedule-empty"><span aria-hidden="true">–</span><span class="sr-only">{p.noMilestone}</span></td>}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  {/* The doc ends with "Apply here": the same row again after the
+      schedule, so a long read on a phone ends at the button. */}
+  <section
+    id="apply"
+    class="section section--tight hackathon-apply"
+    aria-labelledby="hackathon-apply-title"
+    data-show-until={HACKATHON_REGISTRATION_DEADLINE}
+    hidden={closed}
+  >
+    <div class="container-wide">
+      <div class="hackathon-apply-card ink-card" data-tone="leaf">
+        <h2 id="hackathon-apply-title" class="content-heading">{p.applyTitle}</h2>
+        <p class="content-body">{p.applyNote}</p>
+        <HackathonAction locale={locale} />
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>window.caligoDeadlines && window.caligoDeadlines();</script>
+
+  <FigureLightbox locale={locale} />
+</Base>
+
+<style>
+  .hackathon-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-l) var(--space-xl);
+  }
+  /* margin: 0 beats the global sibling spacing, which pushed every block
+     after the first 24 px down and out of line with its neighbour. */
+  .hackathon-block { display: grid; gap: var(--space-xs); align-content: start; margin: 0; }
+  .hackathon-block > * { margin: 0; }
+  .hackathon-block .content-body { max-width: var(--measure); }
+
+  .hackathon-dates { display: grid; gap: var(--space-xs); margin: 0; }
+  .hackathon-dates > div {
+    display: grid;
+    gap: 0.1rem;
+    padding-left: var(--space-s);
+    border-left: 3px solid var(--deadline-line);
+  }
+  .hackathon-dates dt { font-size: var(--step--1); color: var(--text-muted); }
+  .hackathon-dates dd { margin: 0; font-weight: 600; color: var(--text-strong); }
+
+  .hackathon-schedule-note { margin: var(--space-2xs) 0 var(--space-s); }
+  .schedule-wrapper { padding: 0; overflow: hidden; }
+  .schedule-table { width: 100%; border-collapse: collapse; }
+  .schedule-table thead th {
+    padding: var(--space-s) var(--space-m);
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--on-pastel);
+    background: var(--pastel-leaf);
+    border-bottom: var(--ink-w) solid var(--ink-line);
+  }
+  .schedule-table tbody tr { border-bottom: 1px solid var(--hairline); }
+  .schedule-table tbody tr:last-child { border-bottom: none; }
+  .schedule-table tbody th,
+  .schedule-table tbody td {
+    padding: var(--space-s) var(--space-m);
+    text-align: left;
+    vertical-align: top;
+    line-height: 1.45;
+    color: var(--text);
+  }
+  .schedule-table tbody th { font-weight: 600; color: var(--text-strong); white-space: nowrap; }
+  .schedule-table thead th:first-child { width: 8.5rem; }
+  .schedule-milestone { font-weight: 560; color: var(--text-strong) !important; }
+  .schedule-empty { color: var(--text-muted) !important; font-weight: 400; }
+
+  .hackathon-apply { padding-top: 0; }
+  .hackathon-apply[hidden] { display: none; }
+  .hackathon-apply-card { display: grid; gap: var(--space-s); padding: var(--space-l); }
+  .hackathon-apply-card > * { margin: 0; }
+
+  @media (max-width: 52rem) {
+    .hackathon-apply-card { padding: var(--space-m); }
+    .hackathon-details-grid { grid-template-columns: 1fr; gap: var(--space-l); }
+  }
+
+  /* Phones: each day becomes a small block, the column names as labels. */
+  @media (max-width: 48rem) {
+    .schedule-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .schedule-table, .schedule-table tbody, .schedule-table tr, .schedule-table th, .schedule-table td { display: block; }
+    .schedule-table tbody tr { padding: var(--space-s) var(--space-m); }
+    .schedule-table tbody th,
+    .schedule-table tbody td { padding: 0.2rem 0; }
+    .schedule-table tbody th {
+      padding-bottom: var(--space-2xs);
+      font-family: var(--font-mono);
+      font-size: var(--step--1);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .schedule-table td[data-label]::before {
+      content: attr(data-label) ': ';
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .schedule-table td.schedule-empty { display: none; }
+  }
+</style>

@@ -1,0 +1,52 @@
+---
+/**
+ * The hackathon's registration row: the Register button, the deadline and
+ * the countdown while applications are open; after the deadline, the
+ * dashed "registration closed" chip and a short note. Used by the home card,
+ * the top of /hackathon and again at the foot of that page.
+ */
+import ArrowText from './ArrowText.astro';
+import DeadlineChip from './DeadlineChip.astro';
+import { HACKATHON, HACKATHON_END, HACKATHON_REGISTRATION_DEADLINE, HACKATHON_REGISTRATION_URL, isPast } from '../data/hackathon';
+import type { Locale } from '../i18n';
+
+interface Props { readonly locale: Locale; }
+const { locale } = Astro.props;
+const c = HACKATHON[locale];
+const closed = isPast(HACKATHON_REGISTRATION_DEADLINE);
+const over = isPast(HACKATHON_END);
+---
+<div class="hackathon-action" data-show-until={HACKATHON_REGISTRATION_DEADLINE} hidden={closed}>
+  <a class="btn btn--primary" href={HACKATHON_REGISTRATION_URL} target="_blank" rel="external noopener">
+    <span><ArrowText text={c.register} icon="external" /></span><span class="sr-only"> {c.newTab}</span>
+  </a>
+  <div class="hackathon-deadline">
+    <span class="hackathon-deadline-label">{c.deadlineLabel}</span>
+    <strong><time datetime={HACKATHON_REGISTRATION_DEADLINE}>{c.deadline}</time></strong>
+  </div>
+  <DeadlineChip locale={locale} deadline={HACKATHON_REGISTRATION_DEADLINE} strings={c.chip} />
+</div>
+{/* After the deadline: the dashed "registration closed" pill, as on
+    Funding, in place of the button row. */}
+<div class="hackathon-status" data-show-after={HACKATHON_REGISTRATION_DEADLINE} hidden={!closed}>
+  <DeadlineChip locale={locale} deadline={HACKATHON_REGISTRATION_DEADLINE} strings={c.chip} />
+  <p class="content-body hackathon-closed" data-show-until={HACKATHON_END} hidden={over}>{c.closedNote}</p>
+</div>
+
+<style>
+  .hackathon-action {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-s) var(--space-m);
+  }
+  .hackathon-action[hidden], .hackathon-status[hidden] { display: none; }
+  .hackathon-deadline { display: grid; line-height: 1.3; font-size: var(--step--1); color: var(--text-muted); }
+  .hackathon-deadline strong { color: var(--text-strong); font-size: var(--step-0); font-weight: 600; }
+  .hackathon-status { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-xs) var(--space-s); }
+  .hackathon-closed { margin: 0; }
+  .hackathon-closed[hidden] { display: none; }
+  @media (max-width: 36rem) {
+    .hackathon-action .btn { width: 100%; justify-content: center; }
+  }
+</style>
