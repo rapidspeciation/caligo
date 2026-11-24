@@ -7,6 +7,8 @@ import CardIcon, { type CardIconName } from '../CardIcon.astro';
 import DeadlineChip from '../DeadlineChip.astro';
 import { PILOT_INTRO, isCallClosed } from '../../data/pilot-call';
 import MediaCandidateViewer from '../MediaCandidateViewer.astro';
+import LocalPilots from '../LocalPilots.astro';
+import { LOCAL_PILOTS_COPY } from '../../data/local-pilots';
 import { getDict, localePath, type Locale } from '../../i18n';
 import { PILOTS, getSource, getMediaModule } from '../../data/records';
 import { PROJECTS } from '../../data/content';
@@ -72,6 +74,10 @@ const callClosed = isCallClosed();
     </div>
   </section>
 
+  {/* The local projects the first call selected, before the proposals:
+      these are under way. */}
+  <LocalPilots locale={locale} />
+
 
   {/*
     container-wide supplies the gutter and the centring. This used to come
@@ -80,9 +86,10 @@ const callClosed = isCallClosed();
     diagrams sat flush against the viewport edge.
   */}
   <div class="projects-layout container-wide">
-    {/* The page title already names the list, so it carries no heading of
-        its own; the anchor stays for links from Funding. */}
-    <ol id="proposed-projects" class="pilots" aria-label={intro.projects}>
+    {/* Below the local projects, the network's proposed pilots get their
+        own heading; the anchor stays for links from Funding. */}
+    <h2 id="proposed-projects-title" class="content-heading proposed-title">{LOCAL_PILOTS_COPY[locale].proposedTitle}</h2>
+    <ol id="proposed-projects" class="pilots" aria-labelledby="proposed-projects-title">
       {
         publishedPilots.map((pilot) => {
           const project = projectById.get(pilotToProjectId[pilot.id]);
@@ -97,7 +104,7 @@ const callClosed = isCallClosed();
 
             <!-- Text: the right column on desktop -->
             <div class="pilot-text">
-              <h2 class="pilot-heading content-heading" set:html={italicizeSpecies(pilot.heading[locale])} />
+              <h3 class="pilot-heading content-heading" set:html={italicizeSpecies(pilot.heading[locale])} />
 
               {pilot.taxon && (
                 <p class="pilot-taxon content-meta mono chip" set:html={italicizeSpecies(pilot.taxon)} />
@@ -238,6 +245,7 @@ const callClosed = isCallClosed();
   .pilot-reasons { margin-block: var(--space-m); }
   .pilot-reasons p { margin-top: var(--space-xs); }
   .pilots { scroll-margin-top: var(--scroll-margin-top); }
+  .proposed-title { margin: 0 0 var(--space-m); }
 
   .pilots {
     list-style: none;

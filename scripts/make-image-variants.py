@@ -15,7 +15,7 @@ from pathlib import Path
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent / 'public' / 'media'
-FOLDERS = ['documentary', 'figures-published', 'people']
+FOLDERS = ['documentary', 'figures-published', 'people', 'local-pilots']
 WIDTHS = [320, 640, 960]
 VARIANT = re.compile(r'-(\d+)\.webp$')
 

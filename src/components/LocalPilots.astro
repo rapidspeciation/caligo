@@ -1,0 +1,163 @@
+---
+/**
+ * Local pilot projects from Caligo's calls (Colombia first), on the Pilot
+ * projects page. One card per project: photo on the left, then the title,
+ * the team's own summary and who leads it. Smaller and flatter than the
+ * proposed pilots below, so the two sets read as different kinds. On phones
+ * the photo becomes a thumbnail beside the title, so a low-resolution photo
+ * is never blown up to the full width. Data in `data/local-pilots.ts`.
+ */
+import Icon from './Icon.astro';
+import { italicizeSpecies } from '../data/content';
+import { LOCAL_PILOTS, SHOWN_LOCAL_PILOTS, LOCAL_PILOTS_COPY } from '../data/local-pilots';
+import { srcsetFor } from '../data/image-variants';
+import type { Locale } from '../i18n';
+
+interface Props { readonly locale: Locale; }
+const { locale } = Astro.props;
+const c = LOCAL_PILOTS_COPY[locale];
+const base = import.meta.env.BASE_URL;
+const pending = LOCAL_PILOTS.length > SHOWN_LOCAL_PILOTS.length;
+---
+
+<section id="local-pilots" class="section local-pilots" aria-labelledby="local-pilots-title">
+  <div class="container-wide">
+    <header class="local-head">
+      <h2 id="local-pilots-title" class="content-heading">{c.title}</h2>
+      <p class="content-body local-lead">{c.lead}</p>
+    </header>
+
+    <ol class="local-list" role="list">
+      {SHOWN_LOCAL_PILOTS.map((p) => {
+        const photo = p.photo!;
+        const srcset = srcsetFor(photo.path, photo.width, base);
+        return (
+          <li id={`local-${p.id}`} class="local-card ink-card ink-card--flat">
+            <figure class:list={['local-media', { 'local-media--contain': photo.fit === 'contain' }]}>
+              <img
+                src={`${base}${photo.path}`}
+                srcset={srcset}
+                sizes={srcset ? '(min-width: 48rem) 15rem, 7rem' : undefined}
+                width={photo.width}
+                height={photo.height}
+                alt={photo.alt[locale]}
+                loading="lazy"
+                decoding="async"
+                style={photo.position ? `object-position: ${photo.position}` : undefined}
+              />
+              {photo.caption && <figcaption><em>{photo.caption}</em></figcaption>}
+            </figure>
+            <h3 class="local-title" set:html={italicizeSpecies(p.title[locale])} />
+            <p class="local-summary content-body" set:html={italicizeSpecies(p.summary[locale])} />
+            {(p.leaders.length > 0 || p.where) && (
+              <dl class="local-meta">
+                {p.leaders.length > 0 && (
+                  <div>
+                    <dt><Icon name="users" /><span class="sr-only">{c.leaders}</span></dt>
+                    <dd>{p.leaders.join(', ')}</dd>
+                  </div>
+                )}
+                {p.where && (
+                  <div>
+                    <dt><Icon name="map-pin" /><span class="sr-only">{c.where}</span></dt>
+                    <dd>{p.where[locale]}</dd>
+                  </div>
+                )}
+              </dl>
+            )}
+          </li>
+        );
+      })}
+    </ol>
+    {pending && <p class="content-meta local-more">{c.more}</p>}
+  </div>
+</section>
+
+<style>
+  .local-pilots { scroll-margin-top: var(--scroll-margin-top, 4rem); }
+  .local-head { display: grid; gap: var(--space-2xs); margin-bottom: var(--space-m); }
+  .local-head > * { margin: 0; }
+  .local-lead { max-width: var(--measure); color: var(--text-muted); }
+
+  .local-list {
+    display: grid;
+    gap: var(--space-m);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .local-card {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr);
+    grid-template-areas:
+      'media title'
+      'summary summary'
+      'meta meta';
+    gap: var(--space-xs) var(--space-s);
+    align-items: start;
+    margin: 0;
+    padding: var(--space-s);
+    border-width: 1px;
+    border-left-width: 4px;
+    scroll-margin-top: var(--scroll-margin-top, 4rem);
+  }
+  .local-media { grid-area: media; margin: 0; display: grid; gap: 0.3rem; }
+  .local-media img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    height: auto;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--hairline);
+    background: var(--bg);
+  }
+  .local-media--contain img { object-fit: contain; background: #fff; }
+  .local-media figcaption { font-size: var(--step--1); color: var(--text-muted); line-height: 1.3; }
+
+  .local-title {
+    grid-area: title;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text-strong);
+    text-wrap: pretty;
+  }
+  .local-summary { grid-area: summary; margin: 0; max-width: var(--measure); }
+
+  .local-meta {
+    grid-area: meta;
+    display: grid;
+    gap: 0.25rem;
+    margin: 0;
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--hairline);
+    font-size: var(--step--1);
+    color: var(--text-muted);
+  }
+  .local-meta > div { display: grid; grid-template-columns: 1.1rem minmax(0, 1fr); gap: 0.5rem; align-items: start; }
+  .local-meta dt { display: flex; padding-top: 0.15em; color: var(--deadline-line); }
+  .local-meta dt :global(svg) { width: 1rem; height: 1rem; }
+  .local-meta dd { margin: 0; }
+  .local-meta > div:first-child dd { color: var(--text-strong); font-weight: 560; }
+
+  .local-more { margin: var(--space-s) 0 0; }
+
+  /* Wider screens: the photo as a column on the left, the text beside it. */
+  @media (min-width: 48rem) {
+    .local-card {
+      grid-template-columns: 15rem minmax(0, 1fr);
+      grid-template-areas:
+        'media title'
+        'media summary'
+        'media meta';
+      grid-template-rows: auto auto 1fr;
+      gap: var(--space-xs) var(--space-l);
+      padding: var(--space-m);
+    }
+    .local-title { font-size: var(--step-1); }
+    .local-meta { align-self: end; }
+  }
+</style>

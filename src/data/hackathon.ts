@@ -7,9 +7,11 @@
  *    participants from Latin America & the Caribbean, LEMA logo);
  *  - Nicol's Google Doc of 23 November 2026, the full text for the
  *    hackathon page: description, participation and selection, key dates,
- *    cost, language and the provisional schedule. Left out on purpose: the
- *    doc's line that grant applications are pending (kept internal). The Spanish here is our
- *    translation of that English text.
+ *    cost, language and the provisional schedule;
+ *  - Nicol's changes of 23 November 2026 (WhatsApp): the event line with the
+ *    optional Sunday welcome day, "(optional)" on the Sunday row, and the
+ *    cost text with scholarships.
+ * The Spanish here is our translation of the English text.
  * The congress dates (30 March – 3 April 2027) come from the Biology of
  * Butterflies / ELEN 2027 page (even3.com.br/bob-elen-2027).
  *
@@ -167,12 +169,13 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
       ],
       datesTitle: 'Key dates and hours',
       keyDates: [
+        { label: 'Event', value: 'Monday 5 to Friday 9 April 2027, at UNICAMP in Campinas, Brazil, in person or online. An optional welcome day will be held on Sunday 4 April (introductions, team formation and computing access checks).', iso: '2027-04-05' },
         { label: 'Application deadline', value: '20 December 2026', iso: '2026-12-20' },
         { label: 'Selected participants notified', value: '31 January 2027', iso: '2027-01-31' },
         { label: 'Daily hours', value: '9:00 am to 6:00 pm (Brasília time, UTC−3)' },
       ],
       costTitle: 'Cost',
-      cost: 'The registration fee is US$50 per participant, which covers lunch and coffee breaks.',
+      cost: 'The registration fee is US$50 per participant, which covers lunch and coffee breaks. We are applying for grants to fund scholarships. If funding is secured, scholarship recipients will not need to pay the registration fee. We will update this page as soon as we have confirmation.',
       languageTitle: 'Language',
       language: 'The hackathon will be taught in English, and several instructors speak Spanish and Portuguese.',
       scheduleTitle: 'Schedule',
@@ -181,7 +184,7 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
       detailsLabel: 'Hackathon details',
       columns: { day: 'Day', morning: 'Morning', afternoon: 'Afternoon', milestone: 'Milestone' },
       schedule: [
-        { day: 'Sun. 4 Apr.', iso: '2027-04-04', morning: 'Welcome, introductions, IDEA and data sovereignty principles', afternoon: 'Form teams, practice command-line tools and computing access checks', milestone: 'All participants in teams and online, data release strategy and plan for genome release & papers' },
+        { day: 'Sun. 4 Apr. (optional)', iso: '2027-04-04', morning: 'Welcome, introductions, IDEA and data sovereignty principles', afternoon: 'Form teams, practice command-line tools and computing access checks', milestone: 'All participants in teams and online, data release strategy and plan for genome release & papers' },
         { day: 'Mon. 5 Apr.', iso: '2027-04-05', morning: 'ONT read quality control, trimming, purging, and genome size estimation', afternoon: 'Inspect assigned genome raw data and estimate coverage', milestone: 'QC report for genomes' },
         { day: 'Tue. 6 Apr.', iso: '2027-04-06', morning: 'Long-read genome assembly', afternoon: 'Long-read assembler intro, parameter selection and computational workflows', milestone: 'Toy genomes assembled' },
         { day: 'Wed. 7 Apr.', iso: '2027-04-07', morning: 'Hi-C contact maps, chromosome scaffolding, and manual curation', afternoon: 'Inspect precomputed Hi-C maps, identify misassemblies, and practice curation', milestone: 'Preliminary chromosome-level scaffolds or documented curation decisions' },
@@ -250,12 +253,13 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
       ],
       datesTitle: 'Fechas y horario',
       keyDates: [
+        { label: 'Evento', value: 'Del lunes 5 al viernes 9 de abril de 2027, en la UNICAMP, en Campinas, Brasil, de forma presencial o virtual. El domingo 4 de abril habrá un día de bienvenida opcional (presentaciones, formación de equipos y verificación del acceso a los recursos de cómputo).', iso: '2027-04-05' },
         { label: 'Cierre de postulaciones', value: '20 de diciembre de 2026', iso: '2026-12-20' },
         { label: 'Aviso a las personas seleccionadas', value: '31 de enero de 2027', iso: '2027-01-31' },
         { label: 'Horario diario', value: 'De 9:00 a 18:00 (hora de Brasilia, UTC−3)' },
       ],
       costTitle: 'Costo',
-      cost: 'La inscripción cuesta US$50 por participante e incluye almuerzos y pausas para café.',
+      cost: 'La inscripción cuesta US$50 por participante e incluye almuerzos y pausas para café. Estamos postulando a fondos para ofrecer becas. Si conseguimos el financiamiento, las personas becadas no tendrán que pagar la inscripción. Actualizaremos esta página en cuanto tengamos confirmación.',
       languageTitle: 'Idioma',
       language: 'El hackatón se impartirá en inglés; varios instructores hablan español y portugués.',
       scheduleTitle: 'Programa',
@@ -264,7 +268,7 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
       detailsLabel: 'Detalles del hackatón',
       columns: { day: 'Día', morning: 'Mañana', afternoon: 'Tarde', milestone: 'Resultado del día' },
       schedule: [
-        { day: 'Dom. 4 abr.', iso: '2027-04-04', morning: 'Bienvenida, presentaciones, principios IDEA y de soberanía de datos', afternoon: 'Formación de equipos, práctica con herramientas de línea de comandos y verificación del acceso a los recursos de cómputo', milestone: 'Todos los participantes en equipos y conectados; estrategia de publicación de datos y plan para publicar los genomas y los artículos' },
+        { day: 'Dom. 4 abr. (opcional)', iso: '2027-04-04', morning: 'Bienvenida, presentaciones, principios IDEA y de soberanía de datos', afternoon: 'Formación de equipos, práctica con herramientas de línea de comandos y verificación del acceso a los recursos de cómputo', milestone: 'Todos los participantes en equipos y conectados; estrategia de publicación de datos y plan para publicar los genomas y los artículos' },
         { day: 'Lun. 5 abr.', iso: '2027-04-05', morning: 'Control de calidad de lecturas ONT, recorte (trimming), depuración (purging) y estimación del tamaño del genoma', afternoon: 'Revisión de los datos crudos del genoma asignado y estimación de la cobertura', milestone: 'Informe de calidad de los genomas' },
         { day: 'Mar. 6 abr.', iso: '2027-04-06', morning: 'Ensamblaje de genomas con lecturas largas', afternoon: 'Introducción a los ensambladores de lecturas largas, selección de parámetros y flujos de trabajo computacionales', milestone: 'Genomas de prueba ensamblados' },
         { day: 'Mié. 7 abr.', iso: '2027-04-07', morning: 'Mapas de contacto Hi-C, scaffolding a escala cromosómica y curación manual', afternoon: 'Revisión de mapas Hi-C precalculados, detección de errores de ensamblaje y práctica de curación', milestone: 'Scaffolds preliminares a escala cromosómica o decisiones de curación documentadas' },

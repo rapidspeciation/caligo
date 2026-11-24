@@ -307,9 +307,9 @@ export const en = {
       "parides": "Parides ascanius",
       "panacea": "Panacea prola"
     },
-    "metaTitle": "Proposed pilot projects | Caligo",
-    "metaDescription": "Four proposed pilot projects, each starting from a published finding about Neotropical butterflies or moths.",
-    "title": "Proposed pilot projects",
+    "metaTitle": "Pilot projects | Caligo",
+    "metaDescription": "The local pilot projects selected in Colombia and four pilot projects proposed by the network, each starting from a published finding about Neotropical butterflies or moths.",
+    "title": "Pilot projects",
     "pilotProposal": {
       "leadsLabel": "Pilot project leads",
       "resourcesLabel": "Starting material and capacity",

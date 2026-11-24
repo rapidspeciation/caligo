@@ -304,9 +304,9 @@ export const es: Dict = {
       "parides": "Parides ascanius",
       "panacea": "Panacea prola"
     },
-    "metaTitle": "Proyectos piloto propuestos | Caligo",
-    "metaDescription": "Cuatro proyectos piloto propuestos; cada uno parte de un hallazgo publicado sobre mariposas o polillas neotropicales.",
-    "title": "Proyectos piloto propuestos",
+    "metaTitle": "Proyectos piloto | Caligo",
+    "metaDescription": "Los proyectos piloto locales seleccionados en Colombia y cuatro proyectos propuestos por la red, cada uno a partir de un hallazgo publicado sobre mariposas o polillas neotropicales.",
+    "title": "Proyectos piloto",
     "pilotProposal": {
       "leadsLabel": "Quiénes lo lideran",
       "resourcesLabel": "Material y capacidad disponibles",
