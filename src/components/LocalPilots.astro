@@ -62,7 +62,7 @@ const manyPlaces = (s: string) => /;| (?:and|y) (?:Universidad|Instituto|Centro)
             {(p.leaders.length > 0 || p.where) && (
               <dl class="local-meta">
                 {p.leaders.length > 0 && (
-                  <div>
+                  <div class="local-meta-leaders">
                     <dt><Icon name="users" /><span>{p.leaders.length === 1 ? c.leadersOne : c.leaders}</span></dt>
                     <dd>{p.leaders.join(', ')}</dd>
                   </div>
@@ -87,8 +87,9 @@ const manyPlaces = (s: string) => /;| (?:and|y) (?:Universidad|Instituto|Centro)
   .local-head { display: grid; gap: var(--space-2xs); margin-bottom: var(--space-m); }
   .local-head > * { margin: 0; }
   .local-lead { max-width: var(--measure); }
-  .local-jump { justify-self: start; font-size: var(--step--1); font-weight: 600; }
+  .local-jump { justify-self: start; padding-block: 0.35rem; font-size: var(--step--1); font-weight: 600; }
   .local-jump :global(svg) { width: 1rem; height: 1rem; }
+  @media (pointer: coarse) { .local-jump { min-height: 44px; display: inline-flex; align-items: center; } }
   .local-jump:hover :global(svg) { transform: translateY(3px); }
 
   .local-list {
@@ -168,7 +169,7 @@ const manyPlaces = (s: string) => /;| (?:and|y) (?:Universidad|Instituto|Centro)
     border-top: 1px solid var(--hairline);
     font-size: var(--step--1);
   }
-  .local-meta > div { display: grid; gap: 0.15rem; }
+  .local-meta > div { display: grid; gap: 0.15rem; align-content: start; }
   .local-meta dt {
     display: flex;
     align-items: center;
@@ -177,7 +178,7 @@ const manyPlaces = (s: string) => /;| (?:and|y) (?:Universidad|Instituto|Centro)
   }
   .local-meta dt :global(svg) { width: 1rem; height: 1rem; flex: none; color: var(--deadline-line); }
   .local-meta dd { margin: 0; color: var(--text); }
-  .local-meta > div:first-child dd { color: var(--text-strong); font-weight: 560; }
+  .local-meta-leaders dd { color: var(--text-strong); font-weight: 560; }
 
   /* Tablets: the photo as a column on the left, the text beside it. */
   @media (min-width: 48rem) {

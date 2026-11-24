@@ -32,7 +32,7 @@ export interface LocalPilot {
     width: number;
     height: number;
     alt: Text;
-    /** Name of the species in the photo, when the team gave it. */
+    /** Taxon in the photo: the species when the team gave it, otherwise the genus from the title. */
     caption?: string;
     /** `contain` for specimens on a plain background, so nothing is cut off. */
     fit?: 'cover' | 'contain';
@@ -216,7 +216,7 @@ export const SHOWN_LOCAL_PILOTS = LOCAL_PILOTS.filter((p) => p.photo);
 export const LOCAL_PILOTS_COPY = {
   en: {
     title: 'Selected pilot projects in Colombia',
-    lead: 'Our first call, in September 2026, selected eight local projects. Caligo covers the sequencing and each team leads its own research.',
+    lead: 'Our first call, which closed in September 2026, selected eight local projects. Caligo covers the sequencing and each team leads its own research.',
     more: '{Shown} are shown here; the other {rest} will follow soon.',
     moreOne: '{Shown} are shown here; the last one will follow soon.',
     jump: 'Jump to the projects proposed by the network',
@@ -230,7 +230,7 @@ export const LOCAL_PILOTS_COPY = {
   },
   es: {
     title: 'Proyectos piloto seleccionados en Colombia',
-    lead: 'Nuestra primera convocatoria, en septiembre de 2026, seleccionó ocho proyectos locales. Caligo cubre la secuenciación y cada equipo lidera su propia investigación.',
+    lead: 'Nuestra primera convocatoria, que cerró en septiembre de 2026, seleccionó ocho proyectos locales. Caligo cubre la secuenciación y cada equipo lidera su propia investigación.',
     more: 'Aquí presentamos {shown}; pronto publicaremos los otros {rest}.',
     moreOne: 'Aquí presentamos {shown}; pronto publicaremos el último.',
     jump: 'Ir a los proyectos propuestos por la red',
