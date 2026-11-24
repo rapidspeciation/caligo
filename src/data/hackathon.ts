@@ -170,7 +170,7 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
       datesTitle: 'Key dates and hours',
       keyDates: [
         { label: 'Event', value: 'Monday 5 to Friday 9 April 2027, at UNICAMP in Campinas, Brazil, in person or online', iso: '2027-04-05' },
-        { label: 'Optional welcome day', value: 'Sunday 4 April: introductions, team formation and computing access checks', iso: '2027-04-04' },
+        { label: 'Welcome day (optional)', value: 'Sunday 4 April: introductions, team formation and computing access checks', iso: '2027-04-04' },
         { label: 'Application deadline', value: '20 December 2026', iso: '2026-12-20' },
         { label: 'Selected participants notified', value: '31 January 2027', iso: '2027-01-31' },
         { label: 'Daily hours', value: '9:00 am to 6:00 pm (Brasília time, UTC−3)' },

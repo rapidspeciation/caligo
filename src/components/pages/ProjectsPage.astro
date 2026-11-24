@@ -57,15 +57,12 @@ const callClosed = isCallClosed();
     <PageHeader title={pageTitle} intro={intro.opening} />
   </div>
 
-  <section class="section pilot-introduction">
+  {/* Only while a call is open: the call first, then the projects. A closed
+      call would only push the selected projects below the first screen. */}
+  <section class="section pilot-introduction" data-when-call="open" hidden={callClosed}>
     <div class="container-wide">
       <div class="pilot-intro-layout">
-        <div class="intro-copy content-body">
-          {intro.body.map((paragraph) => <p>{paragraph}</p>)}
-        </div>
-        {/* Only while a call is open: a closed call would push the selected
-            projects below the first screen. */}
-        <aside class="funding-callout ink-card ink-card--rose" data-card="link" aria-labelledby="funding-callout-title" data-when-call="open" hidden={callClosed}>
+        <aside class="funding-callout ink-card ink-card--rose" data-card="link" aria-labelledby="funding-callout-title">
           <h2 id="funding-callout-title" class="funding-callout-title">{intro.call}</h2>
           <DeadlineChip locale={locale} />
           <p class="content-body" data-when-call="open" hidden={callClosed}>{intro.covered} {intro.logistics}</p>
@@ -91,6 +88,10 @@ const callClosed = isCallClosed();
     {/* Below the local projects, the network's proposed pilots get their
         own heading; the anchor stays for links from Funding. */}
     <h2 id="proposed-projects" class="content-heading proposed-title">{LOCAL_PILOTS_COPY[locale].proposedTitle}</h2>
+    {/* The invitation to propose pilots belongs with the proposals. */}
+    <div class="intro-copy content-body">
+      {intro.body.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
     <ol class="pilots" aria-labelledby="proposed-projects">
       {
         publishedPilots.map((pilot) => {
@@ -221,7 +222,7 @@ const callClosed = isCallClosed();
   /* The first pilot follows the introduction at one rhythm step, not two:
      the funding box is the tallest item here and already ends the row. */
   .pilot-introduction { padding-top: var(--space-l); padding-bottom: var(--space-l); }
-  .intro-copy { max-width: var(--measure); }
+  .intro-copy { max-width: var(--measure); margin-bottom: var(--space-l); }
   .intro-copy p + p { margin-top: var(--space-s); }
   .pilot-intro-layout {
     display: grid;
@@ -229,9 +230,9 @@ const callClosed = isCallClosed();
     align-items: start;
   }
   @media (min-width: 60rem) {
-    .pilot-intro-layout { grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr); gap: clamp(2rem, 5vw, 5rem); }
+    .pilot-intro-layout { grid-template-columns: minmax(0, 40rem); }
   }
-  .funding-callout[hidden] { display: none; }
+  .pilot-introduction[hidden] { display: none; }
   .funding-callout {
     display: grid;
     justify-items: start;
