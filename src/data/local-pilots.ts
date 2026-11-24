@@ -172,7 +172,7 @@ export const LOCAL_PILOTS: readonly LocalPilot[] = [
     id: 'oidaematophorus',
     call: 'colombia',
     title: {
-      en: 'A reference genome for Oidaematophorus espeletiae, a plume moth native to the Colombian páramos',
+      en: 'Reference genome of Oidaematophorus espeletiae, a plume moth native to the Colombian páramos',
       es: 'Genoma de referencia de Oidaematophorus espeletiae, una polilla pluma nativa de los páramos de Colombia',
     },
     summary: {
@@ -198,7 +198,7 @@ export const LOCAL_PILOTS: readonly LocalPilot[] = [
     },
     leaders: ['Diana M. Toro-Vargas', 'Camila González Rosas', 'Gustavo A. Bravo'],
     where: {
-      en: 'Centro de Investigaciones en Microbiología y Parasitología Tropical (CIMPAT), Department of Biological Sciences, Universidad de los Andes, Bogotá; Instituto Alexander von Humboldt, Villa de Leyva',
+      en: 'Centro de Investigaciones en Microbiología y Parasitología Tropical (CIMPAT), Departamento de Ciencias Biológicas, Universidad de los Andes, Bogotá; Instituto Alexander von Humboldt, Villa de Leyva',
       es: 'Centro de Investigaciones en Microbiología y Parasitología Tropical (CIMPAT), Departamento de Ciencias Biológicas, Universidad de los Andes, Bogotá; Instituto Alexander von Humboldt, Villa de Leyva',
     },
   },
@@ -210,10 +210,10 @@ export const SHOWN_LOCAL_PILOTS = LOCAL_PILOTS.filter((p) => p.photo);
 export const LOCAL_PILOTS_COPY = {
   en: {
     title: 'Selected pilot projects in Colombia',
-    lead: 'Caligo’s first call selected eight local pilot projects in Colombia. Caligo covers the sequencing; each team leads its own research.',
+    lead: 'Our first call selected eight local projects. Caligo covers the sequencing and each team leads its own research.',
     more: 'Here are the first {shown}; the other {rest} will follow soon.',
     moreOne: 'Here are the first {shown}; the last one will follow soon.',
-    jump: 'Jump to the pilot projects proposed by the network',
+    jump: 'Jump to the projects proposed by the network',
     leaders: 'Led by',
     leadersOne: 'Led by',
     where: 'Institution',
@@ -224,10 +224,10 @@ export const LOCAL_PILOTS_COPY = {
   },
   es: {
     title: 'Proyectos piloto seleccionados en Colombia',
-    lead: 'La primera convocatoria de Caligo seleccionó ocho proyectos piloto locales en Colombia. Caligo cubre la secuenciación y cada equipo lidera su propia investigación.',
+    lead: 'Nuestra primera convocatoria seleccionó ocho proyectos locales. Caligo cubre la secuenciación y cada equipo lidera su propia investigación.',
     more: 'Aquí están los primeros {shown}; pronto publicaremos los otros {rest}.',
     moreOne: 'Aquí están los primeros {shown}; pronto publicaremos el último.',
-    jump: 'Ir a los proyectos piloto propuestos por la red',
+    jump: 'Ir a los proyectos propuestos por la red',
     leaders: 'Lideran',
     leadersOne: 'Lidera',
     where: 'Institución',

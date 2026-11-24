@@ -222,7 +222,7 @@ const callClosed = isCallClosed();
   /* The first pilot follows the introduction at one rhythm step, not two:
      the funding box is the tallest item here and already ends the row. */
   .pilot-introduction { padding-top: var(--space-l); padding-bottom: var(--space-l); }
-  .intro-copy { max-width: var(--measure); margin-bottom: var(--space-l); }
+  .intro-copy { max-width: var(--measure); margin-bottom: var(--space-m); }
   .intro-copy p + p { margin-top: var(--space-s); }
   .pilot-intro-layout {
     display: grid;
@@ -249,7 +249,9 @@ const callClosed = isCallClosed();
   .pilot-reasons { margin-block: var(--space-m); }
   .pilot-reasons p { margin-top: var(--space-xs); }
   .pilots { scroll-margin-top: var(--scroll-margin-top); }
-  .proposed-title { margin: var(--space-l) 0 var(--space-m); scroll-margin-top: var(--scroll-margin-top); }
+  .proposed-title { margin: var(--space-xl) 0 var(--space-xs); scroll-margin-top: var(--scroll-margin-top); }
+  /* With no call open the local band follows the header rule directly: one line, not two. */
+  .pilot-introduction[hidden] + :global(.local-pilots) { border-top: 0; }
 
   .pilots {
     list-style: none;
