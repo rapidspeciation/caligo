@@ -305,7 +305,7 @@ export const es: Dict = {
       "panacea": "Panacea prola"
     },
     "metaTitle": "Proyectos piloto | Caligo",
-    "metaDescription": "Los proyectos piloto locales seleccionados en Colombia y cuatro proyectos propuestos por la red, cada uno a partir de un hallazgo publicado sobre mariposas o polillas neotropicales.",
+    "metaDescription": "Los proyectos piloto locales seleccionados en Colombia y cuatro proyectos propuestos por la red sobre mariposas y polillas neotropicales.",
     "title": "Proyectos piloto",
     "pilotProposal": {
       "leadsLabel": "Quiénes lo lideran",

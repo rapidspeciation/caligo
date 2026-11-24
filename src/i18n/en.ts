@@ -308,7 +308,7 @@ export const en = {
       "panacea": "Panacea prola"
     },
     "metaTitle": "Pilot projects | Caligo",
-    "metaDescription": "The local pilot projects selected in Colombia and four pilot projects proposed by the network, each starting from a published finding about Neotropical butterflies or moths.",
+    "metaDescription": "The local pilot projects selected in Colombia and four pilot projects proposed by the network on Neotropical butterflies and moths.",
     "title": "Pilot projects",
     "pilotProposal": {
       "leadsLabel": "Pilot project leads",

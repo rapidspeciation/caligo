@@ -63,7 +63,9 @@ const callClosed = isCallClosed();
         <div class="intro-copy content-body">
           {intro.body.map((paragraph) => <p>{paragraph}</p>)}
         </div>
-        <aside class="funding-callout ink-card ink-card--rose" data-card="link" aria-labelledby="funding-callout-title">
+        {/* Only while a call is open: a closed call would push the selected
+            projects below the first screen. */}
+        <aside class="funding-callout ink-card ink-card--rose" data-card="link" aria-labelledby="funding-callout-title" data-when-call="open" hidden={callClosed}>
           <h2 id="funding-callout-title" class="funding-callout-title">{intro.call}</h2>
           <DeadlineChip locale={locale} />
           <p class="content-body" data-when-call="open" hidden={callClosed}>{intro.covered} {intro.logistics}</p>
@@ -88,8 +90,8 @@ const callClosed = isCallClosed();
   <div class="projects-layout container-wide">
     {/* Below the local projects, the network's proposed pilots get their
         own heading; the anchor stays for links from Funding. */}
-    <h2 id="proposed-projects-title" class="content-heading proposed-title">{LOCAL_PILOTS_COPY[locale].proposedTitle}</h2>
-    <ol id="proposed-projects" class="pilots" aria-labelledby="proposed-projects-title">
+    <h2 id="proposed-projects" class="content-heading proposed-title">{LOCAL_PILOTS_COPY[locale].proposedTitle}</h2>
+    <ol class="pilots" aria-labelledby="proposed-projects">
       {
         publishedPilots.map((pilot) => {
           const project = projectById.get(pilotToProjectId[pilot.id]);
@@ -229,6 +231,7 @@ const callClosed = isCallClosed();
   @media (min-width: 60rem) {
     .pilot-intro-layout { grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr); gap: clamp(2rem, 5vw, 5rem); }
   }
+  .funding-callout[hidden] { display: none; }
   .funding-callout {
     display: grid;
     justify-items: start;
@@ -245,7 +248,7 @@ const callClosed = isCallClosed();
   .pilot-reasons { margin-block: var(--space-m); }
   .pilot-reasons p { margin-top: var(--space-xs); }
   .pilots { scroll-margin-top: var(--scroll-margin-top); }
-  .proposed-title { margin: 0 0 var(--space-m); }
+  .proposed-title { margin: var(--space-l) 0 var(--space-m); scroll-margin-top: var(--scroll-margin-top); }
 
   .pilots {
     list-style: none;

@@ -169,7 +169,8 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
       ],
       datesTitle: 'Key dates and hours',
       keyDates: [
-        { label: 'Event', value: 'Monday 5 to Friday 9 April 2027, at UNICAMP in Campinas, Brazil, in person or online. An optional welcome day will be held on Sunday 4 April (introductions, team formation and computing access checks).', iso: '2027-04-05' },
+        { label: 'Event', value: 'Monday 5 to Friday 9 April 2027, at UNICAMP in Campinas, Brazil, in person or online', iso: '2027-04-05' },
+        { label: 'Optional welcome day', value: 'Sunday 4 April: introductions, team formation and computing access checks', iso: '2027-04-04' },
         { label: 'Application deadline', value: '20 December 2026', iso: '2026-12-20' },
         { label: 'Selected participants notified', value: '31 January 2027', iso: '2027-01-31' },
         { label: 'Daily hours', value: '9:00 am to 6:00 pm (Brasília time, UTC−3)' },
@@ -253,7 +254,8 @@ export const HACKATHON: Record<Locale, HackathonCopy> = {
       ],
       datesTitle: 'Fechas y horario',
       keyDates: [
-        { label: 'Evento', value: 'Del lunes 5 al viernes 9 de abril de 2027, en la UNICAMP, en Campinas, Brasil, de forma presencial o virtual. El domingo 4 de abril habrá un día de bienvenida opcional (presentaciones, formación de equipos y verificación del acceso a los recursos de cómputo).', iso: '2027-04-05' },
+        { label: 'Evento', value: 'Del lunes 5 al viernes 9 de abril de 2027, en la UNICAMP, en Campinas, Brasil, de forma presencial o virtual', iso: '2027-04-05' },
+        { label: 'Día de bienvenida (opcional)', value: 'Domingo 4 de abril: presentaciones, formación de equipos y verificación del acceso a los recursos de cómputo', iso: '2027-04-04' },
         { label: 'Cierre de postulaciones', value: '20 de diciembre de 2026', iso: '2026-12-20' },
         { label: 'Aviso a las personas seleccionadas', value: '31 de enero de 2027', iso: '2027-01-31' },
         { label: 'Horario diario', value: 'De 9:00 a 18:00 (hora de Brasilia, UTC−3)' },

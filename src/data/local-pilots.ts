@@ -46,7 +46,7 @@ export const LOCAL_PILOTS: readonly LocalPilot[] = [
     call: 'colombia',
     title: {
       en: 'Untangling phylogenetic discordance in Eurytides (Protesilaus): incomplete lineage sorting, gene flow, or fewer species than currently recognized?',
-      es: 'Discordancia filogenética en Eurytides (Protesilaus): ¿separación incompleta de linajes, flujo génico o menos especies de las que se reconocen hoy?',
+      es: 'Desentrañando la discordancia filogenética en Eurytides (Protesilaus): ¿sorteo incompleto de linajes, flujo génico o menos especies de las que se reconocen actualmente?',
     },
     summary: {
       en: 'The subgenus Protesilaus (Leptocircini) comprises kite swallowtail butterflies characterized by highly similar color patterns and unresolved phylogenetic relationships. Using population genomics and a reference genome, we aim to clarify species boundaries, distinguish between cryptic speciation and taxonomic inflation, and uncover demographic and evolutionary processes underlying genomic diversity.',
@@ -70,7 +70,7 @@ export const LOCAL_PILOTS: readonly LocalPilot[] = [
     call: 'colombia',
     title: {
       en: 'Whole-genome sequencing and transcriptome analysis of Neoleucinodes elegantalis (Lepidoptera: Crambidae)',
-      es: 'Secuenciación del genoma completo y análisis del transcriptoma de Neoleucinodes elegantalis (Lepidoptera: Crambidae)',
+      es: 'Secuenciación del genoma completo y análisis transcriptómico de Neoleucinodes elegantalis (Lepidoptera: Crambidae)',
     },
     summary: {
       en: 'We will generate the first reference genome of Neoleucinodes elegantalis, a major pest of solanaceous crops in tropical America. Together with transcriptomes from antennae, pheromone glands and larvae, it will reveal genes for chemical communication and insecticide detoxification, as well as differences between populations from Suriname and Colombia, to support more precise and sustainable pest control.',
@@ -81,7 +81,7 @@ export const LOCAL_PILOTS: readonly LocalPilot[] = [
     photo: {
       path: 'media/local-pilots/neoleucinodes-elegantalis.jpg',
       width: 208,
-      height: 158,
+      height: 156,
       alt: {
         en: 'A Neoleucinodes elegantalis moth, white with rust-brown patches, wings spread on a beige background.',
         es: 'Una polilla Neoleucinodes elegantalis, blanca con manchas pardo rojizas, con las alas abiertas sobre fondo beige.',
@@ -94,7 +94,7 @@ export const LOCAL_PILOTS: readonly LocalPilot[] = [
     call: 'colombia',
     title: {
       en: 'Filling the gap: new genomic and distributional data for Macrosoma Hübner (Lepidoptera: Hedylidae) from the Colombian Caribbean',
-      es: 'Llenando el vacío: nuevos datos genómicos y de distribución de Macrosoma Hübner (Lepidoptera: Hedylidae) del Caribe colombiano',
+      es: 'Cerrando la brecha: nuevos datos genómicos y de distribución de Macrosoma Hübner (Lepidoptera: Hedylidae) en el Caribe colombiano',
     },
     summary: {
       en: 'Hedylidae are the only nocturnal lineage of butterflies and, although exclusively Neotropical, their diversity in Colombia remains poorly known, particularly in the Caribbean region. We aim to document at least five Hedylidae species for the first time in the Colombian Caribbean and provide genetic evidence to assess their morphological identifications. We will also generate the first reference genome for Macrosoma heliconiaria (Guenée, 1858), expanding the genomic resources available for the study of this Neotropical family.',
@@ -105,7 +105,7 @@ export const LOCAL_PILOTS: readonly LocalPilot[] = [
     photo: {
       path: 'media/local-pilots/macrosoma.jpg',
       width: 1400,
-      height: 931,
+      height: 926,
       alt: {
         en: 'A Macrosoma moth-butterfly, dark grey with white patches near the wing tips, resting on a white sheet.',
         es: 'Una mariposa Macrosoma, gris oscura con manchas blancas cerca de las puntas de las alas, posada sobre una sábana blanca.',
@@ -142,7 +142,7 @@ export const LOCAL_PILOTS: readonly LocalPilot[] = [
     call: 'colombia',
     title: {
       en: 'Reference genomes for Lymanopoda Westwood, 1851 (Nymphalidae, Satyrinae, Pronophilina): elevational adaptation and wing colour-pattern evolution in Andean butterflies',
-      es: 'Genomas de referencia de Lymanopoda Westwood, 1851 (Nymphalidae, Satyrinae, Pronophilina): adaptación altitudinal y evolución del patrón de color alar en mariposas andinas',
+      es: 'Genomas de referencia de Lymanopoda Westwood, 1851 (Nymphalidae, Satyrinae, Pronophilina): adaptación altitudinal y evolución del color y patrón alar en mariposas andinas',
     },
     summary: {
       en: 'We will generate high-quality reference genomes for seven Lymanopoda species, a young and diverse Andean butterfly genus with high endemism in Colombia. The species were chosen to contrast closely related and co-occurring species with different wing colours, and lineages living at different elevations. This will create the first comparative genomic framework for the genus, to study how wing colour and pattern evolve and how species adapt to Andean elevational gradients.',
@@ -198,8 +198,8 @@ export const LOCAL_PILOTS: readonly LocalPilot[] = [
     },
     leaders: ['Diana M. Toro-Vargas', 'Camila González Rosas', 'Gustavo A. Bravo'],
     where: {
-      en: 'CIMPAT, Department of Biological Sciences, Universidad de los Andes, Bogotá; Instituto Alexander von Humboldt, Villa de Leyva',
-      es: 'CIMPAT, Departamento de Ciencias Biológicas, Universidad de los Andes, Bogotá; Instituto Alexander von Humboldt, Villa de Leyva',
+      en: 'Centro de Investigaciones en Microbiología y Parasitología Tropical (CIMPAT), Department of Biological Sciences, Universidad de los Andes, Bogotá; Instituto Alexander von Humboldt, Villa de Leyva',
+      es: 'Centro de Investigaciones en Microbiología y Parasitología Tropical (CIMPAT), Departamento de Ciencias Biológicas, Universidad de los Andes, Bogotá; Instituto Alexander von Humboldt, Villa de Leyva',
     },
   },
 ];
@@ -209,21 +209,21 @@ export const SHOWN_LOCAL_PILOTS = LOCAL_PILOTS.filter((p) => p.photo);
 
 export const LOCAL_PILOTS_COPY = {
   en: {
-    title: 'Local pilot projects in Colombia',
-    lead: 'Our first call selected eight local pilot projects from Colombia. Caligo covers their sequencing; each team leads its own research.',
-    more: 'More projects from this call will appear here soon.',
+    title: 'Selected pilot projects in Colombia',
+    lead: 'Eight teams from Colombia were selected in Caligo’s first call. Caligo covers the sequencing and each team leads its own research.',
+    more: 'We are publishing them as their photos arrive; the rest will follow soon.',
     leaders: 'Led by',
     where: 'Institution',
     proposedTitle: 'Pilot projects proposed by the network',
-    seeSelected: 'See the selected projects',
+    seeSelected: 'See the Colombia pilot projects',
   },
   es: {
-    title: 'Proyectos piloto locales en Colombia',
-    lead: 'Nuestra primera convocatoria seleccionó ocho proyectos piloto locales de Colombia. Caligo cubre su secuenciación; cada equipo lidera su propia investigación.',
-    more: 'Pronto añadiremos aquí más proyectos de esta convocatoria.',
-    leaders: 'Liderado por',
+    title: 'Proyectos piloto seleccionados en Colombia',
+    lead: 'Ocho equipos de Colombia fueron seleccionados en la primera convocatoria de Caligo. Caligo cubre la secuenciación y cada equipo lidera su propia investigación.',
+    more: 'Los publicamos a medida que llegan sus fotos; pronto estarán los demás.',
+    leaders: 'Lideran',
     where: 'Institución',
     proposedTitle: 'Proyectos piloto propuestos por la red',
-    seeSelected: 'Ver los proyectos seleccionados',
+    seeSelected: 'Ver los proyectos piloto de Colombia',
   },
 } as const;
