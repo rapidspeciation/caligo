@@ -36,6 +36,8 @@ export interface LocalPilot {
     caption?: string;
     /** `contain` for specimens on a plain background, so nothing is cut off. */
     fit?: 'cover' | 'contain';
+    /** Photographed on a pale sheet or card: dimmed a little in dark mode. */
+    lightBackdrop?: boolean;
     position?: string;
   };
 }
@@ -62,6 +64,7 @@ export const LOCAL_PILOTS: readonly LocalPilot[] = [
         en: 'A kite swallowtail of the subgenus Protesilaus, white with black stripes and long tails, wings spread on a white background.',
         es: 'Una mariposa cola de golondrina del subgénero Protesilaus, blanca con franjas negras y colas largas, con las alas abiertas sobre fondo blanco.',
       },
+      caption: 'Eurytides (Protesilaus)',
       fit: 'contain',
     },
   },
@@ -87,6 +90,7 @@ export const LOCAL_PILOTS: readonly LocalPilot[] = [
         es: 'Una polilla Neoleucinodes elegantalis, blanca con manchas pardo rojizas, con las alas abiertas sobre fondo beige.',
       },
       caption: 'Neoleucinodes elegantalis',
+      lightBackdrop: true,
     },
   },
   {
@@ -110,6 +114,8 @@ export const LOCAL_PILOTS: readonly LocalPilot[] = [
         en: 'A Macrosoma moth-butterfly, dark grey with white patches near the wing tips, resting on a white sheet.',
         es: 'Una mariposa Macrosoma, gris oscura con manchas blancas cerca de las puntas de las alas, posada sobre una sábana blanca.',
       },
+      caption: 'Macrosoma',
+      lightBackdrop: true,
     },
   },
   {
@@ -210,9 +216,9 @@ export const SHOWN_LOCAL_PILOTS = LOCAL_PILOTS.filter((p) => p.photo);
 export const LOCAL_PILOTS_COPY = {
   en: {
     title: 'Selected pilot projects in Colombia',
-    lead: 'Our first call selected eight local projects. Caligo covers the sequencing and each team leads its own research.',
-    more: 'Here are the first {shown}; the other {rest} will follow soon.',
-    moreOne: 'Here are the first {shown}; the last one will follow soon.',
+    lead: 'Our first call, in September 2026, selected eight local projects. Caligo covers the sequencing and each team leads its own research.',
+    more: '{Shown} are shown here; the other {rest} will follow soon.',
+    moreOne: '{Shown} are shown here; the last one will follow soon.',
     jump: 'Jump to the projects proposed by the network',
     leaders: 'Led by',
     leadersOne: 'Led by',
@@ -224,9 +230,9 @@ export const LOCAL_PILOTS_COPY = {
   },
   es: {
     title: 'Proyectos piloto seleccionados en Colombia',
-    lead: 'Nuestra primera convocatoria seleccionó ocho proyectos locales. Caligo cubre la secuenciación y cada equipo lidera su propia investigación.',
-    more: 'Aquí están los primeros {shown}; pronto publicaremos los otros {rest}.',
-    moreOne: 'Aquí están los primeros {shown}; pronto publicaremos el último.',
+    lead: 'Nuestra primera convocatoria, en septiembre de 2026, seleccionó ocho proyectos locales. Caligo cubre la secuenciación y cada equipo lidera su propia investigación.',
+    more: 'Aquí presentamos {shown}; pronto publicaremos los otros {rest}.',
+    moreOne: 'Aquí presentamos {shown}; pronto publicaremos el último.',
     jump: 'Ir a los proyectos propuestos por la red',
     leaders: 'Lideran',
     leadersOne: 'Lidera',

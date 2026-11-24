@@ -21,7 +21,7 @@ const base = import.meta.env.BASE_URL;
 const shown = SHOWN_LOCAL_PILOTS.length;
 const rest = LOCAL_PILOTS.length - shown;
 const word = (n: number) => c.numbers[n] ?? String(n);
-const more = rest > 0 ? (rest === 1 ? c.moreOne : c.more).replace('{shown}', word(shown)).replace('{rest}', word(rest)) : '';
+const more = rest > 0 ? (rest === 1 ? c.moreOne : c.more).replace('{Shown}', word(shown).replace(/^./, (ch) => ch.toUpperCase())).replace('{shown}', word(shown)).replace('{rest}', word(rest)) : '';
 /** Two institutions are joined by "and"/"y" or ";" in the data. */
 const manyPlaces = (s: string) => /;| (?:and|y) (?:Universidad|Instituto|Centro)\b/.test(s);
 ---
@@ -35,13 +35,13 @@ const manyPlaces = (s: string) => /;| (?:and|y) (?:Universidad|Instituto|Centro)
     </header>
 
     <ol class="local-list" role="list">
-      {SHOWN_LOCAL_PILOTS.map((p) => {
+      {SHOWN_LOCAL_PILOTS.map((p, i) => {
         const photo = p.photo!;
         const srcset = srcsetFor(photo.path, photo.width, base);
         const small = photo.width < 400;
         return (
           <li id={`local-${p.id}`} class="local-card ink-card ink-card--flat">
-            <figure class:list={['local-media', { 'local-media--contain': photo.fit === 'contain', 'local-media--small': small }]}>
+            <figure class:list={['local-media', { 'local-media--contain': photo.fit === 'contain', 'local-media--small': small, 'local-media--light': photo.lightBackdrop }]}>
               <div class="local-frame">
               <img
                 src={`${base}${photo.path}`}
@@ -50,12 +50,12 @@ const manyPlaces = (s: string) => /;| (?:and|y) (?:Universidad|Instituto|Centro)
                 width={photo.width}
                 height={photo.height}
                 alt={photo.alt[locale]}
-                loading="lazy"
+                loading={i === 0 ? 'eager' : 'lazy'}
                 decoding="async"
                 style={photo.position ? `object-position: ${photo.position}` : undefined}
               />
               </div>
-              {photo.caption && <figcaption><em>{photo.caption}</em></figcaption>}
+              {photo.caption && <figcaption set:html={italicizeSpecies(photo.caption)} />}
             </figure>
             <h3 class="local-title" set:html={italicizeSpecies(p.title[locale])} />
             <p class="local-summary content-body" set:html={italicizeSpecies(p.summary[locale])} />
@@ -127,6 +127,8 @@ const manyPlaces = (s: string) => /;| (?:and|y) (?:Universidad|Instituto|Centro)
      does not glare on the dark theme. */
   .local-media--contain img { object-fit: contain; padding: 0.4rem; background: #fff; }
   :global([data-mode='dark']) .local-media--contain img { filter: brightness(0.78) sepia(0.12) contrast(1.06); }
+  /* Photos on a pale sheet or card get a lighter version of the same dimming. */
+  :global([data-mode='dark']) .local-media--light img { filter: brightness(0.85) sepia(0.06) contrast(1.03); }
   /* A photo smaller than the frame keeps its own size; on phones it sits
      centred on a plain panel, so the space beside it looks intended. */
   .local-media--small img { max-width: 13rem; aspect-ratio: 4 / 3; }
@@ -139,6 +141,8 @@ const manyPlaces = (s: string) => /;| (?:and|y) (?:Universidad|Instituto|Centro)
       border: 1px solid var(--hairline);
       border-radius: 6px;
     }
+    /* The frame owns the hairline: no box inside a box. */
+    .local-media--small img { border: 0; border-radius: 4px; }
   }
   .local-media figcaption { font-size: var(--step--1); color: var(--text-muted); line-height: 1.3; }
 
@@ -147,7 +151,7 @@ const manyPlaces = (s: string) => /;| (?:and|y) (?:Universidad|Instituto|Centro)
     margin: 0;
     max-width: 44rem;
     font-family: var(--font-display);
-    font-size: var(--step-0);
+    font-size: var(--step-1);
     font-weight: 600;
     line-height: 1.3;
     color: var(--text-strong);
@@ -188,7 +192,11 @@ const manyPlaces = (s: string) => /;| (?:and|y) (?:Universidad|Instituto|Centro)
       padding: var(--space-m);
     }
     .local-media img { aspect-ratio: 4 / 3; }
-    .local-title { font-size: var(--step-1); }
+  }
+
+  /* Tablets and small laptops: leaders and institution side by side. */
+  @media (min-width: 48rem) and (max-width: 71.99rem) {
+    .local-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-m); }
   }
 
   /* Wide screens: who leads it moves to a third column, level with the

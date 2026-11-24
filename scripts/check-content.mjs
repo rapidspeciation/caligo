@@ -105,7 +105,7 @@ const load = (rel) => import(pathToFileURL(resolve(root, rel)).href);
 
 // 2. Every bilingual field in the data files has both languages. A field is
 //    bilingual when it is an object with an `en` or an `es` key.
-const DATA_FILES = ['content', 'records', 'initiative', 'pilot-call', 'about-feedback', 'science-feedback', 'network-map', 'hackathon'];
+const DATA_FILES = ['content', 'records', 'initiative', 'pilot-call', 'about-feedback', 'science-feedback', 'network-map', 'hackathon', 'local-pilots'];
 const oneSided = [];
 function bilingual(node, path) {
   if (Array.isArray(node)) return node.forEach((v, i) => bilingual(v, `${path}[${i}]`));
