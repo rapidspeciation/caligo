@@ -9,6 +9,7 @@
  * Data in `data/local-pilots.ts`.
  */
 import Icon from './Icon.astro';
+import FigureLightbox from './FigureLightbox.astro';
 import { italicizeSpecies } from '../data/content';
 import { LOCAL_PILOTS, SHOWN_LOCAL_PILOTS, LOCAL_PILOTS_COPY } from '../data/local-pilots';
 import { srcsetFor } from '../data/image-variants';
@@ -40,9 +41,18 @@ const manyPlaces = (s: string) => /;| (?:and|y) (?:Universidad|Instituto|Centro)
         const srcset = srcsetFor(photo.path, photo.width, base);
         const small = photo.width < 400;
         return (
-          <li id={`local-${p.id}`} class="local-card ink-card ink-card--flat">
+          <li id={`local-${p.id}`} class="local-card ink-card" data-card="link">
             <figure class:list={['local-media', { 'local-media--contain': photo.fit === 'contain', 'local-media--small': small, 'local-media--light': photo.lightBackdrop }]}>
-              <div class="local-frame">
+              {/* The photo is the card's link: a click anywhere on the card
+                  opens it enlarged, which is what the lift on hover promises. */}
+              <a
+                class="local-frame card-media card-link"
+                href={`${base}${photo.path}`}
+                aria-label={`${c.photoOpen}: ${photo.alt[locale]}`}
+                data-lightbox
+                data-caption={photo.caption ?? ''}
+              >
+              <span class="local-zoom" aria-hidden="true"><Icon name="zoom-in" /></span>
               <img
                 src={`${base}${photo.path}`}
                 srcset={srcset}
@@ -54,7 +64,7 @@ const manyPlaces = (s: string) => /;| (?:and|y) (?:Universidad|Instituto|Centro)
                 decoding="async"
                 style={photo.position ? `object-position: ${photo.position}` : undefined}
               />
-              </div>
+              </a>
               {photo.caption && <figcaption set:html={italicizeSpecies(photo.caption)} />}
             </figure>
             <h3 class="local-title" set:html={italicizeSpecies(p.title[locale])} />
@@ -81,6 +91,8 @@ const manyPlaces = (s: string) => /;| (?:and|y) (?:Universidad|Instituto|Centro)
     </ol>
   </div>
 </section>
+
+<FigureLightbox locale={locale} />
 
 <style>
   .local-pilots { scroll-margin-top: var(--scroll-margin-top, 4rem); }
@@ -109,21 +121,48 @@ const manyPlaces = (s: string) => /;| (?:and|y) (?:Universidad|Instituto|Centro)
     align-items: start;
     margin: 0;
     padding: var(--space-s);
-    border-width: 1px;
-    border-left-width: 4px;
     scroll-margin-top: var(--scroll-margin-top, 4rem);
   }
   .local-media { grid-area: media; margin: 0; display: grid; gap: 0.3rem; }
+  /* The frame owns the hairline and clips the photo, so the photo can lean
+     in on hover (global .card-media) without leaving its frame. */
+  .local-frame {
+    /* Not positioned: the link's cover (global .card-link) must span the
+       whole card, not just the photo. Photo and magnifier share one grid cell. */
+    position: static;
+    display: grid;
+    overflow: hidden;
+    border-radius: 6px;
+    border: 1px solid var(--hairline);
+    background: var(--bg);
+  }
+  .local-frame > * { grid-area: 1 / 1; }
   .local-media img {
     display: block;
     width: 100%;
     aspect-ratio: 16 / 10;
     height: auto;
     object-fit: cover;
-    border-radius: 6px;
-    border: 1px solid var(--hairline);
-    background: var(--bg);
   }
+  /* A small magnifier, as on the Science page figures, says what the click does. */
+  .local-zoom {
+    align-self: end;
+    justify-self: end;
+    margin: 0.4rem;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: rgba(12, 11, 10, 0.7);
+    color: #F6F7F3;
+    opacity: 0.85;
+    pointer-events: none;
+    transition: opacity var(--transition), transform var(--transition);
+  }
+  .local-zoom :global(svg) { width: 1.05rem; height: 1.05rem; }
+  .local-card:is(:hover, .is-near) .local-zoom { opacity: 1; transform: scale(1.06); }
   /* A specimen on white: shown whole, with a little air, and dimmed so it
      does not glare on the dark theme. */
   .local-media--contain img { object-fit: contain; padding: 0.4rem; background: #fff; }
@@ -143,7 +182,7 @@ const manyPlaces = (s: string) => /;| (?:and|y) (?:Universidad|Instituto|Centro)
       border-radius: 6px;
     }
     /* The frame owns the hairline: no box inside a box. */
-    .local-media--small img { border: 0; border-radius: 4px; }
+    .local-media--small img { border-radius: 4px; }
   }
   .local-media figcaption { font-size: var(--step--1); color: var(--text-muted); line-height: 1.3; }
 
