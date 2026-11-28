@@ -6,7 +6,11 @@
  * summaries, leaders and the first photos ("faltan unas fotos pero mañana me
  * las envían; si puedes ir adicionando los que ya tienen foto"). Summaries are
  * the doc's own text in both languages; titles were in one language only, so
- * the other is our translation, and obvious typos were fixed.
+ * the other is our translation, and obvious typos were fixed. On 27 November
+ * Nicol said two more projects had photos (Lymanopoda, Oidaematophorus); the
+ * doc then also carried new summaries for both and Lymanopoda's two
+ * institutions. The moth figure's panel number "1" was painted out and the
+ * photo padded to 4:3 with its own grey.
  *
  * A project is shown once it has a photo (`photo`), as Nicol asked. To add a
  * photo: put the file in public/media/local-pilots/, run
@@ -151,11 +155,25 @@ export const LOCAL_PILOTS: readonly LocalPilot[] = [
       es: 'Genomas de referencia de Lymanopoda Westwood, 1851 (Nymphalidae, Satyrinae, Pronophilina): adaptación altitudinal y evolución del color y patrón alar en mariposas andinas',
     },
     summary: {
-      en: 'We will generate high-quality reference genomes for seven Lymanopoda species, a young and diverse Andean butterfly genus with high endemism in Colombia. The species were chosen to contrast closely related and co-occurring species with different wing colours, and lineages living at different elevations. This will create the first comparative genomic framework for the genus, to study how wing colour and pattern evolve and how species adapt to Andean elevational gradients.',
-      es: 'Generaremos genomas de referencia de alta calidad para siete especies de Lymanopoda, un género andino de mariposas joven y diverso, con alto endemismo en Colombia. Las especies se eligieron para comparar especies cercanas que conviven pero tienen colores de ala distintos, y linajes que viven a diferentes altitudes. Así se creará el primer marco genómico comparativo del género, para estudiar cómo evolucionan el color y el patrón alar y cómo se adaptan las especies a los gradientes altitudinales andinos.',
+      en: 'This project aims to generate high-quality reference genomes for seven Andean butterfly species of Lymanopoda occurring in Colombia, strategically selected to represent phylogenetic, phenotypic, ecological, and elevational contrasts. By comparing closely and distantly related species, including sympatric taxa with contrasting wing coloration, the project will establish a comparative genomic framework for investigating elevational adaptation and wing color-pattern evolution. These genomic resources will support future research in phylogenomics, population genomics, developmental biology, and conservation, advancing our understanding of diversification and adaptation in tropical mountain environments across Lymanopoda and the broader Pronophilina radiation.',
+      es: 'Este proyecto tiene como objetivo generar genomas de referencia de alta calidad para siete especies de mariposas andinas del género Lymanopoda presentes en Colombia, seleccionadas estratégicamente para representar contrastes filogenéticos, fenotípicos, ecológicos y altitudinales. Mediante la comparación de especies cercana y lejanamente emparentadas, incluidos taxones simpátricos con coloración alar contrastante, el proyecto establecerá un marco genómico comparativo para investigar la adaptación altitudinal y la evolución de los patrones de color alar. Estos recursos genómicos servirán de base para futuras investigaciones en filogenómica, genómica de poblaciones, biología del desarrollo y conservación, y contribuirán a comprender mejor la diversificación y la adaptación en ambientes de montaña tropicales, tanto en Lymanopoda como en la radiación más amplia de Pronophilina.',
     },
     leaders: ['Oscar Javier Mahecha Jiménez', 'Miguel Gonzalo Andrade Correa'],
-    where: { en: 'Universidad Nacional de Colombia, Bogotá', es: 'Universidad Nacional de Colombia, Bogotá' },
+    where: {
+      en: 'Universidad Distrital Francisco José de Caldas, Bogotá; Instituto de Ciencias Naturales (ICN), Universidad Nacional de Colombia',
+      es: 'Universidad Distrital Francisco José de Caldas, Bogotá; Instituto de Ciencias Naturales (ICN), Universidad Nacional de Colombia',
+    },
+    photo: {
+      path: 'media/local-pilots/lymanopoda.jpg',
+      width: 1400,
+      height: 933,
+      alt: {
+        en: 'Two male Lymanopoda butterflies with wings spread on a white background: one dark brown with pale blue patches, the other golden orange with small dark eyespots.',
+        es: 'Dos machos de mariposas Lymanopoda con las alas abiertas sobre fondo blanco: uno marrón oscuro con manchas azul pálido y el otro naranja dorado con pequeños ocelos oscuros.',
+      },
+      caption: 'Lymanopoda',
+      fit: 'contain',
+    },
   },
   {
     id: 'pedaliodes',
@@ -182,13 +200,24 @@ export const LOCAL_PILOTS: readonly LocalPilot[] = [
       es: 'Genoma de referencia de Oidaematophorus espeletiae, una polilla pluma nativa de los páramos de Colombia',
     },
     summary: {
-      en: 'Oidaematophorus espeletiae is a plume moth from the Colombian páramos whose larvae feed on the growing tissue of frailejones (Espeletia), weakening the plants and allowing fungal infections that can kill them. It has been recorded in several páramo complexes, yet it has no genetic reference, not even a DNA barcode. We will collect larvae from frailejones and generate a high-quality reference genome. This genome will lay the groundwork for studying the moth’s adaptation to high-mountain environments, its detoxification of plant compounds and its interaction with Espeletia.',
-      es: 'Oidaematophorus espeletiae es una polilla pluma de los páramos colombianos cuyas larvas se alimentan del tejido en crecimiento de los frailejones (Espeletia). Esto debilita las plantas y favorece infecciones por hongos que pueden causarles la muerte. Se ha registrado en varios complejos de páramo, pero no tiene ninguna referencia genética, ni siquiera un código de barras de ADN. Colectaremos larvas en frailejones para generar un genoma de referencia de alta calidad. Este genoma será la base para estudiar su adaptación a la alta montaña, la detoxificación de compuestos vegetales y su interacción con Espeletia.',
+      en: 'Oidaematophorus espeletiae (Pterophoridae) is a moth from the Colombian páramos whose larvae feed on frailejón meristems. This weakens the plants and leaves them prone to fatal fungal infections (Hernández et al., 2014). Despite its ecological importance and wide distribution across páramo complexes, it has no genetic resources at all, not even a DNA barcode. This project will collect larvae from frailejones to generate a high-quality reference genome. The genome will support future studies on adaptation to extreme environments, plant–insect interactions and evolution within the genus.',
+      es: 'Oidaematophorus espeletiae (Pterophoridae) es una polilla de los páramos colombianos cuyas larvas se alimentan del meristemo de los frailejones. Esto debilita las plantas y las hace propensas a infecciones fúngicas letales (Hernández et al., 2014). A pesar de su importancia ecológica y de su amplia distribución en varios complejos de páramo, la especie no cuenta con ningún recurso genético, ni siquiera un código de barras de ADN. Este proyecto recolectará larvas en frailejones para generar un genoma de referencia de alta calidad. El genoma servirá de base para futuros estudios sobre adaptación a ambientes extremos, interacciones planta–insecto y evolución dentro del género.',
     },
     leaders: ['Fabian Camilo Zapata Sierra', 'Jose Vladimir Sandoval', 'Juan Alejandro Guerrero Cupacan', 'Mailyn Gonzalez'],
     where: {
       en: 'Instituto de Investigación de Recursos Biológicos Alexander von Humboldt, Bogotá',
       es: 'Instituto de Investigación de Recursos Biológicos Alexander von Humboldt, Bogotá',
+    },
+    photo: {
+      path: 'media/local-pilots/oidaematophorus-espeletiae.jpg',
+      width: 661,
+      height: 496,
+      alt: {
+        en: 'A pinned Oidaematophorus espeletiae plume moth on a grey background, its narrow, feathery wings spread wide.',
+        es: 'Un ejemplar de la polilla pluma Oidaematophorus espeletiae sobre fondo gris, con sus alas estrechas y plumosas extendidas.',
+      },
+      caption: 'Oidaematophorus espeletiae',
+      lightBackdrop: true,
     },
   },
   {
